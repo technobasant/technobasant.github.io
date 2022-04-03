@@ -61,7 +61,7 @@ plugins:
 author:
   name   : "Bsant Bhattarai"
   avatar : "/assets/images/basant_profile.jpg"
-  bio    : "Data Engineer, Big Data Researcher, DevOps Engineer, DBA, Backend Developer"
+  bio    : "Data Architect, Data Engineer, Big Data Researcher, DevOps Engineer, DBA, Backend Developer"
   links:
     - label: "Website"
       icon: "fas fa-fw fa-link"
