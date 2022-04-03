@@ -9,4 +9,4 @@ He is a seasoned Data and  DevOps engineer with hands-on experience in the Admin
 
 In past, he has worked as a Backend Developer, Database Administrator, and Linux System Administrator in various organizations and currently working as Data Engineer which involves developing Spark ETL Data pipelines and Managing distributed Systems for Big Data Analytics.
 
-Basant   CS graduate with   B. Tech in  Computer Science and Engineering(CSE) from JNTU Anantapur, AP, India. 
+Basant is CS graduate with B. Tech in  Computer Science and Engineering(CSE) from JNTU Anantapur, AP, India. 
