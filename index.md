@@ -50,9 +50,9 @@ evidence:
   body: "Everything below this line is something I ran on hardware I own, with the commands and the numbers published. Nothing on this page is a figure from an employer's dashboard."
 
 ledger:
-  label: "Receipts"
-  headline: "Eight things I did to a database, and what came back."
-  blurb: "One test plan, six engines, one host. The interesting column is the last one — the detail that only shows up after you kill the process."
+  label: "What broke"
+  headline: "Three things the documentation did not tell me."
+  blurb: "Eight failover scenarios across six engines all passed, which is the least interesting sentence I could write about them. These are the three that cost me an evening each, and none of them produced an error message worth reading."
 
 focus_label: "Where I’m useful"
 focus_headline: "I work where correctness, scale, and judgment meet."

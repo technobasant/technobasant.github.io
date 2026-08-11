@@ -58,9 +58,14 @@
   --lh-code: 1.6;
 
   // ── Tracking ──────────────────────────────────────────────────────────────
-  --ls-display: -0.028em;
+  // Graded to size, following Geist's published ramp: -0.02em to 20px,
+  // -0.04em at 24-32px, -0.06em from 40px up. The hero tops out near 56px.
+  --ls-display: -0.045em;
   --ls-heading: -0.018em;
-  --ls-body: -0.005em;
+  // Zero, deliberately. Across Geist, iA, Emil Kowalski and Josh Comeau the
+  // negative-tracking ramp is graded to size and body copy always sits at 0;
+  // a global letter-spacing is the tell in the other direction.
+  --ls-body: 0em;
   --ls-label: 0.14em;
 
   // ── Measure & containers ──────────────────────────────────────────────────
@@ -132,8 +137,8 @@
   --surface-3: #232830;
 
   --ink-1: #ece8e1; // 15.72:1
-  --ink-2: #a6aeb8; // 8.56:1
-  --ink-3: #7d8792; // 5.26:1
+  --ink-2: #b0aca4; // 8.48:1 — warmed to match --ink-1 and the brass
+  --ink-3: #8a857c; // 5.23:1 — one temperature the whole way down
 
   --line: rgba(236, 232, 225, 0.1);
   --line-strong: rgba(236, 232, 225, 0.17);
@@ -145,9 +150,12 @@
   --accent-on: #16120b;
   --accent-tint: color-mix(in oklab, var(--accent) 12%, transparent);
 
-  --focus: #c4a574;
-  --sel-bg: #c4a574;
-  --sel-fg: #0d0f12;
+  // Not brass. Paco Coursey defines one accent and spends it on a single
+  // element; his selection is grey and Emil Kowalski's focus ring is grey too.
+  // Keeping brass off focus and selection leaves it meaning one thing.
+  --focus: #b8c0c9;      // 10.44:1 on surface-0
+  --sel-bg: #2f3742;
+  --sel-fg: #ece8e1;     // 9.85:1 on --sel-bg
 
   --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
   --shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.55);
@@ -218,9 +226,9 @@
   --accent-on: #16120b;
   --accent-tint: color-mix(in oklab, var(--accent-fill) 24%, transparent);
 
-  --focus: #7c5a18;
-  --sel-bg: #e8d4ac;
-  --sel-fg: #15181c;
+  --focus: #4c535c;      // 7.46:1 on paper
+  --sel-bg: #dfe3e8;
+  --sel-fg: #15181c;     // 13.81:1 on --sel-bg
 
   --shadow-1: 0 1px 2px rgba(30, 26, 18, 0.06);
   --shadow-2: 0 8px 24px -10px rgba(30, 26, 18, 0.14);
