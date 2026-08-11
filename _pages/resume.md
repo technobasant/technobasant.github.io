@@ -13,17 +13,6 @@ redirect_from:
 
 <p><a class="btn btn--primary" href="{{ '/assets/basant-bhattarai-resume.pdf' | relative_url }}">Download the PDF</a></p>
 
-
-## Career shape
-
-A résumé usually flattens a career into a list. The more useful story is how the responsibility changed.
-
-- **2017–2019 · SV Technology, India.** Built backend services and the PostgreSQL schemas behind them. This is where I learned that many “API bugs” begin as unclear data-model decisions.
-- **2019–2020 · SVCET, India.** Led a small team delivering an NLP dialogue system. It was my first time being accountable for a plan assembled by more than one person.
-- **2020–2024 · UXCam, Data Engineer.** Worked across ingestion, transformation, data modeling, orchestration, and analytical serving. The job expanded from making data arrive to keeping it correct, recoverable, and affordable.
-- **2024–present · UXCam, Senior Data Engineer.** Own broader platform and AI-product outcomes: reliability, governance, design review, operational readiness, and the boundaries where automated output becomes trusted data.
-{: .career-timeline }
-
 ## Experience at a glance
 
 | Role | Period | Public scope |
@@ -51,16 +40,8 @@ A résumé usually flattens a career into a list. The more useful story is how t
 - Tuned distributed processing and query workloads by starting with the read path, measurement, and data layout before changing infrastructure settings.
 - Worked with teams across time zones to turn product questions into maintainable datasets and operational workflows.
 
-## Earlier roles
-
-**Project Leader, SVCET**, India, 2019–2020 — led a small team building an intelligent dialogue system; coordinated requirements, planning, reviews, and delivery across academic and industry stakeholders.
-
-**Software Developer, SV Technology**, India, 2017–2019 — built Python backend services, designed and maintained PostgreSQL schemas and reporting procedures, contributed to CI, and began the pipeline work that pulled me toward data engineering.
-
 ## Skills
 {: #skills }
-
-{{ site.data.skills.note }}
 
 ### {{ site.data.skills.tier1.heading }}
 

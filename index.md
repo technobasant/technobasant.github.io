@@ -52,7 +52,7 @@ evidence:
 ledger:
   label: "Independent lab work"
   headline: "I test recovery claims instead of repeating them."
-  blurb: "I keep a rig for taking database clusters apart — six engines, eight injected faults, every command and measurement published. Three findings from it that no documentation warned me about, and none of which produced a useful error message."
+  blurb: "I keep a rig for taking database clusters apart: six engines, eight injected faults, every command and measurement published. Three findings from it that no documentation warned me about."
 
 focus_label: "What I do"
 focus_headline: "Four areas I have carried in production, not evaluated."
@@ -77,7 +77,7 @@ focus:
 work:
   label: "Selected work"
   headline: "Systems with constraints, trade-offs, and receipts."
-  blurb: "Not a tool list: the decision, what it cost, and the number it moved."
+  blurb: "Systems I own end to end, and the practice I bring to the ones I do not."
   more: "All case studies"
   more_url: /work/
 
