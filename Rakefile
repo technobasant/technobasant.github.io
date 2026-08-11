@@ -206,7 +206,7 @@ task :verify do
   # Assets this task's owner generated — these must always be present.
   {
     "assets/apple-touch-icon.png" => 180,
-    "assets/og/og-default.png" => nil
+    "assets/og/og-default-v2.png" => nil
   }.each_key do |asset|
     built = File.join(SITE_DIR, asset)
     v.with(built, label: "#{asset} shipped to _site") do

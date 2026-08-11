@@ -10,6 +10,7 @@ layout: default
   visitor should land on the best work, not the newest.
 {%- endcomment -%}
 {%- assign _featured = site.posts | where: "featured", true -%}
+{%- assign _archive_posts = site.posts | where_exp: "p", "p.featured != true" -%}
 {%- assign _tag_slugs = site.data.tags | map: "slug" -%}
 
 <div class="page">
@@ -44,7 +45,7 @@ layout: default
       <h2 class="section-label" id="topics-title">Topics</h2>
       <a class="section-more" href="{{ '/writing/tags/' | relative_url }}">All topics {% include icon.html name="arrow-right" size=14 %}</a>
     </div>
-    {% include tag-chips.html tags=_tag_slugs counts=true %}
+    {% include tag-chips.html tags=_tag_slugs counts=true nonempty=true %}
   </section>
 
   {%- if site.data.series and site.data.series.size > 0 %}
@@ -68,10 +69,10 @@ layout: default
   </section>
   {%- endif %}
 
-  {%- if site.posts.size > 0 %}
+  {%- if _archive_posts.size > 0 %}
   <section class="wrap reveal" aria-labelledby="archive-title">
     <p class="section-label" id="archive-title">All posts</p>
-    {%- assign _years = site.posts | group_by_exp: "p", "p.date | date: '%Y'" -%}
+    {%- assign _years = _archive_posts | group_by_exp: "p", "p.date | date: '%Y'" -%}
     {%- for year in _years %}
     <h2>{{ year.name }}</h2>
     <div class="card-grid">

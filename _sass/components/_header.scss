@@ -44,11 +44,11 @@
 }
 
 .mark span {
-  font-family: var(--font-body);
-  font-size: var(--step--1);
-  font-weight: 500;
-  letter-spacing: var(--ls-body);
-  color: var(--ink-3);
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 450;
+  letter-spacing: inherit;
+  color: var(--ink-2);
 }
 
 @media (max-width: 34rem) {

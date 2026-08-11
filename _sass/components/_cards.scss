@@ -12,6 +12,44 @@
   list-style: none;
 }
 
+// Homepage showcase: one flagship case gets the reading priority, with two
+// supporting cases beside it. The regular work index keeps the democratic grid.
+.showcase-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(17rem, 0.85fr);
+  gap: var(--sp-5);
+}
+
+.case-card--feature {
+  grid-row: span 2;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  background: color-mix(in oklab, var(--accent-fill) 8%, var(--surface-1));
+}
+
+.case-card--feature .post-card__title {
+  max-width: 18ch;
+  font-family: var(--font-display);
+  font-variation-settings: "SOFT" 0, "WONK" 0;
+  font-size: var(--step-3);
+  letter-spacing: var(--ls-display);
+  line-height: 1.12;
+}
+
+.case-card--feature .case-card__hook {
+  max-width: 42ch;
+  font-size: var(--step-0);
+}
+
+@media (max-width: 48rem) {
+  .showcase-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .case-card--feature {
+    grid-row: auto;
+  }
+}
+
 // ── Case card ────────────────────────────────────────────────────────────────
 .case-card {
   display: flex;
@@ -100,6 +138,23 @@
 
 .case-card__stack li {
   margin: 0;
+}
+
+.case-card__open {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-block-start: var(--sp-3);
+  font-size: var(--step--2);
+  font-weight: 600;
+  color: var(--ink-3);
+  transition: color var(--dur-1) var(--ease-standard),
+    transform var(--dur-1) var(--ease-standard);
+}
+
+.case-card:hover .case-card__open {
+  color: var(--accent-hi);
+  transform: translateX(2px);
 }
 
 // ── Tutorial header ──────────────────────────────────────────────────────────
@@ -385,6 +440,89 @@ ol.series-nav__list > li::before {
 .case-glance dd {
   margin: 0;
   color: var(--ink-1);
+}
+
+// Evidence appears before the long-form narrative so a scanning visitor can
+// decide whether the case is relevant before committing to the full read.
+.case-impact {
+  padding: var(--sp-5);
+  background: color-mix(in oklab, var(--accent-fill) 7%, var(--surface-1));
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+}
+
+.case-impact > .section-label {
+  margin-block-end: var(--sp-4);
+  font-family: var(--font-body);
+  font-size: var(--step--2);
+  letter-spacing: var(--ls-label);
+  line-height: var(--lh-ui);
+}
+
+.case-impact .stats {
+  grid-template-columns: repeat(auto-fit, minmax(min(9rem, 100%), 1fr));
+  gap: var(--sp-5);
+}
+
+.case-impact .stats li > strong {
+  font-size: var(--step-2);
+}
+
+.case-map {
+  padding-block: var(--sp-4);
+  border-block: 1px solid var(--line);
+}
+
+.case-map > .section-label {
+  margin-block-end: var(--sp-3);
+}
+
+.case-map ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: case-map;
+}
+
+.case-map li {
+  counter-increment: case-map;
+}
+
+.prose .case-map a {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45em;
+  min-height: 2.25rem;
+  color: var(--ink-2);
+  font-size: var(--step--1);
+  font-weight: 550;
+  text-decoration: none;
+}
+
+.prose .case-map a::before {
+  content: counter(case-map, decimal-leading-zero);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 400;
+  color: var(--ink-3);
+}
+
+.prose .case-map a:hover {
+  color: var(--accent-hi);
+}
+
+@media (max-width: 34rem) {
+  .case-glance {
+    grid-template-columns: 1fr;
+    gap: var(--sp-1);
+  }
+
+  .case-glance dd + dt {
+    margin-block-start: var(--sp-3);
+  }
 }
 
 .case-decisions th:first-child,

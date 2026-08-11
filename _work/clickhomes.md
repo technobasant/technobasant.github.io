@@ -13,8 +13,8 @@ scale: "Dual PostgreSQL / ClickHouse schema, 90+ versioned SQL migrations, runni
 stack: [PostgreSQL, ClickHouse, Python, FastAPI, Pydantic, Celery, SQLAlchemy, Docker, Next.js]
 metrics: [clickhomes_migrations]
 tags: [postgres, clickhouse, ai-agents]
-image: /assets/og/og-default.png
-image_alt: "A RESO connector, transformer and gold loader writing into separate PostgreSQL and ClickHouse stores with no raw bypass"
+image: /assets/og/og-default-v2.png
+image_alt: "Basant Bhattarai — Reliable data. Accountable AI."
 live_url: "https://clickhomes.ai"
 ---
 
