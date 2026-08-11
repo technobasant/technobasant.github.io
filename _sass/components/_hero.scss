@@ -294,12 +294,21 @@
   line-height: 1.05;
 }
 
+// Two up, so four capability cards form a 2x2 block rather than a row of three
+// with an orphan. auto-fit would decide that for us and decide it differently at
+// every viewport width.
 .band-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  grid-template-columns: 1fr;
   gap: 0;
   margin-block-start: var(--sp-7);
   border-block-start: 1px solid var(--line-strong);
+}
+
+@media (min-width: 48rem) {
+  .band-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 .focus {

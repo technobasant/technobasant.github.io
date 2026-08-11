@@ -9,9 +9,9 @@ hero:
   eyebrow: "Senior Data & AI Engineer · Platform & Database Reliability"
   meta: "Kathmandu, Nepal · Working US and EU hours"
   h1:
-    first: "I break databases"
-    second: "on purpose."
-  lede: "Then I publish what came back. Nine years on data platforms and the systems that decide whether their output can be trusted — and a standing habit of testing the recovery claims rather than repeating them."
+    first: "Data platforms,"
+    second: "and the systems that keep them honest."
+  lede: "I am a senior data and AI engineer with nine years across backend services, production data platforms, database reliability, and AI features that other workflows depend on. I work on the parts that decide whether a system stays correct when it is under load, being changed, or recovering from something."
   actions:
     - label: "Explore selected work"
       url: /work/
@@ -47,28 +47,32 @@ hero:
 # The matrix below the fold is the evidence now, so this line only has to hand
 # the reader over to it.
 evidence:
-  body: "Everything below this line is something I ran on hardware I own, with the commands and the numbers published. Nothing on this page is a figure from an employer's dashboard."
+  body: "Six years of that has been one platform end to end — ingestion, transformation, storage, serving, and the contracts and recovery paths between them. The rest is databases under pressure, and AI features held to the same standard as any other write path."
 
 ledger:
-  label: "What broke"
-  headline: "Three things the documentation did not tell me."
-  blurb: "Eight failover scenarios across six engines all passed, which is the least interesting sentence I could write about them. These are the three that cost me an evening each, and none of them produced an error message worth reading."
+  label: "Independent lab work"
+  headline: "I test recovery claims instead of repeating them."
+  blurb: "I keep a rig for taking database clusters apart — six engines, eight injected faults, every command and measurement published. Three findings from it that no documentation warned me about, and none of which produced a useful error message."
 
-focus_label: "Where I’m useful"
-focus_headline: "I work where correctness, scale, and judgment meet."
+focus_label: "What I do"
+focus_headline: "Four areas I have carried in production, not evaluated."
 focus:
   - index: "01"
-    title: "Data platforms"
-    url: /about/
-    blurb: "Data contracts, freshness objectives, replay, lineage, and ownership boundaries that remain useful when the implementation changes."
+    title: "Data platforms and pipelines"
+    url: /work/data-platform-practice/
+    blurb: "Batch and streaming ingestion, transformation and the serving layer above it. Spark, Kafka, Airflow, dbt and Iceberg — with data contracts at the boundaries, freshness measured as an objective rather than a job exit code, and replay designed in rather than improvised."
   - index: "02"
-    title: "Governed AI products"
-    url: /writing/building-data-platforms-and-ai-products/
-    blurb: "Typed outputs, provenance, evaluation, and policy checks for AI-assisted workflows that affect real product state."
-  - index: "03"
     title: "Databases under pressure"
     url: /work/multi-engine-ha-lab/
-    blurb: "PostgreSQL, ClickHouse, Trino, ScyllaDB, Redis. Replication, sharding, PITR, and failover I have actually timed."
+    blurb: "PostgreSQL, ClickHouse, Trino, MongoDB, Redis, ScyllaDB and MariaDB. Replication and promotion, sharding and partition design, point-in-time recovery, query plans, and the upgrade surprises that only appear on the version you are actually running."
+  - index: "03"
+    title: "AI features you can audit"
+    url: /work/governed-ai-delivery/
+    blurb: "LangGraph, CrewAI, MCP and retrieval over real corpora. Typed outputs validated at the boundary, provenance on every generated record, evaluation before rollout, and a fallback that is a real path rather than an apology."
+  - index: "04"
+    title: "Running it once it is live"
+    url: /resume/#skills
+    blurb: "Kubernetes, Terraform and CI on AWS and GCP, with Prometheus, Grafana and OpenTelemetry underneath. Capacity, cost, backup and restore, incident runbooks, and ownership that transfers to someone else."
 
 work:
   label: "Selected work"
@@ -86,7 +90,7 @@ writing:
 
 currently:
   label: "Currently"
-  body: "Senior Data Engineer based in Kathmandu. My current work sits between data-platform reliability, database serving, and governed AI delivery. Employer architecture and operational figures are intentionally not published here; the writing focuses on portable methods and reproducible personal labs."
+  body: "Senior Data Engineer at UXCam, working across data-platform reliability, database serving and AI delivery. Outside that I build ClickHomes, run a database reliability lab, and write up the things that cost me a day. I take a small number of consulting engagements alongside it."
   cta: "Work with me"
   cta_url: /hire/
 ---

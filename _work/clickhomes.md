@@ -1,6 +1,6 @@
 ---
 title: "ClickHomes: an independent real-estate product"
-hook: "A product I own end to end, documented without exposing deployment or partner internals"
+hook: "A real-estate product I own end to end: PostgreSQL for truth, ClickHouse for speed, RESO as the only way in"
 description: "An independent real-estate product that shows how I approach data contracts, schema evolution, operational safety, and accountable AI."
 kind: production
 order: 3
@@ -24,7 +24,6 @@ ClickHomes is the product I build outside work. It gives me something valuable t
 
 ## Constraints
 
-I still draw a boundary around the details. This page does not publish partner feeds, deployment topology, credentials, security controls, customer data, or operational thresholds. The public evidence is the schema history: **90+ versioned SQL migrations**. That number is not a claim about traffic or commercial traction. It shows that the data model has changed through reviewable, repeatable steps instead of manual edits on a live database.
 
 ## Architecture
 

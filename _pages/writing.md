@@ -11,4 +11,4 @@ redirect_from:
   - /posts/
 ---
 
-I write after I have reproduced the failure, checked the command, and found the trade-off worth carrying forward. What ends up here is the method rather than the deployment — the part that transfers to your system, not mine.
+I write after I have reproduced the failure, checked the command, and found the trade-off worth carrying forward. Every post here is something I ran, with the commands and the output that came back.

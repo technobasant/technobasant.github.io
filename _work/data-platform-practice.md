@@ -1,6 +1,6 @@
 ---
 title: "Running a data platform people can depend on"
-hook: "The operating model I use for ingestion, transformation and serving — method, not deployment"
+hook: "Contracts at the boundary, freshness as an objective, replay as a designed path, one named owner per dataset"
 description: "How I approach data-platform ownership: contracts at the boundary, freshness as an objective, replay as a designed path, and one named owner per dataset."
 kind: practice
 order: 1
@@ -9,18 +9,12 @@ role: "Senior Data Engineer"
 org: "UXCam"
 period: "2020 – present"
 team: "Global team, working US and EU hours"
-scale: "Described at the level UXCam is publicly a mobile-analytics product. No architecture, topology, volumes, cost or customer figures."
+scale: "Mobile analytics, six years of platform ownership"
 stack: [Python, SQL, "Apache Spark", "Apache Kafka", "Apache Airflow", dbt, "Apache Iceberg", PostgreSQL, ClickHouse, Trino, Kubernetes, Prometheus, Grafana]
 tags: [data-quality, observability-slo, iceberg-lakehouse]
 image: /assets/og/og-default-v3.png
 image_alt: "Basant Bhattarai — Reliable data. Accountable AI."
 ---
-
-## What this page is
-
-I work on a commercial mobile-analytics product. Its internals are not mine to publish, so this page describes the **operating model** rather than the system: the decisions I make repeatedly, the reasons behind them, and what each one costs. If you run a data platform, the transferable part was never the topology anyway.
-
-Everything below I have applied in production over six years. None of it requires knowing anything about my employer's architecture to evaluate.
 
 ## Context
 
@@ -73,4 +67,4 @@ Additive by default. Renames go through a period where both names exist. Depreca
 
 ## Related writing
 
-The [failover lab](/work/multi-engine-ha-lab/) is where I test the recovery half of this on hardware I own, because that is the part employer work cannot demonstrate publicly.
+The [failover lab](/work/multi-engine-ha-lab/) is where I test the recovery half of this — six engines, eight injected faults, on hardware I control.
