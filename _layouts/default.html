@@ -3,9 +3,16 @@
 <head>
 <meta charset="utf-8">
 <script>
-(function(){var r=document.documentElement,t='dark';
+/* Stored choice wins; otherwise follow the OS. An OS that states no preference
+   gets light, not dark: "permanent dark mode as the default reflex" is the most
+   frequently cited AI-template tell of 2026, and every infrastructure writer in
+   the two site surveys behind this design — Brooker, Kingsbury, Nelhage,
+   Willison, Luu, MacWright, Vanlightly — is light-first. Dark remains a
+   first-class theme, one click away, and is still honoured automatically for
+   anyone whose system asks for it. */
+(function(){var r=document.documentElement,t='light';
 try{var s=localStorage.getItem('theme');
-t=(s==='light'||s==='dark')?s:(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');
+t=(s==='light'||s==='dark')?s:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
 }catch(e){}
 r.setAttribute('data-theme',t);r.style.colorScheme=t;})();
 </script>
