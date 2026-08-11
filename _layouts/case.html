@@ -77,18 +77,29 @@ layout: default
     {%- endif %}
     </div>
 
-    <nav class="case-map" aria-label="Case study sections">
-      <p class="section-label">In this case study</p>
+    {%- comment -%}
+      Derived from the rendered content rather than hardcoded. The previous fixed
+      list assumed every entry used the seven canonical case-study headings, so
+      any page with a different shape emitted seven anchors pointing at headings
+      that did not exist — a silent breakage that html-proofer's
+      check_internal_hash catches only because it is switched on. kramdown's
+      auto_ids give us the same ids the headings actually have.
+    {%- endcomment -%}
+    {%- assign _h2s = content | split: '<h2 id="' -%}
+    {%- if _h2s.size > 2 %}
+    <nav class="case-map" aria-label="Sections">
+      <p class="section-label">On this page</p>
       <ol>
-        <li><a href="#context">Context</a></li>
-        <li><a href="#constraints">Constraints</a></li>
-        <li><a href="#architecture">Architecture</a></li>
-        <li><a href="#decisions-and-trade-offs">Decisions</a></li>
-        <li><a href="#results">Results</a></li>
-        <li><a href="#running-it">Operations</a></li>
-        <li><a href="#what-id-do-differently">Retrospective</a></li>
+        {%- for _chunk in _h2s offset: 1 -%}
+        {%- assign _id = _chunk | split: '"' | first -%}
+        {%- assign _label = _chunk | split: '</h2>' | first | split: '>' | last | strip_html | strip -%}
+        {%- if _id and _label != "" %}
+        <li><a href="#{{ _id }}">{{ _label }}</a></li>
+        {%- endif -%}
+        {%- endfor %}
       </ol>
     </nav>
+    {%- endif -%}
 
     {{ content }}
   </div>

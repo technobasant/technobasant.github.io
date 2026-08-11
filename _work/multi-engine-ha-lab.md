@@ -3,7 +3,7 @@ title: "Multi-engine HA lab: eight failover scenarios"
 hook: "Six database engines, eight failover scenarios, one laptop — with the numbers"
 description: "A home lab, not a production system: six database engines, eight failover scenarios I wrote and ran on one laptop, and the numbers each one produced."
 kind: lab
-order: 2
+order: 4
 featured: true
 role: "Personal lab"
 org: "Personal"

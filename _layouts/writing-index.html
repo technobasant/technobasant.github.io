@@ -109,9 +109,17 @@ layout: default
       {%- if _parts.size > 0 %}
       <li>
         <article class="post-card">
+          {%- comment -%}
+            The register badge distinguishes measured work from a runbook. A
+            reader deciding whether to trust a number needs to know which one
+            they are looking at before they start reading, not after.
+          {%- endcomment -%}
           <p class="post-card__meta">
-            <span class="badge">{% if s.status == "complete" %}Complete{% else %}In progress{% endif %}</span>
+            {%- if s.register_label %}
+            <span class="badge badge--{{ s.register | default: 'note' }}">{{ s.register_label }}</span>
+            {%- endif %}
             <span>{{ _parts.size }} part{% unless _parts.size == 1 %}s{% endunless %}</span>
+            <span>{% if s.status == "complete" %}Complete{% else %}In progress{% endif %}</span>
           </p>
           <h3 class="post-card__title"><a href="{{ _parts.first.url | relative_url }}">{{ s.title }}</a></h3>
           <p class="post-card__desc">{{ s.blurb }}</p>

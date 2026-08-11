@@ -3,7 +3,7 @@ title: "ClickHomes: an independent real-estate product"
 hook: "A product I own end to end, documented without exposing deployment or partner internals"
 description: "An independent real-estate product that shows how I approach data contracts, schema evolution, operational safety, and accountable AI."
 kind: production
-order: 1
+order: 3
 featured: true
 role: "Founder and sole engineer — built outside my day job"
 org: "Independent personal project"
