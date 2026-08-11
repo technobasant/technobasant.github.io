@@ -8,7 +8,7 @@
 {%- assign _c = include.item -%}
 {%- assign _h = include.heading | default: "h3" -%}
 {%- assign _kind = _c.kind | default: "production" -%}
-{%- if _kind == "lab" -%}{%- assign _kind_label = "Lab" -%}{%- else -%}{%- assign _kind_label = "Production" -%}{%- endif -%}
+{%- if _kind == "lab" -%}{%- assign _kind_label = "Lab" -%}{%- else -%}{%- assign _kind_label = "Independent product" -%}{%- endif -%}
 <article class="case-card{% if include.variant %} case-card--{{ include.variant }}{% endif %}">
   {%- if include.index %}<span class="case-card__index" aria-hidden="true">0{{ include.index }}</span>{% endif %}
   <p class="post-card__meta">

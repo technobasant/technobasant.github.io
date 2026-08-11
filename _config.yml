@@ -6,8 +6,7 @@ email: technobasant9@gmail.com
 description: >-
   Basant Bhattarai — Senior Data & AI Engineer. Nine years across backend
   engineering, production data platforms, database reliability, and governed
-  agent systems serving 25,000+ integrated mobile apps. Kathmandu, working US
-  and EU hours.
+  AI systems. Kathmandu, working US and EU hours.
 url: "https://technobasant.github.io"
 baseurl: ""
 repository: "technobasant/technobasant.github.io"
@@ -28,8 +27,8 @@ author:
   linkedin: "https://www.linkedin.com/in/technobasant"
   github: "https://github.com/technobasant"
   bio: >-
-    Senior Data Engineer at UXCam, where I own production data infrastructure,
-    database serving, and the app-analytics agent platform.
+    Senior Data Engineer focused on reliable data platforms, database systems,
+    and governed AI products.
 
 # ── Build ─────────────────────────────────────────────────────────────────
 markdown: kramdown

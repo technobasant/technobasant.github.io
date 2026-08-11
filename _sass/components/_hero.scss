@@ -303,6 +303,7 @@
   border-block-end: 1px solid var(--line-strong);
   color: inherit;
   text-decoration: none;
+  touch-action: manipulation;
   transition: color var(--dur-2) var(--ease-standard),
     transform var(--dur-2) var(--ease-standard);
 }
@@ -346,6 +347,24 @@
   font-size: var(--step--1);
   line-height: 1.5;
   color: var(--ink-2);
+}
+
+.focus-open {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-block-start: var(--sp-5);
+  font-size: var(--step--2);
+  font-weight: 650;
+  color: var(--ink-3);
+  transition: color var(--dur-1) var(--ease-standard),
+    transform var(--dur-1) var(--ease-standard);
+}
+
+.focus:hover .focus-open,
+.focus:focus-visible .focus-open {
+  color: var(--accent-hi);
+  transform: translateX(2px);
 }
 
 // ── Alternating home sections ───────────────────────────────────────────────

@@ -11,9 +11,11 @@
 
 require "html-proofer"
 require "json"
+require "nokogiri"
 require "shellwords"
 require "yaml"
 require "date"
+require "open3"
 
 SITE_DIR = "./_site".freeze
 
@@ -119,6 +121,24 @@ task :content do
     prose_body = body.gsub(/```.*?```/m, " ")
     type = data["type"].to_s
 
+    in_fence = false
+    opening_fences = 0
+    body.each_line.with_index(1) do |line, line_number|
+      next unless line.start_with?("```")
+
+      if in_fence
+        in_fence = false
+      else
+        opening_fences += 1
+        language = line.delete_prefix("```").strip
+        if language.empty?
+          failures << "#{path}:#{line_number}: fenced code blocks need a language identifier"
+        end
+        in_fence = true
+      end
+    end
+    failures << "#{path}: unclosed fenced code block" if in_fence
+
     %w[title description date type tags key_takeaways].each do |key|
       value = data[key]
       empty = value.nil? || (value.respond_to?(:empty?) && value.empty?)
@@ -179,6 +199,7 @@ task :content do
       end
       prereqs = data["prerequisites"]
       failures << "#{path}: tutorials need at least two prerequisites" unless prereqs.is_a?(Array) && prereqs.size >= 2
+      failures << "#{path}: tutorials need at least one reproducible code or console block" if opening_fences.zero?
     end
 
     puts "  ok    #{File.basename(path)} — #{type}, #{prose_words} prose words, #{h2_count} sections"
@@ -190,6 +211,81 @@ task :content do
   end
 
   puts "content: ok — #{posts.size} published post(s)"
+end
+
+# ── rake privacy ────────────────────────────────────────────────────────────
+# Current-tree guardrails for public material. Employer names and role history
+# are allowed; employer topology, customer figures, scale, and retired case-study
+# routes are not. Git history needs a separate, explicitly authorized cleanup.
+
+SENSITIVE_PUBLIC_PATTERNS = {
+  "legacy employer case-study route" => %r{/work/(?:uxcam-data-platform|iceberg-lakehouse-scd|app-analytics-agent-platform|serving-layer-100m-queries)/}i,
+  "private throughput or customer figure" => /\b(?:10|15)\s*TB\+?|25,?000\+?|100M\+?\s+queries|hundreds of millions of events/i,
+  "private scale description" => /multi[- ]petabyte|petabyte[- ]scale/i,
+  "private platform name" => /App Analytics Agent Platform/i,
+  "private runtime topology" => /self-managed (?:Spark|Kubernetes)/i,
+  "employer joined to implementation detail" => /UXCam.{0,100}(?:Kafka|Spark|Iceberg|Trino|ClickHouse|Milvus|LangGraph|CrewAI)/i,
+  "retired employer outcome" => /(?:99\.9% uptime|40% (?:lower|cost reduction)|50% faster|60% faster analytics)/i
+}.freeze
+
+PUBLIC_SOURCE_GLOBS = %w[
+  _posts/**/*.{md,markdown,html}
+  _pages/**/*.{md,markdown,html}
+  _work/**/*.{md,markdown,html}
+  _data/**/*.{yml,yaml,json}
+  _includes/**/*.{html,md}
+  _layouts/**/*.{html,md}
+  _config.yml
+  index.md
+  llms.txt
+  scripts/generate-resume-pdf.py
+].freeze
+
+def privacy_findings(path, body)
+  SENSITIVE_PUBLIC_PATTERNS.filter_map do |label, pattern|
+    match = body.match(pattern)
+    next unless match
+
+    line = body[0...match.begin(0)].count("\n") + 1
+    "#{path}:#{line}: #{label} — #{match[0].inspect}"
+  end
+end
+
+desc "Reject employer architecture, scale, outcomes and retired private routes from public material"
+task :privacy do
+  failures = []
+
+  PUBLIC_SOURCE_GLOBS.flat_map { |glob| Dir.glob(glob) }.uniq.sort.each do |path|
+    next unless File.file?(path)
+    failures.concat(privacy_findings(path, File.read(path)))
+  end
+
+  if Dir.exist?(SITE_DIR)
+    Dir.glob("#{SITE_DIR}/**/*.{html,txt,xml,json}").sort.each do |path|
+      failures.concat(privacy_findings(path, File.read(path)))
+    end
+  end
+
+  resume_pdf = "assets/basant-bhattarai-resume.pdf"
+  if File.exist?(resume_pdf)
+    if system("command -v pdftotext >/dev/null 2>&1")
+      text, status = Open3.capture2("pdftotext", resume_pdf, "-")
+      if status.success?
+        failures.concat(privacy_findings(resume_pdf, text))
+      else
+        failures << "#{resume_pdf}: pdftotext could not inspect the public résumé"
+      end
+    else
+      warn "privacy: pdftotext unavailable; PDF text inspection skipped"
+    end
+  end
+
+  if failures.any?
+    failures.each { |failure| warn "  FAIL  #{failure}" }
+    abort "privacy: #{failures.size} public disclosure guardrail failure(s)"
+  end
+
+  puts "privacy: ok — public source, built text, and available PDF text are clean"
 end
 
 # ── rake verify ────────────────────────────────────────────────────────────
@@ -310,6 +406,40 @@ task :verify do
     end
   end
 
+  card_pages = %w[index.html writing/index.html work/index.html]
+    .map { |path| File.join(SITE_DIR, path) }
+  v.with(*card_pages, label: "cards are native whole-card links with visible affordances") do
+    failures = []
+    card_count = 0
+
+    card_pages.each do |path|
+      doc = Nokogiri::HTML(File.read(path))
+      doc.css(".post-card, .case-card").each do |card|
+        card_count += 1
+        links = card.css("a[href]")
+        affordance = card.at_css(".post-card__open, .case-card__open")
+        failures << "#{path}: card has #{links.size} links" unless links.size == 1
+        failures << "#{path}: card has no read/open affordance" unless affordance
+      end
+    end
+
+    home_doc = Nokogiri::HTML(File.read(File.join(SITE_DIR, "index.html")))
+    home_doc.css("a.focus[href]").each do |card|
+      card_count += 1
+      failures << "index.html: focus card has no explore affordance" unless card.at_css(".focus-open")
+    end
+
+    writing_doc = Nokogiri::HTML(File.read(File.join(SITE_DIR, "writing/index.html")))
+    feature = writing_doc.at_css("a.writing-feature__link[href] h2")
+    failures << "writing index: lead story is not one native linked feature" unless feature
+
+    if failures.empty? && card_count.positive?
+      v.ok "#{card_count} cards and the lead story use native links with clear affordances"
+    else
+      failures.each { |failure| v.bad(failure) }
+    end
+  end
+
   # Assets this task's owner generated — these must always be present.
   {
     "assets/apple-touch-icon.png" => 180,
@@ -324,4 +454,4 @@ task :verify do
   v.report!
 end
 
-task default: %i[content check verify jsonld]
+task default: %i[content privacy check verify jsonld]

@@ -15,6 +15,8 @@
 {%- if page.layout == 'post' or page.collection == 'posts' -%}{%- assign _is_post = true -%}{%- endif -%}
 {%- if page.layout == 'case' or page.collection == 'work' -%}{%- assign _is_case = true -%}{%- endif -%}
 {%- if page.layout == 'tag' -%}{%- assign _is_tag = true -%}{%- endif -%}
+{%- assign _is_profile = false -%}
+{%- if page.url == '/about/' -%}{%- assign _is_profile = true -%}{%- endif -%}
 
 {%- assign _person_id  = site.url | append: "/#person" -%}
 {%- assign _website_id = site.url | append: "/#website" -%}
@@ -62,9 +64,16 @@
 {%- endfor -%}
 
 {%- comment -%} page node type {%- endcomment -%}
+{%- comment -%}
+  Google documents rich-result eligibility only for Article / NewsArticle /
+  BlogPosting; TechArticle is absent from that list. schema.org permits multiple
+  types, so tutorials declare both: BlogPosting keeps us inside the documented
+  set, TechArticle keeps the semantics (and carries dependencies +
+  proficiencyLevel, which only it defines).
+{%- endcomment -%}
 {%- assign _node_type = "" -%}
 {%- if _is_post -%}
-  {%- if page.type == "tutorial" -%}{%- assign _node_type = "TechArticle" -%}
+  {%- if page.type == "tutorial" -%}{%- assign _node_type = "BlogPosting,TechArticle" | split: "," -%}
   {%- else -%}{%- assign _node_type = "BlogPosting" -%}{%- endif -%}
 {%- elsif _is_case -%}{%- assign _node_type = "Article" -%}
 {%- endif -%}
@@ -83,6 +92,15 @@
 {%- if page.prerequisites -%},"dependencies":{{ page.prerequisites | join: ", " | jsonify }}{%- endif -%}
 {%- endif -%}
 }
+{%- elsif _is_profile -%}
+,
+{%- comment -%}
+  ProfilePage is one of the few rich results Google still supports, and the docs
+  name "an 'About Me' page on a blog site" as the canonical case. mainEntity and
+  name are required; it points at the same #person node every byline references,
+  which is what consolidates the author entity across the site.
+{%- endcomment -%}
+{"@type":"ProfilePage","@id":{{ _canon | append: "#profilepage" | jsonify }},"url":{{ _canon | jsonify }},"name":{{ page.title | default: site.author.name | jsonify }},"description":{{ _desc | jsonify }},"inLanguage":"en","isPartOf":{"@id":{{ _website_id | jsonify }}},"dateModified":{{ site.time | date_to_xmlschema | jsonify }},"mainEntity":{"@id":{{ _person_id | jsonify }}}}
 {%- elsif _is_home == false -%}
 ,
 {"@type":"WebPage","@id":{{ _canon | append: "#webpage" | jsonify }},"url":{{ _canon | jsonify }},"name":{{ page.title | default: site.title | jsonify }},"description":{{ _desc | jsonify }},"inLanguage":"en","isPartOf":{"@id":{{ _website_id | jsonify }}},"about":{"@id":{{ _person_id | jsonify }}}}

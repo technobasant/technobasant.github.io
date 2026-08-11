@@ -7,7 +7,7 @@ layout: default
   number the metrics file already vouches for, together with how it was measured.
 {%- endcomment -%}
 {%- assign _kind = page.kind | default: "production" -%}
-{%- if _kind == "lab" -%}{%- assign _kind_label = "Lab" -%}{%- else -%}{%- assign _kind_label = "Production" -%}{%- endif -%}
+{%- if _kind == "lab" -%}{%- assign _kind_label = "Lab" -%}{%- else -%}{%- assign _kind_label = "Independent product" -%}{%- endif -%}
 {%- assign _av = site.data.availability -%}
 {%- assign _lede = page.hook | default: page.description -%}
 

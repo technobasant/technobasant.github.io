@@ -137,7 +137,12 @@
   --code-header-bg: #191d23;
   --code-hl-bg: rgba(196, 165, 116, 0.1);
   --code-hl-edge: var(--accent);
+  // Decorative only — scrollbar thumb and (unused) line-number gutter. Below
+  // 4.5:1 on --code-bg, so it must never carry text.
   --code-gutter: #5e6874;
+  // Readable chrome inside a code well: the language label and copy button.
+  // 5.77:1 on --code-bg. WCAG 1.4.3 applies here — the label is visible text.
+  --code-meta: #8a939e;
 
   // Callout edges — all ≥3:1 against --surface-1
   --c-note: #c4a574;
@@ -205,7 +210,8 @@
   --code-header-bg: #eeeae2;
   --code-hl-bg: rgba(196, 165, 116, 0.26);
   --code-hl-edge: #a8823a;
-  --code-gutter: #8b8578;
+  --code-gutter: #8b8578; // decorative only — 3.28:1, never text
+  --code-meta: #6e6a5e;   // 4.84:1 on --code-bg
 
   // Callout edges
   --c-note: #7c5a18;

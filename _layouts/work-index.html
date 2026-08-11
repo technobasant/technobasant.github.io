@@ -2,9 +2,8 @@
 layout: default
 ---
 {%- comment -%}
-  Work index. Two groups, and the split is the point: "Production" means it carried
-  real traffic and a pager, "Lab" means it was measured on a rig. Mixing them would
-  make every claim on the page weaker.
+  Work index. Independent products and labs stay distinct so a reader can tell
+  which claims come from a maintained application and which came from a test rig.
 {%- endcomment -%}
 {%- assign _production = site.work | where: "kind", "production" | sort: "order" -%}
 {%- assign _labs = site.work | where: "kind", "lab" | sort: "order" -%}
@@ -19,11 +18,11 @@ layout: default
   <section class="wrap index-section reveal" aria-labelledby="production-title">
     <div class="section-head">
       <div>
-        <p class="section-label">Production systems</p>
-        <h2 id="production-title">Built under load. Kept under watch.</h2>
+        <p class="section-label">Independent product</p>
+        <h2 id="production-title">Owned end to end. Shared at a safe boundary.</h2>
       </div>
     </div>
-    <div class="showcase-grid showcase-grid--index">
+    <div class="showcase-grid showcase-grid--index{% if _production.size == 1 %} showcase-grid--solo{% elsif _production.size == 2 %} showcase-grid--pair{% endif %}">
       {%- for item in _production %}
       {% if forloop.first %}{% include case-card.html item=item variant="feature" index=forloop.index %}{% else %}{% include case-card.html item=item index=forloop.index %}{% endif %}
       {%- endfor %}
@@ -36,7 +35,7 @@ layout: default
     <div class="section-head">
       <div>
         <p class="section-label">Measured labs</p>
-        <h2 id="labs-title">Claims tested on hardware I can break.</h2>
+        <h2 id="labs-title">Claims tested on hardware I can break and restart.</h2>
       </div>
     </div>
     <div class="card-grid">

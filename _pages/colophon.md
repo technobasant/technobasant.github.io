@@ -11,9 +11,9 @@ description: "How this site is built: Jekyll, hand-written SCSS, self-hosted fon
 
 Jekyll, with kramdown for markdown and Rouge for syntax highlighting. The styles are hand-written SCSS on a small set of design tokens — no CSS framework, no utility classes, no build step beyond Jekyll's own. There is a little vanilla JavaScript for the theme toggle, the table of contents and the copy-code buttons, and nothing that runs if it fails to load.
 
-Type is Fraunces for display, Inter for body text and JetBrains Mono for code, all self-hosted from `/assets/fonts/`. Content lives in markdown; the numbers on this site come from a single data file so a figure cannot say one thing on one page and something else on another.
+Type is Fraunces for display, Inter for body text and JetBrains Mono for code, all self-hosted from `/assets/fonts/`. Content lives in markdown; public metrics come from a single data file so a figure cannot say one thing on one page and something else on another.
 
-GitHub Actions builds and deploys on push. html-proofer runs as a gate, so a broken internal link fails the build rather than the reader.
+GitHub Actions builds and deploys on push. The same gate checks internal links, structured data, feeds, code-fence language labels, whole-card link semantics, and a privacy denylist for retired employer details. A broken link or confidential legacy phrase fails the build rather than reaching the reader.
 
 ## Privacy
 
@@ -21,7 +21,7 @@ No analytics. No tag manager. No trackers, no pixels, no A/B testing, no third-p
 
 ## AI crawlers
 
-`robots.txt` explicitly allows GPTBot, ClaudeBot, PerplexityBot, Google-Extended and CCBot. That is a decision rather than an oversight: if a language model is going to answer a question about my work, I would rather it read the current version than a stale scrape or somebody else's summary. There is also an [llms.txt](/llms.txt) with the canonical numbers and the method behind each one, for the same reason.
+`robots.txt` explicitly allows GPTBot, ClaudeBot, PerplexityBot, Google-Extended and CCBot. That is a decision rather than an oversight: if a language model is going to answer a question about my work, I would rather it read the current version than a stale scrape or somebody else's summary. There is also an [llms.txt](/llms.txt) with the approved public figures and the method behind each one, for the same reason.
 
 ## Source
 
