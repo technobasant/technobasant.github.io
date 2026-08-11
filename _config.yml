@@ -1,109 +1,50 @@
-# Welcome to Jekyll!
-#
-# This config file is meant for settings that affect your whole blog, values
-# which you are expected to set up once and rarely edit after that.
-
 title: "Basant Bhattarai"
-subtitle: "Senior Data & AI Engineer · Full-Stack"
-name: "Basant Bhattarai"
+subtitle: "Senior Data & AI Engineer · Platform Architect"
 email: technobasant9@gmail.com
 description: >-
-  Senior Data & AI Engineer with 9+ years building data platforms, agentic AI systems,
-  and full-stack products. Spark, Kafka, Iceberg, LangChain, FastAPI, Next.js —
-  AWS · GCP · Azure. Based in Kathmandu, working with global teams.
+  Senior Data & AI Engineer and platform architect with 9+ years building
+  lakehouses, streaming systems, production agentic AI, and full-stack products
+  at multi-TB scale. Kathmandu · collaborating with US and EU teams.
 url: "https://technobasant.github.io"
 baseurl: ""
 repository: "technobasant/technobasant.github.io"
 
-twitter_username: technobasant
-github_username: technobasant
-linkedin_username: technobasant
-
-minimal_mistakes_skin: contrast
-search: true
-search_full_content: true
-words_per_minute: 200
-
-# Build settings
 markdown: kramdown
-remote_theme: mmistakes/minimal-mistakes
-permalink: /:categories/:title/
-paginate: 5
-paginate_path: /page:num/
+permalink: pretty
 timezone: Asia/Kathmandu
 
 include:
   - _pages
 
-# Plugins
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - scripts
+  - vendor
+  - "*.prev.jpg"
+
 plugins:
-  - jekyll-paginate
   - jekyll-sitemap
-  - jekyll-gist
   - jekyll-feed
-  - jemoji
-  - jekyll-include-cache
-  - jekyll-remote-theme
-
-author:
-  name: "Basant Bhattarai"
-  avatar: "/assets/images/basant_profile.jpg"
-  bio: >-
-    Senior Data & AI Engineer · Full-Stack.
-    Data platforms, agentic AI, and production apps —
-    15TB+/day · 9+ years · AWS · GCP · Azure.
-  location: "Kathmandu, Nepal"
-  links:
-    - label: "Email"
-      icon: "fas fa-fw fa-envelope"
-      url: "mailto:technobasant9@gmail.com"
-    - label: "LinkedIn"
-      icon: "fab fa-fw fa-linkedin"
-      url: "https://www.linkedin.com/in/technobasant"
-    - label: "GitHub"
-      icon: "fab fa-fw fa-github"
-      url: "https://github.com/technobasant"
-    - label: "ClickHomes"
-      icon: "fas fa-fw fa-home"
-      url: "https://clickhomes.ai"
-
-footer:
-  links:
-    - label: "LinkedIn"
-      icon: "fab fa-fw fa-linkedin"
-      url: "https://www.linkedin.com/in/technobasant"
-    - label: "GitHub"
-      icon: "fab fa-fw fa-github"
-      url: "https://github.com/technobasant"
-    - label: "Email"
-      icon: "fas fa-fw fa-envelope"
-      url: "mailto:technobasant9@gmail.com"
 
 defaults:
   - scope:
       path: ""
-      type: posts
-    values:
-      layout: single
-      author_profile: true
-      read_time: true
-      comments: false
-      share: true
-      related: true
-      show_date: true
-
-  - scope:
-      path: "_pages"
       type: pages
     values:
-      layout: single
-      author_profile: true
+      layout: page
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: page
 
-category_archive:
-  type: liquid
-  path: /categories/
-tag_archive:
-  type: liquid
-  path: /tags/
-
-breadcrumbs: true
+author:
+  name: "Basant Bhattarai"
+  role: "Senior Data & AI Engineer · Platform Architect · Full-Stack"
+  location: "Kathmandu, Nepal"
+  avatar: "/assets/images/basant_profile.jpg"
+  email: "technobasant9@gmail.com"
+  linkedin: "https://www.linkedin.com/in/technobasant"
+  github: "https://github.com/technobasant"

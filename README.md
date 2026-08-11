@@ -1,40 +1,38 @@
 # Basant Bhattarai — Personal site
 
-Public profile for **[technobasant.github.io](https://technobasant.github.io)**  
-**Senior Data & AI Engineer · Full-Stack**
+Staff-level portfolio for a Senior Data & AI Engineer / platform architect.  
+Live: [technobasant.github.io](https://technobasant.github.io)
 
-Built with [Jekyll](https://jekyllrb.com/) + [Minimal Mistakes](https://mmistakes.github.io/minimal-mistakes/) (remote theme).
+## Principles
 
-## Local development
+- Authority over decoration — outcomes and ownership, not tool laundry lists
+- ClickHomes appears only under **Work** (`/projects/`)
+- Consulting availability is on **About** only — not the landing page
+- CV source of truth: `realestate/cv/` (kept out of this repo)
+
+## Local
 
 ```bash
 cd technobasant.github.io
+
+# If native gems fail (missing iostream), set C++ includes first:
+export SDKROOT="$(xcrun --show-sdk-path)"
+export CPLUS_INCLUDE_PATH="${SDKROOT}/usr/include/c++/v1"
+
 bundle install
 bundle exec jekyll serve
 # → http://127.0.0.1:4000
 ```
 
-Requires Ruby + Bundler. GitHub Pages builds from the `master` branch.
+Or: `./scripts/serve.sh`
 
-## Content map
+## Structure
 
-| Path | Purpose |
-|------|---------|
-| `/` | Splash landing |
-| `/about/` | Profile & availability |
-| `/experience/` | Work history |
-| `/skills/` | Technical skills |
-| `/projects/` | Selected products & platforms |
-| `/posts/` | Notes |
+| Path | Role |
+|------|------|
+| `_layouts/` | `default`, `home`, `page` |
+| `assets/css/site.css` | Dark editorial design system |
+| `_pages/` | About, Experience, Skills, Work |
+| `_posts/` | Occasional notes |
 
-Author/social links live in `_config.yml`. Profile photo: `assets/images/basant_profile.jpg`.
-
-## Deploy
-
-```bash
-git add -A
-git commit -m "Update professional profile as Senior Data & AI Engineer"
-git push origin master
-```
-
-GitHub Pages publishes automatically after push.
+Push `master` to publish on GitHub Pages.
