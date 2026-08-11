@@ -91,6 +91,9 @@ jobs:
       - name: Check links, images and OpenGraph
         run: bundle exec rake check
 
+      - name: Validate published writing
+        run: bundle exec rake content
+
       - name: Assert output shape
         run: bundle exec rake verify
 

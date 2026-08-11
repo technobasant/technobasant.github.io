@@ -200,6 +200,58 @@
 }
 
 // ── Tutorial header ──────────────────────────────────────────────────────────
+.article-summary {
+  display: grid;
+  grid-template-columns: minmax(8rem, 0.28fr) minmax(0, 1fr);
+  gap: var(--sp-5);
+  padding-block: var(--sp-5);
+  border-block: 1px solid var(--line-strong);
+}
+
+.article-summary__label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.article-summary ol {
+  display: grid;
+  gap: var(--sp-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: article-summary;
+}
+
+.article-summary li {
+  counter-increment: article-summary;
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  gap: var(--sp-3);
+  margin: 0;
+  line-height: 1.55;
+  color: var(--ink-1);
+}
+
+.article-summary li::before {
+  content: counter(article-summary, decimal-leading-zero);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--ink-3);
+}
+
+@media (max-width: 34rem) {
+  .article-summary {
+    grid-template-columns: 1fr;
+    gap: var(--sp-4);
+  }
+}
+
 .tutorial-header {
   padding: var(--sp-5);
   background: var(--surface-1);

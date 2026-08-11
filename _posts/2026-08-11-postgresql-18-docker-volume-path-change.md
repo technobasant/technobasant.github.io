@@ -2,6 +2,7 @@
 title: "PostgreSQL 18 won't take a volume at /var/lib/postgresql/data"
 description: "The mount point moved in the PG 18 image, so every compose file copied from a 12–17 guide breaks. The corrected file, then replication, promotion and PITR."
 date: 2026-08-11 09:00:00 +0545
+last_modified_at: 2026-08-11 10:20:00 +0545
 type: tutorial
 tags: [postgres]
 series: failover-lab
@@ -16,6 +17,10 @@ prerequisites:
   - "Docker Compose v2 — the `docker compose` subcommand, not `docker-compose`"
   - "Working knowledge of psql and basic SQL"
 tested_on: "PostgreSQL 18 (official `postgres:18` image) · Docker Compose v2 · 8 CPU / 12.5 GB"
+key_takeaways:
+  - "The PostgreSQL 18 image expects its persistent volume at /var/lib/postgresql, with PGDATA beneath it—not at the pre-18 /var/lib/postgresql/data mount point."
+  - "A replica cloned with pg_basebackup needs PGDATA set explicitly, Compose variable escaping, and postgres-owned files before it can stream safely."
+  - "Promotion creates a new timeline; the former primary must be rewound or rebuilt before it can rejoin without creating split brain."
 ---
 
 ## The line that breaks every copied compose file
@@ -118,6 +123,7 @@ Four details in there are load-bearing.
 **`-Xs -R -S replica1_slot` on `pg_basebackup`.** `-Xs` streams WAL alongside the base backup, so the backup is consistent without needing archived WAL. `-R` writes `standby.signal` and a `primary_conninfo` line so the clone comes up as a standby with no further editing. `-S` binds it to a named replication slot.
 
 **Verify.** Nothing to run yet — but read the volume lines once more. Both are `:/var/lib/postgresql`, not `:/var/lib/postgresql/data`.
+{: .verify}
 
 ## Step 2 — Create the replication role and slot on the primary
 
@@ -148,6 +154,7 @@ chmod +x pg-replication/primary-init.sh
 ```
 
 **Verify.**
+{: .verify}
 
 ```console
 $ ls -l pg-replication/primary-init.sh
@@ -163,6 +170,7 @@ docker compose -f pg-replication/docker-compose.yml up -d
 The replica polls `pg_isready` until the primary answers, then clones. On this rig that took a few seconds; `-P` prints basebackup progress into the container log while it happens.
 
 **Verify.** The replica's log walks through four states, in this order. Timestamps and LSNs are elided here — yours will differ:
+{: .verify}
 
 ```console
 $ docker compose -f pg-replication/docker-compose.yml logs pgreplica
@@ -196,6 +204,7 @@ docker exec -it pg-replication-pgreplica-1 psql -U admin -d poc
 ```
 
 **Verify.** The row is there, and the write is refused:
+{: .verify}
 
 ```console
 poc=# SELECT * FROM t;
@@ -221,6 +230,7 @@ SELECT application_name, state, sync_state, write_lag, replay_lag,
 ```
 
 **Verify.**
+{: .verify}
 
 ```console
  application_name |   state   | sync_state |    write_lag    |   replay_lag    | lag_bytes
@@ -257,6 +267,7 @@ docker exec pg-replication-pgreplica-1 psql -U admin -d postgres -c "SELECT pg_p
 ```
 
 **Verify.** Promotion returns true, recovery ends, and writes are accepted:
+{: .verify}
 
 ```console
 postgres=# SELECT pg_promote();
@@ -318,6 +329,11 @@ Add archiving to the primary's command list and give it somewhere to write:
       - pgp:/var/lib/postgresql
       - pgarchive:/archive
       - ./primary-init.sh:/docker-entrypoint-initdb.d/primary-init.sh:ro
+
+volumes:
+  pgp:
+  pgr:
+  pgarchive:
 ```
 {: data-file="pg-replication/docker-compose.yml"}
 
@@ -339,6 +355,7 @@ docker exec pg-replication-pgprimary-1 \
 ```
 
 **Verify.** A base backup directory and at least one archived segment:
+{: .verify}
 
 ```console
 $ docker exec pg-replication-pgprimary-1 ls /archive
@@ -367,6 +384,7 @@ docker compose -f pg-replication/docker-compose.yml down -v
 ```
 
 **Verify.**
+{: .verify}
 
 ```console
 $ docker volume ls --filter name=pg-replication

@@ -3,6 +3,7 @@ title: "nodetool refresh only reads upload/ — and TRUNCATE hides your SSTables
 seo_title: "ScyllaDB nodetool refresh only reads upload/"
 description: "Three ScyllaDB behaviors that make a perfectly valid snapshot restore return zero rows, with the repro, the fix, and the AIO limit that stops node three."
 date: 2026-08-07 09:00:00 +0545
+last_modified_at: 2026-08-11 10:20:00 +0545
 type: tutorial
 tags: [distributed-databases]
 series: failover-lab
@@ -18,6 +19,10 @@ prerequisites:
   - "Ability to run a privileged container, to raise a sysctl inside the Docker VM"
   - "Basic CQL: CREATE KEYSPACE, CREATE TABLE, SELECT"
 tested_on: "ScyllaDB 2026.1 · Docker Compose v2 · 8 CPU / 12.5 GB"
+key_takeaways:
+  - "nodetool refresh only scans the live table directory's upload/ subdirectory; valid SSTables placed beside the live files are ignored without an error."
+  - "A TRUNCATE marker keeps pre-truncate SSTables invisible, so recovery requires dropping and recreating the table before loading the snapshot."
+  - "The recreated table has a new UUID and directory; verify that identity in system_schema.tables before copying files or running refresh."
 ---
 
 ## What went wrong
@@ -53,6 +58,7 @@ docker run --rm --privileged alpine sysctl -w fs.aio-max-nr=1048576
 ```
 
 **Verify.**
+{: .verify}
 
 ```console
 $ docker run --rm --privileged alpine sysctl -w fs.aio-max-nr=1048576
@@ -117,6 +123,7 @@ docker compose -f scylla-ha/docker-compose.yml up -d scylla3
 ```
 
 **Verify.** `nodetool status` lists three nodes at `UN` — Up and Normal — each holding 256 tokens:
+{: .verify}
 
 ```console
 UN 172.21.0.2 ... rack1
@@ -157,6 +164,7 @@ INSERT INTO poc.sensor_by_day (sensor_id, day, ts, value) VALUES ('s1','2026-06-
 ```
 
 **Verify.**
+{: .verify}
 
 ```console
 cqlsh> SELECT count(*) FROM poc.sensor_by_day;
@@ -177,6 +185,7 @@ docker exec scylla-ha-scylla1-1 nodetool getendpoints poc sensor_by_day "s1:2026
 ```
 
 **Verify.** Three addresses, one per node, because RF=3 on a three-node ring means every node is a replica:
+{: .verify}
 
 ```console
 172.21.0.2
@@ -191,6 +200,7 @@ docker stop scylla-ha-scylla2-1
 ```
 
 **Verify.**
+{: .verify}
 
 ```console
 cqlsh> CONSISTENCY QUORUM;
@@ -225,6 +235,7 @@ done
 ```
 
 **Verify.** The snapshot directory exists under the table directory:
+{: .verify}
 
 ```console
 $ docker exec scylla-ha-scylla1-1 sh -c 'ls -d /var/lib/scylla/data/poc/sensor_by_day-*/snapshots/poc_bkp'
@@ -242,6 +253,7 @@ docker exec scylla-ha-scylla1-1 cqlsh -e "TRUNCATE poc.sensor_by_day;"
 ```
 
 **Verify.**
+{: .verify}
 
 ```console
 cqlsh> SELECT count(*) FROM poc.sensor_by_day;
@@ -347,6 +359,7 @@ done
 ```
 
 **Verify.**
+{: .verify}
 
 ```console
 cqlsh> CONSISTENCY QUORUM;
@@ -377,6 +390,7 @@ docker compose -f scylla-ha/docker-compose.yml down -v
 ```
 
 **Verify.**
+{: .verify}
 
 ```console
 $ docker volume ls --filter name=scylla-ha

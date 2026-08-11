@@ -1,0 +1,17 @@
+{%- comment -%}
+  A compact argument/result map near the start of every finished post. Authors
+  supply three to five complete takeaways in front matter; the article earns
+  the detail below instead of forcing a reader to mine the introduction for it.
+{%- endcomment -%}
+{%- if page.key_takeaways and page.key_takeaways.size > 0 -%}
+<aside class="article-summary" aria-labelledby="article-summary-title">
+  <p class="article-summary__label" id="article-summary-title">
+    {%- if page.type == "tutorial" -%}Outcome at a glance{%- else -%}The argument in brief{%- endif -%}
+  </p>
+  <ol>
+    {%- for takeaway in page.key_takeaways -%}
+    <li>{{ takeaway }}</li>
+    {%- endfor -%}
+  </ol>
+</aside>
+{%- endif -%}

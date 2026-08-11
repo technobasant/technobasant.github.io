@@ -12,6 +12,8 @@
 require "html-proofer"
 require "json"
 require "shellwords"
+require "yaml"
+require "date"
 
 SITE_DIR = "./_site".freeze
 
@@ -83,6 +85,111 @@ task :jsonld do
   else
     puts "jsonld: ok — #{blocks} block(s) parsed"
   end
+end
+
+# ── rake content ───────────────────────────────────────────────────────────
+# Editorial contracts for published writing. Drafts are intentionally excluded:
+# they may be outlines, while everything under _posts/ must be reader-ready.
+
+desc "Validate published post metadata, structure and tutorial contracts"
+task :content do
+  failures = []
+  posts = Dir.glob("_posts/*.{md,markdown}").sort
+
+  posts.each do |path|
+    raw = File.read(path)
+    match = raw.match(/\A---\s*\n(.*?)\n---\s*\n/m)
+    unless match
+      failures << "#{path}: missing YAML front matter"
+      next
+    end
+
+    begin
+      data = YAML.safe_load(
+        match[1],
+        permitted_classes: [Date, Time],
+        aliases: true
+      ) || {}
+    rescue Psych::SyntaxError => e
+      failures << "#{path}: invalid YAML — #{e.message.lines.first.to_s.strip}"
+      next
+    end
+
+    body = raw[match.end(0)..].to_s
+    prose_body = body.gsub(/```.*?```/m, " ")
+    type = data["type"].to_s
+
+    %w[title description date type tags key_takeaways].each do |key|
+      value = data[key]
+      empty = value.nil? || (value.respond_to?(:empty?) && value.empty?)
+      failures << "#{path}: #{key} is required" if empty
+    end
+
+    description = data["description"].to_s
+    unless description.empty? || (120..165).cover?(description.length)
+      failures << "#{path}: description must be 120–165 characters (got #{description.length})"
+    end
+
+    failures << "#{path}: type must be essay, tutorial or note" unless %w[essay tutorial note].include?(type)
+
+    tags = data["tags"]
+    unless tags.is_a?(Array) && (1..3).cover?(tags.size)
+      failures << "#{path}: tags must contain 1–3 slugs"
+    end
+
+    takeaways = data["key_takeaways"]
+    unless takeaways.is_a?(Array) && (3..5).cover?(takeaways.size) && takeaways.all? { |item| item.to_s.length >= 35 }
+      failures << "#{path}: key_takeaways must contain 3–5 complete, useful statements"
+    end
+
+    if prose_body.match?(/^#\s+/)
+      failures << "#{path}: do not author an H1; the layout renders page.title"
+    end
+
+    h2_count = prose_body.scan(/^##\s+/).size
+    minimum_h2 = type == "tutorial" ? 4 : 3
+    failures << "#{path}: needs at least #{minimum_h2} H2 sections (got #{h2_count})" if h2_count < minimum_h2
+
+    prose_words = prose_body
+      .gsub(/<[^>]+>/, " ")
+      .scan(/[[:alpha:]][[:alnum:]'’-]*/)
+      .size
+    minimum_words = { "tutorial" => 900, "essay" => 650, "note" => 250 }.fetch(type, 250)
+    failures << "#{path}: body is too slight for a finished #{type} (#{prose_words}/#{minimum_words} prose words)" if prose_words < minimum_words
+
+    if body.match?(/\bthe draft (?:will|argues|covers)\b/i)
+      failures << "#{path}: contains outline language instead of finished copy"
+    end
+    failures << "#{path}: links must use /work/, not the retired /projects/ route" if body.include?("/projects/")
+
+    verify_count = body.scan(/^\*\*Verify\.\*\*/).size
+    styled_verify_count = body.scan(/^\{:\s*\.verify\s*\}$/).size
+    if verify_count != styled_verify_count
+      failures << "#{path}: every Verify checkpoint needs a following {: .verify} marker"
+    end
+
+    if type == "tutorial"
+      %w[level time_estimate what_youll_build prerequisites tested_on].each do |key|
+        value = data[key]
+        empty = value.nil? || (value.respond_to?(:empty?) && value.empty?)
+        failures << "#{path}: tutorial field #{key} is required" if empty
+      end
+      unless %w[beginner intermediate advanced].include?(data["level"].to_s)
+        failures << "#{path}: tutorial level must be beginner, intermediate or advanced"
+      end
+      prereqs = data["prerequisites"]
+      failures << "#{path}: tutorials need at least two prerequisites" unless prereqs.is_a?(Array) && prereqs.size >= 2
+    end
+
+    puts "  ok    #{File.basename(path)} — #{type}, #{prose_words} prose words, #{h2_count} sections"
+  end
+
+  if failures.any?
+    failures.each { |failure| warn "  FAIL  #{failure}" }
+    abort "content: #{failures.size} editorial contract failure(s)"
+  end
+
+  puts "content: ok — #{posts.size} published post(s)"
 end
 
 # ── rake verify ────────────────────────────────────────────────────────────
@@ -217,4 +324,4 @@ task :verify do
   v.report!
 end
 
-task default: %i[check verify jsonld]
+task default: %i[content check verify jsonld]

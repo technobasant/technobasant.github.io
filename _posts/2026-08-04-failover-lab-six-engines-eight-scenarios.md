@@ -2,6 +2,7 @@
 title: "A failover lab you can run on one laptop"
 description: "Six database engines, eight failover scenarios, one 8-CPU Docker rig. The results matrix, the headline measurements, and how to run the first scenario."
 date: 2026-08-04 09:00:00 +0545
+last_modified_at: 2026-08-11 10:20:00 +0545
 type: tutorial
 tags: [distributed-databases, postgres]
 series: failover-lab
@@ -17,6 +18,10 @@ prerequisites:
   - "About 20 GB of free disk for images and volumes"
   - "Comfort with a shell and at least one query language"
 tested_on: "MongoDB 8.0 · ScyllaDB 2026.1 · SolrCloud 9 · MariaDB 11.8 + Galera 4 · Redis 8 · PostgreSQL 18 · Docker Compose v2 · 8 CPU / 12.5 GB"
+key_takeaways:
+  - "A failover test is incomplete until it proves quorum behavior, acknowledged-write survival, recovery, and observable state—not merely that a container restarted."
+  - "Run one database stack at a time on this 8-CPU, 12.5-GB rig; host pressure otherwise creates failures that look like engine behavior."
+  - "The method and failure boundaries are portable, but the single-host latency numbers are baselines—not production or cross-region promises."
 ---
 
 ## The claim I wanted to check
@@ -47,6 +52,7 @@ Every stack in this series is deliberately shaped to fit an 8 CPU / 12.5 GB daem
 On Docker Desktop this lives in Settings → Resources. Set CPUs to 8 and memory to 12.5 GB, then apply and restart.
 
 **Verify.**
+{: .verify}
 
 ```console
 $ docker info | grep -E "^ CPUs|^ Total Memory"
@@ -71,6 +77,7 @@ docker run --rm --privileged alpine sysctl -w fs.aio-max-nr=1048576
 ```
 
 **Verify.**
+{: .verify}
 
 ```console
 $ docker run --rm --privileged alpine sysctl -w fs.aio-max-nr=1048576
@@ -140,6 +147,7 @@ s.members.forEach(m => print("  " + m.name + "  " + m.stateStr + "  health=" + m
 ```
 
 **Verify.** Within about ten seconds of `rs.initiate()`:
+{: .verify}
 
 ```console
 set: rs0
@@ -150,15 +158,16 @@ set: rs0
 
 If all three read `SECONDARY`, the election has not finished — wait and run it again. If one reads `STARTUP`, that member never got the config; check that the hostnames in `rs.initiate()` match the compose service names.
 
-## Step 4 — Kill the primary
+## Step 4 — Stop the preferred primary
 
-Not a graceful shutdown of `mongod`, and not a `docker kill` either — `docker stop` sends SIGTERM, which is the closest thing to a node being drained. The engine-specific difference between graceful and ungraceful matters enormously for Galera; for MongoDB it does not change the outcome.
+This first pass uses a controlled loss, not a crash: `docker stop` sends SIGTERM and lets `mongod` shut down cleanly. That isolates election behavior from recovery after an unclean process exit. A separate crash test would use `docker kill --signal=KILL` and should be recorded as a different scenario. The distinction matters enormously for Galera; for this MongoDB election, both paths should leave the same two-member majority able to elect.
 
 ```bash
 docker stop mongo-ha-mongo1-1
 ```
 
 **Verify.** Re-run the status helper against a surviving member:
+{: .verify}
 
 ```console
 set: rs0
@@ -187,6 +196,7 @@ print("write after failover: OK");'
 ```
 
 **Verify.**
+{: .verify}
 
 ```console
 write after failover: OK
@@ -201,6 +211,7 @@ docker start mongo-ha-mongo1-1
 ```
 
 **Verify.** It rejoins as a secondary, catches up from the oplog, and then reclaims the primary role because its priority is 2:
+{: .verify}
 
 ```console
 set: rs0
@@ -220,6 +231,7 @@ docker compose -f mongo-ha/docker-compose.yml down -v
 ```
 
 **Verify.**
+{: .verify}
 
 ```console
 $ docker volume ls --filter name=mongo-ha
