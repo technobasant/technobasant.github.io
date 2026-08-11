@@ -10,10 +10,10 @@ layout: default
 {%- assign _apps = site.data.metrics.apps.value -%}
 
 <section class="hero">
-  <div class="wrap hero-grid">
+  <div class="wrap wrap--shell hero-grid">
     <div class="hero-copy">
       <p class="eyebrow">{{ _hero.eyebrow }}</p>
-      <h1>{{ _hero.h1 }}</h1>
+      <h1><span>{{ _hero.h1.first }}</span><span>{{ _hero.h1.second }}</span></h1>
       <p class="lede">{{ _hero.lede | replace: "%apps%", _apps }}</p>
       {%- if _hero.meta %}<p class="hero-meta">{{ _hero.meta }}</p>{% endif -%}
       <div class="actions">
@@ -25,18 +25,19 @@ layout: default
     <figure class="hero-photo">
       {%- include picture.html
           base=_hero.portrait.base
-          widths="400,800,1200"
+          widths=_hero.portrait.widths
+          raster_widths=_hero.portrait.raster_widths
           ext="jpg"
-          fallback_width="800"
-          sizes="(max-width: 56.25rem) 260px, 380px"
-          width=1200
-          height=1200
+          fallback_width=_hero.portrait.fallback_width
+          sizes=_hero.portrait.sizes
+          width=_hero.portrait.width
+          height=_hero.portrait.height
           alt=_hero.portrait.alt
           fetchpriority="high" -%}
       {%- if _hero.portrait.caption %}<figcaption>{{ _hero.portrait.caption }}</figcaption>{% endif -%}
     </figure>
   </div>
-  <div class="wrap hero-proof">
+  <div class="wrap wrap--shell hero-proof">
     <p class="section-label">{{ page.stats_label | default: 'Selected outcomes' }}</p>
     <ul class="stats" aria-label="{{ page.stats_label | default: 'Selected outcomes' }}">
       {%- for key in page.stats -%}
@@ -55,7 +56,8 @@ layout: default
 
 <section class="band reveal" aria-labelledby="focus-title">
   <div class="wrap">
-    <h2 class="section-label" id="focus-title">{{ page.focus_label }}</h2>
+    <p class="section-label">{{ page.focus_label }}</p>
+    <h2 class="band-title" id="focus-title">{{ page.focus_headline }}</h2>
     <div class="band-grid">
       {%- for f in page.focus %}
       <a class="focus" href="{{ f.url | relative_url }}">
@@ -70,14 +72,18 @@ layout: default
 
 {%- assign _featured_work = site.work | where: "featured", true | sort: "order" -%}
 {%- if _featured_work.size > 0 %}
-<section class="reveal" aria-labelledby="work-title">
+<section class="home-section home-work reveal" aria-labelledby="work-title">
   <div class="wrap">
     <div class="section-head">
-      <h2 class="section-label" id="work-title">{{ page.work.label }}</h2>
+      <div>
+        <p class="section-label">{{ page.work.label }}</p>
+        <h2 id="work-title">{{ page.work.headline }}</h2>
+        <p>{{ page.work.blurb }}</p>
+      </div>
     </div>
     <div class="showcase-grid">
       {%- for item in _featured_work limit: 3 %}
-      {% if forloop.first %}{% include case-card.html item=item variant="feature" %}{% else %}{% include case-card.html item=item %}{% endif %}
+      {% if forloop.first %}{% include case-card.html item=item variant="feature" index=forloop.index %}{% else %}{% include case-card.html item=item index=forloop.index %}{% endif %}
       {%- endfor %}
     </div>
     <p><a class="section-more" href="{{ page.work.more_url | relative_url }}">{{ page.work.more }} {% include icon.html name="arrow-right" size=14 %}</a></p>
@@ -86,11 +92,14 @@ layout: default
 {%- endif %}
 
 {%- if site.posts.size > 0 %}
-<section class="reveal" aria-labelledby="writing-title">
+<section class="home-section home-writing reveal" aria-labelledby="writing-title">
   <div class="wrap">
     <div class="section-head">
-      <h2 class="section-label" id="writing-title">{{ page.writing.label }}</h2>
-      <p>{{ page.writing.blurb }}</p>
+      <div>
+        <p class="section-label">{{ page.writing.label }}</p>
+        <h2 id="writing-title">{{ page.writing.headline }}</h2>
+        <p>{{ page.writing.blurb }}</p>
+      </div>
     </div>
     <div class="card-grid">
       {%- for post in site.posts limit: 3 %}
