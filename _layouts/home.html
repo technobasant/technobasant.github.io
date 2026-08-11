@@ -2,16 +2,9 @@
 layout: default
 ---
 {%- comment -%}
-  Home. Every string on this page comes from `index.md` front matter; every number
-  comes from `_data/metrics.yml` or `_data/availability.yml`. This layout decides
-  placement only.
-
-  `%apps%` in the hero lede is the one templated number — substituted from
-  metrics.yml so the headline claim cannot drift from the metrics file.
-
-  DOM order on the hero is headline → metrics → portrait, deliberately: on a 390px
-  viewport the claim and the proof have to be one above-the-fold unit, and no
-  `order: -1` trick is needed to get there.
+  Home. Every string comes from `index.md`; every number comes from the data files.
+  The hero introduces the person and proposition first, then a full-width proof
+  rail makes the evidence scannable without crowding the headline column.
 {%- endcomment -%}
 {%- assign _hero = page.hero -%}
 {%- assign _apps = site.data.metrics.apps.value -%}
@@ -22,23 +15,12 @@ layout: default
       <p class="eyebrow">{{ _hero.eyebrow }}</p>
       <h1>{{ _hero.h1 }}</h1>
       <p class="lede">{{ _hero.lede | replace: "%apps%", _apps }}</p>
+      {%- if _hero.meta %}<p class="hero-meta">{{ _hero.meta }}</p>{% endif -%}
       <div class="actions">
         {%- for action in _hero.actions %}
         <a class="btn btn--{{ action.variant | default: 'ghost' }}" href="{{ action.url | relative_url }}">{{ action.label }}{% if action.icon %} {% include icon.html name=action.icon size=14 %}{% endif %}</a>
         {%- endfor %}
       </div>
-      <ul class="stats" aria-label="{{ page.stats_label | default: 'Selected outcomes' }}">
-        {%- for key in page.stats -%}
-        {%- assign m = site.data.metrics[key] -%}
-        {%- if m %}
-        <li>
-          <strong>{{ m.value }}</strong>
-          <span>{{ m.label }}</span>
-          <span class="stats__method">{{ m.method }}</span>
-        </li>
-        {%- endif -%}
-        {%- endfor %}
-      </ul>
     </div>
     <figure class="hero-photo">
       {%- include picture.html
@@ -51,7 +33,23 @@ layout: default
           height=1200
           alt=_hero.portrait.alt
           fetchpriority="high" -%}
+      {%- if _hero.portrait.caption %}<figcaption>{{ _hero.portrait.caption }}</figcaption>{% endif -%}
     </figure>
+  </div>
+  <div class="wrap hero-proof">
+    <p class="section-label">{{ page.stats_label | default: 'Selected outcomes' }}</p>
+    <ul class="stats" aria-label="{{ page.stats_label | default: 'Selected outcomes' }}">
+      {%- for key in page.stats -%}
+      {%- assign m = site.data.metrics[key] -%}
+      {%- if m %}
+      <li>
+        <strong>{{ m.value }}</strong>
+        <span>{{ m.label }}</span>
+        <span class="stats__method">{{ m.method }}</span>
+      </li>
+      {%- endif -%}
+      {%- endfor %}
+    </ul>
   </div>
 </section>
 
@@ -77,9 +75,9 @@ layout: default
     <div class="section-head">
       <h2 class="section-label" id="work-title">{{ page.work.label }}</h2>
     </div>
-    <div class="card-grid">
+    <div class="showcase-grid">
       {%- for item in _featured_work limit: 3 %}
-      {% include case-card.html item=item %}
+      {% if forloop.first %}{% include case-card.html item=item variant="feature" %}{% else %}{% include case-card.html item=item %}{% endif %}
       {%- endfor %}
     </div>
     <p><a class="section-more" href="{{ page.work.more_url | relative_url }}">{{ page.work.more }} {% include icon.html name="arrow-right" size=14 %}</a></p>

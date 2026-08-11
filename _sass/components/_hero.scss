@@ -1,9 +1,9 @@
 // ─────────────────────────────────────────────────────────────────────────────
-// HOME — hero, focus band, strip.
+// HOME — hero, proof rail, focus band, strip.
 //
-// The photograph is the only warm object above the fold. There is no radial
-// glow behind it and no gradient on <body>: depth is the portrait, one
-// hairline-separated grid, and the brass on the single primary action.
+// The opening is intentionally spare: a short proposition, a human portrait,
+// then the evidence on its own rail. The content has plenty of technical depth;
+// the first viewport should orient a visitor before asking them to parse it.
 // ─────────────────────────────────────────────────────────────────────────────
 
 .hero {
@@ -15,7 +15,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
   gap: clamp(2rem, 5vw, 4.5rem);
-  align-items: end;
+  align-items: center;
 }
 
 .hero-copy {
@@ -24,7 +24,9 @@
 
 .hero h1 {
   margin: 0;
-  font-size: var(--step-5);
+  max-width: 10ch;
+  font-size: clamp(3.25rem, 6.2vw, 5.25rem);
+  line-height: 0.96;
 }
 
 .hero .role {
@@ -32,7 +34,13 @@
 }
 
 .hero .lede {
+  margin-block-start: var(--sp-5);
+}
+
+.hero-meta {
   margin-block-start: var(--sp-4);
+  font-size: var(--step--1);
+  color: var(--ink-3);
 }
 
 .hero .actions {
@@ -44,8 +52,10 @@
 // it reads as a printed registration mark, which is the whole idea.
 .hero-photo {
   position: relative;
+  width: min(100%, 23rem);
   margin: 0;
   isolation: isolate;
+  justify-self: end;
 }
 
 .hero-photo::before {
@@ -66,12 +76,19 @@
   box-shadow: var(--shadow-3);
 }
 
+.hero-photo figcaption {
+  margin-block-start: var(--sp-3);
+  font-size: var(--step--2);
+  color: var(--ink-3);
+  text-align: end;
+}
+
 // ── Stats ────────────────────────────────────────────────────────────────────
 .stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
   gap: var(--sp-5) var(--sp-4);
-  margin: var(--sp-8) 0 0;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
@@ -104,6 +121,23 @@
   font-size: var(--step--2);
   line-height: 1.35;
   color: var(--ink-3);
+}
+
+.hero-proof {
+  margin-block-start: clamp(3rem, 7vw, 5rem);
+}
+
+.hero-proof > .section-label {
+  margin-block-end: var(--sp-4);
+}
+
+.hero-proof .stats {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--sp-5);
+}
+
+.hero-proof .stats li {
+  min-width: 0;
 }
 
 // ── Focus band ───────────────────────────────────────────────────────────────
@@ -242,7 +276,8 @@
   // deliberately, so the claim and its proof are one above-the-fold unit on a
   // 390px screen. Reordering here would undo that.
   .hero-photo {
-    width: min(16.25rem, 60%);
+    width: min(19rem, 76%);
+    justify-self: start;
   }
 
   .hero-photo::before {
@@ -251,5 +286,35 @@
 
   .strip-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 48rem) {
+  .hero-proof .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 30rem) {
+  .hero h1 {
+    font-size: clamp(3rem, 15vw, 4.25rem);
+  }
+
+  .hero-proof .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-proof .stats li {
+    display: grid;
+    grid-template-columns: minmax(6rem, auto) 1fr;
+    gap: var(--sp-1) var(--sp-4);
+  }
+
+  .hero-proof .stats li > strong {
+    grid-row: 1 / span 2;
+  }
+
+  .hero-proof .stats li > span {
+    margin-block-start: 0;
   }
 }

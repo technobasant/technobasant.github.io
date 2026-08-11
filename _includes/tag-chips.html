@@ -19,7 +19,9 @@
   {%- assign _t = site.data.tags | where: "slug", slug | first -%}
   {%- assign _name = _t.name | default: slug -%}
   {%- assign _count = site.tags[slug] | size -%}
+  {%- unless include.nonempty and _count == 0 %}
   <li><a class="chip{% if include.counts %} chip--count{% endif %}" href="{{ '/writing/tags/' | append: slug | append: '/' | relative_url }}">{{ _name }}{% if include.counts %} <span>{{ _count }}</span>{% endif %}</a></li>
+  {%- endunless %}
   {%- endfor %}
 </ul>
 {%- endif -%}

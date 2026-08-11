@@ -58,26 +58,39 @@ layout: default
       {%- endif %}
     </dl>
 
+    {%- if page.metrics and page.metrics.size > 0 %}
+    <section class="case-impact" aria-labelledby="impact-title">
+      <h2 class="section-label" id="impact-title">Measured outcomes</h2>
+      <ul class="stats">
+        {%- for key in page.metrics -%}
+        {%- assign m = site.data.metrics[key] -%}
+        {%- if m %}
+        <li>
+          <strong>{{ m.value }}</strong>
+          <span>{{ m.label }}</span>
+          <span class="stats__method">{{ m.method }}{% if m.window %} · {{ m.window }}{% endif %}</span>
+        </li>
+        {%- endif -%}
+        {%- endfor %}
+      </ul>
+    </section>
+    {%- endif %}
+
+    <nav class="case-map" aria-label="Case study sections">
+      <p class="section-label">In this case study</p>
+      <ol>
+        <li><a href="#context">Context</a></li>
+        <li><a href="#constraints">Constraints</a></li>
+        <li><a href="#architecture">Architecture</a></li>
+        <li><a href="#decisions-and-trade-offs">Decisions</a></li>
+        <li><a href="#results">Results</a></li>
+        <li><a href="#running-it">Operations</a></li>
+        <li><a href="#what-id-do-differently">Retrospective</a></li>
+      </ol>
+    </nav>
+
     {{ content }}
   </div>
-
-  {%- if page.metrics and page.metrics.size > 0 %}
-  <section class="case-results reveal" aria-labelledby="results-title">
-    <h2 class="section-label" id="results-title">Results</h2>
-    <ul class="stats">
-      {%- for key in page.metrics -%}
-      {%- assign m = site.data.metrics[key] -%}
-      {%- if m %}
-      <li>
-        <strong>{{ m.value }}</strong>
-        <span>{{ m.label }}</span>
-        <span class="stats__method">{{ m.method }}{% if m.window %}, {{ m.window }}{% endif %}</span>
-      </li>
-      {%- endif -%}
-      {%- endfor %}
-    </ul>
-  </section>
-  {%- endif %}
 
   {% include related-posts.html tags=page.tags exclude_url=page.url heading="Related writing" %}
 

@@ -9,7 +9,7 @@
 {%- assign _h = include.heading | default: "h3" -%}
 {%- assign _kind = _c.kind | default: "production" -%}
 {%- if _kind == "lab" -%}{%- assign _kind_label = "Lab" -%}{%- else -%}{%- assign _kind_label = "Production" -%}{%- endif -%}
-<article class="case-card">
+<article class="case-card{% if include.variant %} case-card--{{ include.variant }}{% endif %}">
   <p class="post-card__meta">
     <span class="badge badge--{{ _kind }}">{{ _kind_label }}</span>
     {%- if _c.period %}<span>{{ _c.period }}</span>{% endif -%}
@@ -29,4 +29,5 @@
     {%- endfor %}
   </ul>
   {%- endif %}
+  <span class="case-card__open" aria-hidden="true">View case study {% include icon.html name="arrow-right" size=14 %}</span>
 </article>

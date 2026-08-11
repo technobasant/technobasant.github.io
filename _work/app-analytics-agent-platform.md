@@ -13,8 +13,8 @@ scale: "25,000+ integrated mobile apps; 1M+ session videos a month through the r
 stack: [Google-ADK, LangGraph, LangChain, CrewAI, MCP, Milvus, Trino, ClickHouse, Apache Iceberg, MLflow, LangSmith, Langfuse, Opik]
 metrics: [analytics_delivery, analyst_effort, apps]
 tags: [ai-agents, rag, data-quality]
-image: /assets/og/og-default.png
-image_alt: "A planner agent calling typed MCP tools over the serving layer, with validated output written into governed tables"
+image: /assets/og/og-default-v2.png
+image_alt: "Basant Bhattarai — Reliable data. Accountable AI."
 ---
 
 ## Context

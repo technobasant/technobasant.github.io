@@ -13,8 +13,8 @@ scale: "Docker on 8 CPU / 12.5 GB; nine compose stacks, brought up one at a time
 stack: [MongoDB, ScyllaDB, SolrCloud, MariaDB, Galera, Redis, PostgreSQL, Docker, Prometheus, Grafana]
 metrics: [lab_scenarios, lab_pg_replay_lag, lab_redis_promotion]
 tags: [distributed-databases, postgres, observability-slo]
-image: /assets/og/og-default.png
-image_alt: "Eight database high-availability scenarios run on Docker, each with a pass result"
+image: /assets/og/og-default-v2.png
+image_alt: "Basant Bhattarai — Reliable data. Accountable AI."
 ---
 
 ## Context

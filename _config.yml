@@ -15,7 +15,7 @@ lang: en
 
 # Site-wide social-card fallback (1200×630 PNG — never AVIF/WebP, LinkedIn and
 # Slack will not render those as og:image).
-og_image: "/assets/og/og-default.png"
+og_image: "/assets/og/og-default-v2.png"
 
 author:
   name: "Basant Bhattarai"

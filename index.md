@@ -9,15 +9,16 @@ title: Basant Bhattarai
 # only number on this page still has a single source of truth.
 
 hero:
-  eyebrow: "Senior Data & AI Platform Engineer · Kathmandu, working US and EU hours"
-  h1: "I build data platforms that stay correct under load — and the AI agents that sit on top of them."
-  lede: "Six years at UXCam owning a mobile-analytics platform end to end: Kafka into Spark on Kubernetes, an Iceberg lakehouse, freshness SLOs, and a multi-agent analytics layer over %apps% integrated apps. Open-source first. Measured in uptime, latency, and cost."
+  eyebrow: "Senior Data & AI Platform Engineer"
+  meta: "Kathmandu, Nepal · Working US and EU hours"
+  h1: "Reliable data. Accountable AI."
+  lede: "I design and operate the systems behind both: Kafka into Spark on Kubernetes, an Iceberg lakehouse, freshness SLOs, and a multi-agent analytics layer across %apps% integrated apps. Open-source first. Measured in uptime, latency, and cost."
   actions:
-    - label: "Read the case studies"
+    - label: "Explore selected work"
       url: /work/
       variant: primary
-    - label: "Work with me"
-      url: /hire/
+    - label: "How I work"
+      url: /about/
       variant: ghost
     - label: "Résumé (PDF)"
       url: /assets/basant-bhattarai-resume.pdf
@@ -26,6 +27,7 @@ hero:
   portrait:
     base: /assets/images/portrait
     alt: "Basant Bhattarai, data and AI platform engineer, Kathmandu"
+    caption: "Basant Bhattarai · Kathmandu, Nepal"
 
 # Five metrics, by key, from _data/metrics.yml. Four unqualified percentages read
 # like a résumé; five qualified ones read like someone who owns a dashboard — so the
@@ -38,7 +40,7 @@ stats:
   - infra_cost
   - analytics_delivery
 
-focus_label: "What I own end to end"
+focus_label: "Where I’m useful"
 focus:
   - index: "01"
     title: "Data platforms"

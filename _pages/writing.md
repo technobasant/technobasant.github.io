@@ -9,5 +9,3 @@ redirect_from:
   - /notes/
   - /posts/
 ---
-
-Notes from operating data platforms and databases at scale. Mostly the things that cost me a day.
