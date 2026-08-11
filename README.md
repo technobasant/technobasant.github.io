@@ -1,27 +1,40 @@
-# Minimal Mistakes remote theme starter
+# Basant Bhattarai — Personal site
 
-Click [**Use this template**](https://github.com/mmistakes/mm-github-pages-starter/generate) button above for the quickest method of getting started with the [Minimal Mistakes Jekyll theme](https://github.com/mmistakes/minimal-mistakes).
+Public profile for **[technobasant.github.io](https://technobasant.github.io)**  
+**Senior Data & AI Engineer · Full-Stack**
 
-Contains basic configuration to get you a site with:
+Built with [Jekyll](https://jekyllrb.com/) + [Minimal Mistakes](https://mmistakes.github.io/minimal-mistakes/) (remote theme).
 
-- Sample posts.
-- Sample top navigation.
-- Sample author sidebar with social links.
-- Sample footer links.
-- Paginated home page.
-- Archive pages for posts grouped by year, category, and tag.
-- Sample about page.
-- Sample 404 page.
-- Site wide search.
+## Local development
 
-Replace sample content with your own and [configure as necessary](https://mmistakes.github.io/minimal-mistakes/docs/configuration/).
+```bash
+cd technobasant.github.io
+bundle install
+bundle exec jekyll serve
+# → http://127.0.0.1:4000
+```
 
----
+Requires Ruby + Bundler. GitHub Pages builds from the `master` branch.
 
-## Troubleshooting
+## Content map
 
-If you have a question about using Jekyll, start a discussion on the [Jekyll Forum](https://talk.jekyllrb.com/) or [StackOverflow](https://stackoverflow.com/questions/tagged/jekyll). Other resources:
+| Path | Purpose |
+|------|---------|
+| `/` | Splash landing |
+| `/about/` | Profile & availability |
+| `/experience/` | Work history |
+| `/skills/` | Technical skills |
+| `/projects/` | Selected products & platforms |
+| `/posts/` | Notes |
 
-- [Ruby 101](https://jekyllrb.com/docs/ruby-101/)
-- [Setting up a Jekyll site with GitHub Pages](https://jekyllrb.com/docs/github-pages/)
-- [Configuring GitHub Metadata](https://github.com/jekyll/github-metadata/blob/master/docs/configuration.md#configuration) to work properly when developing locally and avoid `No GitHub API authentication could be found. Some fields may be missing or have incorrect data.` warnings.
+Author/social links live in `_config.yml`. Profile photo: `assets/images/basant_profile.jpg`.
+
+## Deploy
+
+```bash
+git add -A
+git commit -m "Update professional profile as Senior Data & AI Engineer"
+git push origin master
+```
+
+GitHub Pages publishes automatically after push.
