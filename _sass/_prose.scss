@@ -533,3 +533,29 @@
 .prose > :first-child {
   margin-block-start: 0;
 }
+
+// A static checklist in prose is a list, not a form. Kramdown's GFM task-list
+// syntax renders `- [ ]` as a disabled <input type="checkbox"> with no
+// accessible name, which is nine unlabeled form controls on one page and a
+// WCAG 4.1.2 failure. The marker below reproduces the affordance with no
+// interactive element to mislabel, and it needs no JavaScript.
+.prose > ul.checklist {
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+.prose > ul.checklist > li {
+  position: relative;
+  padding-inline-start: 1.9em;
+}
+
+.prose > ul.checklist > li::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 0.42em;
+  width: 0.78em;
+  height: 0.78em;
+  border: 1.5px solid var(--line-control);
+  border-radius: 2px;
+}

@@ -15,7 +15,7 @@ redirect_from:
 
 ## Experience at a glance
 
-| Role | Period | Public scope |
+| Role | Period | Scope |
 |---|---|---|
 | Senior Data Engineer, UXCam | 2024 – present | Data-platform and AI-product reliability, governance, architecture review, and technical leadership |
 | Data Engineer, UXCam | 2020 – 2024 | Batch and streaming pipelines, data modeling, orchestration, storage, serving, and operations |
@@ -47,10 +47,10 @@ redirect_from:
 
 {{ site.data.skills.tier1.blurb }}
 
-| Technology | Since | Public description | Evidence |
-|---|---|---|---|
+| Technology | Since | What I use it for |
+|---|---|---|
 {% for item in site.data.skills.tier1.items -%}
-| {{ item.name }} | {{ item.since }} | {{ item.scale }} | [{{ item.evidence_label | default: "Public note" }}]({{ item.evidence }}) |
+| {% if item.evidence %}[{{ item.name }}]({{ item.evidence }}){% else %}{{ item.name }}{% endif %} | {{ item.since }} | {{ item.scale }} |
 {% endfor %}
 
 ### {{ site.data.skills.tier2.heading }}

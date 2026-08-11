@@ -248,14 +248,15 @@ End-to-end ownership does not mean one person builds every service. It means the
 
 This is the checklist I use before a data-backed or AI-assisted workflow ships:
 
-- [ ] The consumer-facing fact and decision window are written down.
-- [ ] Missing, late, duplicate, malformed, and contradictory inputs have named states.
-- [ ] Automated output crosses typed validation before it can create an effect.
-- [ ] The decision record includes policy version, evidence references, and time.
-- [ ] The write path is idempotent under retry and replay.
-- [ ] Projections can be rebuilt without rewriting source or decision history.
-- [ ] Alerts point to a safe action, not merely a dashboard.
-- [ ] A corrected decision can reach the product without erasing the old one.
-- [ ] A human can stop or review the workflow when the consequence demands it.
+- The consumer-facing fact and decision window are written down.
+- Missing, late, duplicate, malformed, and contradictory inputs have named states.
+- Automated output crosses typed validation before it can create an effect.
+- The decision record includes policy version, evidence references, and time.
+- The write path is idempotent under retry and replay.
+- Projections can be rebuilt without rewriting source or decision history.
+- Alerts point to a safe action, not merely a dashboard.
+- A corrected decision can reach the product without erasing the old one.
+- A human can stop or review the workflow when the consequence demands it.
+{: .checklist }
 
 The principle underneath all of this is modest: the platform is part of the product because it decides which facts the product may trust. Once that is explicit, architecture discussions get less theatrical. The useful questions become concrete: What is the promise? Where is it recorded? How does it fail? Who can repair it? And can they do so while the rest of the system keeps moving?
