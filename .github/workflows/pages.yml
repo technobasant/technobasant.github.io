@@ -91,6 +91,13 @@ jobs:
       - name: Check links, images and OpenGraph
         run: bundle exec rake check
 
+      # html-proofer's OpenGraph check reads only og:url and og:image, matches
+      # property= but not name=, and says nothing about card type, title length,
+      # image dimensions, aspect ratio or file size. This covers the rest, with
+      # no network calls and no dependencies.
+      - name: Validate social cards
+        run: node scripts/check-og.mjs
+
       - name: Validate published writing
         run: bundle exec rake content
 

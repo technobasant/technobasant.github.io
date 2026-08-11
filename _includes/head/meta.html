@@ -81,7 +81,14 @@
   <meta property="og:site_name" content="{{ site.title | escape }}">
   <meta property="og:locale" content="en_US">
   <meta property="og:type" content="{% if _is_article %}article{% else %}website{% endif %}">
-  <meta property="og:title" content="{{ _title | escape }}">
+  {%- comment -%}
+    The card title drops the " · Basant Bhattarai" suffix that <title> carries:
+    og:site_name already states it, and repeating it pushed four pages past the
+    ~70 characters every platform truncates at. Home falls back to the tagline.
+  {%- endcomment -%}
+  {%- assign _og_title = page.seo_title | default: page.title -%}
+  {%- unless _og_title -%}{%- assign _og_title = site.title -%}{%- endunless -%}
+  <meta property="og:title" content="{{ _og_title | escape }}">
   <meta property="og:description" content="{{ _desc | escape }}">
   <meta property="og:url" content="{{ _canon }}">
   <meta property="og:image" content="{{ _img }}">
