@@ -12,7 +12,6 @@
 require "html-proofer"
 require "json"
 require "nokogiri"
-require "shellwords"
 require "yaml"
 require "date"
 require "open3"
@@ -378,10 +377,6 @@ class Verifier
     yield
   end
 
-  def sh?(cmd)
-    system(cmd, out: File::NULL, err: File::NULL)
-  end
-
   def report!
     puts
     puts "verify: #{@pass} passed, #{@skip} skipped, #{@fail.size} failed"
@@ -406,10 +401,11 @@ task :verify do
 
   [feed_xml, sitemap].each do |f|
     v.with(f, label: "#{File.basename(f)} is well-formed XML") do
-      if v.sh?("xmllint --noout #{Shellwords.escape(f)}")
+      begin
+        Nokogiri::XML(File.read(f)) { |config| config.strict }
         v.ok "#{File.basename(f)} is well-formed XML"
-      else
-        v.bad "#{File.basename(f)} is not well-formed XML"
+      rescue Nokogiri::XML::SyntaxError => e
+        v.bad "#{File.basename(f)} is not well-formed XML: #{e.message.lines.first.to_s.strip}"
       end
     end
   end
