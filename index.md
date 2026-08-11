@@ -24,7 +24,11 @@ hero:
       url: /assets/basant-bhattarai-resume.pdf
       variant: link
       icon: arrow-down
-  portrait:
+  # Portrait removed from the homepage: the background is a generated
+  # circuit-board render, which is the strongest amateur signal a technical site
+  # can carry, and homepage portraits are rare in this genre anyway. The square
+  # crop still serves the post author card and the Person structured data.
+  portrait_disabled:
     base: /assets/images/hero-portrait-v2
     widths: "420,840,1120"
     raster_widths: "420,840,1120"
@@ -35,13 +39,15 @@ hero:
     alt: "Basant Bhattarai, data and AI platform engineer, Kathmandu"
     caption: "Basant Bhattarai · Kathmandu, Nepal"
 
-# Only personal, reproducible evidence is published here. Employer scale,
-# topology, customer, cost, and reliability figures stay private.
-stats_label: "Public evidence"
-stats:
-  - experience
-  - lab_scenarios
-  - clickhomes_migrations
+# Not a stats strip. Two independent surveys — 44 senior-engineer sites and 26
+# data/infra sites — found zero with a big-number card grid, zero with a
+# years-of-experience claim, and zero with a skills grid. Where engineers of this
+# kind do publish numbers, the numbers live in a sentence, attached to hardware
+# the author owns and results a reader can reproduce.
+evidence:
+  body: "Most recently I wrote a common test plan and ran it against six database engines — MongoDB, ScyllaDB, SolrCloud, MariaDB with Galera, Redis and PostgreSQL — on a single machine I own. Eight failover scenarios, every command and measurement published, including a PostgreSQL 18 replay lag of 383 µs and a Redis Sentinel promotion at roughly five seconds."
+  cta: "Read the lab, the rig, and the numbers"
+  url: /work/multi-engine-ha-lab/
 
 focus_label: "Where I’m useful"
 focus_headline: "I work where correctness, scale, and judgment meet."

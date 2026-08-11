@@ -33,22 +33,12 @@
   mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent);
 }
 
-.interior-hero::after {
-  content: attr(data-code);
-  position: absolute;
-  inset-inline-end: -0.05em;
-  inset-block-end: -0.2em;
-  z-index: -1;
-  font-family: var(--font-mono);
-  font-size: clamp(4.5rem, 11vw, 10rem);
-  font-weight: 400;
-  line-height: 0.8;
-  letter-spacing: -0.08em;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(223, 182, 108, 0.11);
-  white-space: nowrap;
-  pointer-events: none;
-}
+// The giant outlined `data-code` wordmark is removed. At clamp(4.5rem, 11vw,
+// 10rem) with `white-space: nowrap` and a negative inline-end offset it always
+// overflowed the viewport, so "SYSTEM / RECORD" rendered clipped mid-letter and
+// bled across the section boundary below. It read as a rendering fault, and no
+// site in either survey of this genre uses decorative background lettering.
+// `data-code` stays on the element for the small mono label in the corner.
 
 .interior-hero__inner {
   display: grid;
@@ -151,7 +141,7 @@
   margin: 0;
   font-family: var(--font-display);
   font-variation-settings: "SOFT" 0, "WONK" 0;
-  font-size: clamp(3.25rem, 6.7vw, 6.75rem);
+  font-size: clamp(2.25rem, 3.6vw, 3.5rem);
   font-weight: 560;
   letter-spacing: -0.045em;
   line-height: 0.94;
@@ -161,7 +151,7 @@
 .interior-hero--post h1,
 .interior-hero--case h1 {
   max-width: 18ch;
-  font-size: clamp(3rem, 5.6vw, 5.75rem);
+  font-size: clamp(2.125rem, 3.2vw, 3.125rem);
 }
 
 .interior-hero .lede {
