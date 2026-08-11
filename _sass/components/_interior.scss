@@ -109,6 +109,32 @@
   display: none;
 }
 
+.article-cover {
+  margin-block-start: clamp(2rem, 5vw, 4rem);
+}
+
+.article-cover picture {
+  display: block;
+  overflow: hidden;
+  background: #0d0f12;
+  border: 1px solid var(--line-strong);
+}
+
+.article-cover img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.article-cover figcaption {
+  max-width: 72ch;
+  margin-block-start: var(--sp-3);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  line-height: 1.5;
+  color: var(--ink-3);
+}
+
 .interior-hero__sequence {
   font-family: var(--font-mono);
   font-size: var(--step--2);

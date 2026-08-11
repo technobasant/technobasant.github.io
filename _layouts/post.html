@@ -69,6 +69,24 @@ biggest liability of a tutorial blog into a trust signal costs one paragraph. {%
   </div>
 </header>
 
+{%- if page.cover %}
+<figure class="article-cover wrap wrap--shell">
+  {%- include picture.html
+      base=page.cover.base
+      widths=page.cover.widths
+      raster_widths=page.cover.raster_widths
+      ext="jpg"
+      fallback_width=page.cover.fallback_width
+      sizes="(max-width: 900px) calc(100vw - 32px), 1320px"
+      width=page.cover.width
+      height=page.cover.height
+      alt=page.cover.alt
+      loading="eager"
+      fetchpriority="high" -%}
+  {%- if page.cover.caption %}<figcaption>{{ page.cover.caption }}</figcaption>{% endif -%}
+</figure>
+{%- endif %}
+
 <div class="post-shell">
   {%- if page.toc %}
   {% include toc.html content=content %}
