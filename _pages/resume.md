@@ -35,7 +35,7 @@ A résumé usually flattens a career into a list. The more useful story is how t
 
 ## Senior Data Engineer · UXCam
 
-**February 2024 – present** · Kathmandu, working with a global team
+**February 2024 – present** · Working with a global team
 
 - Own reliability and governance outcomes across production data and AI-assisted workflows, including clear service expectations, incident-ready runbooks, and reviewable data contracts.
 - Design boundaries that turn model output into typed, validated, traceable records before another product workflow can depend on it.
@@ -44,7 +44,7 @@ A résumé usually flattens a career into a list. The more useful story is how t
 
 ## Data Engineer · UXCam
 
-**February 2020 – February 2024** · Kathmandu
+**February 2020 – February 2024**
 
 - Built and operated batch and streaming data pipelines, then took on the data models, orchestration, storage, and analytical serving paths around them.
 - Improved recovery and change safety by treating schema evolution, replay, late data, and backfills as designed interfaces instead of emergency procedures.
@@ -95,4 +95,4 @@ English: C1 · Nepali: native
 
 ## Contact
 
-Kathmandu, Nepal · [{{ site.author.email }}](mailto:{{ site.author.email }}) · [LinkedIn](https://www.linkedin.com/in/technobasant) · [GitHub](https://github.com/technobasant)
+[{{ site.author.email }}](mailto:{{ site.author.email }}) · [LinkedIn](https://www.linkedin.com/in/technobasant) · [GitHub](https://github.com/technobasant)

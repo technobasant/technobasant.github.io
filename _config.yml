@@ -6,7 +6,7 @@ email: technobasant9@gmail.com
 description: >-
   Basant Bhattarai — Senior Data & AI Engineer. Nine years across backend
   engineering, production data platforms, database reliability, and governed
-  AI systems. Kathmandu, working US and EU hours.
+  AI systems. Working US and EU hours.
 url: "https://technobasant.github.io"
 baseurl: ""
 repository: "technobasant/technobasant.github.io"
@@ -19,9 +19,6 @@ og_image: "/assets/og/og-default-v3.png"
 author:
   name: "Basant Bhattarai"
   role: "Senior Data & AI Engineer · Platform & Database Reliability"
-  location: "Kathmandu, Nepal"
-  locality: "Kathmandu"
-  country: "NP"
   avatar: "/assets/images/portrait-800.jpg"
   email: "technobasant9@gmail.com"
   linkedin: "https://www.linkedin.com/in/technobasant"

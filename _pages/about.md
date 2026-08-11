@@ -8,7 +8,7 @@ permalink: /about/
 description: "Nine years across backend engineering, data platforms, database reliability, and governed AI systems — plus the principles I use to operate them."
 ---
 
-I am a Senior Data & AI Engineer in Kathmandu. Over nine years, my work has moved from Python backend services and PostgreSQL schemas to the harder seams between data, databases, APIs, and AI-assisted products. I care about the part that begins after a successful demo: defining what a system promises, making that promise observable, and giving the person on call a safe way to repair it.
+I am a Senior Data & AI Engineer. Over nine years, my work has moved from Python backend services and PostgreSQL schemas to the harder seams between data, databases, APIs, and AI-assisted products. I care about the part that begins after a successful demo: defining what a system promises, making that promise observable, and giving the person on call a safe way to repair it.
 
 
 ## How I work
@@ -31,9 +31,9 @@ My independent work is easier to show in full. I am documenting a multi-engine f
 
 ## Background
 
-I am from Kathmandu and still live here. I studied computer science at JNTUA College of Engineering in Anantapur, India, from 2015 to 2019. My first roles centered on backend services; the data half of the job gradually became the job. I speak English at C1 and Nepali natively.
+I studied computer science at JNTUA College of Engineering in Anantapur, India, from 2015 to 2019. My first roles centered on backend services; the data half of the job gradually became the job. I speak English at C1 and Nepali natively.
 
-Nepal sits at UTC+5:45, an offset scheduling tools still manage to make surprising. I shift my working day later to overlap with European afternoons and US business hours, a rhythm I have used with distributed teams for years.
+I shift my working day later to overlap with European afternoons and US business hours, a rhythm I have used with distributed teams for years.
 
 I take one or two consulting engagements at a time. The work I take on, and the work I decline, is described on [Work with me](/hire/).
 

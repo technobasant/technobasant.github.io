@@ -35,7 +35,7 @@ Declining the wrong work early is cheaper for both of us than discovering the mi
 
 **{{ site.data.availability.headline }}** — {{ site.data.availability.hours }}, {{ site.data.availability.coverage }}.
 
-I am in Kathmandu (UTC+5:45) and work a deliberately shifted day: {{ site.data.availability.detail }} Real overlap with your team, not asynchronous-only.
+I work a shifted day by design: {{ site.data.availability.detail }} Real overlap with your team, not asynchronous-only.
 
 *Availability updated {{ site.data.availability.updated | date: "%B %-d, %Y" }}. If this page says one thing and my reply says another, believe the reply — but I keep this line current.*
 

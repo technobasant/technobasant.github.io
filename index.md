@@ -7,7 +7,7 @@ title: Basant Bhattarai
 #
 hero:
   eyebrow: "Senior Data & AI Engineer · Platform & Database Reliability"
-  meta: "Kathmandu, Nepal · Working US and EU hours"
+  meta: "Working US and EU hours"
   h1:
     first: "Data platforms,"
     second: "and the systems that keep them honest."
