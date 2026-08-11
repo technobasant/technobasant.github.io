@@ -1,0 +1,95 @@
+# The failover lab, as data. Single source for the homepage matrix and the case
+# study, so the two can never disagree.
+#
+# Every row is something I ran, not something I read. `note` is the one thing
+# worth knowing about that engine — the detail that only shows up if you
+# actually kill the process.
+
+apparatus:
+  rig: "One host, 8 CPU / 12.5 GB, Docker Compose v2"
+  window: "2026"
+  method: "A common test plan I wrote, executed per engine: bring the cluster up, kill a node, read what came back."
+  caveat: "A single Docker host cannot produce a real network partition, so no split-brain case is claimed."
+
+# `value` is deliberately short enough to typeset in a narrow column.
+# `unit` is separated so the numerals can align on their own.
+scenarios:
+  - engine: "PostgreSQL"
+    version: "18"
+    topology: "Primary + hot standby"
+    probe: "pg_promote()"
+    value: "383"
+    unit: "µs"
+    metric: "replay lag"
+    result: pass
+    note: "Timeline advanced 1 → 2 on promotion. write_lag measured 104 µs on the same run."
+
+  - engine: "Redis"
+    version: "8"
+    topology: "Sentinel, quorum 2"
+    probe: "SIGKILL primary"
+    value: "~5"
+    unit: "s"
+    metric: "to writable"
+    result: pass
+    note: "Old primary was auto-demoted to replica on rejoin rather than fighting for the role."
+
+  - engine: "Redis"
+    version: "8"
+    topology: "Cluster, 3 primaries + 3 replicas"
+    probe: "SIGKILL primary"
+    value: "2 → 7"
+    unit: ""
+    metric: "config epoch"
+    result: pass
+    note: "All 16,384 slots stayed covered. No acknowledged write was lost."
+
+  - engine: "MariaDB + Galera"
+    version: "11.8"
+    topology: "3-node multi-master"
+    probe: "150 concurrent cross-master UPDATEs"
+    value: "300"
+    unit: ""
+    metric: "converged on all 3"
+    result: pass
+    note: "Certification failures logged on two nodes — the counter still agreed everywhere afterwards."
+
+  - engine: "MongoDB"
+    version: "8.0"
+    topology: "3-node replica set, 2 shards"
+    probe: "100,000 docs on a hashed key"
+    value: "49,607 / 50,393"
+    unit: ""
+    metric: "shard split"
+    result: pass
+    note: "A targeted query hit one shard; an unqualified filter scatter-gathered to both."
+
+  - engine: "ScyllaDB"
+    version: "2026.1"
+    topology: "3-node, RF=3, 256 vnodes"
+    probe: "Node loss at QUORUM"
+    value: "3 / 3"
+    unit: ""
+    metric: "replicas held key"
+    result: pass
+    note: "Restore needed the table's upload/ subdirectory; a TRUNCATE marker hides older SSTables."
+
+  - engine: "SolrCloud"
+    version: "9"
+    topology: "ZooKeeper + 2 nodes, 2×2"
+    probe: "Node loss"
+    value: "6"
+    unit: ""
+    metric: "numFound, still served"
+    result: pass
+    note: "Cluster went ORANGE, kept answering, and returned to GREEN unattended."
+
+  - engine: "Prometheus + Grafana"
+    version: "—"
+    topology: "Exporters per engine"
+    probe: "Golden signals"
+    value: "500 / 500"
+    unit: ""
+    metric: "keyspace hits/misses"
+    result: pass
+    note: "Every engine above was observed through the same dashboard rather than by hand."

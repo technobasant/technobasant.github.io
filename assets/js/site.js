@@ -330,6 +330,37 @@
     });
   })();
 
+  /* ── 4c · Generic scrollable regions ────────────────────────────────────
+   * Anything that scrolls horizontally must be reachable by keyboard, or the
+   * content inside it is unreachable without a mouse (WCAG 2.1.1). The code
+   * module does this for <pre>; the results table needs it too. tabindex is
+   * added only while the element actually overflows, so we never litter the tab
+   * order with stops that do not scroll.
+   */
+  (function scrollables() {
+    var nodes = document.querySelectorAll("[data-scrollable]");
+    if (!nodes.length) return;
+
+    Array.prototype.forEach.call(nodes, function (el) {
+      var label = el.getAttribute("data-scroll-label") || "Scrollable content";
+      var sync = function () {
+        var overflows = el.scrollWidth > el.clientWidth + 1;
+        if (overflows && !el.hasAttribute("tabindex")) {
+          el.setAttribute("tabindex", "0");
+          el.setAttribute("role", "region");
+          el.setAttribute("aria-label", label + ", scrollable");
+        } else if (!overflows && el.hasAttribute("tabindex")) {
+          el.removeAttribute("tabindex");
+          el.removeAttribute("role");
+          el.removeAttribute("aria-label");
+        }
+      };
+      sync();
+      if ("ResizeObserver" in window) new ResizeObserver(sync).observe(el);
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(sync);
+    });
+  })();
+
   /* ── 5 · TOC scroll-spy ─────────────────────────────────────────────────
    * IntersectionObserver over the headings, not a scroll listener. The
    * rootMargin pins the "current" line just below the sticky header.
