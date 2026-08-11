@@ -1,120 +1,103 @@
-# Welcome to Jekyll!
-#
-# This config file is meant for settings that affect your whole blog, values
-# which you are expected to set up once and rarely edit after that. If you find
-# yourself editing this file very often, consider using Jekyll's data files
-# feature for the data you need to update frequently.
-#
-# For technical reasons, this file is *NOT* reloaded automatically when you use
-# 'bundle exec jekyll serve'. If you change this file, please restart the server process.
+# ── Identity ──────────────────────────────────────────────────────────────
+title: "Basant Bhattarai"
+subtitle: "Senior Data & AI Engineer · Platform & Database Reliability"
+tagline: "I build data platforms that stay correct under load — and the AI agents that sit on top of them."
+email: technobasant9@gmail.com
+description: >-
+  Basant Bhattarai — Senior Data & AI Engineer. Nine years across backend
+  engineering, production data platforms, database reliability, and governed
+  AI systems. Working US and EU hours.
+url: "https://technobasant.github.io"
+baseurl: ""
+repository: "technobasant/technobasant.github.io"
+lang: en
 
-# Site settings
-# These are used to personalize your new site. If you look in the HTML files,
-# you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
-# You can create any custom variable you would like, and they will be accessible
-# in the templates via {{ site.myvariable }}.
-title: TechnoBasant
-email: bkalpab9@gmail.com
-description: >- # this means to ignore newlines until "baseurl:"
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
-twitter_username: username
-github_username: username
-minimal_mistakes_skin: dirt #default
-search: true
+# Site-wide social-card fallback (1200×630 PNG — never AVIF/WebP, LinkedIn and
+# Slack will not render those as og:image).
+og_image: "/assets/og/og-default-v3.png"
 
-# Build settings
+author:
+  name: "Basant Bhattarai"
+  role: "Senior Data & AI Engineer · Platform & Database Reliability"
+  location: "Kathmandu, Nepal"
+  avatar: "/assets/images/hero-portrait-v2-840.jpg"
+  email: "technobasant9@gmail.com"
+  linkedin: "https://www.linkedin.com/in/technobasant"
+  github: "https://github.com/technobasant"
+  bio: >-
+    Senior Data Engineer focused on reliable data platforms, database systems,
+    and governed AI products.
+
+# ── Build ─────────────────────────────────────────────────────────────────
 markdown: kramdown
-remote_theme: mmistakes/minimal-mistakes
-# Outputting
-permalink: /:categories/:title/
-paginate: 5 # amount of posts to show
-paginate_path: /page:num/
-timezone: # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+highlighter: rouge
+permalink: /writing/:title/          # posts only; pages declare explicit permalinks
+timezone: Asia/Kathmandu
+future: false
+excerpt_separator: "<!--more-->"
+
+kramdown:
+  input: GFM
+  hard_wrap: false
+  auto_ids: true
+  toc_levels: 2..3
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    block:
+      line_numbers: false
+
+sass:
+  sass_dir: _sass
+  style: compressed
+  sourcemap: never
+  quiet_deps: true
 
 include:
   - _pages
 
-# Exclude from processing.
-# The following items will not be processed, by default. Create a custom list
-# to override the default setting.
-# exclude:
-#   - Gemfile
-#   - Gemfile.lock
-#   - node_modules
-#   - vendor/bundle/
-#   - vendor/cache/
-#   - vendor/gems/
-#   - vendor/ruby/
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - Rakefile
+  - Makefile
+  - README.md
+  - scripts
+  - vendor
+  - node_modules
+  - _source
+  - _templates
+  - "*.prev.jpg"
+  # Unused: mislabeled JPEG (1024x1024, 172KB) with a .png extension, referenced
+  # by nothing. Safe to delete from the repo; excluded so it never ships.
+  - assets/images/basant_profile.png
+  - _drafts/zzz-scaffold-test.md
 
-# Plugins (previously gems:)
-plugins:
-  - jekyll-paginate
-  - jekyll-sitemap
-  - jekyll-gist
-  - jekyll-feed
-  - jemoji
-  - jekyll-include-cache
-  - jekyll-remote-theme
-
-author:
-  name   : "Bsant Bhattarai"
-  avatar : "/assets/images/basant_profile.jpg"
-  bio    : "Data Architect, Data Engineer, Big Data Researcher, DevOps Engineer, DBA, Backend Developer"
-  links:
-    - label: "Website"
-      icon: "fas fa-fw fa-link"
-      url: "https://"
-    - label: "Twitter"
-      icon: "fab fa-fw fa-twitter-square"
-      url: "https://twitter.com/"
-    - label: "GitHub"
-      icon: "fab fa-fw fa-github"
-      url: "https://github.com/bkalpa9"
-    - label: "Instagram"
-      icon: "fab fa-fw fa-instagram"
-      url: "https://instagram.com/"
-
-footer:
-  links:
-    - label: "Twitter"
-      icon: "fab fa-fw fa-twitter-square"
-      url: "https://twitter.com/"
-    - label: "GitHub"
-      icon: "fab fa-fw fa-github"
-      url: "https://github.com/"
-    - label: "Instagram"
-      icon: "fab fa-fw fa-instagram"
-      url: "https://instagram.com/"
+# ── Content ───────────────────────────────────────────────────────────────
+collections:
+  work:
+    output: true
+    permalink: /work/:name/
 
 defaults:
-  # _posts
-  - scope:
-      path: ""
-      type: posts
+  - scope: { path: "", type: pages }
     values:
-      layout: single
-      author_profile: true
-      read_time: true
-      comments: true
-      share: true
-      related: true
-      show_date: true
-
-  # _pages
-  - scope:
-      path: "_pages"
-      type: pages
+      layout: page
+  - scope: { path: "", type: posts }
     values:
-      layout: single
-      author_profile: true
+      layout: post
+      type: essay
+      toc: false
+  - scope: { path: "", type: work }
+    values:
+      layout: case
+      kind: production
 
-category_archive:
-  type: liquid
-  path: /categories/
-tag_archive:
-  type: liquid
-  path: /tags/
+# ── Plugins ───────────────────────────────────────────────────────────────
+plugins:
+  - jekyll-sitemap
+  - jekyll-feed
+  - jekyll-redirect-from
 
-breadcrumbs: true
+feed:
+  path: /writing/feed.xml
+  posts_limit: 30

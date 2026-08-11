@@ -1,0 +1,187 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// SYNTAX — "Brass Editorial", hand-written for Rouge.
+//
+// This is not `rougify style` output. Rouge can emit ~90 token classes; across
+// Python, SQL, YAML, HCL, JSON, bash and Dockerfile — the languages that
+// actually appear here — only these 31 ever fire. One selector set, 14
+// variables, both themes.
+//
+// Traps this mapping accounts for:
+//   · bash marks comments `.c`,  python/sql/yaml mark them `.c1`
+//   · HCL identifiers are `.nx`, not `.n`
+//   · YAML keys are `.na`,       JSON keys are `.nl`
+//   · `.kc` is True/False/None/null — a literal, so it is coloured as a number
+//
+// No line numbers. They double the DOM, break copy-paste, and are read aloud
+// by screen readers as content.
+// ─────────────────────────────────────────────────────────────────────────────
+
+.highlight {
+  color: var(--sx-fg);
+}
+
+// ── Comments ─────────────────────────────────────────────────────────────────
+.highlight {
+  .c,
+  .c1,
+  .cm,
+  .cs,
+  .cp,
+  .cd,
+  .cpf {
+    color: var(--sx-comment);
+    font-style: italic;
+  }
+
+  // ── Keywords ───────────────────────────────────────────────────────────────
+  .k,
+  .kn,
+  .kd,
+  .kr,
+  .kp,
+  .kt,
+  .nt {
+    color: var(--sx-key);
+  }
+
+  // ── Literals ───────────────────────────────────────────────────────────────
+  .kc, // True / False / None / null — a literal, not a keyword
+  .m,
+  .mi,
+  .mf,
+  .mh,
+  .mo,
+  .mb,
+  .il {
+    color: var(--sx-num);
+  }
+
+  .s,
+  .s1,
+  .s2,
+  .sb,
+  .sh,
+  .sd,
+  .se,
+  .si,
+  .sx,
+  .sr,
+  .ss,
+  .sa,
+  .sc,
+  .dl {
+    color: var(--sx-str);
+  }
+
+  // ── Names ──────────────────────────────────────────────────────────────────
+  .nf,
+  .nd,
+  .nb,
+  .bp,
+  .fm {
+    color: var(--sx-fn);
+  }
+
+  .nc,
+  .nn {
+    color: var(--sx-type);
+  }
+
+  .na, // YAML keys, HTML attributes
+  .nl, // JSON keys
+  .nv, // shell/scala variables — and, in Rouge, some YAML keys too
+  .py, // Scala / Java properties
+  .vg,
+  .vi,
+  .vc,
+  .vm {
+    color: var(--sx-attr);
+  }
+
+  .nx, // HCL / JS identifiers
+  .n,
+  .no,
+  .ni,
+  .ne {
+    color: var(--sx-fg);
+  }
+
+  // ── Operators & punctuation ────────────────────────────────────────────────
+  .o,
+  .ow {
+    color: var(--sx-op);
+  }
+
+  .p,
+  .pi {
+    color: var(--sx-punc);
+  }
+
+  // ── Generic (diffs, shell transcripts, error output) ───────────────────────
+  .gi {
+    color: var(--sx-ins);
+    background: color-mix(in oklab, var(--sx-ins) 12%, transparent);
+  }
+
+  .gd {
+    color: var(--sx-del);
+    background: color-mix(in oklab, var(--sx-del) 12%, transparent);
+  }
+
+  // Shell prompt. user-select: none means a reader can drag-select the whole
+  // transcript and paste only the commands.
+  .gp {
+    color: var(--sx-key);
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .go {
+    color: var(--sx-out);
+  }
+
+  .gh,
+  .gu {
+    color: var(--sx-type);
+    font-weight: 600;
+  }
+
+  .ge {
+    font-style: italic;
+  }
+
+  .gs {
+    font-weight: 600;
+  }
+
+  .err,
+  .gt, // Python traceback lines inside an output block
+  .gr {
+    color: var(--sx-err);
+    text-decoration: underline wavy;
+    text-underline-offset: 0.2em;
+  }
+
+  .w {
+    color: inherit;
+  }
+}
+
+// ── Emphasised line ──────────────────────────────────────────────────────────
+// Rouge emits <span class="hll"> for highlighted lines. The negative inline
+// margin makes the band run the full width of the well, not just the glyphs.
+.highlight .hll {
+  display: block;
+  margin-inline: calc(var(--code-pad) * -1);
+  padding-inline: calc(var(--code-pad) - 3px) var(--code-pad);
+  border-inline-start: 3px solid var(--code-hl-edge);
+  background: var(--code-hl-bg);
+}
+
+// If line numbers are ever switched back on at least they will not be selectable.
+.highlight .lineno,
+.highlight .gutter {
+  color: var(--code-gutter);
+  user-select: none;
+  -webkit-user-select: none;
+}

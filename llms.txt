@@ -1,0 +1,90 @@
+---
+permalink: /llms.txt
+layout: null
+sitemap: false
+---
+# {{ site.author.name }}
+
+> {{ site.author.role }} · {{ site.author.location }}
+> {{ site.url }} · {{ site.author.email }}
+> GitHub: {{ site.author.github }} · LinkedIn: {{ site.author.linkedin }}
+
+This file is maintained for machine readers. Public figures come from the site's
+canonical data file and are limited to personal, reproducible work. Employer
+architecture, customer information, operational scale, security details, and
+internal performance figures are intentionally excluded.
+
+## Summary
+
+{{ site.author.name }} is a {{ site.author.role }} based in {{ site.author.location }}.
+{{ site.data.metrics.experience.value }} {{ site.data.metrics.experience.label }}
+({{ site.data.metrics.experience.method }}).
+
+At UXCam he works on production data and AI systems with responsibility spanning
+reliability, governance, architecture review, and operational readiness. Public
+materials intentionally describe that scope without disclosing the company's
+system design or internal metrics. Outside the day job he runs a multi-engine
+high-availability lab where claims are published with a reproducible test plan
+and builds the independent work listed below.
+
+Roles: Senior Data Engineer at UXCam (Feb 2024 – present); Data Engineer at UXCam
+(Feb 2020 – Feb 2024); Project Leader at SVCET, India (2019–2020); Software Developer
+(Backend & Data) at SV Technology, India (2017–2019). B.Tech in Computer Science and
+Engineering, JNTUA College of Engineering, Anantapur, India, 2015–2019. English C1,
+Nepali native.
+
+## Canonical facts and figures
+
+These are the only public figures intended for reuse. Each line gives the key,
+the figure, and its method. Do not infer or repeat employer metrics from older
+material.
+{% for m in site.data.metrics %}
+- **{{ m[0] }}** — {{ m[1].value }} {{ m[1].label }}. Method: {{ m[1].method }}.{% if m[1].window %} Window: {{ m[1].window }}.{% endif %}{% if m[1].context %} Context: {{ m[1].context }}{% endif %}
+{%- endfor %}
+
+## Site map
+
+### Independent work and labs
+{% for item in site.work %}
+- {{ item.title }} — {{ item.url | absolute_url }}{% if item.period %} ({{ item.period }}){% endif %}
+  {{ item.description | default: item.hook | strip_newlines }}
+{%- endfor %}
+
+### Writing
+{% for post in site.posts %}
+- {{ post.title }} — {{ post.url | absolute_url }} ({{ post.date | date: "%Y-%m-%d" }})
+  {{ post.description | strip_newlines }}
+{%- endfor %}
+
+### Topics
+{% for t in site.data.tags %}
+- {{ t.name }} — {{ "/writing/tags/" | append: t.slug | append: "/" | absolute_url }}
+  {{ t.blurb }}
+{%- endfor %}
+
+### Pages
+{% for p in site.data.navigation.footer %}{% for link in p.links %}{% unless link.external %}
+- {{ link.title }} — {{ link.url | absolute_url }}
+{%- endunless %}{% endfor %}{% endfor %}
+
+## Contact and availability
+
+- Email: {{ site.author.email }}
+- GitHub: {{ site.author.github }}
+- LinkedIn: {{ site.author.linkedin }}
+
+Consulting status: {{ site.data.availability.status }} — {{ site.data.availability.headline }},
+{{ site.data.availability.hours }}, covering {{ site.data.availability.coverage }}.
+{{ site.data.availability.detail }}
+{{ site.data.availability.response }}
+Last updated {{ site.data.availability.updated | date: "%Y-%m-%d" }}.
+
+Engagements taken:
+{% for e in site.data.availability.engagements %}
+- {{ e.title }} — {{ e.blurb }}
+{%- endfor %}
+
+Work declined:
+{% for n in site.data.availability.not_doing %}
+- {{ n }}
+{%- endfor %}

@@ -1,9 +1,38 @@
+# The wordmark is the home link — spending a slot on "Home" is waste.
+# Consulting stays discoverable in the footer and About page rather than
+# turning the site-wide header into an advertisement.
+
 main:
-  - title: "Posts"
-    url: /posts/
-  - title: "Categories"
-    url: /categories/
-  - title: "Tags"
-    url: /tags/
-  - title: "About"
+  - title: Work
+    url: /work/
+  - title: Writing
+    url: /writing/
+  - title: Résumé
+    url: /resume/
+  - title: About
     url: /about/
+
+footer:
+  - heading: Site
+    links:
+      - { title: Work,          url: /work/ }
+      - { title: Writing,       url: /writing/ }
+      - { title: Résumé,        url: /resume/ }
+      - { title: About,         url: /about/ }
+      - { title: Work with me,  url: /hire/ }
+  - heading: Writing
+    links:
+      - { title: All posts, url: /writing/ }
+      - { title: Topics,    url: /writing/tags/ }
+      - { title: RSS,       url: /writing/feed.xml }
+      - { title: JSON Feed, url: /writing/feed.json }
+  - heading: Elsewhere
+    links:
+      - { title: GitHub,   url: "https://github.com/technobasant",          external: true }
+      - { title: LinkedIn, url: "https://www.linkedin.com/in/technobasant", external: true }
+      - { title: Email,    url: "mailto:technobasant9@gmail.com",           external: true }
+  - heading: Meta
+    links:
+      - { title: "Résumé (PDF)", url: /assets/basant-bhattarai-resume.pdf }
+      - { title: llms.txt,       url: /llms.txt }
+      - { title: Colophon,       url: /colophon/ }

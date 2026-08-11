@@ -1,0 +1,56 @@
+{%- comment -%}
+  Accessible system path used on Home and case studies.
+  Usage: {% include system-flow.html variant="platform" %}
+{%- endcomment -%}
+{%- assign _variant = include.variant | default: "platform" -%}
+{%- case _variant -%}
+  {%- when "ai" -%}
+    {%- assign _label = "Governed AI delivery path" -%}
+    {%- assign _steps = "Context|Bind claims to source records;Generate|Create a candidate, never final state;Validate|Enforce typed schemas and policy;Review|Publish, correct, or fall back" | split: ";" -%}
+  {%- when "clickhomes" -%}
+    {%- assign _label = "ClickHomes listing data path" -%}
+    {%- assign _steps = "Connect|Retain source and rights metadata;Transform|Normalize through RESO contracts;Load|Write versioned gold models;Serve|Keep operational and analytical paths separate" | split: ";" -%}
+  {%- when "lab" -%}
+    {%- assign _label = "Failover experiment path" -%}
+    {%- assign _steps = "Provision|Start one reproducible cluster;Seed|Write known state and capture baseline;Fault|Kill the selected primary or node;Verify|Measure promotion, recovery, and data survival" | split: ";" -%}
+  {%- else -%}
+    {%- assign _label = "Production data platform operating path" -%}
+    {%- assign _steps = "Ingest|Accept change without accepting ambiguity;Govern|Validate contracts, lineage, and ownership;Serve|Match models to real read paths;Recover|Replay safely and prove the objective" | split: ";" -%}
+{%- endcase -%}
+<figure class="system-flow system-flow--{{ _variant }}">
+  <figcaption>{{ _label }}</figcaption>
+  <ol class="system-flow__track">
+    {%- for raw_step in _steps -%}
+      {%- assign step = raw_step | split: "|" -%}
+      <li class="system-flow__step">
+        <span class="system-flow__index" aria-hidden="true">{{ forloop.index | prepend: "0" }}</span>
+        <strong>{{ step[0] }}</strong>
+        <span>{{ step[1] }}</span>
+      </li>
+    {%- endfor -%}
+  </ol>
+  {%- unless include.hide_evidence -%}
+  {%- if _variant == "platform" -%}
+  <div class="system-flow__evidence" aria-label="Platform evidence">
+    <p><strong>{{ site.data.metrics.professional_platform_scale.value }}</strong> {{ site.data.metrics.professional_platform_scale.label }}</p>
+    <p><strong>{{ site.data.metrics.professional_event_volume.value }}</strong> {{ site.data.metrics.professional_event_volume.label }}</p>
+    <p><strong>{{ site.data.metrics.professional_uptime.value }}</strong> {{ site.data.metrics.professional_uptime.label }}</p>
+  </div>
+  {%- elsif _variant == "ai" -%}
+  <div class="system-flow__evidence" aria-label="AI delivery evidence">
+    <p><strong>{{ site.data.metrics.professional_analytics_delivery.value }}</strong> {{ site.data.metrics.professional_analytics_delivery.label }}</p>
+    <p><strong>{{ site.data.metrics.professional_manual_effort.value }}</strong> {{ site.data.metrics.professional_manual_effort.label }}</p>
+  </div>
+  {%- elsif _variant == "clickhomes" -%}
+  <div class="system-flow__evidence" aria-label="Independent product evidence">
+    <p><strong>{{ site.data.metrics.clickhomes_migrations.value }}</strong> {{ site.data.metrics.clickhomes_migrations.label }}</p>
+  </div>
+  {%- elsif _variant == "lab" -%}
+  <div class="system-flow__evidence" aria-label="Lab evidence">
+    <p><strong>{{ site.data.metrics.lab_scenarios.value }}</strong> {{ site.data.metrics.lab_scenarios.label }}</p>
+    <p><strong>{{ site.data.metrics.lab_pg_replay_lag.value }}</strong> {{ site.data.metrics.lab_pg_replay_lag.label }}</p>
+    <p><strong>{{ site.data.metrics.lab_redis_promotion.value }}</strong> {{ site.data.metrics.lab_redis_promotion.label }}</p>
+  </div>
+  {%- endif -%}
+  {%- endunless -%}
+</figure>

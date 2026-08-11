@@ -1,0 +1,591 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// HOME — "Signal Ledger": a full-bleed editorial hero, proof rail and
+// alternating section fields. It is intentionally distinct from the quieter
+// long-form pages while using the same type and spacing system.
+// ─────────────────────────────────────────────────────────────────────────────
+
+.hero {
+  --hero-bg: #090b0f;
+  --hero-panel: #11151b;
+  --hero-ink: #f3eee5;
+  --hero-muted: #a9b2bd;
+  --hero-line: rgba(243, 238, 229, 0.14);
+  --hero-accent: var(--brand-brass-masthead);
+  position: relative;
+  overflow: clip;
+  isolation: isolate;
+  padding: 0;
+  background: var(--hero-bg);
+  color: var(--hero-ink);
+  border-block-end: 1px solid var(--hero-line);
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image:
+    linear-gradient(var(--hero-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--hero-line) 1px, transparent 1px);
+  background-size: 5rem 5rem;
+  opacity: 0.2;
+  mask-image: linear-gradient(90deg, transparent, black 22%, black 78%, transparent);
+}
+
+// The oversized ghost wordmark is removed. It clipped at the viewport edge on
+// every interior page, bled across the section boundary, and read as a
+// rendering fault rather than a device. Nothing in either survey of this genre
+// uses decorative background lettering.
+
+// The portrait column is deliberately narrow. A half-viewport photograph is the
+// portfolio-template shape and it squeezed the headline onto four lines; at
+// ~17rem it reads as an editorial portrait beside the claim instead of
+// competing with it, and the headline keeps its measure.
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 19rem;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+  min-height: 0;
+}
+
+// Without a portrait the headline takes the whole measure instead of half of
+// it, which is what stops a three-word headline breaking onto four lines.
+.hero-grid:not(:has(.hero-photo)) {
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 0;
+}
+
+.hero-grid:not(:has(.hero-photo)) .hero-copy {
+  max-width: 34rem;
+}
+
+.hero-copy {
+  min-width: 0;
+  align-self: center;
+  padding-block: clamp(4rem, 9vw, 7.5rem);
+  position: relative;
+  z-index: 2;
+}
+
+.hero .eyebrow {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-block-end: var(--sp-5);
+  color: var(--hero-accent);
+}
+
+.hero .eyebrow::before {
+  content: "";
+  width: 2.75rem;
+  height: 1px;
+  background: currentcolor;
+}
+
+// Was clamp(4rem, 7.4vw, 7rem) — up to 112px — with max-width: 9.5ch, which
+// forced a two-word headline onto four lines. Elite sites in this genre set the
+// hero line at 24–48px; leerob uses 24px for his own name and brandur has no h1
+// at all. 36→56px still reads as display type and holds each clause on one line.
+.hero h1 {
+  margin: 0;
+  max-width: 20ch;
+  // Deliberate exception to the serif interior mastheads: the homepage opens
+  // with a direct sans proposition, then uses italic and brass for emphasis.
+  font-family: var(--font-body);
+  // Floor lowered from 2.25rem: at 390px the clamp pinned to the minimum and
+  // the headline took six lines. 30px holds it to four.
+  font-size: clamp(1.875rem, 3.9vw, 3.5rem);
+  line-height: 1.02;
+  color: var(--hero-ink);
+}
+
+.hero h1 span {
+  display: block;
+}
+
+.hero h1 span:last-child {
+  color: var(--hero-accent);
+  font-style: italic;
+  font-weight: 500;
+}
+
+.hero .role {
+  margin-block-start: var(--sp-5);
+}
+
+.hero .lede {
+  margin-block-start: var(--sp-5);
+  max-width: 48ch;
+  color: var(--hero-muted);
+}
+
+.hero-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-block-start: var(--sp-5);
+  padding-block-start: var(--sp-4);
+  border-block-start: 1px solid var(--hero-line);
+  font-size: var(--step--1);
+  color: var(--hero-muted);
+}
+
+.hero .actions {
+  margin-block-start: var(--sp-6);
+}
+
+.hero .btn--primary {
+  background: var(--hero-accent);
+  color: #151109;
+}
+
+.hero .btn--ghost {
+  border-color: rgba(243, 238, 229, 0.38);
+  color: var(--hero-ink);
+}
+
+.hero .btn--ghost:hover {
+  background: rgba(243, 238, 229, 0.08);
+  border-color: var(--hero-ink);
+}
+
+.hero .btn--link {
+  color: var(--hero-ink);
+  text-decoration-color: rgba(223, 182, 108, 0.65);
+}
+
+// ── Portrait ─────────────────────────────────────────────────────────────────
+.hero-photo {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  align-self: center;
+  justify-self: stretch;
+  z-index: 1;
+}
+
+// A single offset rule, not a frame-within-a-frame. Enough to say the placement
+// was intentional; not so much that it decorates.
+.hero-photo::before {
+  content: "";
+  position: absolute;
+  inset: 0.9rem -0.9rem -0.9rem 0.9rem;
+  z-index: -1;
+  border: 1px solid rgba(223, 182, 108, 0.45);
+}
+
+.hero-photo img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: center top;
+  border: 1px solid var(--hero-line);
+  border-radius: 0;
+  // Layered and warm, none of it over 8%. A single wide black shadow at 42% is
+  // the giveaway; the reference tier layers 4-6 stops of a warm near-black.
+  box-shadow:
+    0 1px 1px rgba(30, 20, 10, 0.03),
+    0 4px 6px -2px rgba(30, 20, 10, 0.04),
+    0 12px 18px -6px rgba(30, 20, 10, 0.05),
+    0 28px 44px -12px rgba(30, 20, 10, 0.07);
+}
+
+.hero-photo figcaption {
+  position: absolute;
+  inset-inline-end: var(--sp-4);
+  inset-block-end: var(--sp-4);
+  margin: 0;
+  padding: var(--sp-2) var(--sp-3);
+  background: rgba(9, 11, 15, 0.78);
+  border: 1px solid var(--hero-line);
+  font-size: var(--step--2);
+  color: var(--hero-muted);
+  backdrop-filter: blur(10px);
+}
+
+// ── Stats ────────────────────────────────────────────────────────────────────
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: var(--sp-5) var(--sp-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stats li {
+  padding-block-start: var(--sp-4);
+  border-block-start: 1px solid var(--line-strong);
+}
+
+.stats li > strong {
+  display: block;
+  font-size: var(--step-2);
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--ink-1);
+}
+
+.stats li > span {
+  display: block;
+  margin-block-start: var(--sp-2);
+  font-size: var(--step--1);
+  line-height: 1.35;
+  color: var(--ink-2);
+}
+
+// How the number was measured. Deliberately quiet, deliberately present.
+.stats__method {
+  display: block;
+  margin-block-start: var(--sp-2);
+  font-size: var(--step--2);
+  line-height: 1.35;
+  color: var(--ink-3);
+}
+
+.hero-proof {
+  position: relative;
+  z-index: 3;
+  padding-block: var(--sp-5) var(--sp-6);
+  border-block-start: 1px solid var(--hero-line);
+  background: rgba(17, 21, 27, 0.72);
+}
+
+// A sentence, not a card grid. Set at reading size in the prose measure so it
+// reads as a claim someone is making rather than as dashboard furniture.
+.hero-proof__line {
+  max-width: var(--measure);
+  margin: 0;
+  color: var(--hero-muted);
+  font-size: var(--step-0);
+  line-height: var(--lh-prose);
+  text-wrap: pretty;
+}
+
+.hero-proof__more {
+  margin-block: var(--sp-4) 0;
+  font-size: var(--step--1);
+}
+
+.hero-proof__more a {
+  color: var(--hero-accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
+}
+
+// ── Outcome rail ─────────────────────────────────────────────────────────────
+.home-outcomes {
+  margin-block-start: 0;
+  padding-block: clamp(3rem, 7vw, 6rem);
+  background: var(--surface-1);
+  border-block-end: 1px solid var(--line);
+}
+
+.outcome-intro {
+  display: grid;
+  grid-template-columns: minmax(10rem, 0.3fr) minmax(0, 0.7fr);
+  gap: var(--sp-5) clamp(2rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.outcome-intro .section-label {
+  margin: 0;
+}
+
+.outcome-intro h2 {
+  max-width: 24ch;
+  margin: 0;
+  font-size: var(--step-3);
+  line-height: 1.15;
+}
+
+.outcome-rail {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: var(--sp-7) 0 0;
+  padding: 0;
+  border-block: 1px solid var(--line-strong);
+  list-style: none;
+}
+
+.outcome-rail li {
+  display: grid;
+  align-content: start;
+  gap: var(--sp-2);
+  min-width: 0;
+  margin: 0;
+  padding: var(--sp-5);
+}
+
+.outcome-rail li + li {
+  border-inline-start: 1px solid var(--line-strong);
+}
+
+.outcome-rail strong {
+  font-family: var(--font-body);
+  font-size: var(--step-3);
+  font-weight: 620;
+  letter-spacing: var(--ls-display);
+  line-height: 1;
+  color: var(--ink-1);
+  font-variant-numeric: tabular-nums;
+}
+
+.outcome-rail span {
+  font-size: var(--step--1);
+  font-weight: 650;
+  line-height: 1.35;
+  color: var(--ink-1);
+}
+
+.outcome-rail small {
+  font-size: var(--step--2);
+  line-height: 1.5;
+  color: var(--ink-3);
+}
+
+.hero + .home-outcomes,
+.home-outcomes + .home-section,
+.home-section + .home-section {
+  margin-block-start: 0;
+}
+
+// ── Alternating home sections ───────────────────────────────────────────────
+.home-section {
+  padding-block: var(--sp-section);
+}
+
+.home-writing {
+  background: var(--surface-1);
+  border-block: 1px solid var(--line);
+}
+
+.home-independent {
+  background: var(--surface-2);
+  border-block: 1px solid var(--line);
+}
+
+.home-section .section-head {
+  align-items: end;
+  margin-block-end: var(--sp-7);
+  padding-block-end: var(--sp-6);
+}
+
+.home-section .section-head > div {
+  display: grid;
+  gap: var(--sp-3);
+}
+
+.home-section .section-head .section-label {
+  margin: 0;
+}
+
+.home-section .section-head h2 {
+  max-width: 19ch;
+  font-size: var(--step-4);
+  line-height: 1.05;
+}
+
+.home-section .section-head > div > p:not(.section-label) {
+  margin: 0;
+  max-width: 48ch;
+  font-size: var(--step--1);
+  color: var(--ink-2);
+}
+
+.independent-grid,
+.writing-selection {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  padding: 1px;
+  background: var(--line-strong);
+}
+
+.current-role {
+  display: grid;
+  grid-template-columns: minmax(8rem, 0.22fr) minmax(0, 1fr) auto;
+  gap: var(--sp-4) var(--sp-6);
+  align-items: start;
+  margin-block-start: var(--sp-8);
+  padding-block: var(--sp-6);
+  border-block: 1px solid var(--line-strong);
+}
+
+.current-role > * {
+  margin: 0;
+}
+
+.current-role > p:not(.section-label) {
+  max-width: 58ch;
+  color: var(--ink-2);
+}
+
+// ── Strip (closing band: what I'm doing now / contact) ───────────────────────
+.strip-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: end;
+  padding-block-start: var(--sp-6);
+  border-block-start: 1px solid var(--line);
+}
+
+.strip-grid > * {
+  min-width: 0;
+}
+
+.strip h2 {
+  margin: 0 0 var(--sp-4);
+  font-family: var(--font-display);
+  font-variation-settings: "SOFT" 0, "WONK" 0;
+  font-size: var(--step-3);
+  letter-spacing: var(--ls-display);
+}
+
+.strip p {
+  margin: 0;
+  max-width: var(--measure-lede);
+  color: var(--ink-2);
+}
+
+.strip-meta > p {
+  margin: 0;
+  font-size: var(--step--1);
+  color: var(--ink-1);
+}
+
+.strip-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-4) var(--sp-5);
+  margin-block-start: var(--sp-5);
+  font-size: var(--step--1);
+  font-weight: 600;
+}
+
+// `:not(.btn)` — the closing strip carries the page's one primary action, and
+// a .btn in here must keep its own plate, not become an underlined text link.
+.strip-links a:not(.btn) {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--ink-1);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--accent) 45%, transparent);
+  text-underline-offset: 0.22em;
+}
+
+.strip-links a:not(.btn):hover {
+  color: var(--accent-hi);
+  text-decoration-color: currentcolor;
+}
+
+// ── Responsive ───────────────────────────────────────────────────────────────
+// Breakpoint matches the `sizes` attribute in the homepage portrait data.
+@media (max-width: 56.25rem) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    align-items: start;
+    min-height: auto;
+  }
+
+  .hero-copy {
+    padding-block: clamp(3.5rem, 12vw, 6rem) var(--sp-6);
+  }
+
+  .hero::after {
+    display: none;
+  }
+
+  .hero-photo {
+    // Keep the portrait as an identity cue, not a second mobile hero. The
+    // previous full-width treatment added almost 450px before readers reached
+    // the first piece of evidence.
+    width: min(44vw, 15rem);
+    justify-self: start;
+    padding-block-start: 0;
+  }
+
+  .hero-photo::before {
+    inset: 0.65rem -0.65rem -0.65rem 0.65rem;
+  }
+
+  .outcome-rail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .outcome-rail li:nth-child(3) {
+    border-inline-start: 0;
+  }
+
+  .outcome-rail li:nth-child(n + 3) {
+    border-block-start: 1px solid var(--line-strong);
+  }
+
+  .current-role {
+    grid-template-columns: minmax(8rem, 0.25fr) minmax(0, 1fr);
+  }
+
+  .current-role > .section-more {
+    grid-column: 2;
+  }
+
+  .strip-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 48rem) {
+  .outcome-intro,
+  .independent-grid,
+  .writing-selection,
+  .current-role {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .current-role > .section-more {
+    grid-column: auto;
+  }
+
+  .hero-proof .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+@media (max-width: 30rem) {
+  .outcome-rail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .outcome-rail li + li,
+  .outcome-rail li:nth-child(3) {
+    border-inline-start: 0;
+    border-block-start: 1px solid var(--line-strong);
+  }
+
+  .outcome-rail li {
+    padding-inline: 0;
+  }
+
+  .hero-proof .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-proof .stats li {
+    display: grid;
+    grid-template-columns: minmax(6rem, auto) 1fr;
+    gap: var(--sp-1) var(--sp-4);
+  }
+
+  .hero-proof .stats li > strong {
+    grid-row: 1 / span 2;
+  }
+
+  .hero-proof .stats li > span {
+    margin-block-start: 0;
+  }
+}

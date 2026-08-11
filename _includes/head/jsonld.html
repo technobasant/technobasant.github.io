@@ -1,0 +1,121 @@
+{%- comment -%}
+  One ld+json @graph per page. Every string goes through `jsonify` so a quote,
+  ampersand or newline in a title can never break the JSON — CI parses every block.
+
+  Nodes: WebSite, Person (#person), the page node (BlogPosting / TechArticle /
+  Article / WebPage), and a BreadcrumbList on every non-home page.
+  No HowTo — Google retired those rich results.
+{%- endcomment -%}
+
+{%- assign _is_home = false -%}
+{%- assign _is_post = false -%}
+{%- assign _is_case = false -%}
+{%- assign _is_tag  = false -%}
+{%- if page.layout == 'home' -%}{%- assign _is_home = true -%}{%- endif -%}
+{%- if page.layout == 'post' or page.collection == 'posts' -%}{%- assign _is_post = true -%}{%- endif -%}
+{%- if page.layout == 'case' or page.collection == 'work' -%}{%- assign _is_case = true -%}{%- endif -%}
+{%- if page.layout == 'tag' -%}{%- assign _is_tag = true -%}{%- endif -%}
+{%- assign _is_profile = false -%}
+{%- if page.url == '/about/' -%}{%- assign _is_profile = true -%}{%- endif -%}
+
+{%- assign _person_id  = site.url | append: "/#person" -%}
+{%- assign _website_id = site.url | append: "/#website" -%}
+{%- assign _home_url   = site.url | append: "/" -%}
+{%- assign _canon = page.canonical_url | default: page.url | absolute_url -%}
+
+{%- assign _tag = nil -%}
+{%- if _is_tag and page.tag -%}{%- assign _tag = site.data.tags | where: "slug", page.tag | first -%}{%- endif -%}
+{%- assign _tag_name = _tag.name | default: page.title -%}
+
+{%- comment -%} description, mirroring head/meta.html {%- endcomment -%}
+{%- capture _desc -%}
+{%- if page.description -%}{{ page.description }}
+{%- elsif _is_tag and _tag.blurb -%}{{ _tag.blurb }}
+{%- elsif page.excerpt -%}{{ page.excerpt }}
+{%- else -%}{{ site.description }}
+{%- endif -%}
+{%- endcapture -%}
+{%- assign _desc = _desc | strip_html | normalize_whitespace | strip | truncate: 160 -%}
+
+{%- comment -%} social card, mirroring head/meta.html {%- endcomment -%}
+{%- assign _img = "" -%}
+{%- if page.image and page.image contains ".png" -%}{%- assign _img = page.image -%}{%- endif -%}
+{%- if _img == "" and page.tags and page.tags.size > 0 -%}
+  {%- assign _first = page.tags | first -%}
+  {%- assign _t = site.data.tags | where: "slug", _first | first -%}
+  {%- if _t.og -%}{%- assign _img = "/assets/og/" | append: _t.og -%}{%- endif -%}
+{%- endif -%}
+{%- if _img == "" and _tag.og -%}{%- assign _img = "/assets/og/" | append: _tag.og -%}{%- endif -%}
+{%- if _img == "" -%}{%- assign _img = site.og_image -%}{%- endif -%}
+{%- assign _img = _img | absolute_url -%}
+
+{%- comment -%} knowsAbout is generated from _data/skills.yml tiers 1 + 2 so it cannot drift {%- endcomment -%}
+{%- assign _knows = site.data.skills.tier1.items | map: "name" -%}
+{%- for _g in site.data.skills.tier2.groups -%}
+  {%- assign _knows = _knows | concat: _g.items -%}
+{%- endfor -%}
+
+{%- comment -%} keywords: tag slugs resolved to their human names {%- endcomment -%}
+{%- assign _kw = "" | split: "," -%}
+{%- for _s in page.tags -%}
+  {%- assign _hit = site.data.tags | where: "slug", _s | first -%}
+  {%- if _hit -%}{%- assign _one = _hit.name | split: "|" -%}{%- else -%}{%- assign _one = _s | split: "|" -%}{%- endif -%}
+  {%- assign _kw = _kw | concat: _one -%}
+{%- endfor -%}
+
+{%- comment -%} page node type {%- endcomment -%}
+{%- comment -%}
+  Google documents rich-result eligibility only for Article / NewsArticle /
+  BlogPosting; TechArticle is absent from that list. schema.org permits multiple
+  types, so tutorials declare both: BlogPosting keeps us inside the documented
+  set, TechArticle keeps the semantics (and carries dependencies +
+  proficiencyLevel, which only it defines).
+{%- endcomment -%}
+{%- assign _node_type = "" -%}
+{%- if _is_post -%}
+  {%- if page.type == "tutorial" -%}{%- assign _node_type = "BlogPosting,TechArticle" | split: "," -%}
+  {%- else -%}{%- assign _node_type = "BlogPosting" -%}{%- endif -%}
+{%- elsif _is_case -%}{%- assign _node_type = "Article" -%}
+{%- endif -%}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"WebSite","@id":{{ _website_id | jsonify }},"url":{{ _home_url | jsonify }},"name":{{ site.title | jsonify }},"alternateName":{{ site.subtitle | jsonify }},"description":{{ site.description | strip_newlines | strip | jsonify }},"inLanguage":"en","publisher":{"@id":{{ _person_id | jsonify }}}},
+{"@type":"Person","@id":{{ _person_id | jsonify }},"name":{{ site.author.name | jsonify }},"url":{{ _home_url | jsonify }},"image":{{ site.author.avatar | absolute_url | jsonify }},"jobTitle":{{ site.author.role | jsonify }},"description":{{ site.author.bio | strip_newlines | strip | jsonify }},"email":{{ site.author.email | prepend: "mailto:" | jsonify }},"sameAs":[{{ site.author.github | jsonify }},{{ site.author.linkedin | jsonify }}],"alumniOf":{"@type":"CollegeOrUniversity","name":"JNTUA College of Engineering"},"worksFor":{"@type":"Organization","name":"UXCam","url":"https://uxcam.com"},"knowsLanguage":[{"@type":"Language","name":"English","alternateName":"en"},{"@type":"Language","name":"Nepali","alternateName":"ne"}],"knowsAbout":{{ _knows | jsonify }}}
+{%- if _node_type != "" -%}
+,
+{"@type":{{ _node_type | jsonify }},"@id":{{ _canon | append: "#article" | jsonify }},"url":{{ _canon | jsonify }},"headline":{{ page.title | jsonify }},"name":{{ page.title | jsonify }},"description":{{ _desc | jsonify }}
+{%- if page.date -%},"datePublished":{{ page.date | date_to_xmlschema | jsonify }},"dateModified":{{ page.last_modified_at | default: page.date | date_to_xmlschema | jsonify }}{%- endif -%}
+,"author":{"@id":{{ _person_id | jsonify }}},"publisher":{"@id":{{ _person_id | jsonify }}},"image":[{{ _img | jsonify }}],"inLanguage":"en","isAccessibleForFree":true,"wordCount":{{ page.content | number_of_words }},"mainEntityOfPage":{"@type":"WebPage","@id":{{ _canon | jsonify }}},"isPartOf":{"@id":{{ _website_id | jsonify }}}
+{%- if _kw.size > 0 -%},"keywords":{{ _kw | jsonify }}{%- endif -%}
+{%- if page.type == "tutorial" -%}
+{%- if page.level -%},"proficiencyLevel":{{ page.level | jsonify }}{%- endif -%}
+{%- if page.prerequisites -%},"dependencies":{{ page.prerequisites | join: ", " | jsonify }}{%- endif -%}
+{%- endif -%}
+}
+{%- elsif _is_profile -%}
+,
+{%- comment -%}
+  ProfilePage is one of the few rich results Google still supports, and the docs
+  name "an 'About Me' page on a blog site" as the canonical case. mainEntity and
+  name are required; it points at the same #person node every byline references,
+  which is what consolidates the author entity across the site.
+{%- endcomment -%}
+{"@type":"ProfilePage","@id":{{ _canon | append: "#profilepage" | jsonify }},"url":{{ _canon | jsonify }},"name":{{ page.title | default: site.author.name | jsonify }},"description":{{ _desc | jsonify }},"inLanguage":"en","isPartOf":{"@id":{{ _website_id | jsonify }}},"dateModified":{{ site.time | date_to_xmlschema | jsonify }},"mainEntity":{"@id":{{ _person_id | jsonify }}}}
+{%- elsif _is_home == false -%}
+,
+{"@type":"WebPage","@id":{{ _canon | append: "#webpage" | jsonify }},"url":{{ _canon | jsonify }},"name":{{ page.title | default: site.title | jsonify }},"description":{{ _desc | jsonify }},"inLanguage":"en","isPartOf":{"@id":{{ _website_id | jsonify }}},"about":{"@id":{{ _person_id | jsonify }}}}
+{%- endif -%}
+{%- unless _is_home -%}
+,
+{"@type":"BreadcrumbList","@id":{{ _canon | append: "#breadcrumb" | jsonify }},"itemListElement":[
+{"@type":"ListItem","position":1,"name":"Home","item":{{ _home_url | jsonify }}}
+{%- if _is_post or _is_tag -%},{"@type":"ListItem","position":2,"name":"Writing","item":{{ "/writing/" | absolute_url | jsonify }}}{%- endif -%}
+{%- if _is_case -%},{"@type":"ListItem","position":2,"name":"Work","item":{{ "/work/" | absolute_url | jsonify }}}{%- endif -%}
+{%- if _is_tag -%},{"@type":"ListItem","position":3,"name":"Topics","item":{{ "/writing/tags/" | absolute_url | jsonify }}},{"@type":"ListItem","position":4,"name":{{ _tag_name | jsonify }},"item":{{ _canon | jsonify }}}
+{%- elsif _is_post or _is_case -%},{"@type":"ListItem","position":3,"name":{{ page.title | jsonify }},"item":{{ _canon | jsonify }}}
+{%- else -%},{"@type":"ListItem","position":2,"name":{{ page.title | default: site.title | jsonify }},"item":{{ _canon | jsonify }}}
+{%- endif -%}
+]}
+{%- endunless -%}
+]}
+</script>

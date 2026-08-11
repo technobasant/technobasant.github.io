@@ -1,0 +1,125 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// TABLE OF CONTENTS
+//
+// Desktop: a sticky rail placed by .post-shell.
+// Mobile:  the layout's <details class="toc-mobile"> collapses it inline.
+//
+// The active entry is the brass on a post page. Nothing else in the article
+// chrome is brass.
+// ─────────────────────────────────────────────────────────────────────────────
+
+.toc {
+  font-size: var(--step--1);
+  line-height: 1.4;
+}
+
+// The layout emits both variants so no JavaScript is needed to construct a
+// table of contents. Only one may participate in layout at a time.
+.post-shell > .toc {
+  display: none;
+}
+
+@media (min-width: 68.75rem) {
+  .post-shell > .toc {
+    display: block;
+    max-height: calc(100dvh - var(--header-h) - var(--sp-8));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-inline-start: var(--sp-5);
+    border-inline-start: 1px solid var(--line);
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-strong) transparent;
+  }
+}
+
+.toc > :is(h2, h3, p, .toc__heading) {
+  margin: 0 0 var(--sp-3);
+  font-family: var(--font-body);
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.toc__list,
+.toc ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+// Nested (h3) entries.
+.toc__list ul,
+.toc ul ul {
+  padding-inline-start: var(--sp-4);
+}
+
+.toc__link,
+.toc a {
+  position: relative;
+  display: block;
+  padding-block: var(--sp-2);
+  color: var(--ink-3);
+  text-decoration: none;
+  text-wrap: pretty;
+  transition: color var(--dur-1) var(--ease-standard);
+}
+
+.toc__link:hover,
+.toc a:hover {
+  color: var(--ink-1);
+}
+
+.toc__link.is-active {
+  color: var(--ink-1);
+  font-weight: 600;
+}
+
+.toc__link.is-active::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: calc(var(--sp-5) * -1 - 1px);
+  inset-block: 0.35em;
+  width: 2px;
+  border-radius: var(--r-full);
+  background: var(--accent);
+}
+
+@media (max-width: 68.6875rem) {
+  .toc__link.is-active::before {
+    content: none;
+  }
+}
+
+// ── Mobile disclosure ────────────────────────────────────────────────────────
+.toc-mobile {
+  margin-block-end: var(--sp-6);
+  padding: var(--sp-3) var(--sp-4);
+  background: var(--surface-1);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+}
+
+.toc-mobile > summary {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--ink-1);
+  cursor: pointer;
+  list-style-position: inside;
+}
+
+.toc-mobile[open] > summary {
+  margin-block-end: var(--sp-3);
+  padding-block-end: var(--sp-3);
+  border-block-end: 1px solid var(--line);
+}
+
+@media (min-width: 68.75rem) {
+  .toc-mobile {
+    display: none;
+  }
+}

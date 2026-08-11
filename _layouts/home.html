@@ -1,0 +1,128 @@
+---
+layout: default
+---
+{%- assign _hero = page.hero -%}
+
+<section class="hero">
+  <div class="wrap wrap--shell hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow">{{ _hero.eyebrow }}</p>
+      <h1 aria-label="{{ _hero.h1.first }} {{ _hero.h1.second }}"><span>{{ _hero.h1.first }}</span><span>{{ _hero.h1.second }}</span></h1>
+      <p class="lede">{{ _hero.lede }}</p>
+      {%- if _hero.meta %}<p class="hero-meta">{{ _hero.meta }}</p>{% endif -%}
+      <div class="actions">
+        {%- for action in _hero.actions %}
+        <a class="btn btn--{{ action.variant | default: 'ghost' }}" href="{{ action.url | relative_url }}">{{ action.label }}{% if action.icon %} {% include icon.html name=action.icon size=14 %}{% endif %}</a>
+        {%- endfor %}
+      </div>
+    </div>
+    {%- if _hero.portrait %}
+    <figure class="hero-photo">
+      {%- include picture.html
+          base=_hero.portrait.base
+          widths=_hero.portrait.widths
+          raster_widths=_hero.portrait.raster_widths
+          ext="jpg"
+          fallback_width=_hero.portrait.fallback_width
+          sizes=_hero.portrait.sizes
+          width=_hero.portrait.width
+          height=_hero.portrait.height
+          alt=_hero.portrait.alt
+          fetchpriority="high" -%}
+      {%- if _hero.portrait.caption %}<figcaption>{{ _hero.portrait.caption }}</figcaption>{% endif -%}
+    </figure>
+    {%- endif -%}
+  </div>
+</section>
+
+<section class="home-outcomes" aria-labelledby="outcomes-title">
+  <div class="wrap wrap--shell">
+    <div class="outcome-intro">
+      <p class="section-label">{{ page.outcomes.label }}</p>
+      <h2 id="outcomes-title">{{ page.outcomes.headline }}</h2>
+    </div>
+    <ul class="outcome-rail">
+      {%- for key in page.outcomes.keys -%}
+        {%- assign outcome = site.data.metrics[key] -%}
+        <li>
+          <strong>{{ outcome.value }}</strong>
+          <span>{{ outcome.label }}</span>
+          <small>{{ outcome.context }}</small>
+        </li>
+      {%- endfor -%}
+    </ul>
+    {% include system-flow.html variant="platform" %}
+  </div>
+</section>
+
+{%- assign _professional_work = site.work | where: "kind", "practice" | sort: "order" -%}
+<section class="home-section home-work reveal" aria-labelledby="professional-title">
+  <div class="wrap wrap--shell">
+    <div class="section-head">
+      <div>
+        <p class="section-label">{{ page.professional.label }}</p>
+        <h2 id="professional-title">{{ page.professional.headline }}</h2>
+        <p>{{ page.professional.blurb }}</p>
+      </div>
+    </div>
+    <div class="case-bands">
+      {%- for item in _professional_work limit: 2 %}
+      {% include case-card.html item=item variant="band" heading="h3" index=forloop.index %}
+      {%- endfor %}
+    </div>
+    <p><a class="section-more" href="{{ page.professional.more_url | relative_url }}">{{ page.professional.more }} {% include icon.html name="arrow-right" size=14 %}</a></p>
+  </div>
+</section>
+
+{%- assign _independent_product = site.work | where: "kind", "production" | first -%}
+{%- assign _lab = site.work | where: "kind", "lab" | first -%}
+<section class="home-section home-independent reveal" aria-labelledby="independent-title">
+  <div class="wrap wrap--shell">
+    <div class="section-head">
+      <div>
+        <p class="section-label">{{ page.independent.label }}</p>
+        <h2 id="independent-title">{{ page.independent.headline }}</h2>
+        <p>{{ page.independent.blurb }}</p>
+      </div>
+    </div>
+    <div class="independent-grid">
+      {% include case-card.html item=_independent_product variant="compact" heading="h3" %}
+      {% include case-card.html item=_lab variant="compact" heading="h3" %}
+    </div>
+  </div>
+</section>
+
+{%- if site.posts.size > 0 %}
+<section class="home-section home-writing reveal" aria-labelledby="writing-title">
+  <div class="wrap wrap--shell">
+    <div class="section-head">
+      <div>
+        <p class="section-label">{{ page.writing.label }}</p>
+        <h2 id="writing-title">{{ page.writing.headline }}</h2>
+        <p>{{ page.writing.blurb }}</p>
+      </div>
+    </div>
+    {%- assign _editor_picks = site.posts | where: "editor_pick", true -%}
+    {%- assign _lead_post = _editor_picks | first -%}
+    <div class="writing-selection">
+      {%- if _lead_post -%}
+      {% include post-card.html post=_lead_post %}
+      {%- endif -%}
+      {%- for post in site.posts -%}
+        {%- if post.url != _lead_post.url and forloop.index <= 3 -%}
+        {% include post-card.html post=post %}
+        {%- endif -%}
+      {%- endfor %}
+    </div>
+    <p class="section-more-row">
+      <a class="section-more" href="{{ page.writing.more_url | relative_url }}">{{ page.writing.more }} {% include icon.html name="arrow-right" size=14 %}</a>
+      <a class="section-more" href="{{ '/writing/feed.xml' | relative_url }}">{% include icon.html name="rss" size=14 %} RSS</a>
+    </p>
+    <aside class="current-role" aria-labelledby="currently-title">
+      <p class="section-label" id="currently-title">{{ page.currently.label }}</p>
+      <p>{{ page.currently.body }}</p>
+      <a class="section-more" href="{{ page.currently.cta_url | relative_url }}">{{ page.currently.cta }} {% include icon.html name="arrow-right" size=14 %}</a>
+    </aside>
+  </div>
+</section>
+{%- endif %}

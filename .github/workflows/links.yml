@@ -1,0 +1,37 @@
+name: External link check
+
+# Off-site links rot on someone else's schedule, so checking them on every push
+# would make the deploy gate depend on third-party uptime. This runs on its own,
+# weekly, and has no deploy job — it can never block a release.
+on:
+  schedule:
+    - cron: "0 3 * * 1" # Mondays, 03:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: links
+  cancel-in-progress: true
+
+jobs:
+  external:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version-file: .ruby-version
+          bundler-cache: true
+
+      - name: Build site
+        env:
+          JEKYLL_ENV: production
+        run: bundle exec jekyll build --trace
+
+      - name: Check external links
+        run: bundle exec rake check:external

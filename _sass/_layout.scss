@@ -1,0 +1,190 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// LAYOUT — page shell, section rhythm, post shell.
+//
+// Depth comes from surface elevation, hairlines and one photograph. There are
+// no ambient gradients on <body>; a radial glow behind the fold is the single
+// clearest tell of a generated design.
+// ─────────────────────────────────────────────────────────────────────────────
+
+.wrap {
+  width: 100%;
+  max-width: var(--w-page);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.wrap--shell {
+  max-width: var(--w-shell);
+}
+
+.wrap--wide {
+  max-width: var(--w-wide);
+}
+
+// Sticky footer without a wrapper div.
+body {
+  display: flex;
+  flex-direction: column;
+  // Wide tables and code own their horizontal scrolling. Nothing else may give
+  // the document itself a second axis, including at 200% text size.
+  overflow-x: clip;
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+// ── Section rhythm ───────────────────────────────────────────────────────────
+// One rule owns the vertical gap between top-level blocks. Components do not
+// add their own bottom padding on top of it — the index layouts stack
+// `.prose` head + N × `section.wrap`, and the home layout stacks five
+// sections, and both need to read as the same rhythm.
+section + section,
+.page > * + * {
+  margin-block-start: var(--sp-section);
+}
+
+// ── Page ─────────────────────────────────────────────────────────────────────
+// No bottom padding: .site-footer supplies the closing gap, so there is
+// exactly one number between the last block and the rule above the footer.
+.page {
+  padding-block-start: clamp(2.5rem, 5vw, 4rem);
+}
+
+.page-head {
+  max-width: 44rem;
+  margin-bottom: var(--sp-7);
+  padding-bottom: var(--sp-5);
+  border-bottom: 1px solid var(--line);
+}
+
+.page-head h1 {
+  margin: 0;
+  font-size: var(--step-4);
+}
+
+.page-head .lede {
+  margin-top: var(--sp-4);
+}
+
+// ── Post ─────────────────────────────────────────────────────────────────────
+// .post-head is a direct child of .prose, so it already sits in the `content`
+// track and needs no width of its own — that is what optically aligns the H1
+// with the body copy underneath it.
+.post-head {
+  margin-bottom: var(--sp-7);
+  padding-bottom: var(--sp-5);
+  border-bottom: 1px solid var(--line);
+}
+
+.post-head h1 {
+  margin: 0 0 var(--sp-4);
+  font-size: var(--step-4);
+}
+
+.post-head .lede {
+  margin-bottom: var(--sp-5);
+}
+
+.post-meta {
+  font-variant-numeric: tabular-nums;
+}
+
+.post-meta > * + *::before {
+  content: "";
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  margin-inline-end: var(--sp-3);
+  margin-bottom: 0.18em;
+  border-radius: var(--r-full);
+  background: currentcolor;
+  opacity: 0.5;
+}
+
+.post-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin-block-start: var(--sp-5);
+  padding: 0;
+  list-style: none;
+}
+
+// ── Post shell: article + sticky TOC rail ────────────────────────────────────
+// Below 1100px the rail collapses and the layout agent's `.toc-mobile`
+// <details> element takes over.
+.post-shell {
+  width: 100%;
+  max-width: var(--w-shell);
+  margin-inline: auto;
+  padding-block-start: clamp(2.5rem, 5vw, 4rem);
+}
+
+.post-shell > * {
+  min-width: 0;
+}
+
+// The article's non-.prose blocks — share, series nav, author card, related —
+// are siblings of .prose, so they get no gutters or measure from the prose
+// grid. This lines them up with the prose `content` track exactly: same max
+// width, same inline padding, same centring.
+.post-shell > article > * + * {
+  margin-block-start: var(--sp-8);
+}
+
+.post-shell > article > :not(.prose) {
+  width: min(100%, calc(var(--w-prose) + var(--gutter) * 2));
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+@media (min-width: 68.75rem) {
+  .post-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 15rem;
+    column-gap: var(--sp-8);
+    padding-inline: var(--gutter);
+  }
+
+  // Everything auto-flows into column 1; only the rail is placed explicitly,
+  // so this works regardless of which order the layout emits them in.
+  .post-shell > * {
+    grid-column: 1;
+  }
+
+  .post-shell > .toc {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: start;
+    position: sticky;
+    top: calc(var(--header-h) + var(--sp-5));
+  }
+
+  // Inside the shell the article no longer needs to reserve page gutters — the
+  // shell already has them. Setting the token on <article> rather than on
+  // .prose keeps the prose grid and its non-prose siblings on the same rail.
+  .post-shell > article {
+    --gutter: 0rem;
+  }
+}
+
+// Focus lands here from the skip link. It is a legitimate focus target, but a
+// 2px ring drawn around the entire page is noise, not information — the scroll
+// position already says where you are.
+main[tabindex="-1"]:focus,
+main[tabindex="-1"]:focus-visible {
+  outline: none;
+}
+
+// Inline SVG icons. The reset makes svg display:block for images; icons sit in
+// running text and inside inline-flex buttons, so they opt back out.
+.icon {
+  display: inline-block;
+  flex: none;
+  vertical-align: -0.15em;
+}
+
+:is(.btn, .nav__cta, .share a, .section-more, .footer-col a) .icon {
+  vertical-align: baseline;
+}

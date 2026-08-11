@@ -1,0 +1,26 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+[*.{yml,yaml,html,scss,css,js,json,rb,liquid,svg,xml}]
+indent_style = space
+indent_size = 2
+
+[{Rakefile,Gemfile}]
+indent_style = space
+indent_size = 2
+
+# Tabs are part of the syntax.
+[Makefile]
+indent_style = tab
+
+[*.{md,markdown}]
+max_line_length = off
+# Two trailing spaces are a hard line break in kramdown.
+trim_trailing_whitespace = false

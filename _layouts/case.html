@@ -1,0 +1,138 @@
+---
+layout: default
+---
+{%- comment -%}
+  Case study. Glance box from front matter, the write-up, then a results block whose
+  numbers are looked up by key in _data/metrics.yml — a case study can only claim a
+  number the metrics file already vouches for, together with how it was measured.
+{%- endcomment -%}
+{%- assign _kind = page.kind | default: "production" -%}
+{%- case _kind -%}
+  {%- when "lab" -%}{%- assign _kind_label = "Measured lab" -%}
+  {%- when "practice" -%}{%- assign _kind_label = "Professional practice" -%}
+  {%- else -%}{%- assign _kind_label = "Independent product" -%}
+{%- endcase -%}
+{%- assign _lede = page.hook | default: page.description -%}
+
+<header class="interior-hero interior-hero--case" data-code="SYSTEM / RECORD">
+  <div class="wrap wrap--shell interior-hero__inner interior-hero__inner--article">
+    <div class="interior-hero__rail">
+      <nav class="article-breadcrumb" aria-label="Breadcrumb">
+        <a href="{{ '/work/' | relative_url }}">Work</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">{{ _kind_label }}</span>
+      </nav>
+      <dl class="article-facts">
+        {%- if page.org %}<div><dt>Organization</dt><dd>{{ page.org }}</dd></div>{% endif %}
+        {%- if page.period %}<div><dt>Period</dt><dd>{{ page.period }}</dd></div>{% endif %}
+        {%- if page.role %}<div><dt>Role</dt><dd>{{ page.role }}</dd></div>{% endif %}
+      </dl>
+    </div>
+    <div class="interior-hero__content">
+      <h1>{{ page.title }}</h1>
+      {%- if _lede %}<p class="lede">{{ _lede }}</p>{% endif %}
+      <p class="interior-hero__status"><span class="badge badge--{{ _kind }}">{{ _kind_label }}</span></p>
+    </div>
+  </div>
+</header>
+
+<article class="page page--case">
+  <div class="prose">
+    <div class="case-scan is-wide">
+      <section class="case-scan__decision" aria-labelledby="problem-title">
+        <h2 class="section-label" id="problem-title">Problem and decision</h2>
+        {%- if page.problem %}<p><strong>Problem</strong>{{ page.problem }}</p>{% endif -%}
+        {%- if page.decision %}<p><strong>Decision</strong>{{ page.decision }}</p>{% endif -%}
+      </section>
+      <section class="case-brief" aria-labelledby="brief-title">
+        <h2 class="section-label" id="brief-title">Scope</h2>
+        <dl class="case-glance">
+          {%- if page.team %}
+          <dt>Team</dt>
+          <dd>{{ page.team }}</dd>
+          {%- endif %}
+          {%- if page.scale %}
+          <dt>Scale</dt>
+          <dd>{{ page.scale }}</dd>
+          {%- endif %}
+          {%- if page.repo or page.live_url %}
+          <dt>Links</dt>
+          <dd>
+            {%- if page.repo %}<a href="{{ page.repo }}" rel="noopener">Source</a>{% endif -%}
+            {%- if page.repo and page.live_url %} <span aria-hidden="true">·</span> {% endif -%}
+            {%- if page.live_url %}<a href="{{ page.live_url }}" rel="noopener">Live</a>{% endif -%}
+          </dd>
+          {%- endif %}
+        </dl>
+      </section>
+
+      {%- if page.metrics and page.metrics.size > 0 %}
+      <section class="case-impact" aria-labelledby="impact-title">
+        <h2 class="section-label" id="impact-title">{% if _kind == "lab" %}Measured results{% else %}Outcomes{% endif %}</h2>
+        <ul class="stats">
+          {%- for key in page.metrics -%}
+          {%- assign m = site.data.metrics[key] -%}
+          {%- if m %}
+          <li>
+            <strong>{{ m.value }}</strong>
+            <span>{{ m.label }}</span>
+            <details class="stats__detail">
+              <summary>How this was measured</summary>
+              <span class="stats__method">{{ m.method }}{% if m.window %} · {{ m.window }}{% endif %}</span>
+            </details>
+          </li>
+          {%- endif -%}
+          {%- endfor %}
+        </ul>
+      </section>
+      {%- endif %}
+    </div>
+    {%- if page.flow -%}
+    <div class="case-system is-wide">
+      {% include system-flow.html variant=page.flow hide_evidence=true %}
+    </div>
+    {%- endif -%}
+
+    {%- comment -%}
+      Derived from the rendered content rather than hardcoded. The previous fixed
+      list assumed every entry used the seven canonical case-study headings, so
+      any page with a different shape emitted seven anchors pointing at headings
+      that did not exist — a silent breakage that html-proofer's
+      check_internal_hash catches only because it is switched on. kramdown's
+      auto_ids give us the same ids the headings actually have.
+    {%- endcomment -%}
+    {%- assign _h2s = content | split: '<h2 id="' -%}
+    {%- if _h2s.size > 2 %}
+    <nav class="case-map" aria-label="Sections">
+      <p class="section-label">On this page</p>
+      <ol>
+        {%- for _chunk in _h2s offset: 1 -%}
+        {%- assign _id = _chunk | split: '"' | first -%}
+        {%- assign _label = _chunk | split: '</h2>' | first | split: '>' | last | strip_html | strip -%}
+        {%- if _id and _label != "" %}
+        <li><a href="#{{ _id }}">{{ _label }}</a></li>
+        {%- endif -%}
+        {%- endfor %}
+      </ol>
+    </nav>
+    {%- endif -%}
+
+    {{ content }}
+  </div>
+
+  {% include related-posts.html tags=page.tags exclude_url=page.url heading="Related writing" %}
+
+  <section class="strip reveal" aria-labelledby="case-cta">
+    <div class="wrap strip-grid">
+      <div>
+        <h2 class="section-label" id="case-cta">Continue the conversation</h2>
+        <p>See the full career record, or get in touch about a senior data, platform, or AI engineering role.</p>
+      </div>
+      <p class="strip-links">
+        <a class="btn btn--primary" href="{{ '/resume/' | relative_url }}">View résumé {% include icon.html name="arrow-right" size=14 %}</a>
+        <a class="btn btn--ghost" href="mailto:{{ site.author.email }}">Email Basant</a>
+        <a class="btn btn--ghost" href="{{ '/work/' | relative_url }}">All case studies</a>
+      </p>
+    </div>
+  </section>
+</article>

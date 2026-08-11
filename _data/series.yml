@@ -1,0 +1,25 @@
+# Post series. Posts reference these by `series:` slug + `series_order:` integer.
+#
+# `register` states what kind of work a series is, because the two here are not
+# the same kind and should not be read as though they were. Jack Vanlightly
+# separates "Analyses" from "Blog" in his top-level navigation for exactly this
+# reason: measured, reproducible work and shorter field notes set different
+# expectations, and collapsing them into one undifferentiated feed forces every
+# post to be either overweight or underweight for its slot.
+#
+#   measurement — a rig, a stated apparatus, and numbers a reader can reproduce
+#   runbook     — a follow-along setup, correct but not a measurement exercise
+
+- slug: failover-lab
+  title: "The failover lab"
+  register: measurement
+  register_label: "Measured on my own hardware"
+  blurb: "Six database engines, eight failover scenarios, one laptop. Every claim in this series was measured on the rig, not quoted from a docs page."
+  status: in-progress    # in-progress | complete
+
+- slug: self-hosted-ops
+  title: "Free OSS on your own VPS"
+  register: runbook
+  register_label: "Follow-along runbook"
+  blurb: "Want a free VPN, a private remote desktop, or a mailbox for your domain? Three follow-along setups with fully OSS tools, plus the one thing each guide usually gets wrong."
+  status: complete

@@ -1,0 +1,27 @@
+{%- comment -%}
+  Tag pills. Usage:
+    {% include tag-chips.html tags=page.tags %}
+    {% include tag-chips.html tags=slug_list counts=true %}
+    {% include tag-chips.html labels=page.stack %}        (plain, non-linking pills)
+
+  `tags` are slugs resolved through _data/tags.yml; unknown slugs still render so a
+  typo is visible rather than silently dropped.
+{%- endcomment -%}
+{%- if include.labels -%}
+<ul class="post-tags">
+  {%- for label in include.labels %}
+  <li><span class="chip">{{ label }}</span></li>
+  {%- endfor %}
+</ul>
+{%- elsif include.tags and include.tags.size > 0 -%}
+<ul class="post-tags">
+  {%- for slug in include.tags -%}
+  {%- assign _t = site.data.tags | where: "slug", slug | first -%}
+  {%- assign _name = _t.name | default: slug -%}
+  {%- assign _count = site.tags[slug] | size -%}
+  {%- unless include.nonempty and _count == 0 %}
+  <li><a class="chip{% if include.counts %} chip--count{% endif %}" href="{{ '/writing/tags/' | append: slug | append: '/' | relative_url }}">{{ _name }}{% if include.counts %} <span>{{ _count }}</span>{% endif %}</a></li>
+  {%- endunless %}
+  {%- endfor %}
+</ul>
+{%- endif -%}

@@ -1,0 +1,206 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// PRINT
+//
+// Someone will print the resume page, and a recruiter will print a case study.
+// Force the paper theme regardless of the on-screen mode, drop every piece of
+// chrome that cannot be clicked on paper, and expose link destinations.
+// ─────────────────────────────────────────────────────────────────────────────
+
+@media print {
+  :root,
+  :root[data-theme="dark"],
+  :root[data-theme="light"] {
+    color-scheme: light;
+
+    --surface-0: #ffffff;
+    --surface-1: #ffffff;
+    --surface-2: #f4f2ee;
+    --surface-3: #eae6df;
+
+    --ink-1: #000000;
+    --ink-2: #333333;
+    --ink-3: #555555;
+
+    --line: rgba(0, 0, 0, 0.18);
+    --line-strong: rgba(0, 0, 0, 0.3);
+    --line-control: #666666;
+
+    --accent: #5e4310;
+    --accent-hi: #5e4310;
+    --accent-tint: transparent;
+
+    --code-bg: #f7f6f3;
+    --code-bg-inline: transparent;
+    --code-fg-inline: #000000;
+    --code-border: rgba(0, 0, 0, 0.28);
+    --code-header-bg: #eeece8;
+
+    --sx-fg: #000;
+    --sx-comment: #555;
+    --sx-key: #000;
+    --sx-str: #333;
+    --sx-num: #333;
+    --sx-fn: #000;
+    --sx-type: #000;
+    --sx-attr: #333;
+    --sx-op: #333;
+    --sx-punc: #555;
+    --sx-out: #555;
+
+    --shadow-1: none;
+    --shadow-2: none;
+    --shadow-3: none;
+  }
+
+  @page {
+    margin: 16mm 14mm;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+    font-size: 10.5pt;
+    line-height: 1.45;
+  }
+
+  // Chrome that means nothing on paper. No !important needed: _print.scss is
+  // the last @use in the manifest, media queries add no specificity, and these
+  // selectors tie or beat the rules they override, so source order settles it.
+  .site-header,
+  .site-footer,
+  .nav,
+  .nav-toggle,
+  .nav-dialog,
+  .theme-toggle,
+  .toc,
+  .toc-mobile,
+  .progress,
+  .skip-link,
+  .share,
+  .copy-btn,
+  .code-tools,
+  .related,
+  .series-nav,
+  .section-more,
+  .hero-photo::before {
+    display: none;
+  }
+
+  main {
+    padding: 0;
+  }
+
+  // The prose grid collapses to a single measure-free column.
+  .prose {
+    display: block;
+    max-width: none;
+  }
+
+  .prose > * {
+    max-width: none;
+  }
+
+  .wrap,
+  .post-shell {
+    max-width: none;
+    padding-inline: 0;
+    display: block;
+  }
+
+  // Never split a code block, a callout or a table row across a page.
+  .highlighter-rouge,
+  .callout,
+  .case-glance,
+  .tutorial-header,
+  .article-summary,
+  .author-card,
+  figure,
+  tr,
+  li,
+  blockquote {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .highlighter-rouge pre {
+    // On paper there is no scrollbar, so long lines must wrap instead of
+    // silently truncating.
+    overflow: visible;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .highlighter-rouge code {
+    display: block;
+    min-width: 0;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  h2,
+  h3 {
+    break-before: auto;
+  }
+
+  p,
+  li {
+    orphans: 3;
+    widows: 3;
+  }
+
+  // Expose destinations for links that leave the page. In-page anchors and
+  // links whose text already is the URL are skipped.
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 0.85em;
+    color: #555;
+    word-break: break-all;
+  }
+
+  a[href^="http"][href*="technobasant.github.io"]::after,
+  a[href^="#"]::after,
+  .btn::after,
+  .chip::after,
+  .mark::after {
+    content: "";
+  }
+
+  a {
+    color: #000;
+    text-decoration: underline;
+  }
+
+  img {
+    max-width: 100%;
+    break-inside: avoid;
+  }
+
+  // Cards flatten to plain blocks; a grid of shadowed panels prints badly.
+  .post-card,
+  .case-card {
+    border: 0;
+    border-block-end: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 0;
+    padding-inline: 0;
+    background: none;
+  }
+}
+
+// A table spanning a page break loses its column headers on paper unless the
+// header group is declared repeatable.
+thead {
+  display: table-header-group;
+}
+
+// Keep a measured value and its unit together when the line breaks.
+.ledger__measure,
+.stats li > strong,
+.case-card__metric strong {
+  white-space: nowrap;
+}

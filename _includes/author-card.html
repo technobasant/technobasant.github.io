@@ -1,0 +1,30 @@
+{%- comment -%}
+  End-of-post author card. Exactly one call to action — a stack of them reads as
+  desperation and each extra one lowers the click rate of the first.
+{%- endcomment -%}
+<aside class="author-card reveal">
+  {%- include picture.html
+      base="/assets/images/hero-portrait-v2"
+      widths="420"
+      ext="jpg"
+      fallback_width="420"
+      sizes="104px"
+      width=420
+      height=525
+      alt="Basant Bhattarai"
+      loading="lazy" -%}
+  <div>
+    <p><strong>Basant Bhattarai</strong> is a Senior Data & AI Engineer with nine years across backend systems, production data platforms, database reliability, and governed agents. He writes about the failure modes that only appear under load. Working US and EU hours.</p>
+    <p>Currently: Senior Data Engineer at <a href="https://uxcam.com" rel="noopener">UXCam</a>.</p>
+    <p class="author-card__links">
+      <a href="{{ '/about/' | relative_url }}">About</a>
+      <span aria-hidden="true">·</span>
+      <a href="{{ site.author.github }}" rel="me noopener">GitHub</a>
+      <span aria-hidden="true">·</span>
+      <a href="{{ site.author.linkedin }}" rel="me noopener">LinkedIn</a>
+      <span aria-hidden="true">·</span>
+      <a href="mailto:{{ site.author.email }}">Email</a>
+    </p>
+    <p class="author-card__action"><span>Building something like this? I take a couple of consulting engagements at a time.</span> <a class="btn btn--ghost" href="{{ '/hire/' | relative_url }}">Work with me {% include icon.html name="arrow-right" size=14 %}</a></p>
+  </div>
+</aside>

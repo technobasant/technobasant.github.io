@@ -1,0 +1,172 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// TYPOGRAPHY
+//
+// Fraunces is a display face and nothing else: page h1, section h2, stat
+// numerals. Its defaults ("SOFT" and "WONK" on) read cute; both are pinned to 0
+// so it reads as a well-cut serif instead of a bakery logo.
+// ─────────────────────────────────────────────────────────────────────────────
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+  line-height: var(--lh-heading);
+  letter-spacing: var(--ls-heading);
+  color: var(--ink-1);
+  text-wrap: balance;
+}
+
+p,
+li,
+dd,
+figcaption,
+blockquote {
+  text-wrap: pretty;
+}
+
+// Display face. Applied deliberately, never inherited into body copy.
+// `:not(.section-label)` — the layouts label a section with <h2 class="section-label">,
+// which must stay a small upright caps label, not a display line.
+.display,
+.hero h1,
+.page-head h1,
+.post-head h1,
+.section-head h2:not(.section-label),
+.stats li > strong {
+  // Numerals in Inter, not Fraunces: the Fraunces subset ships only `liga` and
+  // `rvrn`, so `tabular-nums` on it is a silent no-op and stacked figures came
+  // out ragged. The wght-only subset also makes SOFT/WONK dead declarations.
+  font-family: var(--font-body);
+  font-weight: 600;
+  letter-spacing: var(--ls-display);
+  line-height: var(--lh-display);
+}
+
+// ── Eyebrow / section label ──────────────────────────────────────────────────
+// Small caps-ish label. Set in --ink-3, NOT brass: there is one brass element
+// per viewport and it is never a label.
+.eyebrow,
+.section-label {
+  display: block;
+  margin: 0 0 var(--sp-3);
+  font-size: var(--step--2);
+  font-weight: 600;
+  line-height: var(--lh-ui);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+// ── Lede ─────────────────────────────────────────────────────────────────────
+.lede {
+  margin: 0;
+  max-width: var(--measure-lede);
+  font-size: var(--step-1);
+  line-height: 1.5;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+// ── Role line (hero, resume) ─────────────────────────────────────────────────
+.role {
+  margin: 0;
+  font-size: var(--step-1);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ink-1);
+}
+
+// ── Section head: label + heading + a "more" link on the same baseline ───────
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-2) var(--sp-5);
+  margin-bottom: var(--sp-6);
+  padding-bottom: var(--sp-4);
+  border-bottom: 1px solid var(--line);
+}
+
+.section-head h2:not(.section-label) {
+  margin: 0;
+  font-size: var(--step-3);
+}
+
+.section-head .section-label {
+  margin-bottom: 0;
+}
+
+// A blurb under the label wraps to its own line.
+.section-head > p:not([class]) {
+  flex-basis: 100%;
+  margin: 0;
+  max-width: var(--measure-lede);
+  font-size: var(--step--1);
+  color: var(--ink-2);
+}
+
+// The layouts supply an arrow icon inside the link, so there is no ::after
+// glyph here — two arrows is one arrow too many.
+.section-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  min-height: 2.75rem;
+  max-width: 100%;
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--ink-2);
+  text-decoration: none;
+  white-space: normal;
+  transition: color var(--dur-1) var(--ease-standard);
+}
+
+.section-more + .section-more {
+  margin-inline-start: var(--sp-5);
+}
+
+.section-more:hover {
+  color: var(--ink-1);
+}
+
+// ── Metadata line ────────────────────────────────────────────────────────────
+.meta,
+.post-meta,
+.case-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2) var(--sp-4);
+  margin: 0;
+  font-size: var(--step--1);
+  line-height: var(--lh-ui);
+  color: var(--ink-3);
+}
+
+.meta > * ,
+.post-meta > * {
+  margin: 0;
+}
+
+small,
+.small {
+  font-size: var(--step--1);
+}
+
+abbr[title] {
+  text-decoration: underline dotted;
+  text-underline-offset: 0.2em;
+  cursor: help;
+}
+
+// Tabular figures wherever numbers are compared vertically.
+.stats li > strong,
+.case-glance dd,
+td,
+time {
+  font-variant-numeric: tabular-nums;
+}

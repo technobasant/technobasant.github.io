@@ -1,0 +1,41 @@
+{%- comment -%}
+  Series navigation.
+    {% include series-nav.html %}            → "Part N of M" + prev/next
+    {% include series-nav.html full=true %}  → the full ordered list (bottom of post)
+{%- endcomment -%}
+{%- assign _parts = site.posts | where: "series", page.series | sort: "series_order" -%}
+{%- assign _total = _parts | size -%}
+{%- assign _meta = site.data.series | where: "slug", page.series | first -%}
+{%- assign _title = _meta.title | default: page.series -%}
+{%- if _total > 0 -%}
+{%- assign _index = 0 -%}
+{%- assign _prev = nil -%}
+{%- assign _next = nil -%}
+{%- for p in _parts -%}
+  {%- if p.url == page.url -%}
+    {%- assign _index = forloop.index -%}
+    {%- unless forloop.first -%}{%- assign _pi = forloop.index0 | minus: 1 -%}{%- assign _prev = _parts[_pi] -%}{%- endunless -%}
+    {%- unless forloop.last -%}{%- assign _prev_ni = forloop.index -%}{%- assign _next = _parts[_prev_ni] -%}{%- endunless -%}
+  {%- endif -%}
+{%- endfor -%}
+<nav class="series-nav" aria-label="Series: {{ _title | escape }}">
+  <p class="section-label">Part {{ _index }} of {{ _total }} <span aria-hidden="true">·</span> {{ _title }}{% if _meta.status == "in-progress" %} <span>(in progress)</span>{% endif %}</p>
+  {%- if include.full %}
+  {%- if _meta.blurb %}<p>{{ _meta.blurb }}</p>{% endif %}
+  <ol class="series-nav__list">
+    {%- for p in _parts %}
+    <li>{% if p.url == page.url %}<span aria-current="true">{{ p.title }}</span>{% else %}<a href="{{ p.url | relative_url }}">{{ p.title }}</a>{% endif %}</li>
+    {%- endfor %}
+  </ol>
+  {%- else %}
+  <ul class="series-nav__list">
+    {%- if _prev %}
+    <li><a href="{{ _prev.url | relative_url }}" rel="prev">{% include icon.html name="arrow-left" size=16 %} Previous: {{ _prev.title }}</a></li>
+    {%- endif %}
+    {%- if _next %}
+    <li><a href="{{ _next.url | relative_url }}" rel="next">Next: {{ _next.title }} {% include icon.html name="arrow-right" size=16 %}</a></li>
+    {%- endif %}
+  </ul>
+  {%- endif %}
+</nav>
+{%- endif -%}

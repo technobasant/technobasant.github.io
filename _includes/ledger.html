@@ -1,0 +1,58 @@
+{%- comment -%}
+  The failover matrix, from _data/lab.yml.
+
+  Caption above the table (scientific convention for tables) and carrying the
+  apparatus, because a measurement without its method is decoration. Pass/fail is
+  carried by a glyph as well as a colour so it survives greyscale and colour
+  blindness — WCAG 1.4.1.
+
+  Params:
+    limit — render only the first N rows (homepage uses a subset)
+    more  — URL for a "full matrix" link
+{%- endcomment -%}
+{%- assign _lab = site.data.lab -%}
+{%- assign _rows = _lab.scenarios -%}
+{%- if include.limit %}{%- assign _rows = _rows | slice: 0, include.limit -%}{%- endif -%}
+
+<figure class="ledger">
+  <figcaption class="ledger__caption">
+    <b>{{ include.label | default: "Table 1 · Failover, measured" }}</b>
+    {{ _lab.apparatus.method }} {{ _lab.apparatus.rig }}, {{ _lab.apparatus.window }}.
+    {{ _lab.apparatus.caveat }}
+  </figcaption>
+
+  <div class="ledger__scroll" data-scrollable data-scroll-label="Failover results table">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Engine</th>
+          <th scope="col">Topology</th>
+          <th scope="col">What I did to it</th>
+          <th scope="col">Measured</th>
+          <th scope="col">Result</th>
+          <th scope="col">What it taught me</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%- for s in _rows %}
+        <tr>
+          <td>
+            <span class="ledger__engine">{{ s.engine }}</span>
+            {%- if s.version != "—" %}<span class="ledger__version">{{ s.version }}</span>{% endif -%}
+          </td>
+          <td>{{ s.topology }}</td>
+          <td class="ledger__probe">{{ s.probe }}</td>
+          <td class="ledger__measure">
+            <span class="ledger__value">{{ s.value }}</span>{%- if s.unit != "" %}<span class="ledger__unit">{{ s.unit }}</span>{% endif -%}
+            <span class="ledger__metric">{{ s.metric }}</span>
+          </td>
+          <td>
+            <span class="ledger__result ledger__result--{% if s.result == "untested" %}untested{% else %}measured{% endif %}">{{ s.result }}</span>
+          </td>
+          <td class="ledger__note">{{ s.note }}</td>
+        </tr>
+        {%- endfor %}
+      </tbody>
+    </table>
+  </div>
+</figure>

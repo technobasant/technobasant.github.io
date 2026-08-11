@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: 'en' }}">
+<head>
+<meta charset="utf-8">
+<script>
+/* Stored choice wins; otherwise follow the OS. An OS that states no preference
+   gets light, not dark: "permanent dark mode as the default reflex" is the most
+   frequently cited AI-template tell of 2026, and every infrastructure writer in
+   the two site surveys behind this design — Brooker, Kingsbury, Nelhage,
+   Willison, Luu, MacWright, Vanlightly — is light-first. Dark remains a
+   first-class theme, one click away, and is still honoured automatically for
+   anyone whose system asks for it. */
+(function(){var r=document.documentElement,t='light';r.classList.add('js');
+try{var s=localStorage.getItem('theme');
+t=(s==='light'||s==='dark')?s:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+}catch(e){}
+r.setAttribute('data-theme',t);r.style.colorScheme=t;})();
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+{%- comment -%} One theme-color, no `media` — site.js repaints it from the resolved
+--surface-0 token on load and on every toggle, so a second media-scoped meta would
+win over it in exactly the case the user overrode their OS. {%- endcomment %}
+<meta name="theme-color" content="#0D0F12">
+{% include head/meta.html %}
+  <link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}">
+  {% feed_meta %}
+  <link rel="alternate" type="application/feed+json" title="{{ site.title | escape }}" href="{{ '/writing/feed.json' | relative_url }}">
+{% include head/jsonld.html %}
+</head>
+<body class="template-{{ page.layout | default: 'page' }}{% if page.page_class %} {{ page.page_class }}{% endif %}">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <a class="mark" href="{{ '/' | relative_url }}">Basant <span>Bhattarai</span></a>
+      {% include nav.html %}
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    {{ content }}
+  </main>
+
+  {% include footer.html %}
+
+  <script src="{{ '/assets/js/site.js' | relative_url }}" defer></script>
+</body>
+</html>

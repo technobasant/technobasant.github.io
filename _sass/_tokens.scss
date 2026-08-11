@@ -1,0 +1,283 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// TOKENS — the single source of truth.
+//
+// Two themes, switched by `data-theme` on <html>. Dark is the default and is
+// also attached to bare `:root` so the page is never unstyled if the no-flash
+// inline script fails to run.
+//
+// Contrast ratios in the comments are computed against the theme's --surface-0
+// and are not to be changed without recomputing.
+// ─────────────────────────────────────────────────────────────────────────────
+
+:root {
+  // ── Brand constants (mode-invariant) ──────────────────────────────────────
+  --brand-brass: #c4a574;
+  --brand-brass-lift: #d9be8e;
+  --brand-brass-masthead: #dfb66c;
+
+  // ── Type families ─────────────────────────────────────────────────────────
+  // Serif for prose, sans for UI. In a survey of 26 data/infra sites the serif
+  // camp is almost exactly the infrastructure-writing camp — Brooker (Georgia),
+  // Willison (Georgia), Sivers (Georgia), Jepsen (TeX Gyre Schola), Nelhage
+  // (Vollkorn), Eaton (Merriweather), Morling (Lora) — while all-sans marks the
+  // design-engineer sites. This is genre signalling, not taste.
+  //
+  // The stack is deliberately system-only: it costs zero bytes and zero
+  // requests, which matters more than a licensed face on a site whose whole
+  // proposition is that it is fast. brandur.org ships `ui-serif` and nothing
+  // else. Iowan Old Style and Charter are excellent on Apple platforms; Georgia
+  // carries Windows and Android.
+  --font-display: "Fraunces", "Fraunces Fallback", Georgia, "Times New Roman", serif;
+  --font-prose: ui-serif, "Iowan Old Style", Charter, "Bitstream Charter", Georgia, "Times New Roman", serif;
+  --font-body: "Inter", "Inter Fallback", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  // ── Fluid type ramp ───────────────────────────────────────────────────────
+  // Utopia-style: min at 320px viewport, max at 1200px. Body is 17px on desktop.
+  // 12→13 · 14→15 · 16→17 · 18→20 · 20→24 · 23→30 · 27→40 · 40→68
+  --step--2: clamp(0.75rem, 0.727rem + 0.12vw, 0.8125rem);
+  --step--1: clamp(0.875rem, 0.852rem + 0.114vw, 0.9375rem);
+  // Body is 17→19px. Nothing in either survey sets prose below 17px:
+  // justinjaffray and scattered-thoughts 20, maxhalford 19, chrisalbon ~18.8,
+  // jepsen 18.7, aphyr 18, vondra and morling 17.
+  --step-0: clamp(1.0625rem, 1.019rem + 0.188vw, 1.1875rem);
+  --step-1: clamp(1.125rem, 1.08rem + 0.227vw, 1.25rem);
+  --step-2: clamp(1.25rem, 1.159rem + 0.455vw, 1.5rem);
+  --step-3: clamp(1.4375rem, 1.278rem + 0.795vw, 1.875rem);
+  --step-4: clamp(1.6875rem, 1.392rem + 1.477vw, 2.5rem);
+  // Hero display, pulled back from 68px. A 48px+ name-H1 is the Tailwind
+  // Spotlight signature and now reads as template; leerob sets his own name at
+  // 24px and brandur has no H1 at all. This still reads as display type without
+  // wrapping a three-word headline onto three lines.
+  --step-5: clamp(2.125rem, 1.756rem + 1.84vw, 3.25rem);
+
+  // ── Line height ───────────────────────────────────────────────────────────
+  --lh-display: 1.03;
+  --lh-heading: 1.18;
+  --lh-ui: 1.4;
+  --lh-prose: 1.65;
+  --lh-code: 1.6;
+
+  // ── Tracking ──────────────────────────────────────────────────────────────
+  // Graded to size, following Geist's published ramp: -0.02em to 20px,
+  // -0.04em at 24-32px, -0.06em from 40px up. The hero tops out near 56px.
+  --ls-display: -0.045em;
+  --ls-heading: -0.018em;
+  // Zero, deliberately. Across Geist, iA, Emil Kowalski and Josh Comeau the
+  // negative-tracking ramp is graded to size and body copy always sits at 0;
+  // a global letter-spacing is the tell in the other direction.
+  --ls-body: 0em;
+  --ls-label: 0.1em; // Butterick: 5-12% extra space with caps; 0.14em was over
+
+  // ── Measure & containers ──────────────────────────────────────────────────
+  // Measured from two surveys of sites in this genre. Prose measure clusters at
+  // 650–800px and nothing credible runs wider than ~900px: eatonphil 650,
+  // brandur 625–750, vondra and morling 760–800, justinjaffray 720,
+  // jepsen ~745, brooker ~800. The previous 69rem page container was sized for
+  // a magazine and was the mechanical reason these pages read as sparse.
+  --measure: 46rem; // 736px
+  --measure-lede: 34rem;
+  --measure-wide: 52rem;
+
+  --w-prose: var(--measure);
+  --w-wide: 52rem;
+  --w-page: 58rem; // 928px — index and home grids
+  --w-shell: 72rem; // 1152px — post shell incl. the TOC rail
+
+  // ── Space ─────────────────────────────────────────────────────────────────
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4rem;
+  --sp-9: 6rem;
+  --sp-10: 8rem;
+
+  --gutter: clamp(1.25rem, 5vw, 2.5rem);
+  --sp-section: clamp(3.5rem, 8vw, 7rem);
+
+  // Single source of truth for the sticky header. Nothing may hardcode this.
+  --header-h: 4.25rem;
+
+  // ── Radius ────────────────────────────────────────────────────────────────
+  --r-sm: 3px; // inline code, small chips
+  --r-md: 6px; // buttons, cards, code blocks, callouts
+  --r-lg: 10px; // large panels, photographs
+  --r-full: 999px; // tag pills ONLY
+
+  // ── Motion ────────────────────────────────────────────────────────────────
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-1: 120ms;
+  --dur-2: 200ms;
+  --dur-3: 320ms;
+  --dur-4: 520ms;
+}
+
+@media (max-width: 30rem) {
+  :root {
+    --gutter: max(1rem, env(safe-area-inset-left), env(safe-area-inset-right));
+    --header-h: 4rem;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DARK (default)
+// ─────────────────────────────────────────────────────────────────────────────
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --surface-0: #0d0f12;
+  --surface-1: #14171c;
+  --surface-2: #1b1f26;
+  --surface-3: #232830;
+
+  --ink-1: #ece8e1; // 15.72:1
+  --ink-2: #b0aca4; // 8.48:1 — warmed to match --ink-1 and the brass
+  // Verified against every surface, not just surface-0: 6.28 / 5.88 / 5.41 /
+  // 4.85. The previous warmed value passed on the page background and failed at
+  // 4.39 on a raised panel, which is exactly the regression a single-surface
+  // contrast check misses.
+  --ink-3: #98938a;
+
+  --line: rgba(236, 232, 225, 0.1);
+  --line-strong: rgba(236, 232, 225, 0.17);
+  // 4.00 / 3.74 / 3.44 / 3.09 on surface-0..3. Was #636b75, which cleared 3:1
+  // on surface-0 but fell to 2.74:1 on surface-3 — a control border that is a
+  // control's ONLY affordance has to hold 1.4.11 on every surface it lands on.
+  --line-control: #6b737d;
+
+  --accent: #c4a574; // 8.21:1
+  --accent-hi: #d9be8e; // 10.70:1
+  --accent-fill: #c4a574;
+  --accent-on: #16120b;
+  --accent-tint: color-mix(in oklab, var(--accent) 12%, transparent);
+
+  // Not brass. Paco Coursey defines one accent and spends it on a single
+  // element; his selection is grey and Emil Kowalski's focus ring is grey too.
+  // Keeping brass off focus and selection leaves it meaning one thing.
+  --focus: #b8c0c9;      // 10.44:1 on surface-0
+  --sel-bg: #2f3742;
+  --sel-fg: #ece8e1;     // 9.85:1 on --sel-bg
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.55);
+  --shadow-3: 0 28px 80px -20px rgba(0, 0, 0, 0.6);
+
+  // Code
+  --code-bg: #14171c;
+  --code-bg-inline: rgba(196, 165, 116, 0.09);
+  --code-fg-inline: #d9be8e;
+  --code-border: rgba(236, 232, 225, 0.14);
+  --code-header-bg: #191d23;
+  --code-hl-bg: rgba(196, 165, 116, 0.1);
+  --code-hl-edge: var(--accent);
+  // Decorative only — scrollbar thumb and (unused) line-number gutter. Below
+  // 4.5:1 on --code-bg, so it must never carry text.
+  --code-gutter: #5e6874;
+  // Readable chrome inside a code well: the language label and copy button.
+  // 5.77:1 on --code-bg. WCAG 1.4.3 applies here — the label is visible text.
+  --code-meta: #8a939e;
+
+  // Callout edges — all ≥3:1 against --surface-1
+  --c-note: #c4a574;
+  --c-tip: #8fbf8f;
+  --c-warn: #e0b36a;
+  --c-danger: #e0757a;
+  --c-gotcha: #e0b36a;
+
+  // Syntax — "Brass Editorial"
+  --sx-fg: #d6d1c9;
+  --sx-comment: #828c98;
+  --sx-key: #c9a96e;
+  --sx-str: #9bbf9e;
+  --sx-num: #d9a276;
+  --sx-fn: #8fb6d9;
+  --sx-type: #d8c79a;
+  --sx-attr: #b7c4d0;
+  --sx-op: #a9b2bc;
+  --sx-punc: #8a939e;
+  --sx-ins: #8fbf8f;
+  --sx-del: #e08a8e;
+  --sx-err: #e0757a;
+  --sx-out: #9aa3ad;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// LIGHT — warm paper, not white. Brass is darkened to #7C5A18 for text-weight
+// use; true brass survives as --accent-fill for decorative fills only.
+// ─────────────────────────────────────────────────────────────────────────────
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --surface-0: #fbfaf8;
+  --surface-1: #ffffff;
+  --surface-2: #f1eee8;
+  --surface-3: #e7e2d9;
+
+  --ink-1: #15181c; // 17.07:1
+  --ink-2: #4c535c; // 7.46:1
+  // Verified against every light surface, not just paper: 5.98 / 5.74 / 5.17 /
+  // 4.64 on surface-1/0/2/3. The previous #676e77 was measured on surface-0
+  // only and failed at 4.45 on --surface-2 and 4.00 on --surface-3 — the same
+  // single-surface mistake the dark --ink-3 had. `rake tokens` now blocks it.
+  --ink-3: #5d646d;
+
+  --line: rgba(21, 24, 28, 0.09);
+  --line-strong: rgba(21, 24, 28, 0.15);
+  // 3.80 / 3.97 / 3.43 / 3.08 on surface-0..3. Was #8c8578 — 2.84:1 on surface-3.
+  --line-control: #867f72;
+
+  --accent: #7c5a18; // 6.04:1
+  --accent-hi: #5e4310;
+  --accent-fill: #c4a574;
+  --accent-on: #16120b;
+  --accent-tint: color-mix(in oklab, var(--accent-fill) 24%, transparent);
+
+  --focus: #4c535c;      // 7.46:1 on paper
+  --sel-bg: #dfe3e8;
+  --sel-fg: #15181c;     // 13.81:1 on --sel-bg
+
+  --shadow-1: 0 1px 2px rgba(30, 26, 18, 0.06);
+  --shadow-2: 0 8px 24px -10px rgba(30, 26, 18, 0.14);
+  --shadow-3: 0 28px 70px -24px rgba(30, 26, 18, 0.2);
+
+  // Code
+  --code-bg: #f5f2ec;
+  --code-bg-inline: rgba(124, 90, 24, 0.1);
+  --code-fg-inline: #6b4e14;
+  --code-border: rgba(21, 24, 28, 0.12);
+  --code-header-bg: #eeeae2;
+  --code-hl-bg: rgba(196, 165, 116, 0.26);
+  --code-hl-edge: #a8823a;
+  --code-gutter: #8b8578; // decorative only — 3.28:1, never text
+  --code-meta: #6b675b; // 5.06 on --code-bg, 4.71 on --code-header-bg
+
+  // Callout edges
+  --c-note: #7c5a18;
+  --c-tip: #2e6b3a;
+  --c-warn: #8a5f1c;
+  --c-danger: #a32d33;
+  --c-gotcha: #8a5f1c;
+
+  // Syntax
+  --sx-fg: #22262b;
+  --sx-comment: #66707c;
+  --sx-key: #8a5f1c;
+  --sx-str: #3c6a48;
+  --sx-num: #97511f;
+  --sx-fn: #2c5a85;
+  --sx-type: #6e5520;
+  --sx-attr: #3f4a57;
+  --sx-op: #4e555e;
+  --sx-punc: #66707c;
+  --sx-ins: #2e6b3a;
+  --sx-del: #a32d33;
+  --sx-err: #a32d33;
+  --sx-out: #5a626c;
+}

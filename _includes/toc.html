@@ -1,0 +1,75 @@
+{%- comment -%}
+  Server-rendered table of contents.
+
+  Usage: {% include toc.html content=content %}              → sticky rail <nav class="toc">
+         {% include toc.html content=content mobile=true %}  → <details class="toc-mobile">
+
+  Parsed out of the already-rendered HTML, relying on kramdown `auto_ids`
+  (`<h2 id="slug">…`). Server-rendered means zero CLS, zero JS, and a TOC that is
+  indexable and placeable in a sidebar — none of which a `{:toc}` marker inside the
+  body can do, because it renders inside the article's own flow. JS only adds
+  scroll-spy (`.toc__link.is-active`) on top.
+
+  Renders nothing below `min_headings` (default 3) — a two-item TOC is furniture.
+{%- endcomment -%}
+{%- assign _min = include.min_headings | default: 3 -%}
+{%- assign _nodes = include.content | split: '<h' -%}
+
+{%- assign _count = 0 -%}
+{%- for _n in _nodes offset: 1 -%}
+  {%- assign _lvl = _n | slice: 0, 1 -%}
+  {%- if _lvl == '2' or _lvl == '3' -%}
+    {%- if _n contains 'id="' -%}{%- assign _count = _count | plus: 1 -%}{%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- if _count >= _min -%}
+{%- capture _list -%}
+<ul class="toc__list">
+{%- assign _li_open = false -%}
+{%- assign _sub_open = false -%}
+{%- for _n in _nodes offset: 1 -%}
+  {%- assign _lvl = _n | slice: 0, 1 -%}
+  {%- if _lvl == '2' or _lvl == '3' -%}
+  {%- if _n contains 'id="' -%}
+    {%- assign _idparts = _n | split: 'id="' -%}
+    {%- assign _id = _idparts[1] | split: '"' | first -%}
+    {%- assign _inner = _n | split: '</h' | first -%}
+    {%- assign _bits = _inner | split: '">' -%}
+    {%- assign _text = "" -%}
+    {%- for _b in _bits offset: 1 -%}
+      {%- if forloop.first -%}{%- assign _text = _b -%}
+      {%- else -%}{%- assign _text = _text | append: '">' | append: _b -%}{%- endif -%}
+    {%- endfor -%}
+    {%- assign _text = _text | strip_html | normalize_whitespace | strip -%}
+    {%- if _id != "" and _text != "" -%}
+      {%- if _lvl == '2' -%}
+        {%- if _sub_open -%}</ul>{%- assign _sub_open = false -%}{%- endif -%}
+        {%- if _li_open -%}</li>{%- assign _li_open = false -%}{%- endif -%}
+        <li><a class="toc__link" href="#{{ _id }}">{{ _text }}</a>
+        {%- assign _li_open = true -%}
+      {%- else -%}
+        {%- unless _li_open -%}<li>{%- assign _li_open = true -%}{%- endunless -%}
+        {%- unless _sub_open -%}<ul class="toc__list">{%- assign _sub_open = true -%}{%- endunless -%}
+        <li><a class="toc__link" href="#{{ _id }}">{{ _text }}</a></li>
+      {%- endif -%}
+    {%- endif -%}
+  {%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- if _sub_open -%}</ul>{%- endif -%}
+{%- if _li_open -%}</li>{%- endif -%}
+</ul>
+{%- endcapture -%}
+{%- if include.mobile -%}
+<details class="toc-mobile">
+  <summary>On this page</summary>
+  {{ _list }}
+</details>
+{%- else -%}
+<nav class="toc" aria-labelledby="toc-title" data-toc>
+  <h2 class="section-label" id="toc-title">On this page</h2>
+  {{ _list }}
+</nav>
+{%- endif -%}
+{%- endif -%}

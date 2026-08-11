@@ -1,0 +1,95 @@
+# Skills are intentionally described without employer scale, topology, or
+# operational figures. Public evidence points only to independent work, generic
+# writing, or the privacy-safe career summary.
+
+note: >-
+  Tiers are self-assessed and deliberately conservative. Tier 1 means sustained
+  production use; Tier 2 means meaningful delivery on a narrower surface; Tier 3
+  marks working knowledge from evaluation, prototyping, or lab work.
+
+tier1:
+  heading: "Sustained production experience"
+  blurb: "Technologies I have operated, debugged, and reviewed as part of long-lived systems."
+  items:
+    - { name: "Python", since: 2017, scale: "Backend services, data pipelines, automation, and AI tooling" }
+    - { name: "SQL", since: 2017, scale: "Transactional, analytical, and reliability work", evidence: /writing/postgresql-18-docker-volume-path-change/, evidence_label: "PostgreSQL tutorial" }
+    - { name: "Apache Spark / PySpark", since: 2020, scale: "Batch and streaming data processing" }
+    - { name: "Apache Kafka", since: 2020, scale: "Event-driven and streaming systems" }
+    - { name: "Apache Airflow", since: 2020, scale: "Workflow orchestration, replay, and recovery design" }
+    - { name: "Apache Iceberg", since: 2022, scale: "Table evolution, maintenance, and data modeling" }
+    - { name: "dbt", since: 2021, scale: "Transformation contracts, testing, and documentation" }
+    - { name: "PostgreSQL", since: 2017, scale: "Application data, replication, recovery, and upgrades", evidence: /writing/postgresql-18-docker-volume-path-change/, evidence_label: "PostgreSQL tutorial" }
+    - { name: "ClickHouse", since: 2021, scale: "Analytical modeling and operational practice" }
+    - { name: "Trino", since: 2021, scale: "Federated SQL and query modeling" }
+    - { name: "Kubernetes", since: 2022, scale: "Container orchestration and data workloads" }
+    - { name: "Prometheus + Grafana", since: 2021, scale: "Service and data-reliability signals", evidence: /work/multi-engine-ha-lab/, evidence_label: "Reliability lab" }
+
+tier2:
+  heading: "Shipped on a narrower surface"
+  blurb: "Used to deliver real systems, with less breadth or duration than Tier 1."
+  groups:
+    - name: "AI & agents"
+      items: [LangGraph, LangChain, CrewAI, "Google-ADK", MCP, Milvus, MLflow, Pydantic]
+    - name: "Data platform"
+      items: ["Databricks + Unity Catalog", "Amazon Kinesis", "Spark Structured Streaming", "Debezium / CDC", "Delta Lake"]
+    - name: "Databases"
+      items: [Redis, MongoDB, Citus, TimescaleDB]
+    - name: "Product & infra"
+      items: [FastAPI, Celery, "Next.js", Terraform, Docker, "GitHub Actions", Helm]
+
+tier3:
+  heading: "Working knowledge"
+  blurb: "Evaluated, prototyped, or run in a lab; listed to show where the depth stops."
+  items:
+    - Apache Flink
+    - Apache Beam
+    - Prefect
+    - LlamaIndex
+    - AutoGen
+    - Haystack
+    - Semantic Kernel
+    - DSPy
+    - OpenAI Agents SDK
+    - Pinecone
+    - pgvector
+    - Chroma
+    - FAISS
+    - Weaviate
+    - ScyllaDB
+    - "MariaDB + Galera"
+    - SolrCloud
+    - Elasticsearch
+    - Apache Druid
+    - Snowflake
+    - BigQuery
+    - Amazon Redshift
+    - DuckDB
+    - Hadoop
+    - Apache Hive
+    - Scala
+    - Java
+    - Azure Synapse
+    - Azure Data Factory
+    - Power BI
+    - Tableau
+    - Looker
+    - Superset
+    - Metabase
+    - PyTorch
+    - Polars
+    - PyArrow
+    - Ansible
+    - Jenkins
+    - LangSmith
+    - Langfuse
+    - Opik
+    - OpenTelemetry
+    - Datadog
+
+clouds:
+  - name: AWS
+    items: [S3, EKS, Lambda, Glue, Athena, Redshift, Kinesis, EMR, RDS, "Step Functions", Bedrock, SageMaker]
+  - name: GCP
+    items: [BigQuery, Dataflow, Dataproc, Datastream, "Pub/Sub", "Cloud Composer", GKE, "Vertex AI"]
+  - name: Azure
+    items: [Synapse, "Data Factory", Databricks, ADLS, "Event Hubs", AKS, "Azure ML"]

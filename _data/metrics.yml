@@ -1,0 +1,188 @@
+# Single source for every figure used by the site and the résumé.
+#
+# A page may not state a number that does not exist here, and every entry
+# carries how it was measured. `method` and `window` are rendered to the
+# reader next to the figure; `source` and `context` are editorial notes.
+
+experience:
+  value: "9 years"
+  label: "in software engineering"
+  method: "role history, 2017–2026"
+  scope: "professional"
+  source: "CV role history"
+  context: "Four engineering roles from backend development through senior data and AI platform ownership."
+
+# --- professional platform evidence ---
+
+professional_platform_scale:
+  value: "15 TB+"
+  label: "production data footprint"
+  method: "operated footprint across ingestion, transformation, storage, and analytical serving"
+  window: "2024–2026 role period"
+  scope: "professional"
+  source: "CV summary"
+  context: "Batch and streaming data systems across ingestion, transformation, storage, and analytical serving."
+
+professional_event_volume:
+  value: "100M+"
+  label: "events processed daily"
+  method: "daily event throughput on the production ingestion path"
+  window: "2024–2026 role period"
+  scope: "professional"
+  source: "CV summary and Senior Data Engineer role"
+  context: "Production mobile-analytics workloads; stated as a conservative floor."
+
+professional_uptime:
+  value: "99.9%"
+  label: "platform uptime sustained"
+  method: "service availability on platform serving endpoints, rolling window"
+  window: "2020–2026 platform ownership"
+  scope: "professional"
+  source: "CV Senior Data Engineer and Data Engineer roles"
+  context: "Reliability work included service objectives, observability, runbooks, governance, and autoscaling."
+
+professional_cost_reduction:
+  value: "40%"
+  label: "lower infrastructure cost"
+  method: "before/after infrastructure run-rate across the Kubernetes migration"
+  window: "2020–2024 Data Engineer role"
+  scope: "professional"
+  source: "CV Data Engineer role"
+  context: "Kubernetes migration and capacity work across the data infrastructure."
+
+professional_processing_improvement:
+  value: "50%"
+  label: "faster core processing"
+  method: "before/after wall-clock runtime of the rebuilt core pipeline"
+  window: "2020–2024 Data Engineer role"
+  scope: "professional"
+  source: "CV Data Engineer role"
+  context: "Spark/PySpark ETL rebuild with Airflow orchestration for multi-terabyte daily processing."
+
+professional_analytics_delivery:
+  value: "60%"
+  label: "faster analytics delivery"
+  method: "before/after delivery time for recurring analytics requests"
+  window: "2024–2026 Senior Data Engineer role"
+  scope: "professional"
+  source: "CV Senior Data Engineer role"
+  context: "Governed AI-assisted analytics workflows."
+
+professional_manual_effort:
+  value: "75%"
+  label: "less analyst manual effort"
+  method: "before/after manual effort per recurring analyst request"
+  window: "2024–2026 Senior Data Engineer role"
+  scope: "professional"
+  source: "CV Senior Data Engineer role"
+  context: "AI-assisted analytics workflows with typed output, provenance, evaluation, and review paths."
+
+professional_team_delivery:
+  value: "30%"
+  label: "faster team delivery"
+  method: "before/after team delivery time following mentoring and review changes"
+  window: "2024–2026 Senior Data Engineer role"
+  scope: "professional"
+  source: "CV Senior Data Engineer role"
+  context: "Mentoring five engineers through pairing, code review, and written design feedback."
+
+professional_mentoring:
+  value: "5"
+  label: "engineers mentored"
+  method: "engineers mentored directly through pairing and design review"
+  scope: "professional"
+  source: "CV Senior Data Engineer role"
+  context: "Pairing, code review, written design feedback, and transferable system ownership."
+
+professional_daily_processing:
+  value: "5 TB+"
+  label: "processed per day"
+  method: "daily volume through the core Spark processing path"
+  scope: "professional"
+  source: "CV Data Engineer role"
+  context: "Core Spark/PySpark ETL workloads orchestrated with Airflow."
+
+professional_query_volume:
+  value: "100M+"
+  label: "analytical queries served daily"
+  method: "daily analytical query volume across the serving engines"
+  scope: "professional"
+  source: "CV Data Engineer role"
+  context: "Distributed analytical serving across Trino, ClickHouse, Citus, and TimescaleDB."
+
+professional_query_latency:
+  value: "50%"
+  label: "lower p95 query latency"
+  method: "before/after p95 latency on the analytical serving path"
+  scope: "professional"
+  source: "CV Data Engineer role"
+  context: "Partitioning, clustering, and data-model redesign."
+
+professional_project_team:
+  value: "4"
+  label: "developers led"
+  method: "project team size"
+  scope: "professional"
+  source: "CV Project Leader role"
+  context: "NLP dialogue-system project across academic and industry stakeholders."
+
+professional_project_delivery:
+  value: "2 weeks"
+  label: "ahead of schedule"
+  method: "delivery against the agreed project schedule"
+  scope: "professional"
+  source: "CV Project Leader role"
+  context: "Client acceptance threshold met for the dialogue system."
+
+professional_backend_users:
+  value: "10K+"
+  label: "backend users served"
+  method: "users served by the backend services"
+  scope: "professional"
+  source: "CV Software Developer role"
+  context: "Python and FastAPI backend services."
+
+professional_test_coverage:
+  value: "85%"
+  label: "test coverage"
+  method: "line coverage on the backend test suite"
+  scope: "professional"
+  source: "CV Software Developer role"
+  context: "Python and FastAPI backend services."
+
+# --- multi-engine HA lab (independent, measured) ---
+
+lab_scenarios:
+  value: "8 of 8"
+  label: "failover scenarios passed"
+  method: "my own test plan, executed on Docker with 8 CPU / 12.5 GB"
+  scope: "independent"
+  source: "2026 multi-engine HA lab"
+  window: "2026"
+  context: "MongoDB, ScyllaDB, SolrCloud, MariaDB+Galera, Redis Cluster, Redis Sentinel, PostgreSQL, observability."
+
+lab_pg_replay_lag:
+  value: "383 µs"
+  label: "PostgreSQL 18 streaming replay lag"
+  method: "pg_stat_replication, primary + hot standby on one host"
+  scope: "independent"
+  source: "2026 multi-engine HA lab"
+  context: "write_lag measured at 104 µs on the same run."
+
+lab_redis_promotion:
+  value: "~5 s"
+  label: "Redis Sentinel primary promotion"
+  method: "wall-clock from SIGKILL of the primary to a writable replica"
+  scope: "independent"
+  source: "2026 multi-engine HA lab"
+  context: "Redis Cluster promoted with zero data loss, config epoch 2 → 7."
+
+# --- ClickHomes (personal project) ---
+
+clickhomes_migrations:
+  value: "90+"
+  label: "SQL migrations"
+  method: "versioned migration files in the repository"
+  scope: "independent"
+  source: "ClickHomes migration directory"
+  context: "Independent project; count taken from the versioned migration directory."

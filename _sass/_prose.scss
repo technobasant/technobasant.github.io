@@ -1,0 +1,576 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// PROSE — the load-bearing layout primitive.
+//
+// A named-line grid with three usable column spans:
+//
+//   full     edge to edge of the viewport
+//   wide     52rem — code blocks, tables, figures
+//   content  62ch  — everything else
+//
+// Authors write plain markdown. A fenced code block widens out of the measure
+// on its own because Rouge's wrapper is a direct child of .prose. No wrapper
+// divs, no Liquid, no classes to remember.
+//
+// CSS grid does NOT collapse child margins, so vertical rhythm uses the owl
+// model with a per-element --flow override. That makes spacing deterministic:
+// the gap between any two blocks is exactly one number, set by the block below.
+// ─────────────────────────────────────────────────────────────────────────────
+
+.prose {
+  counter-reset: prose-table;
+  display: grid;
+  grid-template-columns:
+    [full-start] minmax(var(--gutter), 1fr)
+    [wide-start] minmax(0, calc((var(--w-wide) - var(--w-prose)) / 2))
+    [content-start] min(var(--w-prose), 100% - var(--gutter) * 2) [content-end]
+    minmax(0, calc((var(--w-wide) - var(--w-prose)) / 2)) [wide-end]
+    minmax(var(--gutter), 1fr) [full-end];
+
+  // Running text is serif; UI chrome around it stays sans. Elements that are
+  // interface rather than prose — chips, badges, buttons, tables of contents,
+  // code — opt back out below and in their own components.
+  font-family: var(--font-prose);
+  font-size: var(--step-0);
+  line-height: var(--lh-prose);
+  color: var(--ink-1);
+}
+
+// Serifs carry more visual weight at the same nominal size, so the measure
+// tightens slightly and the tracking relaxes back to normal.
+.prose > p,
+.prose > ul,
+.prose > ol,
+.prose > blockquote,
+.prose > dl {
+  letter-spacing: 0;
+}
+
+// Structural and interface children keep the sans face.
+.prose :where(code, kbd, samp, pre) { font-family: var(--font-mono); }
+.prose :where(table, .callout__title, figcaption, .chip, .badge) {
+  font-family: var(--font-body);
+}
+
+.template-post .prose {
+  font-size: clamp(1.0625rem, 1.02rem + 0.18vw, 1.1875rem);
+  line-height: 1.7;
+  counter-reset: article-section;
+}
+
+.template-post .prose > p:first-of-type {
+  font-size: var(--step-1);
+  line-height: 1.65;
+  color: var(--ink-1);
+}
+
+.prose > * {
+  grid-column: content;
+  min-width: 0;
+}
+
+.prose > .highlighter-rouge,
+.prose > table,
+.prose > figure,
+.prose > .is-wide {
+  grid-column: wide;
+}
+
+.prose > .is-bleed {
+  grid-column: full;
+}
+
+// ── Flow ─────────────────────────────────────────────────────────────────────
+.prose > * {
+  margin-block: 0;
+}
+
+.prose > * + * {
+  margin-block-start: var(--flow, 1.15em);
+}
+
+.prose > h2 {
+  --flow: 2.75rem;
+}
+.prose > h3 {
+  --flow: 2rem;
+}
+.prose > h4 {
+  --flow: 1.5rem;
+}
+// A heading and the paragraph it introduces are one unit.
+.prose > h2 + *,
+.prose > h3 + *,
+.prose > h4 + * {
+  --flow: 0.7rem;
+}
+
+// …except a panel. The tight 0.7rem exists so a heading and its opening
+// paragraph read as one unit; applied to a full-bleed tinted block it puts the
+// panel edge on the heading's descenders.
+.prose > h2 + :is(.principle-list, .callout, .case-glance, .tutorial-header, .ledger, table) {
+  --flow: 1.75rem;
+}
+.prose > .highlighter-rouge {
+  --flow: 1.75rem;
+}
+.prose > table,
+.prose > figure,
+.prose > blockquote,
+.prose > .callout,
+.prose > details,
+.prose > .tutorial-header,
+.prose > .article-summary,
+.prose > .staleness,
+.prose > .series-nav,
+.prose > .toc-mobile,
+.prose > .case-glance,
+.prose > .case-impact,
+.prose > .case-map,
+.prose > .case-results {
+  --flow: 2rem;
+}
+
+// Verification output is part of the procedure, not an aside. A quiet rule
+// and explicit label make the command/result rhythm scannable without turning
+// every checkpoint into a heavy callout.
+.prose > .verify {
+  padding: var(--sp-3) var(--sp-4);
+  border-inline-start: 2px solid var(--accent);
+  background: color-mix(in oklab, var(--accent) 5%, transparent);
+  font-size: var(--step--1);
+  color: var(--ink-2);
+}
+
+.prose > .verify > strong:first-child {
+  margin-inline-end: 0.35em;
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.prose > hr {
+  --flow: 3rem;
+  margin-block-end: 3rem;
+}
+.prose > ul,
+.prose > ol,
+.prose > dl {
+  --flow: 1.15em;
+}
+
+// ── Headings ─────────────────────────────────────────────────────────────────
+// The layout renders the H1 from page.title; content markdown starts at ##.
+.prose > h1 {
+  display: none;
+}
+
+.prose h2 {
+  font-family: var(--font-display);
+  font-variation-settings: "SOFT" 0, "WONK" 0;
+  font-size: var(--step-3);
+  letter-spacing: var(--ls-display);
+  line-height: 1.15;
+}
+
+.template-post .prose > h2 {
+  counter-increment: article-section;
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr);
+  gap: var(--sp-4);
+  align-items: start;
+}
+
+.template-post .prose > h2::before {
+  content: counter(article-section, decimal-leading-zero);
+  padding-block-start: 0.22em;
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+  color: var(--accent);
+}
+
+@media (max-width: 30rem) {
+  .template-post .prose > h2 {
+    grid-template-columns: 1fr;
+    gap: var(--sp-2);
+  }
+}
+
+.prose h3 {
+  font-size: var(--step-1);
+  line-height: 1.3;
+}
+
+.prose h4 {
+  font-size: var(--step-0);
+  font-weight: 700;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+// Anchor links on headings, if the layout adds them. Invisible until hover or
+// keyboard focus, and never part of the text a screen reader announces first.
+.prose :is(h2, h3, h4) > .anchor {
+  margin-inline-start: 0.4em;
+  color: var(--ink-3);
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity var(--dur-1) var(--ease-standard);
+}
+
+.prose :is(h2, h3, h4):hover > .anchor,
+.prose .anchor:focus-visible {
+  opacity: 1;
+}
+
+// ── Body copy ────────────────────────────────────────────────────────────────
+// Body is --ink-1, inherited from `.prose` itself. The previous stylesheet set
+// `.prose p, .prose li { color: var(--muted) }` — four thousand words of
+// tutorial in secondary ink. Secondary ink is for captions, ledes and
+// metadata; it is applied explicitly to those and nowhere else, so there is no
+// blanket rule here to fight with.
+
+.prose > * strong,
+.prose > strong,
+.prose > * b {
+  font-weight: 650;
+}
+
+.prose em {
+  font-style: italic;
+}
+
+// `:not([class])` throughout the element-level rules below. Components live
+// inside .prose all the time — tag chips in the post head, the series nav, the
+// tutorial header's definition list — and a bare `.prose a` (0,1,1) would beat
+// `.chip` (0,1,0) and paint underlines through every one of them. Authored
+// markdown never carries a class, so this is an exact split with no
+// specificity arms race.
+.prose a:not([class]) {
+  color: var(--ink-1);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--accent) 55%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  transition: color var(--dur-1) var(--ease-standard),
+    text-decoration-color var(--dur-1) var(--ease-standard);
+}
+
+.prose a:not([class]):hover {
+  color: var(--accent-hi);
+  text-decoration-color: currentcolor;
+}
+
+// ── Lists ────────────────────────────────────────────────────────────────────
+.prose :is(ul, ol):not([class]) {
+  padding-inline-start: 1.35em;
+}
+
+.prose :is(ul, ol):not([class]) > li + li,
+.prose :is(ul, ol):not([class]) > li > :is(ul, ol) {
+  margin-block-start: 0.45em;
+}
+
+.prose :is(ul, ol):not([class]) > li::marker {
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.prose dl:not([class]) {
+  display: grid;
+  grid-template-columns: minmax(6rem, auto) 1fr;
+  gap: var(--sp-2) var(--sp-5);
+}
+
+.prose dl:not([class]) > dt {
+  font-weight: 650;
+  color: var(--ink-2);
+}
+
+.prose dl:not([class]) > dd {
+  margin: 0;
+}
+
+// Task lists (GFM)
+.prose li.task-list-item {
+  list-style: none;
+  margin-inline-start: -1.35em;
+}
+
+.prose input[type="checkbox"] {
+  margin-inline-end: 0.5em;
+  accent-color: var(--accent);
+}
+
+// ── Blockquote ───────────────────────────────────────────────────────────────
+.prose blockquote {
+  padding-inline-start: var(--sp-5);
+  border-inline-start: 2px solid var(--line-strong);
+  color: var(--ink-2);
+  font-size: var(--step-1);
+  line-height: 1.5;
+}
+
+.prose blockquote p + p {
+  margin-block-start: 0.8em;
+}
+
+.prose blockquote cite {
+  display: block;
+  margin-block-start: var(--sp-3);
+  font-size: var(--step--1);
+  font-style: normal;
+  color: var(--ink-3);
+}
+
+// ── Tables ───────────────────────────────────────────────────────────────────
+// booktabs, not a card. A box + radius + header fill + zebra is the spreadsheet
+// register; none of Jepsen, Distill, GOV.UK, the FT or SQLite uses any of the
+// four. Rules are heavy/light/heavy with nothing vertical, per booktabs' first
+// two guidelines, and the weight difference is carried by alpha rather than
+// thickness — 1px renders device-pixel-exact at every DPR while 0.05em rounds
+// unpredictably.
+.prose table {
+  width: 100%;
+  font-size: var(--step--1);
+  line-height: 1.45;
+  border-collapse: collapse;
+  border-block: 1.5px solid var(--line-strong); // \toprule + \bottomrule
+  counter-increment: prose-table;
+}
+
+.prose > .table-scroll-hint {
+  grid-column: wide;
+  display: flex;
+  align-items: center;
+  min-height: 2rem;
+  margin-block-end: calc(var(--sp-3) * -1);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  line-height: 1.4;
+  color: var(--ink-3);
+}
+
+.prose > .table-scroll-hint[hidden] {
+  display: none;
+}
+
+.prose th {
+  font-size: var(--step--1);
+  font-weight: 650;
+  letter-spacing: 0;
+  // Sentence case. Not one of Jepsen, Distill, the FT or latex-css uppercases a
+  // table header — that is a dashboard convention. Weight and the midrule do the
+  // separating.
+  text-transform: none;
+  color: var(--ink-1);
+  white-space: nowrap;
+  // FT Origami: multi-line column heads sit ON the midrule rather than floating
+  // above it.
+  vertical-align: bottom;
+  // Caps beside oldstyle figures look wrong, and headers may carry years.
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.prose thead th {
+  border-block-end: 1px solid var(--line); // \midrule — the only interior rule
+  padding-block-end: 0.21em; // \aboverulesep .4ex
+}
+
+.prose tbody tr:first-child > * {
+  padding-block-start: 0.34em; // \belowrulesep .65ex — deliberately > above
+}
+
+.prose td {
+  padding: var(--sp-3) var(--sp-4);
+  text-align: start;
+  vertical-align: baseline; // digits of differing length share a baseline
+  border-block-end: 1px solid
+    color-mix(in oklab, var(--ink-1) 7%, transparent);
+}
+
+.prose thead th {
+  padding-inline: var(--sp-4);
+}
+
+// booktabs' @{} — zero the OUTER padding so the rules begin exactly at the text
+// measure. Without it the first column is indented while the rule spans full
+// width, and the table optically hangs left of the body copy. GOV.UK ships this.
+.prose tr > :first-child {
+  padding-inline-start: 0;
+}
+
+.prose tr > :last-child {
+  padding-inline-end: 0;
+}
+
+// No rule under the last row: the table's own bottom border already draws it,
+// and two adjacent rules is booktabs' second prohibition.
+.prose tbody tr:last-child > * {
+  border-block-end: 0;
+}
+
+// Numeric cells opt in. --font-prose is a serif stack and Georgia ships no
+// `tnum`, so tabular-nums inherited by a table is a silent no-op with no console
+// warning and no visual cue. Inter does carry it.
+.prose :is(td, th).n {
+  font-family: var(--font-body);
+  font-variant-numeric: tabular-nums lining-nums;
+  text-align: end;
+}
+
+.prose caption {
+  caption-side: top;
+  text-align: start;
+  padding-block-end: 0.6em;
+  font-size: 0.9em;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.prose caption::before {
+  content: "Table " counter(prose-table) ". ";
+  font-weight: 650;
+  color: var(--ink-1);
+}
+
+@media (max-width: 40rem) {
+  // Wide table internals can contribute their intrinsic width to the page even
+  // when the table itself scrolls. Contain that overflow at the prose shell so
+  // the document never acquires a second horizontal scrollbar; the table and
+  // code regions remain independently scrollable and keyboard reachable.
+  .prose {
+    overflow-x: clip;
+  }
+
+  // Preserve table semantics while giving dense evidence tables a deliberate,
+  // touch-friendly horizontal reading surface.
+  .prose > table {
+    display: block;
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-control) transparent;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+  }
+
+  .prose > table :is(th, td) {
+    min-width: 9rem;
+    scroll-snap-align: start;
+  }
+
+  .prose > table :is(th, td):first-child {
+    position: sticky;
+    inset-inline-start: 0;
+    z-index: 1;
+    min-width: 8rem;
+    background: var(--surface-1);
+    white-space: normal;
+  }
+
+  .prose > table:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+  }
+}
+
+// ── Figures ──────────────────────────────────────────────────────────────────
+.prose figure {
+  margin: 0;
+}
+
+.prose figure img,
+.prose > img {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+}
+
+.prose figcaption {
+  margin-block-start: var(--sp-3);
+  font-size: var(--step--1);
+  line-height: 1.45;
+  color: var(--ink-3);
+  text-wrap: pretty;
+}
+
+// ── Details / disclosure ─────────────────────────────────────────────────────
+// `:not([class])` again: .toc-mobile is a <details> living inside .prose and
+// brings its own chrome.
+.prose details:not([class]) {
+  padding: var(--sp-4) var(--sp-5);
+  background: var(--surface-1);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+}
+
+.prose details:not([class]) > summary {
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--ink-1);
+}
+
+.prose details:not([class])[open] > summary {
+  margin-block-end: var(--sp-4);
+  padding-block-end: var(--sp-3);
+  border-block-end: 1px solid var(--line);
+}
+
+// ── Footnotes (kramdown) ─────────────────────────────────────────────────────
+.prose .footnotes {
+  --flow: 3rem;
+  padding-block-start: var(--sp-5);
+  border-block-start: 1px solid var(--line);
+  font-size: var(--step--1);
+  color: var(--ink-2);
+}
+
+.prose sup[role="doc-noteref"] a,
+.prose .footnote {
+  text-decoration: none;
+  font-variant-numeric: tabular-nums;
+}
+
+// ── Horizontal rule ──────────────────────────────────────────────────────────
+.prose hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+// ── First-child guard ────────────────────────────────────────────────────────
+.prose > :first-child {
+  margin-block-start: 0;
+}
+
+// A static checklist in prose is a list, not a form. Kramdown's GFM task-list
+// syntax renders `- [ ]` as a disabled <input type="checkbox"> with no
+// accessible name, which is nine unlabeled form controls on one page and a
+// WCAG 4.1.2 failure. The marker below reproduces the affordance with no
+// interactive element to mislabel, and it needs no JavaScript.
+.prose > ul.checklist {
+  padding-inline-start: 0;
+  list-style: none;
+}
+
+.prose > ul.checklist > li {
+  position: relative;
+  padding-inline-start: 1.9em;
+}
+
+.prose > ul.checklist > li::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 0.42em;
+  width: 0.78em;
+  height: 0.78em;
+  border: 1.5px solid var(--line-control);
+  border-radius: 2px;
+}

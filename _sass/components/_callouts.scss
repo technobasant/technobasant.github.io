@@ -1,0 +1,93 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// CALLOUTS
+//
+// One rule set, five severities, one variable. --cx is the severity colour;
+// the tint, the border and the edge are all derived from it with color-mix, so
+// adding a sixth severity is one custom property and nothing else.
+//
+// Every edge colour is ≥3:1 against --surface-1 in both themes, and the
+// severity is always stated in words in .callout__title — colour is never the
+// only carrier of meaning.
+// ─────────────────────────────────────────────────────────────────────────────
+
+.callout {
+  --cx: var(--c-note);
+
+  padding: var(--sp-5);
+  background: color-mix(in oklab, var(--cx) 7%, var(--surface-1));
+  border: 1px solid color-mix(in oklab, var(--cx) 24%, var(--line-strong));
+  border-inline-start: 3px solid var(--cx);
+  border-radius: var(--r-md);
+  color: var(--ink-1);
+}
+
+.callout--note {
+  --cx: var(--c-note);
+}
+.callout--tip {
+  --cx: var(--c-tip);
+}
+.callout--warn {
+  --cx: var(--c-warn);
+}
+.callout--danger {
+  --cx: var(--c-danger);
+}
+.callout--gotcha {
+  --cx: var(--c-gotcha);
+}
+
+// Kramdown puts real markdown inside, so reset the flow locally rather than
+// relying on .prose (a callout is a grid child, not a grid).
+.callout > * {
+  margin-block: 0;
+}
+
+.callout > * + * {
+  margin-block-start: 0.9em;
+}
+
+.callout__title,
+.callout > :is(h2, h3, h4, h5, h6):first-child {
+  margin: 0 0 var(--sp-3);
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  font-weight: 700;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  line-height: var(--lh-ui);
+  color: var(--cx);
+}
+
+.callout p,
+.callout li {
+  font-size: var(--step--1);
+  line-height: 1.6;
+  color: var(--ink-1);
+}
+
+.callout ul,
+.callout ol {
+  padding-inline-start: 1.35em;
+}
+
+.callout li + li {
+  margin-block-start: 0.4em;
+}
+
+.callout a {
+  color: var(--ink-1);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--cx) 65%, transparent);
+  text-underline-offset: 0.2em;
+}
+
+.callout a:hover {
+  text-decoration-color: currentcolor;
+}
+
+// A code block inside a callout keeps its own surface but loses the double
+// border — one container edge is enough.
+.callout .highlighter-rouge {
+  border-color: color-mix(in oklab, var(--cx) 20%, var(--code-border));
+}
