@@ -7,12 +7,36 @@ layout: default
 {%- endcomment -%}
 {%- assign _production = site.work | where: "kind", "production" | sort: "order" -%}
 {%- assign _labs = site.work | where: "kind", "lab" | sort: "order" -%}
+{%- assign _practice = site.work | where: "kind", "practice" | sort: "order" -%}
 
 {% include interior-hero.html variant="index" code="SYSTEM / RECORD" %}
 <div class="page page--index">
   <div class="prose index-intro">
     {{ content }}
   </div>
+
+  {%- comment -%}
+    Professional practice comes first: it is the largest body of work, and a
+    reader arriving from a résumé is looking for it. Each entry describes the
+    method rather than the deployment — the approach that transfers, not the
+    employer's architecture. This is Brendan Gregg's move: he never published a
+    Netflix diagram, he published the USE Method, and the industry adopted it.
+  {%- endcomment -%}
+  {%- if _practice.size > 0 %}
+  <section class="wrap index-section reveal" aria-labelledby="practice-title">
+    <div class="section-head">
+      <div>
+        <p class="section-label">Professional practice</p>
+        <h2 id="practice-title">The method, not the deployment.</h2>
+      </div>
+    </div>
+    <div class="showcase-grid showcase-grid--index{% if _practice.size == 1 %} showcase-grid--solo{% elsif _practice.size == 2 %} showcase-grid--pair{% endif %}">
+      {%- for item in _practice %}
+      {% include case-card.html item=item index=forloop.index %}
+      {%- endfor %}
+    </div>
+  </section>
+  {%- endif %}
 
   {%- if _production.size > 0 %}
   <section class="wrap index-section reveal" aria-labelledby="production-title">

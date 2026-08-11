@@ -105,6 +105,17 @@ button.chip:hover {
   color: var(--c-warn);
 }
 
+// Series register. `measurement` carries the accent because a claim backed by a
+// stated rig is the strongest thing on this site; `runbook` is deliberately
+// quieter, since a correct setup guide is useful but is not evidence.
+.badge--measurement {
+  color: var(--accent);
+}
+
+.badge--runbook {
+  color: var(--ink-3);
+}
+
 .badge--production {
   color: var(--accent);
 }
