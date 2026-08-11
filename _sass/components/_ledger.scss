@@ -258,3 +258,75 @@
 .section-more-row {
   margin-block: var(--sp-6) 0;
 }
+
+// ── Findings ─────────────────────────────────────────────────────────────────
+// Three failures, set as a numbered list. Deliberately narrow — this is reading
+// matter, not a matrix, so it takes the prose measure rather than the shell.
+.findings {
+  max-width: var(--measure);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: finding;
+}
+
+.finding {
+  counter-increment: finding;
+  padding-block: var(--sp-6);
+  border-block-start: 1px solid var(--line);
+}
+
+.finding:last-child { border-block-end: 1px solid var(--line); }
+
+.finding__engine {
+  margin: 0 0 var(--sp-2);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+// The counter sits in the margin at wide viewports and inline below it, so the
+// number never competes with the headline for the first reading position.
+.finding__engine::before {
+  content: counter(finding, decimal-leading-zero);
+  margin-inline-end: var(--sp-3);
+  color: var(--accent);
+}
+
+.finding__headline {
+  max-width: 30ch;
+  margin: 0 0 var(--sp-3);
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  font-weight: 600;
+  letter-spacing: var(--ls-heading);
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.finding__headline a {
+  color: var(--ink-1);
+  text-decoration-color: var(--line-control);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  transition: text-decoration-color var(--dur-1) var(--ease-standard);
+}
+
+.finding__headline a:hover { text-decoration-color: var(--accent); }
+
+.finding__detail {
+  max-width: 62ch;
+  margin: 0;
+  font-size: var(--step--1);
+  line-height: 1.6;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+.finding__detail code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  color: var(--code-fg-inline);
+}

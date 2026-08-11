@@ -67,13 +67,16 @@ layout: default
 {%- comment -%}
   The evidence, immediately, as the first thing below the fold.
 
-  This is the one section on the site that a reader cannot get anywhere else and
-  cannot fake: eight things I did to a database and what came back. It sits here
-  rather than three sections down because everything above it is a claim and
-  everything in it is a measurement, and the sooner a stranger crosses that line
-  the better. It is deliberately NOT a stats strip — every row names the engine,
-  the topology, the exact thing I did to it, the number, and the detail that only
-  appears once you have actually killed the process.
+  This was an eight-row all-PASS matrix. It looked like evidence and was closer
+  to decoration: a constant column carries about one bit, and presenting "nothing
+  broke" in the footprint of a comparison advertises a comparison that is not
+  there. Jepsen states the epistemics plainly — experiments prove the existence
+  of errors, not their absence — and its own analyses index is a list, not a
+  results table. Across 20 sites in this genre, none lead with a table.
+
+  Three failures carry variance, a decision and a diagnosis, which is what
+  demonstrates judgment rather than completion. The matrix still exists, on the
+  lab page, where its framing and its caveats live with it.
 {%- endcomment -%}
 {%- if site.data.lab %}
 <section class="home-section home-ledger reveal" aria-labelledby="ledger-title">
@@ -85,9 +88,9 @@ layout: default
         {%- if page.ledger.blurb %}<p class="section-blurb">{{ page.ledger.blurb }}</p>{% endif -%}
       </div>
     </div>
-    {% include ledger.html %}
+    {% include findings.html %}
     <p class="section-more-row">
-      <a class="section-more" href="{{ '/work/multi-engine-ha-lab/' | relative_url }}">The rig, the commands, and the failures {% include icon.html name="arrow-right" size=14 %}</a>
+      <a class="section-more" href="{{ '/work/multi-engine-ha-lab/' | relative_url }}">All eight scenarios, the rig, and the numbers {% include icon.html name="arrow-right" size=14 %}</a>
     </p>
   </div>
 </section>

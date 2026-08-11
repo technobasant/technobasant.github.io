@@ -40,8 +40,10 @@
 
 .case-card--feature .post-card__title {
   max-width: 18ch;
-  font-family: var(--font-display);
-  font-variation-settings: "SOFT" 0, "WONK" 0;
+  // Numerals in Inter, not Fraunces: the Fraunces subset ships only `liga` and
+  // `rvrn`, so `tabular-nums` on it is a silent no-op and stacked figures came
+  // out ragged. The wght-only subset also makes SOFT/WONK dead declarations.
+  font-family: var(--font-body);
   font-size: var(--step-4);
   letter-spacing: var(--ls-display);
   line-height: 1.04;
@@ -163,8 +165,10 @@
 
 .case-card__metric strong {
   display: block;
-  font-family: var(--font-display);
-  font-variation-settings: "SOFT" 0, "WONK" 0;
+  // Numerals in Inter, not Fraunces: the Fraunces subset ships only `liga` and
+  // `rvrn`, so `tabular-nums` on it is a silent no-op and stacked figures came
+  // out ragged. The wght-only subset also makes SOFT/WONK dead declarations.
+  font-family: var(--font-body);
   font-size: var(--step-2);
   font-weight: 600;
   letter-spacing: var(--ls-display);
@@ -724,8 +728,10 @@ ol.series-nav__list > li::before {
 
 .case-results strong {
   display: block;
-  font-family: var(--font-display);
-  font-variation-settings: "SOFT" 0, "WONK" 0;
+  // Numerals in Inter, not Fraunces: the Fraunces subset ships only `liga` and
+  // `rvrn`, so `tabular-nums` on it is a silent no-op and stacked figures came
+  // out ragged. The wght-only subset also makes SOFT/WONK dead declarations.
+  font-family: var(--font-body);
   font-size: var(--step-2);
   letter-spacing: var(--ls-display);
   line-height: 1.1;

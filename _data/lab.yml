@@ -93,3 +93,27 @@ scenarios:
     metric: "keyspace hits/misses"
     result: pass
     note: "Every engine above was observed through the same dashboard rather than by hand."
+
+# The findings. This is what the homepage shows instead of the all-PASS matrix.
+#
+# An eight-row PASS column carries about one bit — "nothing broke" — in the
+# visual footprint of a comparison. Jepsen states the epistemics outright:
+# experiments "can only prove the existence of errors, not their absence", and
+# jepsen.io/analyses is deliberately a list, not a results table. The unit of
+# value in this genre is a difference, so the surprises lead and the matrix
+# lives on the lab page where its framing lives too.
+findings:
+  - engine: "ScyllaDB"
+    headline: "The third node would not start, and the error was about the kernel"
+    detail: "Two nodes came up fine. The third died on `system does not satisfy minimum AIO requirements` — Seastar reserves async I/O contexts per reactor, and the Docker VM's `fs.aio-max-nr` ceiling fit two of them. It is a VM-wide sysctl, and it does not survive a Docker Desktop restart."
+    url: /writing/scylladb-nodetool-refresh-upload-truncate-marker/
+
+  - engine: "ScyllaDB"
+    headline: "A valid snapshot restored zero rows, three times, with no error"
+    detail: "`nodetool refresh` only reads the table's `upload/` subdirectory. `TRUNCATE` writes a marker that hides every older SSTable even after you put them back. And recreating a table gives it a new UUID, so the directory you just copied into belongs to a dead table."
+    url: /writing/scylladb-nodetool-refresh-upload-truncate-marker/
+
+  - engine: "PostgreSQL 18"
+    headline: "Every compose file copied from a PG 12–17 guide breaks"
+    detail: "The image wants the volume at `/var/lib/postgresql` with PGDATA in an `18/docker` subdirectory, not at `/var/lib/postgresql/data`. The change exists so `pg_upgrade --link` can work. The failure mode is a container that starts and then refuses the mount."
+    url: /writing/postgresql-18-docker-volume-path-change/

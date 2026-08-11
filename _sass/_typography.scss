@@ -36,8 +36,10 @@ blockquote {
 .post-head h1,
 .section-head h2:not(.section-label),
 .stats li > strong {
-  font-family: var(--font-display);
-  font-variation-settings: "SOFT" 0, "WONK" 0;
+  // Numerals in Inter, not Fraunces: the Fraunces subset ships only `liga` and
+  // `rvrn`, so `tabular-nums` on it is a silent no-op and stacked figures came
+  // out ragged. The wght-only subset also makes SOFT/WONK dead declarations.
+  font-family: var(--font-body);
   font-weight: 600;
   letter-spacing: var(--ls-display);
   line-height: var(--lh-display);
