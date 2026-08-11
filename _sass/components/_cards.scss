@@ -261,6 +261,26 @@
   color: var(--ink-2);
 }
 
+@media (max-width: 34rem) {
+  .tutorial-header {
+    padding: var(--sp-4);
+  }
+
+  .tutorial-header__grid {
+    grid-template-columns: 1fr;
+    gap: var(--sp-1);
+  }
+
+  .tutorial-header__grid > dt,
+  .tutorial-header__grid > dd {
+    grid-row: auto;
+  }
+
+  .tutorial-header__grid > dt:not(:first-child) {
+    margin-block-start: var(--sp-4);
+  }
+}
+
 // ── Series nav ───────────────────────────────────────────────────────────────
 .series-nav {
   padding: var(--sp-5);
@@ -311,6 +331,9 @@ ol.series-nav__list > li::before {
 }
 
 .series-nav__list a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--ink-2);
   text-decoration: none;
 }
@@ -347,16 +370,17 @@ ol.series-nav__list > li::before {
 
 .author-card:has(img) {
   display: grid;
-  grid-template-columns: 3.5rem 1fr;
+  grid-template-columns: 6.5rem 1fr;
   gap: var(--sp-4) var(--sp-5);
   align-items: start;
 }
 
 .author-card img {
-  width: 3.5rem;
-  height: 3.5rem;
-  border-radius: var(--r-full);
+  width: 6.5rem;
+  height: 8.125rem;
+  border-radius: 0;
   object-fit: cover;
+  object-position: center top;
 }
 
 .author-card p {
@@ -391,6 +415,29 @@ ol.series-nav__list > li::before {
   margin-block-start: var(--sp-2);
 }
 
+@media (max-width: 30rem) {
+  .author-card:has(img) {
+    grid-template-columns: 4.75rem 1fr;
+    gap: var(--sp-4);
+  }
+
+  .author-card img {
+    width: 4.75rem;
+    height: 5.9375rem;
+  }
+}
+
+@media (max-width: 23rem) {
+  .author-card:has(img) {
+    grid-template-columns: 1fr;
+  }
+
+  .author-card img {
+    width: 6.5rem;
+    height: 8.125rem;
+  }
+}
+
 // ── Related / share / staleness ──────────────────────────────────────────────
 .related {
   padding-block-start: var(--sp-6);
@@ -403,6 +450,31 @@ ol.series-nav__list > li::before {
   margin: var(--sp-4) 0 0;
   padding: 0;
   list-style: none;
+}
+
+.related .card-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  background: var(--line-strong);
+  border: 1px solid var(--line-strong);
+}
+
+.related .post-card {
+  min-height: 15rem;
+  background: var(--surface-1);
+  border: 0;
+  border-radius: 0;
+}
+
+@media (max-width: 48rem) {
+  .related .card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .related .post-card {
+    min-height: auto;
+  }
 }
 
 .related a {

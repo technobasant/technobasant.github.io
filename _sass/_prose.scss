@@ -284,12 +284,36 @@
 }
 
 @media (max-width: 40rem) {
-  // Last resort on narrow screens: let the table scroll rather than force a
-  // 300px-wide four-column squeeze.
+  // Preserve table semantics while giving dense evidence tables a deliberate,
+  // touch-friendly horizontal reading surface.
   .prose > table {
     display: block;
     overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-control) transparent;
+    -webkit-overflow-scrolling: touch;
     white-space: nowrap;
+  }
+
+  .prose > table :is(th, td) {
+    min-width: 9rem;
+    scroll-snap-align: start;
+  }
+
+  .prose > table :is(th, td):first-child {
+    position: sticky;
+    inset-inline-start: 0;
+    z-index: 1;
+    min-width: 8rem;
+    background: var(--surface-1);
+    white-space: normal;
+  }
+
+  .prose > table:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
   }
 }
 

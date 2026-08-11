@@ -1,9 +1,10 @@
 ---
 title: Selected work
 eyebrow: Case studies
+headline: "Architecture decisions under real constraints."
 layout: work-index
 permalink: /work/
-description: "Case studies from production data platforms and personal labs: the constraint each system faced, the decision I made, what it cost, and what it measured."
+description: "Production data platforms, database systems, governed agents, and a founder-built product — documented through constraints, decisions, trade-offs, operations, and measured outcomes."
 redirect_from:
   - /projects/
 ---

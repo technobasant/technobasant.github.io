@@ -1,31 +1,32 @@
 ---
 title: About
 eyebrow: Profile
+headline: "I build systems that stay trustworthy after the demo."
+hero_code: "OPERATE / OWN"
+page_class: page-about
 permalink: /about/
-description: "Basant Bhattarai — how I work on data platforms and the AI layer above them, what I am building now, and the timezone I do it from in Kathmandu."
+description: "Nine years across backend engineering, production data platforms, database reliability, and governed AI systems — plus the principles I use to operate them."
 ---
 
-I build data platforms, and the AI layer that sits on top of them. At UXCam I own one product's ingestion, storage, serving and governance — Kafka into Spark on self-managed Kubernetes, an Iceberg lakehouse underneath, query engines in front, and a multi-agent analytics platform above all of it. The part of the work I actually like is the part most people skip: deciding what a dataset promises, writing that promise down where a consumer can read it, and being the person paged when it stops being true.
+I am a Senior Data & AI Engineer in Kathmandu. Over nine years I have moved from Python backend services and PostgreSQL schemas to owning production data infrastructure end to end: ingestion, transformation, lakehouse storage, database serving, reliability, governance, and the AI products built on top. At UXCam that means Kafka into Spark on self-managed Kubernetes, Iceberg underneath, Trino and ClickHouse in front, and a multi-agent analytics platform above it. The part of the work I value most is the part many teams postpone: defining what a dataset promises, making that promise observable, and being accountable when it stops being true.
 
 ## How I work
 
-**Every dataset gets a freshness objective and a named owner before it gets a consumer.** An unowned table does not fail loudly. It keeps serving yesterday's numbers until somebody makes a decision on them, which makes it an outage with a delay fuse. If nobody will own a dataset, I would rather not publish it.
-
-**Open-source first, and I will take the operational work over a bill I cannot walk away from.** I have migrated off a platform once. The expensive part was never the license — it was re-deriving semantics that lived only inside somebody else's product. Managed services earn their place where the data model stays mine and the exit stays cheap, which is why Databricks sits beside self-managed Spark in my stack rather than replacing it.
-
-**An agent's output is not a product until it lands in a typed table.** A chat transcript cannot be joined, audited, backfilled or diffed against last week. If a model produces something worth acting on, it passes through a schema and a validator like any other producer, and it gets rejected the same way when it fails.
-
-**The cheapest correctness mechanism is a narrower contract.** Most data-quality work I have seen is downstream cleanup that exists because an upstream table promised more than it could hold. I would rather ship three columns with a guarantee I can defend than a wide table everyone quietly stops trusting.
-
-**I publish the method next to the number.** Every figure on this site carries how it was measured, because a percentage without a denominator is a decoration. If I cannot name the counter, the query or the billing line behind a claim, I do not make the claim.
+<ol class="principle-list is-wide">
+  <li><h3>Ownership before consumption</h3><p>Every dataset gets a freshness objective and a named owner before it gets a consumer. An unowned table does not fail loudly; it keeps serving yesterday's numbers until somebody makes a decision on them. If nobody will own a dataset, I would rather not publish it.</p></li>
+  <li><h3>Open-source, with an exit</h3><p>I will take operational work over a bill I cannot walk away from. Managed services earn their place where the data model stays mine and the exit stays cheap, which is why Databricks sits beside self-managed Spark rather than replacing it.</p></li>
+  <li><h3>Agents produce records, not theatre</h3><p>A chat transcript cannot be joined, audited, backfilled, or diffed against last week. If a model produces something worth acting on, it passes through a schema and validator like any other producer—and gets rejected the same way when it fails.</p></li>
+  <li><h3>Narrow contracts beat wide promises</h3><p>Most data-quality work is downstream cleanup caused by an upstream table promising more than it can hold. I would rather ship three columns with a guarantee I can defend than a wide table everyone quietly stops trusting.</p></li>
+  <li><h3>The method belongs beside the number</h3><p>Every figure on this site carries how it was measured. If I cannot name the counter, query, or billing line behind a claim, I do not make the claim.</p></li>
+</ol>
 
 ## What I'm doing now
 
-I own the data platform and the App Analytics Agent Platform at UXCam, which currently means more time on retrieval quality and agent evaluation than on batch throughput.
+I own the data platform and the App Analytics Agent Platform at UXCam, which currently means more time on retrieval quality, agent evaluation, database serving, and governance than on raw batch throughput.
 
 I am writing up a failover lab: six database engines, eight scenarios, measured on a rig I can restart rather than quoted from a documentation page.
 
-Outside work I build ClickHomes, a real-estate platform, largely as an excuse to own a dual OLTP/OLAP schema end to end without a committee.
+Outside work I am the founder and sole engineer behind ClickHomes, a real-estate data and AI platform with PostgreSQL for operational truth, ClickHouse for analytical speed, a mandatory RESO transformation boundary, and more than 90 versioned SQL migrations.
 
 *Updated {{ site.data.availability.updated | date: "%B %Y" }}.*
 

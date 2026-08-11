@@ -1,19 +1,26 @@
 ---
 title: Work with me
 eyebrow: Consulting
+headline: "Bring me the system that is expensive, slow, or hard to trust."
+hero_code: "SCOPE / DECIDE"
+page_class: page-hire
 permalink: /hire/
-description: "Consulting on data platforms and production AI agents: engagement shapes, the work I decline, current availability, timezone coverage, and how to start."
+description: "Senior consulting on data platforms, database reliability, and governed AI systems — focused engagements with an explicit decision, measurable outcome, and clean handoff."
 ---
 
 I take one or two engagements at a time, alongside a full-time role. That constraint is the point: it keeps the work to problems where senior judgement is the bottleneck, not headcount.
 
 ## Four shapes an engagement takes
 
+<div class="engagement-grid is-wide">
 {% for e in site.data.availability.engagements %}
-### {{ e.title }}
-
-{{ e.blurb }}
+<article class="engagement-card">
+  <span aria-hidden="true">0{{ forloop.index }}</span>
+  <h3>{{ e.title }}</h3>
+  <p>{{ e.blurb }}</p>
+</article>
 {% endfor %}
+</div>
 
 ## What I don't do
 
@@ -22,6 +29,7 @@ Declining the wrong work early is cheaper for both of us than discovering the mi
 {% for item in site.data.availability.not_doing %}
 - {{ item }}
 {%- endfor %}
+{: .decline-list }
 
 ## Availability
 
@@ -42,6 +50,7 @@ Answer these five in the first message and my first reply can be useful instead 
 3. **What is already running, and what cannot be replaced?** Engines, orchestrator, cloud, warehouse — plus the contractual or political constraints on each.
 4. **Who owns this after I leave, and how many of them are there?** I build for the team that inherits it. One part-time analyst and a four-person platform team get different designs.
 5. **What decision are you trying to make, and by when?** "Should we move off the warehouse" and "our pipeline is down" both need help, but not the same engagement.
+{: .briefing-list }
 
 Repositories, diagrams and dashboards are welcome but never required in a first email. A paragraph of honest description beats a polished deck.
 

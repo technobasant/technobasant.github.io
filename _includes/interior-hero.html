@@ -1,0 +1,22 @@
+{%- comment -%}
+  Shared masthead for non-home routes. It gives every index and profile page the
+  same editorial identity as the homepage while keeping page-specific copy in
+  front matter.
+{%- endcomment -%}
+{%- assign _variant = include.variant | default: "page" -%}
+{%- assign _headline = include.headline | default: page.headline | default: include.title | default: page.title -%}
+{%- assign _eyebrow = include.eyebrow | default: page.eyebrow | default: "Basant Bhattarai" -%}
+{%- assign _lede = include.lede | default: page.description -%}
+{%- assign _code = include.code | default: page.hero_code | default: "FIELD / NOTES" -%}
+<header class="interior-hero interior-hero--{{ _variant }}" data-code="{{ _code | escape }}">
+  <div class="wrap wrap--shell interior-hero__inner">
+    <div class="interior-hero__rail">
+      <p class="interior-hero__eyebrow">{{ _eyebrow }}</p>
+      <span class="interior-hero__sequence" aria-hidden="true">BB / {{ _eyebrow | upcase }}</span>
+    </div>
+    <div class="interior-hero__content">
+      <h1>{{ _headline }}</h1>
+      {%- if _lede %}<p class="lede">{{ _lede | strip_html | normalize_whitespace | strip }}</p>{% endif -%}
+    </div>
+  </div>
+</header>

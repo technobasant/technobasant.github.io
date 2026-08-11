@@ -1,9 +1,10 @@
 ---
 title: Writing
-eyebrow: Notes
+eyebrow: Field notes
+headline: "Field notes from systems with consequences."
 layout: writing-index
 permalink: /writing/
-description: "Notes from operating data platforms and databases at scale — Spark, Kafka, Iceberg, Postgres, ClickHouse, agents. Mostly the things that cost me a day."
+description: "Reproducible notes from operating data platforms and databases: the failure, the evidence, the repair, and the detail that usually gets left out."
 redirect_from:
   - /blog/
   - /notes/

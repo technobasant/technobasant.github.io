@@ -27,6 +27,35 @@ biggest liability of a tutorial blog into a trust signal costs one paragraph. {%
 
 <div class="progress" aria-hidden="true"></div>
 
+<header class="interior-hero interior-hero--post" data-code="FIELD / NOTE">
+  <div class="wrap wrap--shell interior-hero__inner interior-hero__inner--article">
+    <div class="interior-hero__rail">
+      <p class="interior-hero__eyebrow">{{ _label }} · From production systems</p>
+      <dl class="article-facts">
+        <div>
+          <dt>Published</dt>
+          <dd><time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%b %-d, %Y" }}</time></dd>
+        </div>
+        {%- if page.last_modified_at %}
+        <div>
+          <dt>Updated</dt>
+          <dd><time datetime="{{ page.last_modified_at | date_to_xmlschema }}">{{ page.last_modified_at | date: "%b %-d, %Y" }}</time></dd>
+        </div>
+        {%- endif %}
+        <div>
+          <dt>Reading time</dt>
+          <dd>{% include reading-time.html post=page %}</dd>
+        </div>
+      </dl>
+    </div>
+    <div class="interior-hero__content">
+      <h1>{{ page.title }}</h1>
+      {%- if page.description %}<p class="lede">{{ page.description }}</p>{% endif %}
+      {% include tag-chips.html tags=page.tags %}
+    </div>
+  </div>
+</header>
+
 <div class="post-shell">
   {%- if page.toc %}
   {% include toc.html content=content %}
@@ -34,22 +63,6 @@ biggest liability of a tutorial blog into a trust signal costs one paragraph. {%
 
   <article>
     <div class="prose">
-      <header class="post-head">
-        <p class="post-meta">
-          <span class="badge badge--{{ _type }}">{{ _label }}</span>
-          <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %-d, %Y" }}</time>
-          {%- if page.last_modified_at %}
-          <span>Updated <time datetime="{{ page.last_modified_at | date_to_xmlschema }}">{{ page.last_modified_at | date: "%B %-d, %Y" }}</time></span>
-          {%- endif %}
-          <span>{% include reading-time.html post=page %}</span>
-        </p>
-        <h1>{{ page.title }}</h1>
-        {%- if page.description %}
-        <p class="lede">{{ page.description }}</p>
-        {%- endif %}
-        {% include tag-chips.html tags=page.tags %}
-      </header>
-
       {%- if _type == "tutorial" %}
       {% include tutorial-header.html %}
       {%- endif %}

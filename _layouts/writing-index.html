@@ -13,34 +13,32 @@ layout: default
 {%- assign _archive_posts = site.posts | where_exp: "p", "p.featured != true" -%}
 {%- assign _tag_slugs = site.data.tags | map: "slug" -%}
 
-<div class="page">
-  <div class="prose">
-    <header class="page-head">
-      {%- if page.eyebrow %}
-      <p class="eyebrow">{{ page.eyebrow }}</p>
-      {%- endif %}
-      <h1>{{ page.title }}</h1>
-      {%- if page.description %}
-      <p class="lede">{{ page.description }}</p>
-      {%- endif %}
-    </header>
+{% include interior-hero.html variant="index" code="FIELD / NOTES" %}
+<div class="page page--index page--writing">
+  {%- assign _intro = content | strip -%}
+  {%- if _intro != "" %}
+  <div class="prose index-intro">
     {{ content }}
   </div>
+  {%- endif %}
 
   {%- if _featured.size > 0 %}
-  <section class="wrap reveal" aria-labelledby="start-here-title">
+  <section class="wrap index-section reveal" aria-labelledby="start-here-title">
     <div class="section-head">
-      <h2 class="section-label" id="start-here-title">Start here</h2>
+      <div>
+        <p class="section-label">Start here</p>
+        <h2 id="start-here-title">Three useful ways into the archive.</h2>
+      </div>
     </div>
-    <div class="card-grid">
+    <div class="card-grid editorial-post-grid">
       {%- for post in _featured limit: 3 %}
-      {% include post-card.html post=post %}
+      {% include post-card.html post=post index=forloop.index %}
       {%- endfor %}
     </div>
   </section>
   {%- endif %}
 
-  <section class="wrap reveal" aria-labelledby="topics-title">
+  <section class="wrap index-section index-section--compact reveal" aria-labelledby="topics-title">
     <div class="section-head">
       <h2 class="section-label" id="topics-title">Topics</h2>
       <a class="section-more" href="{{ '/writing/tags/' | relative_url }}">All topics {% include icon.html name="arrow-right" size=14 %}</a>
@@ -49,7 +47,7 @@ layout: default
   </section>
 
   {%- if site.data.series and site.data.series.size > 0 %}
-  <section class="wrap reveal" aria-labelledby="series-title">
+  <section class="wrap index-section reveal" aria-labelledby="series-title">
     <div class="section-head">
       <h2 class="section-label" id="series-title">Series</h2>
     </div>
@@ -70,7 +68,7 @@ layout: default
   {%- endif %}
 
   {%- if _archive_posts.size > 0 %}
-  <section class="wrap reveal" aria-labelledby="archive-title">
+  <section class="wrap index-section reveal" aria-labelledby="archive-title">
     <p class="section-label" id="archive-title">All posts</p>
     {%- assign _years = _archive_posts | group_by_exp: "p", "p.date | date: '%Y'" -%}
     {%- for year in _years %}

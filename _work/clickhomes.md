@@ -5,7 +5,7 @@ description: "A real-estate platform I build outside work: PostgreSQL for truth,
 kind: production
 order: 5
 featured: false
-role: "Sole engineer — a personal project, built on nights and weekends"
+role: "Founder & sole engineer — built on nights and weekends"
 org: "ClickHomes (personal project)"
 period: "2024 – present"
 team: "One person"
@@ -13,7 +13,7 @@ scale: "Dual PostgreSQL / ClickHouse schema, 90+ versioned SQL migrations, runni
 stack: [PostgreSQL, ClickHouse, Python, FastAPI, Pydantic, Celery, SQLAlchemy, Docker, Next.js]
 metrics: [clickhomes_migrations]
 tags: [postgres, clickhouse, ai-agents]
-image: /assets/og/og-default-v2.png
+image: /assets/og/og-default-v3.png
 image_alt: "Basant Bhattarai — Reliable data. Accountable AI."
 live_url: "https://clickhomes.ai"
 ---

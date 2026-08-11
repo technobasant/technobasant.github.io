@@ -9,12 +9,12 @@ title: Basant Bhattarai
 # only number on this page still has a single source of truth.
 
 hero:
-  eyebrow: "Senior Data & AI Platform Engineer"
+  eyebrow: "Senior Data & AI Engineer · Platform & Database Reliability"
   meta: "Kathmandu, Nepal · Working US and EU hours"
   h1:
     first: "Reliable data."
     second: "Accountable AI."
-  lede: "I design and operate the systems behind both: Kafka into Spark on Kubernetes, an Iceberg lakehouse, freshness SLOs, and a multi-agent analytics layer across %apps% integrated apps. Open-source first. Measured in uptime, latency, and cost."
+  lede: "Nine years from backend services to production data infrastructure. Today I design and operate Kafka into Spark on Kubernetes, an Iceberg lakehouse, database serving, freshness SLOs, and a governed multi-agent analytics layer across %apps% integrated apps."
   actions:
     - label: "Explore selected work"
       url: /work/

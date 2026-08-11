@@ -1,13 +1,13 @@
 # ── Identity ──────────────────────────────────────────────────────────────
 title: "Basant Bhattarai"
-subtitle: "Senior Data & AI Platform Engineer"
+subtitle: "Senior Data & AI Engineer · Platform & Database Reliability"
 tagline: "I build data platforms that stay correct under load — and the AI agents that sit on top of them."
 email: technobasant9@gmail.com
 description: >-
-  Basant Bhattarai — Senior Data & AI Platform Engineer. Nine years in software,
-  six of them owning production data platforms: Kafka into Spark on Kubernetes,
-  an Iceberg lakehouse, freshness SLOs, and a multi-agent analytics layer over
-  25,000+ integrated mobile apps. Kathmandu, working US and EU hours.
+  Basant Bhattarai — Senior Data & AI Engineer. Nine years across backend
+  engineering, production data platforms, database reliability, and governed
+  agent systems serving 25,000+ integrated mobile apps. Kathmandu, working US
+  and EU hours.
 url: "https://technobasant.github.io"
 baseurl: ""
 repository: "technobasant/technobasant.github.io"
@@ -15,11 +15,11 @@ lang: en
 
 # Site-wide social-card fallback (1200×630 PNG — never AVIF/WebP, LinkedIn and
 # Slack will not render those as og:image).
-og_image: "/assets/og/og-default-v2.png"
+og_image: "/assets/og/og-default-v3.png"
 
 author:
   name: "Basant Bhattarai"
-  role: "Senior Data & AI Platform Engineer"
+  role: "Senior Data & AI Engineer · Platform & Database Reliability"
   location: "Kathmandu, Nepal"
   locality: "Kathmandu"
   country: "NP"
@@ -28,8 +28,8 @@ author:
   linkedin: "https://www.linkedin.com/in/technobasant"
   github: "https://github.com/technobasant"
   bio: >-
-    Senior Data Engineer at UXCam, where I own the data platform and the
-    app-analytics agent stack.
+    Senior Data Engineer at UXCam, where I own production data infrastructure,
+    database serving, and the app-analytics agent platform.
 
 # ── Build ─────────────────────────────────────────────────────────────────
 markdown: kramdown

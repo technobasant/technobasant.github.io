@@ -27,7 +27,7 @@
 {%- comment -%} ---- title ---- {%- endcomment -%}
 {%- capture _title -%}
 {%- if page.seo_title -%}{{ page.seo_title }}
-{%- elsif _is_home -%}Basant Bhattarai — Senior Data & AI Platform Engineer
+{%- elsif _is_home -%}Basant Bhattarai — {{ site.subtitle }}
 {%- elsif _is_post -%}{{ page.title }} — Basant Bhattarai
 {%- elsif _is_case -%}{{ page.title }} · Case study · Basant Bhattarai
 {%- elsif _is_tag -%}{{ _tag_name }} — {{ _tag_count }} posts · Basant Bhattarai

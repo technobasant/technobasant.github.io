@@ -113,7 +113,10 @@ $nav-bp: 54rem;
   max-height: 100dvh;
   // Pin to the inline-end edge instead of the UA's centred box.
   margin: 0 0 0 auto;
-  padding: var(--sp-5) var(--gutter) var(--sp-7);
+  padding-block-start: max(var(--sp-5), env(safe-area-inset-top));
+  padding-block-end: max(var(--sp-7), env(safe-area-inset-bottom));
+  padding-inline-start: max(var(--gutter), env(safe-area-inset-left));
+  padding-inline-end: max(var(--gutter), env(safe-area-inset-right));
   background: var(--surface-1);
   color: var(--ink-1);
   border: 0;
