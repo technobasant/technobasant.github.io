@@ -24,12 +24,19 @@
   // 12→13 · 14→15 · 16→17 · 18→20 · 20→24 · 23→30 · 27→40 · 40→68
   --step--2: clamp(0.75rem, 0.727rem + 0.12vw, 0.8125rem);
   --step--1: clamp(0.875rem, 0.852rem + 0.114vw, 0.9375rem);
-  --step-0: clamp(1rem, 0.977rem + 0.114vw, 1.0625rem);
+  // Body is 17→19px. Nothing in either survey sets prose below 17px:
+  // justinjaffray and scattered-thoughts 20, maxhalford 19, chrisalbon ~18.8,
+  // jepsen 18.7, aphyr 18, vondra and morling 17.
+  --step-0: clamp(1.0625rem, 1.019rem + 0.188vw, 1.1875rem);
   --step-1: clamp(1.125rem, 1.08rem + 0.227vw, 1.25rem);
   --step-2: clamp(1.25rem, 1.159rem + 0.455vw, 1.5rem);
   --step-3: clamp(1.4375rem, 1.278rem + 0.795vw, 1.875rem);
   --step-4: clamp(1.6875rem, 1.392rem + 1.477vw, 2.5rem);
-  --step-5: clamp(2.5rem, 1.859rem + 3.2vw, 4.25rem);
+  // Hero display, pulled back from 68px. A 48px+ name-H1 is the Tailwind
+  // Spotlight signature and now reads as template; leerob sets his own name at
+  // 24px and brandur has no H1 at all. This still reads as display type without
+  // wrapping a three-word headline onto three lines.
+  --step-5: clamp(2.125rem, 1.756rem + 1.84vw, 3.25rem);
 
   // ── Line height ───────────────────────────────────────────────────────────
   --lh-display: 1.03;
@@ -45,14 +52,19 @@
   --ls-label: 0.14em;
 
   // ── Measure & containers ──────────────────────────────────────────────────
-  --measure: 62ch;
-  --measure-lede: 46ch;
+  // Measured from two surveys of sites in this genre. Prose measure clusters at
+  // 650–800px and nothing credible runs wider than ~900px: eatonphil 650,
+  // brandur 625–750, vondra and morling 760–800, justinjaffray 720,
+  // jepsen ~745, brooker ~800. The previous 69rem page container was sized for
+  // a magazine and was the mechanical reason these pages read as sparse.
+  --measure: 46rem; // 736px
+  --measure-lede: 34rem;
   --measure-wide: 52rem;
 
   --w-prose: var(--measure);
   --w-wide: 52rem;
-  --w-page: 69rem;
-  --w-shell: 84rem;
+  --w-page: 58rem; // 928px — index and home grids
+  --w-shell: 72rem; // 1152px — post shell incl. the TOC rail
 
   // ── Space ─────────────────────────────────────────────────────────────────
   --sp-1: 0.25rem;

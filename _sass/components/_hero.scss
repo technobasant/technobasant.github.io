@@ -33,22 +33,10 @@
   mask-image: linear-gradient(90deg, transparent, black 22%, black 78%, transparent);
 }
 
-.hero::after {
-  content: "DATA / AI";
-  position: absolute;
-  inset-inline-start: calc(50% - 1rem);
-  inset-block-start: 8%;
-  z-index: -1;
-  font-family: var(--font-mono);
-  font-size: clamp(5rem, 13vw, 12rem);
-  font-weight: 400;
-  line-height: 0.8;
-  letter-spacing: -0.08em;
-  color: transparent;
-  -webkit-text-stroke: 1px rgba(223, 182, 108, 0.13);
-  writing-mode: vertical-rl;
-  pointer-events: none;
-}
+// The oversized ghost wordmark is removed. It clipped at the viewport edge on
+// every interior page, bled across the section boundary, and read as a
+// rendering fault rather than a device. Nothing in either survey of this genre
+// uses decorative background lettering.
 
 .hero-grid {
   display: grid;
@@ -56,6 +44,17 @@
   gap: clamp(2rem, 5vw, 6rem);
   align-items: stretch;
   min-height: min(48rem, calc(100svh - var(--header-h)));
+}
+
+// Without a portrait the headline takes the whole measure instead of half of
+// it, which is what stops a three-word headline breaking onto four lines.
+.hero-grid:not(:has(.hero-photo)) {
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 0;
+}
+
+.hero-grid:not(:has(.hero-photo)) .hero-copy {
+  max-width: 34rem;
 }
 
 .hero-copy {
@@ -81,11 +80,15 @@
   background: currentcolor;
 }
 
+// Was clamp(4rem, 7.4vw, 7rem) — up to 112px — with max-width: 9.5ch, which
+// forced a two-word headline onto four lines. Elite sites in this genre set the
+// hero line at 24–48px; leerob uses 24px for his own name and brandur has no h1
+// at all. 36→56px still reads as display type and holds each clause on one line.
 .hero h1 {
   margin: 0;
-  max-width: 9.5ch;
-  font-size: clamp(4rem, 7.4vw, 7rem);
-  line-height: 0.88;
+  max-width: 20ch;
+  font-size: clamp(2.25rem, 3.9vw, 3.5rem);
+  line-height: 1.02;
   color: var(--hero-ink);
 }
 
@@ -235,33 +238,26 @@
   background: rgba(17, 21, 27, 0.72);
 }
 
-.hero-proof > .section-label {
-  margin-block-end: var(--sp-4);
-  color: var(--hero-accent);
-}
-
-.hero-proof .stats {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: var(--sp-5);
-}
-
-.hero-proof .stats li {
-  min-width: 0;
-  padding: 0 0 0 var(--sp-4);
-  border-block-start: 0;
-  border-inline-start: 1px solid var(--hero-line);
-}
-
-.hero-proof .stats li > strong {
-  color: var(--hero-ink);
-}
-
-.hero-proof .stats li > span {
+// A sentence, not a card grid. Set at reading size in the prose measure so it
+// reads as a claim someone is making rather than as dashboard furniture.
+.hero-proof__line {
+  max-width: var(--measure);
+  margin: 0;
   color: var(--hero-muted);
+  font-size: var(--step-0);
+  line-height: var(--lh-prose);
+  text-wrap: pretty;
 }
 
-.hero-proof .stats .stats__method {
-  color: #788390;
+.hero-proof__more {
+  margin-block: var(--sp-4) 0;
+  font-size: var(--step--1);
+}
+
+.hero-proof__more a {
+  color: var(--hero-accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.25em;
 }
 
 // ── Focus band ───────────────────────────────────────────────────────────────

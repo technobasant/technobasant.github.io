@@ -21,6 +21,13 @@ layout: default
         {%- endfor %}
       </div>
     </div>
+    {%- comment -%}
+      Optional by design. Homepage portraits appear on 2 of 26 data/infra sites
+      and 2 of 44 senior-engineer sites surveyed — the credential in this genre
+      is the writing, not the face. Omit `hero.portrait` in index.md and the
+      headline gets the full measure instead of half of it.
+    {%- endcomment -%}
+    {%- if _hero.portrait %}
     <figure class="hero-photo">
       {%- include picture.html
           base=_hero.portrait.base
@@ -35,22 +42,26 @@ layout: default
           fetchpriority="high" -%}
       {%- if _hero.portrait.caption %}<figcaption>{{ _hero.portrait.caption }}</figcaption>{% endif -%}
     </figure>
+    {%- endif -%}
   </div>
+  {%- comment -%}
+    Not a stats strip. A scan of 44 senior-engineer sites found zero with a
+    big-number card grid, zero with a years-of-experience claim, and zero with a
+    skills grid — those read as portfolio-template furniture. Where respected
+    engineers do publish numbers, the numbers sit inside a sentence, welded to a
+    date and a proper noun, and every one counts something the author personally
+    made and a reader can go check. That is what this is.
+  {%- endcomment -%}
+  {%- if page.evidence %}
   <div class="wrap wrap--shell hero-proof">
-    <p class="section-label">{{ page.stats_label | default: 'Selected outcomes' }}</p>
-    <ul class="stats" aria-label="{{ page.stats_label | default: 'Selected outcomes' }}">
-      {%- for key in page.stats -%}
-      {%- assign m = site.data.metrics[key] -%}
-      {%- if m %}
-      <li>
-        <strong>{{ m.value }}</strong>
-        <span>{{ m.label }}</span>
-        <span class="stats__method">{{ m.method }}</span>
-      </li>
-      {%- endif -%}
-      {%- endfor %}
-    </ul>
+    <p class="hero-proof__line">{{ page.evidence.body }}</p>
+    {%- if page.evidence.url %}
+    <p class="hero-proof__more">
+      <a href="{{ page.evidence.url | relative_url }}">{{ page.evidence.cta }}</a>
+    </p>
+    {%- endif -%}
   </div>
+  {%- endif -%}
 </section>
 
 <section class="band reveal" aria-labelledby="focus-title">
