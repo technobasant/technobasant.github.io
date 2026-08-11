@@ -73,7 +73,7 @@
 
 // ── Link-shaped button ───────────────────────────────────────────────────────
 .btn--link {
-  min-height: 2.25rem;
+  min-height: 2.75rem;
   padding-inline: 0;
   color: var(--ink-1);
   background: none;
@@ -105,4 +105,16 @@
   flex-wrap: wrap;
   align-items: center;
   gap: var(--sp-3) var(--sp-4);
+}
+
+@media (max-width: 30rem) {
+  .btn {
+    max-width: 100%;
+    min-width: 0;
+    padding-block: var(--sp-2);
+    line-height: 1.25;
+    text-align: center;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
 }

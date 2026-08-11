@@ -1,7 +1,7 @@
 ---
-title: "Making model output into records you can audit"
-hook: "Typed outputs, provenance on every record, evaluation before rollout, and a fallback that is a real path"
-description: "How I ship AI features that other workflows can rely on: typed outputs, provenance, evaluation before rollout, and a fallback that is a real path rather than an apology."
+title: "Turning model output into product state you can audit"
+hook: "A governed analytics workflow with typed state, provenance, evaluation, review, and an honest fallback path."
+description: "How I designed AI-assisted analytics around typed records, source evidence, evaluation, human review, and measurable workflow outcomes."
 kind: practice
 order: 2
 featured: true
@@ -10,6 +10,10 @@ org: "UXCam"
 period: "2024 – present"
 team: "Global team, working US and EU hours"
 scale: "AI features in a production analytics product"
+problem: "Useful model responses were not enough: downstream workflows needed records that could be validated, traced, reviewed, corrected, and safely withheld."
+decision: "Treat generation as a candidate state, then require schema validation, provenance, evaluation, and a review or fallback decision before publication."
+flow: ai
+metrics: [professional_analytics_delivery, professional_manual_effort]
 stack: [Python, Pydantic, LangGraph, LangChain, CrewAI, "Google-ADK", MCP, Milvus, MLflow, PostgreSQL]
 tags: [ai-agents, data-quality, rag]
 image: /assets/og/og-agents.png
@@ -18,53 +22,57 @@ image_alt: "AI agents in production — Basant Bhattarai"
 
 ## Context
 
-Almost every hard problem in shipping an AI feature turns out to be a data-engineering problem wearing a costume. Getting a plausible answer out of a model is the easy part and has been for a while. The difficulty is that a product cannot depend on prose. It depends on records: typed, queryable, attributable, and correctable when wrong.
+The product goal was not a chat demo. It was a faster analytics workflow that people could use without losing the evidence and reviewability they expected from the underlying data platform.
 
-So the interesting question is never "what did the model say." It is **what is allowed to become state**, and under what conditions.
+A model can return fluent prose, but a product workflow needs durable records: typed, queryable, attributable, and correctable. The central design question became **what is allowed to become state**, under which policy, and what happens when the system cannot justify an answer.
 
-## Constraints I design against
+## My role
 
-- **Non-determinism is permanent.** The same input can produce a different output tomorrow. Any design that assumes stability is already broken.
-- **Confident wrongness is the default failure mode.** A model does not signal uncertainty by going quiet. It signals it by being fluent and incorrect, which is the hardest failure to catch downstream.
-- **Provenance is not optional.** If an automated judgment influenced something a person acted on, I need to reconstruct later which version produced it and on what input.
-- **Latency and cost per call are user-visible in a way a batch job never is.**
+I designed the data and state boundary around the AI workflow: structured outputs, provenance, evaluation, retrieval metadata, publication rules, and the path from automated candidate to human-reviewed result. I worked across platform and product concerns rather than treating the model invocation as the feature.
 
-## The method
+## Constraints
 
-### A typed boundary, and nothing crosses it untyped
+- **Non-determinism is permanent.** The same input can produce a different candidate after a model or prompt change.
+- **Confident wrongness is the dangerous failure.** A fluent answer can pass superficial review while contradicting source data.
+- **Analytical claims need evidence.** Every result must retain enough source context to explain and re-evaluate it.
+- **Latency and cost are user-visible.** Tool loops and retrieval choices are product decisions, not invisible infrastructure.
+- **Automation needs a stopping rule.** Some cases should go to review or return underlying data rather than generate another guess.
 
-Model output is parsed into a declared schema before it goes anywhere. Validation failure is a handled outcome with its own path, not an exception that surfaces to a user. In practice this means a validated object, versioned, with the raw response retained for inspection.
+## Architecture and state boundary
 
-The trade-off: schemas constrain what the feature can express, and loosening one later is a migration. I take that cost deliberately — an unconstrained output is a liability that grows with adoption.
+The workflow separates four states: source context, generated candidate, validated record, and published result. Generation never writes directly into a human-authored field. A schema and policy version travel with the record, along with source references, timestamps, and the path that produced it.
 
-### Separate what is generated from what is true
+Validation failure is an expected outcome. The system can retry a bounded transformation, present the underlying data, mark the result unavailable, or queue it for review. Each path is explicit; none silently converts uncertainty into success.
 
-Generated content lands in its own columns, or its own tables, clearly marked and never silently merged into a field a human authored. Anyone reading the record — or querying it in two years — can tell which is which.
+Retrieval follows the same data-engineering discipline: versioned documents, metadata filters, known retention, and evaluation against held-out questions. Prompt changes cannot compensate for missing provenance or a polluted index.
 
-This one is not negotiable. Losing the distinction is unrecoverable, because after the merge there is no query that separates them again.
+## Decisions and rejected alternatives
 
-### Provenance on every generated record
+| Decision | Alternative rejected | Why | Cost accepted |
+|---|---|---|---|
+| Parse every candidate into a versioned schema | Store free-form model prose as the result | Downstream code gets a stable contract | Schema changes become migrations |
+| Keep generated and human-authored state separate | Merge into one canonical field | Origin and correction history remain recoverable | Consumers handle explicit state |
+| Attach source references and pipeline versions | Keep only the final answer | Claims can be inspected and cohorts re-evaluated | More storage and metadata |
+| Evaluate before rollout and after surprises | Rely on prompt review and spot checks | Regressions become measurable and attributable | Evaluation sets need maintenance |
+| Design review and fallback before automation | Add human review after failures appear | The product stays useful when confidence is low | Some cases complete more slowly |
+{: .case-decisions aria-label="Governed AI decisions and rejected alternatives" }
 
-Input reference, schema version, timestamp, and which pipeline produced it. Enough to answer "why does this say that" without guessing, and enough to re-derive or invalidate a cohort when something upstream turns out to have been wrong.
+## Outcomes
 
-### Evaluate before rollout, and keep the set
+The workflow improved analytics delivery time by **{{ site.data.metrics.professional_analytics_delivery.value }}** and reduced analyst manual effort by **{{ site.data.metrics.professional_manual_effort.value }}**. Those gains matter because the controls remained part of the path: typed output, source evidence, evaluation, review, and fallback were not removed to make the number look better.
 
-A held-out set with expected outcomes, run before a change ships. Tracing so a regression is attributable rather than mysterious. The set grows every time something surprises me in production — that is what makes it valuable, and it is why deleting it is expensive.
+The system also established a reusable operating pattern for AI features: generated content is candidate state; policy decides whether it becomes product state.
 
-The trade-off: maintaining an evaluation set is ongoing work that never feels urgent. It is the first thing to rot and the last thing you want rotten.
+## Failure and recovery
 
-### A fallback that is a real path
+If parsing fails, the raw candidate and validation reason remain inspectable. If evidence is missing or the policy threshold is not met, the workflow does not publish. If a model, prompt, or source changes, the versioned provenance supports cohort re-evaluation instead of manual guesswork.
 
-If validation fails or confidence is low, the feature degrades to something honest and useful — the underlying data, an explicit "not available", a queue for review. Never a guess presented as an answer, and never a blank space that reads as a bug.
+Recovery therefore means more than retrying an API call. It means restoring a defensible record or declining to create one.
 
-### Retrieval is a data problem
+## Reflection
 
-For retrieval-augmented features: chunking, metadata filters and index choice determine quality far more than prompt wording does. A vector store also needs a retention and compaction policy on day one, for the same reason any other store does — without one it becomes a landfill that is expensive to query and impossible to reason about.
+I would build the evaluation set before the first release. Early feature churn makes a stable test set feel premature; in practice, that is when its baseline is most valuable.
 
-## What I would do differently
+I would also decide the human-review path during product design, not after implementation. Retrofitting review into a workflow that assumed full automation is much harder than designing the decision point and using it selectively.
 
-**Build the evaluation set before the first version, not after the first regression.** I know why it happened — early on the feature is changing so fast that fixing the target feels premature. That reasoning is wrong, and it costs more than it saves.
-
-**Decide the human-review path at design time.** Retrofitting review onto a feature that assumed full automation is significantly harder than designing for it and then not needing it.
-
-**Say no to more of them.** The most useful judgment I have developed here is which problems should not have a model in the loop at all. A deterministic rule that is right every time beats a generated answer that is right most of the time, and it is cheaper to operate.
+The most important judgment is still when not to use a model. A deterministic rule that is right every time is cheaper, faster, and easier to operate.

@@ -10,6 +10,9 @@ org: "Personal"
 period: "2026"
 team: "One person"
 scale: "Docker on 8 CPU / 12.5 GB; nine compose stacks, brought up one at a time to fit RAM"
+problem: "Documentation describes expected failover; I wanted current, measured evidence of what six engines actually preserved, promoted, and exposed after a primary or node disappeared."
+decision: "Run one reproducible cluster at a time, seed known state, inject a specific fault, and record promotion, recovery, and data-survival evidence."
+flow: lab
 stack: [MongoDB, ScyllaDB, SolrCloud, MariaDB, Galera, Redis, PostgreSQL, Docker, Prometheus, Grafana]
 metrics: [lab_scenarios, lab_pg_replay_lag, lab_redis_promotion]
 tags: [distributed-databases, postgres, observability-slo]

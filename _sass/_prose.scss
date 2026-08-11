@@ -103,6 +103,13 @@
 .prose > h4 + * {
   --flow: 0.7rem;
 }
+
+// …except a panel. The tight 0.7rem exists so a heading and its opening
+// paragraph read as one unit; applied to a full-bleed tinted block it puts the
+// panel edge on the heading's descenders.
+.prose > h2 + :is(.principle-list, .callout, .case-glance, .tutorial-header, .ledger, table) {
+  --flow: 1.75rem;
+}
 .prose > .highlighter-rouge {
   --flow: 1.75rem;
 }
@@ -433,6 +440,14 @@
 }
 
 @media (max-width: 40rem) {
+  // Wide table internals can contribute their intrinsic width to the page even
+  // when the table itself scrolls. Contain that overflow at the prose shell so
+  // the document never acquires a second horizontal scrollbar; the table and
+  // code regions remain independently scrollable and keyboard reachable.
+  .prose {
+    overflow-x: clip;
+  }
+
   // Preserve table semantics while giving dense evidence tables a deliberate,
   // touch-friendly horizontal reading surface.
   .prose > table {

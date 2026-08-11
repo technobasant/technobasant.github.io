@@ -115,12 +115,13 @@ blockquote {
   display: inline-flex;
   align-items: center;
   gap: 0.4em;
-  min-height: 2.25rem;
+  min-height: 2.75rem;
+  max-width: 100%;
   font-size: var(--step--1);
   font-weight: 600;
   color: var(--ink-2);
   text-decoration: none;
-  white-space: nowrap;
+  white-space: normal;
   transition: color var(--dur-1) var(--ease-standard);
 }
 

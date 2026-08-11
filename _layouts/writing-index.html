@@ -7,7 +7,9 @@ layout: default
   or click handler is needed, so open-in-new-tab, link previews, and keyboard
   navigation continue to work normally.
 {%- endcomment -%}
-{%- assign _lead = site.posts | first -%}
+{%- assign _editor_picks = site.posts | where: "editor_pick", true -%}
+{%- assign _lead = _editor_picks | first -%}
+{%- unless _lead -%}{%- assign _lead = site.posts | first -%}{%- endunless -%}
 {%- assign _tag_slugs = site.data.tags | map: "slug" -%}
 {%- assign _lead_type = _lead.type | default: "essay" -%}
 {%- case _lead_type -%}
@@ -77,19 +79,37 @@ layout: default
     {% include tag-chips.html tags=_tag_slugs counts=true nonempty=true %}
   </section>
 
+  {%- assign _ops_posts = site.posts | where: "series", "self-hosted-ops" -%}
   {%- if site.posts.size > 1 %}
   <section class="wrap index-section reveal" aria-labelledby="latest-title">
     <div class="section-head writing-section-head">
       <div>
-        <p class="section-label">Latest field notes</p>
-        <h2 id="latest-title">Built to be followed, not skimmed past.</h2>
+        <p class="section-label">Platform and AI practice</p>
+        <h2 id="latest-title">Design decisions, failure modes, and operating evidence.</h2>
       </div>
     </div>
     <ol class="writing-feed">
       {%- for post in site.posts -%}
-      {%- unless post.url == _lead.url %}
+      {%- unless post.url == _lead.url or post.series == "self-hosted-ops" %}
       <li>{% include post-card.html post=post heading="h3" %}</li>
       {%- endunless -%}
+      {%- endfor %}
+    </ol>
+  </section>
+  {%- endif %}
+
+  {%- if _ops_posts.size > 0 %}
+  <section class="wrap index-section reveal" aria-labelledby="ops-writing-title">
+    <div class="section-head writing-section-head">
+      <div>
+        <p class="section-label">Self-hosted operations</p>
+        <h2 id="ops-writing-title">Follow-along infrastructure tutorials.</h2>
+        <p class="writing-section-note">A secondary runbook series: RustDesk, WireGuard, and Stalwart Mail on infrastructure you control.</p>
+      </div>
+    </div>
+    <ol class="writing-feed">
+      {%- for post in _ops_posts -%}
+      <li>{% include post-card.html post=post heading="h3" %}</li>
       {%- endfor %}
     </ol>
   </section>
@@ -105,6 +125,7 @@ layout: default
     </div>
     <ul class="card-grid editorial-series-grid">
       {%- for s in site.data.series -%}
+      {%- unless s.slug == "self-hosted-ops" -%}
       {%- assign _parts = site.posts | where: "series", s.slug | sort: "series_order" -%}
       {%- if _parts.size > 0 %}
       <li>
@@ -127,6 +148,7 @@ layout: default
         </article>
       </li>
       {%- endif %}
+      {%- endunless -%}
       {%- endfor %}
     </ul>
   </section>

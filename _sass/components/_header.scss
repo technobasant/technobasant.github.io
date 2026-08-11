@@ -29,8 +29,9 @@
 // ── Wordmark ─────────────────────────────────────────────────────────────────
 .mark {
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
   gap: 0.4rem;
+  min-height: 2.75rem;
   margin-inline-end: auto;
   font-family: var(--font-display);
   font-variation-settings: "SOFT" 0, "WONK" 0;

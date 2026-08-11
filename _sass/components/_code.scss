@@ -32,7 +32,7 @@
 .highlighter-rouge[data-file]::before {
   content: attr(data-file);
   display: block;
-  padding: var(--sp-3) var(--code-pad);
+  padding: var(--sp-4) var(--code-pad);
   // Leave room for the copy button and the language label.
   padding-inline-end: 9rem;
   background: var(--code-header-bg);
@@ -76,7 +76,7 @@ pre.highlight {
 
 // When there is no filename header, the tools float over the first line.
 .highlighter-rouge:not([data-file]) pre {
-  padding-block-start: calc(var(--code-pad) + 0.35rem);
+  padding-block-start: calc(var(--code-pad) + 1.1rem);
 }
 
 .highlighter-rouge pre:focus-visible {
@@ -135,7 +135,7 @@ pre.highlight {
 
 // With a filename header the tools sit inside that band, vertically centred on it.
 .highlighter-rouge[data-file] .code-tools {
-  inset-block-start: calc(var(--sp-2) + 1px);
+  inset-block-start: 3px;
 }
 
 .code-lang {
@@ -154,8 +154,8 @@ pre.highlight {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 2rem;
-  height: 2rem;
+  min-width: 2.75rem;
+  height: 2.75rem;
   padding-inline: var(--sp-3);
   border: 1px solid var(--code-border);
   border-radius: var(--r-sm);

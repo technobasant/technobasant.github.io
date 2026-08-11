@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 import argparse
+import json
+import subprocess
 from pathlib import Path
 
 from reportlab.lib import colors
@@ -30,6 +32,27 @@ ACCENT = colors.HexColor("#9A692C")
 PAPER = colors.HexColor("#FCFAF5")
 PANEL = colors.HexColor("#F3EEE4")
 LINE = colors.HexColor("#D8D0C2")
+ROOT = Path(__file__).resolve().parents[1]
+METRICS_PATH = ROOT / "_data" / "metrics.yml"
+
+
+def load_metrics() -> dict[str, dict[str, str]]:
+    """Load the shared Jekyll metrics source through Ruby's YAML parser."""
+    command = [
+        "ruby",
+        "-ryaml",
+        "-rjson",
+        "-e",
+        "puts JSON.generate(YAML.safe_load_file(ARGV.fetch(0)))",
+        str(METRICS_PATH),
+    ]
+    result = subprocess.run(command, check=True, capture_output=True, text=True)
+    return json.loads(result.stdout)
+
+
+def metric(metrics: dict[str, dict[str, str]], key: str) -> str:
+    """Return one approved public metric value."""
+    return str(metrics[key]["value"])
 
 
 def page_chrome(canvas, doc) -> None:
@@ -181,7 +204,10 @@ def bullets(items: list[str], s: dict[str, ParagraphStyle]) -> list[Paragraph]:
     return [Paragraph(f"- {item}", s["bullet"]) for item in items]
 
 
-def build_story(s: dict[str, ParagraphStyle]) -> list:
+def build_story(
+    s: dict[str, ParagraphStyle],
+    metrics: dict[str, dict[str, str]],
+) -> list:
     story: list = [
         Spacer(1, 2),
         Paragraph("BASANT BHATTARAI", s["name"]),
@@ -197,7 +223,7 @@ def build_story(s: dict[str, ParagraphStyle]) -> list:
 
     story += section("Profile", s)
     story.append(Paragraph(
-        "Senior data and AI engineer with nine years in software engineering, from Python backend services and PostgreSQL schemas to production data platforms, database reliability, and governed AI workflows. I focus on the seams that decide whether a system remains trustworthy: data contracts, observability, replay, recovery, and typed boundaries for automated decisions.",
+        f"Senior data and AI engineer with {metric(metrics, 'experience')} in software engineering, six of them owning production data platforms. Open-source first — Kafka, Spark, Iceberg, Trino, dbt and Airflow on Kubernetes — across ingestion, transformation and analytical serving, with the governance, observability and reliability that production data products demand. Also ships production AI systems and administers the databases underneath them. Track record: {metric(metrics, 'professional_cost_reduction')} lower infrastructure cost, {metric(metrics, 'professional_processing_improvement')} faster processing, {metric(metrics, 'professional_analytics_delivery')} faster analytics delivery.",
         s["body"],
     ))
 
@@ -231,54 +257,83 @@ def build_story(s: dict[str, ParagraphStyle]) -> list:
     story += section("Experience", s)
     story.append(job_header("Senior Data Engineer", "UXCam", "Feb 2024 - present", s))
     story += bullets([
-        "Own reliability and governance outcomes across production data and AI-assisted workflows, including clear service expectations and incident-ready runbooks.",
-        "Design typed, validated, traceable boundaries before automated output can change another product workflow.",
-        "Lead architecture and operational reviews across processing, storage, serving, observability, and recovery.",
-        "Mentor engineers through pairing and review, with an emphasis on transferable ownership and clear decisions.",
+        f"Own reliability and governance for a platform handling {metric(metrics, 'professional_platform_scale')} "
+        f"and {metric(metrics, 'professional_event_volume')} events daily: freshness and latency objectives per "
+        f"dataset, {metric(metrics, 'professional_uptime')} uptime, incident-ready runbooks, reviewable data "
+        "contracts, and a named owner for every published table.",
+        "Design the boundary where automated output becomes product state — typed schemas validated at the load "
+        "edge, provenance on every generated record, evaluation before rollout, and a fallback path that degrades "
+        "honestly rather than guessing.",
+        "Lead architecture and operational review across ingestion, transformation, storage, analytical serving, "
+        "observability and recovery, without treating any single tool as the architecture.",
+        "Run capacity and cost work as a design input rather than a monthly report, using storage layout, "
+        "partitioning and compaction cadence as the primary levers.",
+        f"Mentor {metric(metrics, 'professional_mentoring')} engineers through pairing, code review and written "
+        f"design feedback; team delivery time down {metric(metrics, 'professional_team_delivery')}, with the "
+        "emphasis on making system ownership transferable.",
     ], s)
     story.append(Spacer(1, 4))
     story.append(job_header("Data Engineer", "UXCam", "Feb 2020 - Feb 2024", s))
     story += bullets([
-        "Built and operated batch and streaming pipelines, then expanded into data modeling, orchestration, storage, and analytical serving.",
-        "Improved change and recovery safety by designing for schema evolution, replay, late data, and backfills.",
-        "Tuned processing and query workloads by starting with access patterns, measurement, and data layout.",
+        "Built and operated batch and streaming pipelines, then took on the data models, orchestration, storage "
+        "and analytical serving paths around them.",
+        "Rebuilt the core ETL layer in Spark and PySpark with Airflow orchestration, cutting processing time for "
+        f"{metric(metrics, 'professional_daily_processing')}/day by "
+        f"{metric(metrics, 'professional_processing_improvement')} and unblocking real-time product dashboards.",
+        "Made change and recovery safe by treating schema evolution, replay, late-arriving data and backfills as "
+        "designed interfaces with idempotent loads and explicit watermarks, not as emergency procedures.",
+        f"Tuned Trino, ClickHouse, Citus and TimescaleDB serving "
+        f"{metric(metrics, 'professional_query_volume')} queries/day for a "
+        f"{metric(metrics, 'professional_query_latency')} p95 latency reduction through partitioning, clustering "
+        "and model redesign.",
+        f"Led the Kubernetes migration of the data infrastructure: "
+        f"{metric(metrics, 'professional_cost_reduction')} lower infrastructure cost, "
+        f"{metric(metrics, 'professional_uptime')} uptime, and autoscaling that held under peak load.",
+        "Worked across European and US time zones to turn product questions into maintainable datasets.",
     ], s)
     story.append(Spacer(1, 4))
     story.append(job_header("Project Leader", "SVCET, India", "2019 - 2020", s))
-    story += bullets(["Led a small team delivering an NLP dialogue-system project across academic and industry stakeholders."], s)
+    story += bullets([
+        f"Led {metric(metrics, 'professional_project_team')} developers building an intelligent dialogue system "
+        "on an NLP and deep-learning stack, reaching the client's acceptance threshold for intent recognition and "
+        f"delivering {metric(metrics, 'professional_project_delivery')} ahead of schedule.",
+        "Coordinated requirements, planning and review across academic and industry stakeholders, and introduced "
+        "the code-review and version-control discipline the department kept afterwards.",
+    ], s)
     story.append(Spacer(1, 3))
     story.append(job_header("Software Developer", "SV Technology, India", "2017 - 2019", s))
-    story += bullets(["Built Python backend services, PostgreSQL schemas and reports, and contributed to CI and early pipeline work."], s)
+    story += bullets([
+        f"Built Python and FastAPI backend services carrying "
+        f"{metric(metrics, 'professional_backend_users')} users at "
+        f"{metric(metrics, 'professional_test_coverage')} test coverage.",
+        "Designed and maintained PostgreSQL schemas, stored procedures and reporting paths, and set up CI with "
+        "Jenkins alongside the early pipeline work that moved me into data engineering.",
+    ], s)
 
-    story.append(PageBreak())
-    story += section("Independent work", s)
-    independent = Table(
-        [[
-            [Paragraph("ClickHomes - personal product", s["card_title"]), Paragraph("Founder and sole engineer. Public evidence includes 90+ versioned SQL migrations and a documented approach to contracts, idempotency, schema evolution, and reviewable AI-assisted decisions.", s["card_body"])],
-            [Paragraph("Multi-engine HA lab", s["card_title"]), Paragraph("Eight reproducible failover scenarios on hardware I control. Published results include PostgreSQL 18 replay-lag and Redis Sentinel promotion measurements, with the rig and limitations stated.", s["card_body"])],
-        ]],
-        colWidths=[3.11 * inch, 3.11 * inch],
-    )
-    independent.setStyle(TableStyle([
-        ("BACKGROUND", (0, 0), (-1, -1), PANEL),
-        ("BOX", (0, 0), (-1, -1), 0.5, LINE),
-        ("INNERGRID", (0, 0), (-1, -1), 0.5, LINE),
-        ("VALIGN", (0, 0), (-1, -1), "TOP"),
-        ("LEFTPADDING", (0, 0), (-1, -1), 11),
-        ("RIGHTPADDING", (0, 0), (-1, -1), 11),
-        ("TOPPADDING", (0, 0), (-1, -1), 10),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 10),
-    ]))
-    story.append(independent)
-
-    story += section("Technical practice", s)
+    # No forced page break here any more. It existed to give the Independent work
+    # panel a clean page; with that section gone it stranded 124 words on page 2.
+    story += section("Capability map", s)
     categories = [
-        ("Programming", "Python, SQL, Bash; application and automation work with modern JavaScript/TypeScript stacks."),
-        ("Data processing", "Apache Spark / PySpark, Kafka, Airflow, dbt, Iceberg, streaming and change-data-capture patterns."),
-        ("Databases", "PostgreSQL, ClickHouse, Trino; production or lab work with Redis, MongoDB, Citus, TimescaleDB, ScyllaDB, MariaDB/Galera, and SolrCloud."),
-        ("AI systems", "LangGraph, LangChain, CrewAI, Google-ADK, MCP, Pydantic, retrieval, evaluation, provenance, and structured-output design."),
-        ("Infrastructure", "Kubernetes, Docker, Terraform, Helm, GitHub Actions, Prometheus, Grafana, OpenTelemetry."),
-        ("Cloud", "Hands-on delivery across AWS, GCP, and Azure services for data, compute, storage, orchestration, and AI workloads."),
+        (
+            "Platform ownership",
+            "Python and SQL; Kafka ingestion; Spark/PySpark processing; Airflow orchestration; Iceberg, dbt and "
+            "lakehouse modeling; Kubernetes, Docker and Terraform delivery; contracts, lineage, cost and recovery.",
+        ),
+        (
+            "Database reliability",
+            "PostgreSQL, ClickHouse, Trino, Citus, TimescaleDB, Redis and MongoDB; transactional and analytical "
+            "modeling, partitioning, replication, backup, restore, high availability and query performance.",
+        ),
+        (
+            "Governed AI delivery",
+            "Pydantic, LangGraph, LangChain, MCP, Milvus and MLflow; structured output, provenance, retrieval, "
+            "evaluation, bounded tools, human review and honest fallback paths.",
+        ),
+        (
+            "Technical leadership",
+            "Architecture and operational review, mentoring, incident-ready runbooks, service and freshness "
+            "objectives, observability with Prometheus and Grafana, and distributed delivery across time zones.",
+        ),
     ]
     for label, body in categories:
         story.append(KeepTogether([
@@ -291,14 +346,12 @@ def build_story(s: dict[str, ParagraphStyle]) -> list:
     story.append(Paragraph("JNTUA College of Engineering, Anantapur, India  |  2015 - 2019", s["small"]))
     story.append(Paragraph("English: C1  |  Nepali: native", s["body"]))
 
-    story += section("Public disclosure boundary", s)
+    # The link stays; the disclosure-boundary paragraph does not. A document that
+    # explains what it withholds draws attention to the withholding, and a
+    # recruiter reading a CV is not the audience for a disclosure policy.
+    story.append(Spacer(1, 14))
     story.append(Paragraph(
-        "This public resume names employers and responsibilities but intentionally excludes employer architecture, customer information, operating scale, security posture, and internal performance figures. Independent metrics refer only to personal work with a stated measurement method.",
-        s["note"],
-    ))
-    story.append(Spacer(1, 8))
-    story.append(Paragraph(
-        '<a href="https://technobasant.github.io/resume/" color="#9A692C"><b>Full public resume and evidence: technobasant.github.io/resume/</b></a>',
+        '<a href="https://technobasant.github.io/" color="#9A692C"><b>Selected work, writing and case studies: technobasant.github.io</b></a>',
         s["body"],
     ))
     return story
@@ -306,6 +359,7 @@ def build_story(s: dict[str, ParagraphStyle]) -> list:
 
 def generate(output: Path) -> None:
     output.parent.mkdir(parents=True, exist_ok=True)
+    metrics = load_metrics()
     doc = BaseDocTemplate(
         str(output),
         pagesize=letter,
@@ -313,13 +367,13 @@ def generate(output: Path) -> None:
         leftMargin=0.68 * inch,
         topMargin=0.62 * inch,
         bottomMargin=0.58 * inch,
-        title="Basant Bhattarai - Privacy-safe public resume",
+        title="Basant Bhattarai - Senior Data and AI Engineer",
         author="Basant Bhattarai",
         subject="Senior Data & AI Engineer",
     )
     frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height, id="resume")
     doc.addPageTemplates([PageTemplate(id="resume", frames=[frame], onPage=page_chrome)])
-    doc.build(build_story(styles()))
+    doc.build(build_story(styles(), metrics))
 
 
 def main() -> None:

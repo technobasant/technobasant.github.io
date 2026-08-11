@@ -11,7 +11,7 @@
   --ih-ink: #f3eee5;
   --ih-muted: #a9b2bd;
   --ih-line: rgba(243, 238, 229, 0.14);
-  --ih-accent: #dfb66c;
+  --ih-accent: var(--brand-brass-masthead);
   position: relative;
   isolation: isolate;
   overflow: clip;
@@ -217,6 +217,10 @@
   color: var(--ih-muted);
 }
 
+.interior-hero__status .badge {
+  color: var(--ih-accent);
+}
+
 // ── Indexes ──────────────────────────────────────────────────────────────────
 .page--index,
 .page--body,
@@ -224,8 +228,12 @@
   padding-block-start: clamp(3rem, 6vw, 5.5rem);
 }
 
+.page--case {
+  overflow-x: clip;
+}
+
 .page--index > * + *,
-.case-evidence > section + section {
+.case-scan > section + section {
   margin-block-start: 0;
 }
 
@@ -338,8 +346,8 @@
 
 .writing-feature__link {
   display: grid;
-  grid-template-columns: minmax(0, 1.12fr) minmax(20rem, 0.88fr);
-  min-height: clamp(28rem, 45vw, 36rem);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  min-height: clamp(26rem, 38vw, 32rem);
   color: inherit;
   text-decoration: none;
   touch-action: manipulation;
@@ -387,7 +395,7 @@
   margin: 0;
   font-family: var(--font-display);
   font-variation-settings: "SOFT" 0, "WONK" 0;
-  font-size: clamp(2.35rem, 4.4vw, 4.5rem);
+  font-size: clamp(2.25rem, 3.6vw, 3.5rem);
   letter-spacing: var(--ls-display);
   line-height: 0.98;
   text-wrap: balance;
@@ -457,6 +465,49 @@
   line-height: 1.65;
 }
 
+.page-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.page-actions > span {
+  font-size: var(--step--1);
+  color: var(--ink-2);
+}
+
+.resume-proof {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  padding: 1px;
+  background: var(--line-strong);
+}
+
+.resume-proof__item {
+  display: grid;
+  align-content: start;
+  gap: var(--sp-2);
+  min-width: 0;
+  padding: var(--sp-5);
+  background: var(--surface-1);
+}
+
+.resume-proof__item strong {
+  font-family: var(--font-body);
+  font-size: var(--step-2);
+  letter-spacing: var(--ls-display);
+  line-height: 1;
+  color: var(--ink-1);
+  font-variant-numeric: tabular-nums;
+}
+
+.resume-proof__item span {
+  font-size: var(--step--2);
+  line-height: 1.4;
+  color: var(--ink-3);
+}
+
 .page--body .prose {
   counter-reset: page-section;
 }
@@ -487,7 +538,11 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1px;
-  margin: 0;
+  // No `margin: 0` here. This file loads after _prose.scss, so a blanket margin
+  // reset on the same specificity silently won against the prose flow rule and
+  // the panel's top edge landed on the descenders of the heading above it.
+  // Vertical rhythm belongs to the flow model; components do not opt out of it.
+  margin-inline: 0;
   padding: 1px;
   background: var(--line-strong);
   list-style: none;
@@ -523,8 +578,12 @@
   counter-increment: principle;
 }
 
+// Numbers removed. These sit under an h2 that the section counter already
+// numbers, so the page showed 01/02/03 for sections and 01-05 for principles in
+// the same column and the same style — two sequences a reader has to
+// disentangle. Principles are a set, not an order; the section counter stays.
 .principle-list > li::before {
-  content: counter(principle, decimal-leading-zero);
+  content: none;
 }
 
 .principle-list h3,
@@ -577,22 +636,28 @@
   counter-reset: briefing;
 }
 
+// Flex rows, not absolute labels over a fixed indent. The marker was positioned
+// absolutely against a 3rem padding reserve, but "Not a fit" renders wider than
+// 3rem, so the label overlapped the first words of every item. A flex row cannot
+// collide regardless of the label's width, the font, or the user's text size.
 .decline-list > li,
 .briefing-list > li {
-  position: relative;
+  display: flex;
+  gap: var(--sp-4);
   margin: 0;
-  padding: var(--sp-4) var(--sp-4) var(--sp-4) var(--sp-7);
+  padding: var(--sp-4);
   border-block-start: 1px solid var(--line-strong);
 }
 
 .decline-list > li::before {
   content: "Not a fit";
-  position: absolute;
-  inset-inline-start: 0;
-  inset-block-start: var(--sp-4);
+  flex: none;
+  padding-block-start: 0.15em;
   font-family: var(--font-mono);
   font-size: var(--step--2);
+  line-height: 1.4;
   color: var(--ink-3);
+  white-space: nowrap;
 }
 
 .briefing-list > li {
@@ -601,9 +666,8 @@
 
 .briefing-list > li::before {
   content: counter(briefing, decimal-leading-zero);
-  position: absolute;
-  inset-inline-start: 0;
-  inset-block-start: var(--sp-4);
+  flex: none;
+  padding-block-start: 0.15em;
   font-family: var(--font-mono);
   font-size: var(--step--2);
   color: var(--accent);
@@ -675,18 +739,19 @@
   padding-block-end: var(--sp-9);
 }
 
-// ── Case-study evidence ──────────────────────────────────────────────────────
-.case-evidence {
+// ── Case-study scan layer ────────────────────────────────────────────────────
+.case-scan {
   display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr) minmax(0, 1fr);
   gap: 1px;
   overflow: hidden;
   background: var(--line-strong);
   border: 1px solid var(--line-strong);
 }
 
+.case-scan__decision,
 .case-brief,
-.case-evidence .case-impact {
+.case-scan .case-impact {
   min-width: 0;
   margin: 0;
   padding: clamp(1.25rem, 3vw, 2rem);
@@ -695,24 +760,63 @@
   border-radius: 0;
 }
 
+.case-scan__decision > .section-label,
 .case-brief > .section-label,
-.case-evidence .case-impact > .section-label {
+.case-scan .case-impact > .section-label {
   margin-block-end: var(--sp-5);
 }
 
-.case-evidence .case-glance {
+.case-scan__decision > p {
+  margin: 0;
+  font-size: var(--step--1);
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.case-scan__decision > p + p {
+  margin-block-start: var(--sp-5);
+  padding-block-start: var(--sp-5);
+  border-block-start: 1px solid var(--line);
+}
+
+.case-scan__decision strong {
+  display: block;
+  margin-block-end: var(--sp-2);
+  font-size: var(--step--2);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--ink-1);
+}
+
+.case-scan .case-glance {
   padding: 0;
   background: transparent;
   border: 0;
   border-radius: 0;
 }
 
-.case-evidence .case-impact {
+.case-scan .case-impact {
   background: color-mix(in oklab, var(--accent-fill) 8%, var(--surface-1));
 }
 
-.case-evidence .stats {
+.case-scan .stats {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.case-system {
+  margin-block-start: var(--sp-6);
+}
+
+.case-system .system-flow {
+  margin: 0;
+}
+
+.case-scan .case-glance a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
 }
 
 // ── Mobile composition ───────────────────────────────────────────────────────
@@ -751,6 +855,16 @@
 
   .interior-hero--post .interior-hero__content {
     order: -1;
+  }
+
+  .interior-hero--case .interior-hero__content {
+    order: -1;
+  }
+
+  .interior-hero--case .interior-hero__rail {
+    padding-block: var(--sp-5) 0;
+    border-block-start: 1px solid var(--ih-line);
+    border-block-end: 0;
   }
 
   .interior-hero--post .interior-hero__rail {
@@ -796,8 +910,11 @@
   .interior-hero--post h1,
   .interior-hero--case h1 {
     max-width: 18ch;
-    font-size: clamp(2.7rem, 13vw, 4.5rem);
-    line-height: 0.96;
+    // Interior titles should establish hierarchy without turning a phone into
+    // a poster. The old 43–51px range pushed long titles to six lines and
+    // delayed every page's actual content.
+    font-size: clamp(2.15rem, 10.5vw, 3.5rem);
+    line-height: 1;
   }
 
   .interior-hero .lede {
@@ -819,11 +936,15 @@
     font-size: var(--step-3);
   }
 
-  .case-evidence {
+  .case-scan {
     grid-template-columns: 1fr;
   }
 
-  .case-evidence .stats {
+  .resume-proof {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .case-scan .stats {
     grid-template-columns: 1fr 1fr;
   }
 
@@ -866,7 +987,11 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .case-evidence .stats {
+  .case-scan .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .resume-proof {
     grid-template-columns: 1fr;
   }
 

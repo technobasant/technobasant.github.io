@@ -1,15 +1,19 @@
 ---
-title: "Running a data platform people can depend on"
-hook: "Contracts at the boundary, freshness as an objective, replay as a designed path, one named owner per dataset"
-description: "How I approach data-platform ownership: contracts at the boundary, freshness as an objective, replay as a designed path, and one named owner per dataset."
+title: "Rebuilding a production data platform for scale and recovery"
+hook: "A six-year platform story: faster processing, lower cost, safer change, and recovery designed before the incident."
+description: "How I rebuilt core processing, led a Kubernetes migration, evolved the lakehouse boundary, and made recovery a designed path."
 kind: practice
 order: 1
 featured: true
-role: "Senior Data Engineer"
+role: "Data Engineer → Senior Data Engineer"
 org: "UXCam"
 period: "2020 – present"
 team: "Global team, working US and EU hours"
-scale: "Mobile analytics, six years of platform ownership"
+scale: "Production mobile-analytics workloads across ingestion, processing, storage, and analytical serving"
+problem: "Processing and serving had to scale without making schema change, replay, cost, or on-call work progressively less safe."
+decision: "Rebuild the core processing path, move orchestration onto Kubernetes, and make contracts, ownership, and replay part of the platform interface."
+flow: platform
+metrics: [professional_processing_improvement, professional_cost_reduction, professional_uptime, professional_query_latency]
 stack: [Python, SQL, "Apache Spark", "Apache Kafka", "Apache Airflow", dbt, "Apache Iceberg", PostgreSQL, ClickHouse, Trino, Kubernetes, Prometheus, Grafana]
 tags: [data-quality, observability-slo, iceberg-lakehouse]
 image: /assets/og/og-default-v3.png
@@ -18,53 +22,54 @@ image_alt: "Basant Bhattarai — Reliable data. Accountable AI."
 
 ## Context
 
-Data platforms fail differently from services. A service that breaks pages someone. A dataset that breaks stays silent, keeps serving, and is discovered three weeks later by an analyst who no longer trusts anything. Most of what follows exists to shorten that gap.
+The platform sits downstream of producers it cannot control. Payloads drift, old clients keep sending, late data arrives after a partition looks complete, and a successful job can still publish an empty or misleading dataset. At this scale, the technical problem is not merely moving bytes. It is keeping every boundary understandable while volume, schemas, consumers, and cost all change.
 
-The other structural fact is that a data platform sits downstream of producers it does not control. In a mobile-analytics product the producer is an SDK embedded in applications shipped by other companies, on versions they choose to keep. You cannot reject a bad producer and you cannot make it upgrade. That single constraint drives more design than any other.
+## My role
 
-## Constraints I design against
+I grew from pipeline delivery into end-to-end platform ownership: processing, orchestration, storage layout, analytical serving, observability, recovery, and the design reviews connecting them. I led the core ETL rebuild and Kubernetes migration, set reliability and governance expectations, and mentored engineers so the operating model did not depend on one person.
 
-- **Producers I cannot control or reject.** Old SDK versions keep sending. Payload shapes drift without notice. Backfills arrive out of order.
-- **Correctness matters more than latency, until it doesn't.** Nobody thanks you for fresh wrong numbers, but a correct dataset that lands too late for the morning review is also a failure.
-- **The bill is a design constraint, not a report.** Storage layout and compaction cadence move cost more than instance choice does, and both are schema decisions.
-- **Small team, broad surface.** Anything that only I can operate is a liability, not an achievement.
+## Constraints
 
-## The method
+- **Uncontrolled producers.** The platform must accept old and new payload shapes without silently changing meaning.
+- **Correct and on time.** Fresh wrong data and correct late data are both product failures.
+- **Replay under pressure.** Backfills and late arrivals must be routine paths, not bespoke incident work.
+- **Cost follows data design.** Partitioning, compaction, and retention decisions move the bill before instance tuning does.
+- **A small team owns a broad surface.** Every added engine creates another upgrade, backup, and on-call obligation.
 
-### Contracts at the boundary, tolerant readers behind it
+## Architecture and operating model
 
-Validate at the point data enters a governed store, not scattered through the pipeline. Null, type, range and referential checks at the load boundary; quarantine rather than drop, because a rejected record you cannot inspect is a bug you cannot fix. Behind that boundary, read tolerantly — unknown fields pass through rather than failing the batch.
+The path is intentionally legible: ingest events, validate and govern them at a clear storage boundary, serve models designed around real read paths, and preserve a recovery route that can replay without duplicating state.
 
-The trade-off: quarantine tables need an owner and a review habit, or they silently become a landfill. I have seen that happen.
+The processing layer moved to Spark/PySpark with Airflow orchestration. Lakehouse tables used explicit partition and schema-evolution rules instead of letting each job invent them. Kubernetes provided a common scheduling and scaling boundary. Trino, ClickHouse, Citus, and TimescaleDB were tuned from the query shape and data layout outward, not from infrastructure knobs inward.
 
-### Freshness as a stated objective, not a job-success metric
+Reliability was defined at the dataset boundary. The meaningful signal is event time to queryable, measured per dataset with a named owner—not whether a DAG turned green.
 
-"Did the job succeed" is the wrong question. A DAG can go green while emitting an empty partition. The signal worth alerting on is **event time to queryable**, measured per dataset, at a percentile, with a stated window — and an objective that someone agreed to.
+## Decisions and rejected alternatives
 
-The trade-off: per-dataset objectives are real work to define and real work to keep honest. The alternative is an alert nobody trusts, which is worse than no alert.
+| Decision | Alternative rejected | Why | Cost accepted |
+|---|---|---|---|
+| Validate at the governed write boundary | Scatter checks through every job | One enforceable contract and one place to quarantine failures | Quarantine queues require ownership |
+| Make loads idempotent with explicit watermarks | Treat replay as an incident procedure | Backfills converge on the same state | More write amplification and stricter keys |
+| Evolve schemas additively with dated deprecation | Coordinate breaking renames | Consumers can migrate without a synchronized release | Temporary duplicate fields |
+| Design tables around read paths | Scale infrastructure first | Layout removes more work than larger clusters hide | More up-front modeling |
+| Standardize scheduling on Kubernetes | Keep workload-specific deployment paths | One capacity and operating model across the platform | Migration and platform learning cost |
+{: .case-decisions aria-label="Data platform decisions and rejected alternatives" }
 
-### Replay and backfill as designed interfaces
+## Outcomes
 
-Treat re-running as a first-class path, not an incident procedure. Idempotent loads, explicit watermarks, and partitions you can rewrite without touching neighbours. If a backfill requires a person to reason carefully at 2 a.m., the design is incomplete.
+- Core processing for {{ site.data.metrics.professional_daily_processing.value }} per day became **{{ site.data.metrics.professional_processing_improvement.value }} faster**.
+- The Kubernetes migration and capacity work reduced infrastructure cost by **{{ site.data.metrics.professional_cost_reduction.value }}** while sustaining **{{ site.data.metrics.professional_uptime.value }} uptime**.
+- Serving-path redesign reduced p95 latency by **{{ site.data.metrics.professional_query_latency.value }}** across {{ site.data.metrics.professional_query_volume.value }} analytical queries per day.
+- Ownership, contracts, freshness objectives, and runbooks made failures attributable and recovery transferable rather than dependent on memory.
 
-The trade-off: idempotency costs write amplification and some schema rigidity. Worth it every time.
+## Recovery model
 
-### One named owner per dataset
+Replay is a first-class interface: stable keys, explicit watermarks, partitions that can be replaced without touching neighbours, and a record of rejected input with the reason attached. Runbooks state the decision points and validation queries, not only commands. A person returning months later should be able to tell what is safe to rerun and what result proves recovery.
 
-Not a team — a person. An unowned dataset is an outage with a delay fuse. Ownership means the freshness objective, the quarantine queue, the schema changes, and the cost line.
+## Reflection
 
-### Schema evolution planned in advance of needing it
+I would instrument consumers earlier. I have often known a dataset's freshness better than whether anyone still depended on it. Consumer evidence makes retention and deprecation decisions much easier.
 
-Additive by default. Renames go through a period where both names exist. Deprecation has a date and a consumer list, and the list is derived from lineage rather than memory.
+I would also write the runbook before the first incident and remove tools sooner. Every engine is a permanent operational obligation. Some of the strongest architecture decisions are deletions.
 
-## What I would do differently
-
-**Instrument the consumers earlier.** I have repeatedly known the freshness of a dataset better than I knew whether anyone was reading it. Retention and deprecation arguments are easy when you can name the consumers and hard when you cannot.
-
-**Write the runbook before the first incident, not after the second.** The version written calmly is materially better than the version written at 2 a.m., and the difference persists for years.
-
-**Be slower to add a tool and faster to delete one.** Every engine in the estate is a version-upgrade obligation, a backup story and an on-call surface. Some of the best decisions I have made were removals.
-
-## Related writing
-
-The [failover lab](/work/multi-engine-ha-lab/) is where I test the recovery half of this — six engines, eight injected faults, on hardware I control.
+The [multi-engine failover lab](/work/multi-engine-ha-lab/) is where I keep testing the recovery half of this practice on hardware I control.

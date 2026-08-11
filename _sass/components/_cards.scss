@@ -5,84 +5,14 @@
 
 .card-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(19rem, 100%), 1fr));
+  // auto-fit, not auto-fill: auto-fill keeps empty tracks, so a two-card related
+  // list in a three-column grid rendered a visible empty third cell. auto-fit
+  // collapses the unused track.
+  grid-template-columns: repeat(auto-fit, minmax(min(19rem, 100%), 1fr));
   gap: var(--sp-5);
   padding: 0;
   margin: 0;
   list-style: none;
-}
-
-// Homepage showcase: one flagship case gets the reading priority, with two
-// supporting cases beside it. The regular work index keeps the democratic grid.
-.showcase-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(17rem, 0.85fr);
-  gap: 1px;
-  overflow: hidden;
-  background: var(--line-strong);
-  border: 1px solid var(--line-strong);
-}
-
-.showcase-grid .case-card {
-  min-height: 18rem;
-  overflow: hidden;
-  border: 0;
-  border-radius: 0;
-}
-
-.case-card--feature {
-  grid-row: span 2;
-  padding: clamp(1.5rem, 3vw, 2.25rem);
-  background:
-    linear-gradient(135deg, transparent 62%, color-mix(in oklab, var(--accent-fill) 13%, transparent)),
-    color-mix(in oklab, var(--accent-fill) 10%, var(--surface-1));
-}
-
-.case-card--feature .post-card__title {
-  max-width: 18ch;
-  // Numerals in Inter, not Fraunces: the Fraunces subset ships only `liga` and
-  // `rvrn`, so `tabular-nums` on it is a silent no-op and stacked figures came
-  // out ragged. The wght-only subset also makes SOFT/WONK dead declarations.
-  font-family: var(--font-body);
-  font-size: var(--step-4);
-  letter-spacing: var(--ls-display);
-  line-height: 1.04;
-}
-
-.case-card--feature .case-card__hook {
-  max-width: 42ch;
-  font-size: var(--step-0);
-}
-
-.case-card--feature .case-card__metric {
-  margin-block-start: auto;
-  padding-block-start: var(--sp-5);
-  border-block-start: 1px solid var(--line-strong);
-}
-
-.case-card--feature .case-card__metric strong {
-  font-size: var(--step-3);
-}
-
-// The original magazine composition expects three stories. When privacy-safe
-// filtering leaves one or two public cases, collapse the unused grid track.
-.showcase-grid--solo {
-  grid-template-columns: 1fr;
-}
-
-.showcase-grid--solo .case-card--feature,
-.showcase-grid--pair .case-card--feature {
-  grid-row: auto;
-}
-
-@media (max-width: 48rem) {
-  .showcase-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .case-card--feature {
-    grid-row: auto;
-  }
 }
 
 // ── Case card ────────────────────────────────────────────────────────────────
@@ -90,6 +20,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--sp-3);
+  min-width: 0;
   padding: var(--sp-5);
   background: var(--surface-1);
   border: 1px solid var(--line-strong);
@@ -154,6 +85,21 @@
   color: var(--ink-2);
 }
 
+.case-card__role {
+  margin: 0;
+  font-size: var(--step--2);
+  font-weight: 650;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.case-card__metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-4) var(--sp-6);
+}
+
 // The single number this case is about: <p><strong>value</strong> <span>label</span></p>
 .case-card__metric {
   margin: 0;
@@ -210,6 +156,107 @@
 .case-card:hover .case-card__open {
   color: var(--accent-hi);
   transform: translateX(2px);
+}
+
+// ── Outcome-led case bands ───────────────────────────────────────────────────
+.case-bands {
+  border-block-start: 1px solid var(--line-strong);
+}
+
+.case-card--band {
+  display: grid;
+  grid-template-columns: minmax(10rem, 0.27fr) minmax(0, 0.73fr);
+  gap: var(--sp-3) clamp(1.5rem, 5vw, 5rem);
+  min-height: 0;
+  padding: clamp(1.75rem, 4vw, 3rem) 0;
+  background: transparent;
+  border: 0;
+  border-block-end: 1px solid var(--line-strong);
+  border-radius: 0;
+}
+
+.case-card--band:hover {
+  background: transparent;
+  transform: none;
+}
+
+.case-card--band > .post-card__meta,
+.case-card--band > .case-card__role,
+.case-card--band > .case-card__metrics {
+  grid-column: 1;
+}
+
+.case-card--band > .post-card__title,
+.case-card--band > .case-card__hook,
+.case-card--band > .case-card__open {
+  grid-column: 2;
+}
+
+.case-card--band > .post-card__title {
+  grid-row: 1;
+  max-width: 24ch;
+  font-family: var(--font-display);
+  font-size: var(--step-3);
+  letter-spacing: var(--ls-display);
+  line-height: 1.08;
+}
+
+.case-card--band > .case-card__hook {
+  max-width: 55ch;
+  font-size: var(--step-0);
+}
+
+.case-card--band > .case-card__metrics {
+  margin-block-start: var(--sp-5);
+  padding-block-start: var(--sp-4);
+  border-block-start: 1px solid var(--line);
+}
+
+.case-card--band > .case-card__metrics .case-card__metric strong {
+  font-size: var(--step-2);
+}
+
+.case-card--band > .case-card__open {
+  align-self: end;
+  margin-block-start: var(--sp-5);
+}
+
+.case-card--compact {
+  min-height: 21rem;
+  background: var(--surface-1);
+  border: 0;
+  border-radius: 0;
+}
+
+.case-card--compact .post-card__title {
+  max-width: 22ch;
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  letter-spacing: var(--ls-display);
+  line-height: 1.12;
+}
+
+@media (max-width: 48rem) {
+  .case-card--band {
+    grid-template-columns: 1fr;
+  }
+
+  .case-card--band > .post-card__meta,
+  .case-card--band > .case-card__role,
+  .case-card--band > .case-card__metrics,
+  .case-card--band > .post-card__title,
+  .case-card--band > .case-card__hook,
+  .case-card--band > .case-card__open {
+    grid-column: 1;
+  }
+
+  .case-card--band > .post-card__title {
+    grid-row: auto;
+  }
+
+  .case-card--compact {
+    min-height: 0;
+  }
 }
 
 // ── Tutorial header ──────────────────────────────────────────────────────────
@@ -384,13 +431,21 @@ ol.series-nav__list {
   counter-reset: series;
 }
 
+// The row itself is the flex container. Previously the counter lived on the <li>
+// while the <a> was display:flex — a block-level box — so the number was pushed
+// onto its own line for every linked part, while the current part (a <span>, so
+// still inline) kept its number alongside. Same list, two different layouts.
 ol.series-nav__list > li {
   counter-increment: series;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  min-height: 44px;
 }
 
 ol.series-nav__list > li::before {
   content: counter(series, decimal-leading-zero);
-  margin-inline-end: var(--sp-3);
+  flex: none;
   color: var(--ink-3);
   font-variant-numeric: tabular-nums;
 }
@@ -398,6 +453,7 @@ ol.series-nav__list > li::before {
 .series-nav__list a {
   display: flex;
   align-items: center;
+  flex: 1;
   min-height: 44px;
   color: var(--ink-2);
   text-decoration: none;
@@ -471,13 +527,37 @@ ol.series-nav__list > li::before {
   text-decoration-color: currentcolor;
 }
 
+.author-card__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--sp-3);
+}
+
+.author-card__links a:not([class]) {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+}
+
 .author-card span[aria-hidden] {
   margin-inline: 0.35em;
   color: var(--ink-3);
 }
 
-.author-card .btn {
-  margin-block-start: var(--sp-2);
+.author-card__links span[aria-hidden] {
+  margin: 0;
+}
+
+.author-card__action {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3) var(--sp-4);
+}
+
+.author-card__action .btn {
+  margin: 0;
 }
 
 @media (max-width: 30rem) {
@@ -518,7 +598,7 @@ ol.series-nav__list > li::before {
 }
 
 .related .card-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
   gap: 1px;
   overflow: hidden;
   background: var(--line-strong);
@@ -647,6 +727,35 @@ ol.series-nav__list > li::before {
   font-size: var(--step-2);
 }
 
+.stats__detail {
+  margin-block-start: var(--sp-2);
+}
+
+.stats__detail summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  font-size: var(--step--2);
+  font-weight: 600;
+  color: var(--ink-3);
+  cursor: pointer;
+}
+
+.stats__detail summary::after {
+  content: "+";
+  margin-inline-start: var(--sp-2);
+  font-family: var(--font-mono);
+}
+
+.stats__detail[open] summary::after {
+  content: "−";
+}
+
+.stats__detail[open] .stats__method {
+  display: block;
+  padding-block-end: var(--sp-2);
+}
+
 .case-map {
   padding-block: var(--sp-4);
   border-block: 1px solid var(--line);
@@ -674,7 +783,7 @@ ol.series-nav__list > li::before {
   display: inline-flex;
   align-items: baseline;
   gap: 0.45em;
-  min-height: 2.25rem;
+  min-height: 2.75rem;
   color: var(--ink-2);
   font-size: var(--step--1);
   font-weight: 550;
@@ -744,6 +853,108 @@ ol.series-nav__list > li::before {
   color: var(--ink-2);
 }
 
+// ── Operating ledger / system path ───────────────────────────────────────────
+.system-flow {
+  margin: var(--sp-7) 0 0;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  background: var(--surface-1);
+  border: 1px solid var(--line-strong);
+}
+
+.system-flow figcaption {
+  margin-block-end: var(--sp-5);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 650;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.system-flow__track {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  border-block: 1px solid var(--line-strong);
+  list-style: none;
+}
+
+.system-flow__step {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: var(--sp-2);
+  min-width: 0;
+  margin: 0;
+  padding: var(--sp-5);
+}
+
+.system-flow__step + .system-flow__step {
+  border-inline-start: 1px solid var(--line-strong);
+}
+
+.system-flow__index {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--ink-3);
+}
+
+.system-flow__step strong {
+  font-size: var(--step-0);
+  line-height: 1.25;
+  color: var(--ink-1);
+}
+
+.system-flow__step > span:last-child {
+  font-size: var(--step--1);
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.system-flow__evidence {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3) var(--sp-6);
+  margin-block-start: var(--sp-5);
+}
+
+.system-flow__evidence p {
+  margin: 0;
+  font-size: var(--step--2);
+  line-height: 1.45;
+  color: var(--ink-3);
+}
+
+.system-flow__evidence strong {
+  margin-inline-end: 0.35em;
+  font-size: var(--step--1);
+  color: var(--ink-1);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 48rem) {
+  .system-flow__track {
+    grid-template-columns: 1fr;
+    border-block-end: 0;
+  }
+
+  .system-flow__step {
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: var(--sp-1) var(--sp-3);
+    padding-inline: 0;
+  }
+
+  .system-flow__step + .system-flow__step {
+    border-inline-start: 0;
+    border-block-start: 1px solid var(--line-strong);
+  }
+
+  .system-flow__index {
+    grid-row: 1 / span 2;
+  }
+}
+
 // ── Legacy ───────────────────────────────────────────────────────────────────
 // Existing markdown in _pages/ uses these directly. They keep working.
 .case {
@@ -764,4 +975,42 @@ ol.series-nav__list > li::before {
   border-radius: var(--r-full);
   font-size: var(--step--2);
   color: var(--ink-2);
+}
+
+// ── Work index grid ──────────────────────────────────────────────────────────
+// Two up, uniform. The previous page used three different grid classes plus a
+// "feature" card variant, so four cards rendered at three different widths and
+// two different title sizes with no rule a reader could infer.
+.card-grid--work {
+  grid-template-columns: 1fr;
+  gap: 0;
+  border-block-start: 1px solid var(--line-strong);
+}
+
+@media (min-width: 48rem) {
+  .card-grid--work {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.card-grid--work > .case-card {
+  display: flex;
+  flex-direction: column;
+  padding: var(--sp-6) var(--sp-5);
+  border-block-end: 1px solid var(--line);
+  border-inline-start: 0;
+}
+
+@media (min-width: 48rem) {
+  .card-grid--work > .case-card:nth-child(odd) {
+    border-inline-end: 1px solid var(--line);
+  }
+}
+
+// Push the call to action to the bottom edge so rows align regardless of how
+// much copy each card carries.
+.card-grid--work > .case-card > .case-card__open,
+.card-grid--work > .case-card > .post-card__open {
+  margin-block-start: auto;
+  padding-block-start: var(--sp-5);
 }

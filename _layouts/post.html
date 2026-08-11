@@ -117,8 +117,12 @@ biggest liability of a tutorial blog into a trust signal costs one paragraph. {%
       {{ content }}
     </div>
 
-    {% include share.html %}
-
+    {%- comment -%}
+      Order is deliberate: finish the article, continue the series, learn who
+      wrote it, find adjacent reading, then share. Share used to sit between the
+      in-content series nav and the full series list, splitting one component in
+      half with an action.
+    {%- endcomment -%}
     {%- if page.series %}
     {% include series-nav.html full=true %}
     {%- endif %}
@@ -126,5 +130,7 @@ biggest liability of a tutorial blog into a trust signal costs one paragraph. {%
     {% include author-card.html %}
 
     {% include related-posts.html %}
+
+    {% include share.html %}
   </article>
 </div>

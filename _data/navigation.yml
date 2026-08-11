@@ -1,5 +1,6 @@
-# Primary nav: 5 slots, the last one is the CTA button.
 # The wordmark is the home link — spending a slot on "Home" is waste.
+# Consulting stays discoverable in the footer and About page rather than
+# turning the site-wide header into an advertisement.
 
 main:
   - title: Work
@@ -10,10 +11,6 @@ main:
     url: /resume/
   - title: About
     url: /about/
-
-cta:
-  title: "Work with me"
-  url: /hire/
 
 footer:
   - heading: Site

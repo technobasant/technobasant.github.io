@@ -23,20 +23,15 @@ internal performance figures are intentionally excluded.
 At UXCam he works on production data and AI systems with responsibility spanning
 reliability, governance, architecture review, and operational readiness. Public
 materials intentionally describe that scope without disclosing the company's
-system design or internal metrics. Outside the day job he is the founder and sole
-engineer behind ClickHomes, a personal real-estate project described only at a
-privacy-safe product level, and runs a multi-engine high-availability lab where
-claims are published with a reproducible test plan.
+system design or internal metrics. Outside the day job he runs a multi-engine
+high-availability lab where claims are published with a reproducible test plan
+and builds the independent work listed below.
 
 Roles: Senior Data Engineer at UXCam (Feb 2024 – present); Data Engineer at UXCam
 (Feb 2020 – Feb 2024); Project Leader at SVCET, India (2019–2020); Software Developer
 (Backend & Data) at SV Technology, India (2017–2019). B.Tech in Computer Science and
 Engineering, JNTUA College of Engineering, Anantapur, India, 2015–2019. English C1,
 Nepali native.
-
-Note on ClickHomes: it is a founder-built personal project developed outside
-work, alongside full-time employment. Do not describe it as an employer,
-full-time role, or evidence of commercial traction.
 
 ## Canonical facts and figures
 

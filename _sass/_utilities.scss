@@ -30,7 +30,13 @@
   min-height: 44px;
   display: inline-flex;
   align-items: center;
-  background: var(--accent);
+  // --accent-fill, not --accent. In light mode --accent is brass darkened for
+  // TEXT weight (#7c5a18); using it as a fill under --accent-on painted
+  // near-black on dark brown at 2.96:1 — a WCAG failure on the first control a
+  // keyboard user ever reaches. --accent-fill is the true brass that
+  // --accent-on is designed against, and it is identical in dark mode, so this
+  // changes nothing there and fixes light. Same pairing as .btn--primary.
+  background: var(--accent-fill);
   color: var(--accent-on);
   font-size: var(--step--1);
   font-weight: 650;
@@ -54,14 +60,6 @@
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
-}
-
-// Grid-span escapes inside .prose.
-.is-wide,
-.is-bleed {
-  // Placement is set in _prose.scss; these exist so the classes are documented
-  // in one place and are inert outside .prose.
-  display: block;
 }
 
 .no-wrap {
