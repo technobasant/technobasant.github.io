@@ -1,27 +1,48 @@
-# Minimal Mistakes remote theme starter
+# Basant Bhattarai — Personal site
 
-Click [**Use this template**](https://github.com/mmistakes/mm-github-pages-starter/generate) button above for the quickest method of getting started with the [Minimal Mistakes Jekyll theme](https://github.com/mmistakes/minimal-mistakes).
+Staff-level portfolio for a Senior Data & AI Engineer / platform architect.  
+Live: [technobasant.github.io](https://technobasant.github.io)
 
-Contains basic configuration to get you a site with:
+## Principles
 
-- Sample posts.
-- Sample top navigation.
-- Sample author sidebar with social links.
-- Sample footer links.
-- Paginated home page.
-- Archive pages for posts grouped by year, category, and tag.
-- Sample about page.
-- Sample 404 page.
-- Site wide search.
+- Authority over decoration — outcomes and ownership, not tool laundry lists
+- ClickHomes appears only under **Work** (`/projects/`)
+- Consulting availability is on **About** only — not the landing page
+- CV source of truth: `realestate/cv/` (kept out of this repo)
 
-Replace sample content with your own and [configure as necessary](https://mmistakes.github.io/minimal-mistakes/docs/configuration/).
+## Local
 
----
+```bash
+cd technobasant.github.io
 
-## Troubleshooting
+# If native gems fail (missing iostream), set C++ includes first:
+export SDKROOT="$(xcrun --show-sdk-path)"
+export CPLUS_INCLUDE_PATH="${SDKROOT}/usr/include/c++/v1"
 
-If you have a question about using Jekyll, start a discussion on the [Jekyll Forum](https://talk.jekyllrb.com/) or [StackOverflow](https://stackoverflow.com/questions/tagged/jekyll). Other resources:
+bundle install
+bundle exec jekyll serve
+# → http://127.0.0.1:4000
+```
 
-- [Ruby 101](https://jekyllrb.com/docs/ruby-101/)
-- [Setting up a Jekyll site with GitHub Pages](https://jekyllrb.com/docs/github-pages/)
-- [Configuring GitHub Metadata](https://github.com/jekyll/github-metadata/blob/master/docs/configuration.md#configuration) to work properly when developing locally and avoid `No GitHub API authentication could be found. Some fields may be missing or have incorrect data.` warnings.
+Or: `./scripts/serve.sh`
+
+## Structure
+
+| Path | Role |
+|------|------|
+| `_layouts/` | `default`, `home`, `page` |
+| `assets/css/site.css` | Dark editorial design system |
+| `_pages/` | About, Experience, Skills, Work |
+| `_posts/` | Published essays and reproducible tutorials |
+| `_drafts/` | Unfinished outlines; excluded from the default preview |
+
+`make serve` previews the same finished writing readers will see. Use
+`make serve-drafts` only while editing unfinished outlines.
+
+Run `make content` before publishing, then push `master` to publish on GitHub
+Pages.
+
+Use `make new-post SLUG=... TITLE="..."` for an essay and
+`make new-tutorial SLUG=... TITLE="..."` for a reproducible runbook. The two
+templates carry separate editorial contracts so tutorial steps, evidence, and
+failure boundaries do not collapse into generic prose.

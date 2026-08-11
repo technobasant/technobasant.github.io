@@ -1,0 +1,36 @@
+{%- comment -%}
+  Usage: {% include case-card.html item=doc %}
+  Optional: heading="h2" (default h3)
+
+  The headline metric is looked up by key in _data/metrics.yml — the card can never
+  carry a number the metrics file does not vouch for.
+{%- endcomment -%}
+{%- assign _c = include.item -%}
+{%- assign _h = include.heading | default: "h3" -%}
+{%- assign _kind = _c.kind | default: "production" -%}
+{%- case _kind -%}
+{%- when "lab" -%}{%- assign _kind_label = "Measured lab" -%}
+{%- when "practice" -%}{%- assign _kind_label = "Professional practice" -%}
+{%- else -%}{%- assign _kind_label = "Independent product" -%}
+{%- endcase -%}
+<article class="case-card{% if include.variant %} case-card--{{ include.variant }}{% endif %}">
+  <p class="post-card__meta">
+    {%- if include.index %}<span class="case-card__index">{{ include.index | prepend: "0" }}</span>{% endif -%}
+    <span class="badge badge--{{ _kind }}">{{ _kind_label }}</span>
+    {%- if _c.period %}<span>{{ _c.period }}</span>{% endif -%}
+  </p>
+  <{{ _h }} class="post-card__title"><a href="{{ _c.url | relative_url }}">{{ _c.title }}</a></{{ _h }}>
+  {%- if _c.role %}<p class="case-card__role">{{ _c.role }}</p>{% endif -%}
+  <p class="case-card__hook">{{ _c.hook | default: _c.description }}</p>
+  {%- if _c.metrics and _c.metrics.size > 0 -%}
+  <div class="case-card__metrics">
+    {%- for key in _c.metrics limit: 2 -%}
+    {%- assign m = site.data.metrics[key] -%}
+    {%- if m %}
+    <p class="case-card__metric"><strong>{{ m.value }}</strong> <span>{{ m.label }}</span></p>
+    {%- endif -%}
+    {%- endfor %}
+  </div>
+  {%- endif %}
+  <span class="case-card__open" aria-hidden="true">View case study {% include icon.html name="arrow-right" size=14 %}</span>
+</article>

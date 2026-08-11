@@ -1,0 +1,120 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// BUTTONS
+//
+// Radius is --r-md (6px), not a pill. A 999px button reads as consumer-app
+// chrome; 6px reads as an instrument.
+//
+// Exactly one --btn--primary per viewport. It is the brass.
+// ─────────────────────────────────────────────────────────────────────────────
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  // 44px minimum tap target, met by the box itself rather than a pseudo hack.
+  min-height: 2.75rem;
+  padding-inline: var(--sp-5);
+  border: 1px solid transparent;
+  border-radius: var(--r-md);
+  font-size: var(--step--1);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: var(--ls-body);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--dur-1) var(--ease-standard),
+    border-color var(--dur-1) var(--ease-standard),
+    color var(--dur-1) var(--ease-standard),
+    transform var(--dur-1) var(--ease-standard);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn[aria-disabled="true"],
+.btn:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+// ── Primary — the brass ──────────────────────────────────────────────────────
+// Light mode uses --accent-fill (true brass #C4A574) for the plate because the
+// text sits on it, and #16120B on brass is 9.9:1. The darkened --accent is for
+// brass-as-ink, not brass-as-surface.
+.btn--primary {
+  background: var(--accent-fill);
+  color: var(--accent-on);
+}
+
+.btn--primary:hover {
+  background: var(--brand-brass-lift);
+}
+
+.btn--primary:focus-visible {
+  outline-offset: 3px;
+}
+
+// ── Ghost ────────────────────────────────────────────────────────────────────
+// The border is this control's only affordance, so it uses --line-control
+// (≥3:1) rather than the decorative --line.
+.btn--ghost {
+  border-color: var(--line-control);
+  color: var(--ink-1);
+  background: transparent;
+}
+
+.btn--ghost:hover {
+  background: var(--surface-2);
+  border-color: var(--ink-3);
+}
+
+// ── Link-shaped button ───────────────────────────────────────────────────────
+.btn--link {
+  min-height: 2.75rem;
+  padding-inline: 0;
+  color: var(--ink-1);
+  background: none;
+  border: 0;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--accent) 55%, transparent);
+  text-underline-offset: 0.22em;
+}
+
+.btn--link:hover {
+  color: var(--accent-hi);
+  text-decoration-color: currentcolor;
+}
+
+.btn--link:active {
+  transform: none;
+}
+
+// ── Small variant ────────────────────────────────────────────────────────────
+.btn--sm {
+  min-height: 2.25rem;
+  padding-inline: var(--sp-4);
+  font-size: var(--step--2);
+}
+
+// ── Action row ───────────────────────────────────────────────────────────────
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3) var(--sp-4);
+}
+
+@media (max-width: 30rem) {
+  .btn {
+    max-width: 100%;
+    min-width: 0;
+    padding-block: var(--sp-2);
+    line-height: 1.25;
+    text-align: center;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}

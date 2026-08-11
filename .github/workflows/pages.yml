@@ -1,0 +1,139 @@
+name: Build and deploy to Pages
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One Pages deployment at a time. cancel-in-progress stays false so a queued
+# deploy is never killed halfway through publishing.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # _config.yml sets `future: false` with `timezone: Asia/Kathmandu` (+0545).
+      # A post dated after today is silently dropped from the build with no
+      # warning at all, so the page 404s on the live site while the file sits
+      # happily in the repo. Fail loudly instead.
+      - name: Guard against future-dated posts
+        shell: bash
+        run: |
+          today="$(TZ=Asia/Kathmandu date +%F)"
+          echo "Today in Asia/Kathmandu is ${today}"
+          shopt -s nullglob
+          status=0
+          for f in _posts/*.md _posts/*.markdown _posts/*.html; do
+            base="$(basename "$f")"
+            d="${base:0:10}"
+            if [[ ! "$d" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
+              echo "::error file=${f}::filename must start with YYYY-MM-DD"
+              status=1
+              continue
+            fi
+            if [[ "$d" > "$today" ]]; then
+              echo "::error file=${f}::post is dated ${d}, which is after today (${today} in Asia/Kathmandu). _config.yml sets future:false, so Jekyll will drop this post silently. Re-date it or publish it later."
+              status=1
+            fi
+          done
+          exit $status
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version-file: .ruby-version
+          bundler-cache: true
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Build site
+        env:
+          JEKYLL_ENV: production
+        run: bundle exec jekyll build --strict_front_matter --trace
+
+      # Second half of the future-date trap: a post dated *today* but at a time
+      # later than the current Kathmandu time is also dropped. Compare what was
+      # authored against what actually rendered.
+      - name: Assert no post was silently dropped
+        shell: bash
+        run: |
+          shopt -s nullglob
+          authored=$(ls _posts/*.md _posts/*.markdown _posts/*.html 2>/dev/null | wc -l | tr -d ' ')
+          if [[ ! -f _site/writing/feed.xml ]]; then
+            echo "::warning::_site/writing/feed.xml not found, skipping the dropped-post check"
+            exit 0
+          fi
+          if (( authored > 30 )); then
+            echo "More than the feed's posts_limit (30) authored; skipping the count comparison."
+            exit 0
+          fi
+          rendered=$(grep -c '<entry>\|<item>' _site/writing/feed.xml || true)
+          echo "authored=${authored} rendered=${rendered}"
+          if (( rendered < authored )); then
+            echo "::error::${authored} post(s) in _posts/ but only ${rendered} in the feed. A future-dated post was dropped by future:false."
+            exit 1
+          fi
+
+      - name: Check links, images and OpenGraph
+        run: bundle exec rake check
+
+      # html-proofer's OpenGraph check reads only og:url and og:image, matches
+      # property= but not name=, and says nothing about card type, title length,
+      # image dimensions, aspect ratio or file size. This covers the rest, with
+      # no network calls and no dependencies.
+      - name: Validate social cards
+        run: node scripts/check-og.mjs
+
+      - name: Validate published writing
+        run: bundle exec rake content
+
+      - name: Install PDF text inspector
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils
+
+      - name: Reject confidential public details
+        run: bundle exec rake privacy
+
+      - name: Assert output shape
+        run: bundle exec rake verify
+
+      - name: Validate JSON-LD
+        run: bundle exec rake jsonld
+
+      # Checks the token matrix, not the rendered sample. axe only sees the
+      # colour pairs that exist in today's markup, so a token that fails on a
+      # surface no component happens to use yet ships silently and breaks the
+      # first time someone uses it.
+      - name: Check token contrast (both themes, every surface)
+        run: bundle exec rake tokens
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./_site
+
+  # A pull request builds and gets checked, but never touches the live site.
+  deploy:
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

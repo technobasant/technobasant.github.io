@@ -1,0 +1,10 @@
+---
+layout: default
+---
+{%- assign _lede = page.description | default: page.excerpt -%}
+{% include interior-hero.html variant="page" lede=_lede %}
+<article class="page page--body">
+  <div class="prose">
+    {{ content }}
+  </div>
+</article>

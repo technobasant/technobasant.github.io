@@ -1,0 +1,89 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// MOTION
+//
+// Rules of the house:
+//   · Never `transition: all`. Only colour, background-color, border-color,
+//     opacity, transform, translate, outline-color and box-shadow animate.
+//     Those are the properties the compositor can handle without a relayout.
+//   · Never animate height/width/margin/padding/top/left. Height changes use
+//     the grid-template-rows 0fr → 1fr trick below.
+//   · Entrance reveals are pure CSS scroll-driven animation. No JS, no
+//     IntersectionObserver, no flash of invisible content.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Entrance reveals are removed. Two reasons, both measured rather than
+// aesthetic.
+//
+// The animation faded opacity from 0, and Lighthouse scrolls a page to capture
+// its full-page screenshot — so it audited elements mid-fade and found real
+// contrast failures: --ink-3 at ~0.72 opacity computes to #6f6c67, which is
+// 3.5:1 on --surface-0 against a 4.5:1 requirement. That is not a measurement
+// artefact. Every scrolling reader passed through the same sub-threshold state;
+// the audit just happened to sample it.
+//
+// And the reference tier does not do this. NN/g measured that animations over
+// 500ms cause readers to scroll past before the fade completes, and their
+// guidance is animate once, one element type, never on mobile. The sites in this
+// genre that read as most considered — Jepsen, Brooker, danluu — animate
+// nothing at all. `.reveal` stays in the markup as an inert hook.
+
+// Height animation without animating height. Wrap the collapsible content in a
+// single child; the parent animates its row from 0fr to 1fr.
+.collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--dur-3) var(--ease-standard);
+}
+
+.collapse > * {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.collapse.is-open,
+[open] > .collapse {
+  grid-template-rows: 1fr;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// REDUCED MOTION
+//
+// NOTE: an `animation-duration: 0.01ms` override does NOT stop a scroll-driven
+// animation — a view() or scroll() timeline is progress-based, so duration is
+// ignored entirely. The only way to kill one is by name: set animation-name to
+// none and drop the timeline back to `auto`. Everything below is the one place
+// in this codebase where !important is permitted.
+// ─────────────────────────────────────────────────────────────────────────────
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  // Scroll-driven entrance animation, killed properly.
+  // `.progress` is deliberately NOT in this list: it is an informational
+  // indicator, not decoration, and a 2px bar tracking the scrollbar is not
+  // motion a vestibular-sensitive reader needs protecting from.
+  .reveal { // retained as an inert hook; no animation is attached
+    animation-name: none !important;
+    animation-timeline: auto !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .btn:hover,
+  .post-card:hover,
+  .case-card:hover,
+  .focus:hover {
+    transform: none !important;
+  }
+}

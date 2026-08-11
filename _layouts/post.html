@@ -1,0 +1,136 @@
+---
+layout: default
+---
+{%- comment -%}
+  Post layout: sticky TOC rail + article at ≥1100px, single column below.
+
+  The TOC is parsed out of the rendered content server-side (see _includes/toc.html)
+  rather than built by JS: zero CLS, indexable, and placeable in a rail, which a
+  `{:toc}` marker inside the body cannot be.
+
+  Reading time uses the right unit per type — see _includes/reading-time.html.
+{%- endcomment -%}
+{%- assign _type = page.type | default: "essay" -%}
+{%- case _type -%}
+  {%- when "tutorial" -%}{%- assign _label = "Tutorial" -%}
+  {%- when "note" -%}{%- assign _label = "Note" -%}
+  {%- else -%}{%- assign _label = "Essay" -%}
+{%- endcase -%}
+
+{%- comment -%} A tutorial older than twelve months states so itself. Turning the
+biggest liability of a tutorial blog into a trust signal costs one paragraph. {%- endcomment -%}
+{%- assign _eff = page.last_modified_at | default: page.date -%}
+{%- assign _eff_ts = _eff | date: '%s' | plus: 0 -%}
+{%- assign _cutoff = site.time | date: '%s' | minus: 31557600 -%}
+{%- assign _stale = false -%}
+{%- if _type == "tutorial" and _eff_ts < _cutoff -%}{%- assign _stale = true -%}{%- endif -%}
+{%- assign _published_day = page.date | date: "%Y-%m-%d" -%}
+{%- assign _updated_day = page.last_modified_at | date: "%Y-%m-%d" -%}
+{%- assign _show_updated = false -%}
+{%- if page.last_modified_at and _updated_day != _published_day -%}{%- assign _show_updated = true -%}{%- endif -%}
+
+<div class="progress" aria-hidden="true"></div>
+
+<header class="interior-hero interior-hero--post" data-code="FIELD / NOTE">
+  <div class="wrap wrap--shell interior-hero__inner interior-hero__inner--article">
+    <div class="interior-hero__rail">
+      <nav class="article-breadcrumb article-breadcrumb--rail" aria-label="Breadcrumb">
+        <a href="{{ '/writing/' | relative_url }}">Writing</a>
+        <span aria-hidden="true">/</span>
+        <span>{{ _label }}</span>
+      </nav>
+      <dl class="article-facts">
+        <div>
+          <dt>Published</dt>
+          <dd><time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%b %-d, %Y" }}</time></dd>
+        </div>
+        {%- if _show_updated %}
+        <div>
+          <dt>Updated</dt>
+          <dd><time datetime="{{ page.last_modified_at | date_to_xmlschema }}">{{ page.last_modified_at | date: "%b %-d, %Y" }}</time></dd>
+        </div>
+        {%- endif %}
+        <div>
+          <dt>Reading time</dt>
+          <dd>{% include reading-time.html post=page %}</dd>
+        </div>
+      </dl>
+    </div>
+    <div class="interior-hero__content">
+      <nav class="article-breadcrumb article-breadcrumb--mobile" aria-label="Breadcrumb">
+        <a href="{{ '/writing/' | relative_url }}">Writing</a>
+        <span aria-hidden="true">/</span>
+        <span>{{ _label }}</span>
+      </nav>
+      <h1>{{ page.title }}</h1>
+      {%- if page.description %}<p class="lede">{{ page.description }}</p>{% endif %}
+      {% include tag-chips.html tags=page.tags %}
+    </div>
+  </div>
+</header>
+
+{%- if page.cover %}
+<figure class="article-cover wrap wrap--shell">
+  {%- include picture.html
+      base=page.cover.base
+      widths=page.cover.widths
+      raster_widths=page.cover.raster_widths
+      ext="jpg"
+      fallback_width=page.cover.fallback_width
+      sizes="(max-width: 900px) calc(100vw - 32px), 1320px"
+      width=page.cover.width
+      height=page.cover.height
+      alt=page.cover.alt
+      loading="eager"
+      fetchpriority="high" -%}
+  {%- if page.cover.caption %}<figcaption>{{ page.cover.caption }}</figcaption>{% endif -%}
+</figure>
+{%- endif %}
+
+<div class="post-shell">
+  {%- if page.toc %}
+  {% include toc.html content=content %}
+  {%- endif %}
+
+  <article>
+    <div class="prose">
+      {%- if _type == "tutorial" %}
+      {% include tutorial-header.html %}
+      {%- endif %}
+
+      {% include article-summary.html %}
+
+      {%- if _stale %}
+      <aside class="staleness">
+        <p>Last verified against {{ page.tested_on | default: "the versions listed above" }} in {{ _eff | date: "%B %Y" }}. Versions move; if something drifted, <a href="mailto:{{ site.author.email }}?subject={{ page.title | uri_escape }}">email me</a>.</p>
+      </aside>
+      {%- endif %}
+
+      {%- if page.series %}
+      {% include series-nav.html %}
+      {%- endif %}
+
+      {%- if page.toc %}
+      {% include toc.html content=content mobile=true %}
+      {%- endif %}
+
+      {{ content }}
+    </div>
+
+    {%- comment -%}
+      Order is deliberate: finish the article, continue the series, learn who
+      wrote it, find adjacent reading, then share. Share used to sit between the
+      in-content series nav and the full series list, splitting one component in
+      half with an action.
+    {%- endcomment -%}
+    {%- if page.series %}
+    {% include series-nav.html full=true %}
+    {%- endif %}
+
+    {% include author-card.html %}
+
+    {% include related-posts.html %}
+
+    {% include share.html %}
+  </article>
+</div>

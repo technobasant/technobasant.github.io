@@ -1,0 +1,1016 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// CARDS — case cards, author card, related, share, series nav, tutorial header,
+// case-study blocks, and the legacy .case / .case-meta pair.
+// ─────────────────────────────────────────────────────────────────────────────
+
+.card-grid {
+  display: grid;
+  // auto-fit, not auto-fill: auto-fill keeps empty tracks, so a two-card related
+  // list in a three-column grid rendered a visible empty third cell. auto-fit
+  // collapses the unused track.
+  grid-template-columns: repeat(auto-fit, minmax(min(19rem, 100%), 1fr));
+  gap: var(--sp-5);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+// ── Case card ────────────────────────────────────────────────────────────────
+.case-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  min-width: 0;
+  padding: var(--sp-5);
+  background: var(--surface-1);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  transition: background-color var(--dur-2) var(--ease-standard),
+    border-color var(--dur-2) var(--ease-standard),
+    transform var(--dur-2) var(--ease-standard);
+}
+
+// The oversized ghost numeral is gone. NN/g: bigger elements attract attention,
+// so a 128px "01" outranked the heading it labelled and pulled the eye to the
+// least informative thing in the card. It also asserted an order across items
+// that have none. The number now sits inline with the meta row at label size.
+.case-card__index {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--ink-3);
+}
+
+.case-card > :not(.case-card__index) {
+  position: relative;
+  z-index: 1;
+}
+
+.case-card:hover {
+  background: var(--surface-2);
+  border-color: var(--line-control);
+  transform: translateY(-2px);
+}
+
+.case-card h2,
+.case-card h3 {
+  margin: 0;
+  font-size: var(--step-1);
+}
+
+.case-card a {
+  color: inherit;
+  text-decoration: none;
+  touch-action: manipulation;
+}
+
+// Whole-card click target without nesting interactive elements.
+.case-card a::after,
+.post-card a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.case-card,
+.post-card {
+  position: relative;
+}
+
+.case-card__hook {
+  margin: 0;
+  font-size: var(--step--1);
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.case-card__role {
+  margin: 0;
+  font-size: var(--step--2);
+  font-weight: 650;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.case-card__metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-4) var(--sp-6);
+}
+
+// The single number this case is about: <p><strong>value</strong> <span>label</span></p>
+.case-card__metric {
+  margin: 0;
+  line-height: 1.2;
+}
+
+.case-card__metric strong {
+  display: block;
+  // Numerals in Inter, not Fraunces: the Fraunces subset ships only `liga` and
+  // `rvrn`, so `tabular-nums` on it is a silent no-op and stacked figures came
+  // out ragged. The wght-only subset also makes SOFT/WONK dead declarations.
+  font-family: var(--font-body);
+  font-size: var(--step-2);
+  font-weight: 600;
+  letter-spacing: var(--ls-display);
+  line-height: 1.1;
+  color: var(--ink-1);
+  font-variant-numeric: tabular-nums;
+}
+
+.case-card__metric span {
+  display: block;
+  margin-block-start: var(--sp-1);
+  font-size: var(--step--2);
+  color: var(--ink-3);
+}
+
+// Chips, so no separators — the pills already delimit themselves.
+.case-card__stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin: auto 0 0;
+  padding: var(--sp-4) 0 0;
+  list-style: none;
+}
+
+.case-card__stack li {
+  margin: 0;
+}
+
+.case-card__open {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-block-start: var(--sp-3);
+  font-size: var(--step--2);
+  font-weight: 600;
+  color: var(--ink-3);
+  transition: color var(--dur-1) var(--ease-standard),
+    transform var(--dur-1) var(--ease-standard);
+}
+
+.case-card:hover .case-card__open {
+  color: var(--accent-hi);
+  transform: translateX(2px);
+}
+
+// ── Outcome-led case bands ───────────────────────────────────────────────────
+.case-bands {
+  border-block-start: 1px solid var(--line-strong);
+}
+
+.case-card--band {
+  display: grid;
+  grid-template-columns: minmax(10rem, 0.27fr) minmax(0, 0.73fr);
+  gap: var(--sp-3) clamp(1.5rem, 5vw, 5rem);
+  min-height: 0;
+  padding: clamp(1.75rem, 4vw, 3rem) 0;
+  background: transparent;
+  border: 0;
+  border-block-end: 1px solid var(--line-strong);
+  border-radius: 0;
+}
+
+.case-card--band:hover {
+  background: transparent;
+  transform: none;
+}
+
+.case-card--band > .post-card__meta,
+.case-card--band > .case-card__role,
+.case-card--band > .case-card__metrics {
+  grid-column: 1;
+}
+
+.case-card--band > .post-card__title,
+.case-card--band > .case-card__hook,
+.case-card--band > .case-card__open {
+  grid-column: 2;
+}
+
+.case-card--band > .post-card__title {
+  grid-row: 1;
+  max-width: 24ch;
+  font-family: var(--font-display);
+  font-size: var(--step-3);
+  letter-spacing: var(--ls-display);
+  line-height: 1.08;
+}
+
+.case-card--band > .case-card__hook {
+  max-width: 55ch;
+  font-size: var(--step-0);
+}
+
+.case-card--band > .case-card__metrics {
+  margin-block-start: var(--sp-5);
+  padding-block-start: var(--sp-4);
+  border-block-start: 1px solid var(--line);
+}
+
+.case-card--band > .case-card__metrics .case-card__metric strong {
+  font-size: var(--step-2);
+}
+
+.case-card--band > .case-card__open {
+  align-self: end;
+  margin-block-start: var(--sp-5);
+}
+
+.case-card--compact {
+  min-height: 21rem;
+  background: var(--surface-1);
+  border: 0;
+  border-radius: 0;
+}
+
+.case-card--compact .post-card__title {
+  max-width: 22ch;
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  letter-spacing: var(--ls-display);
+  line-height: 1.12;
+}
+
+@media (max-width: 48rem) {
+  .case-card--band {
+    grid-template-columns: 1fr;
+  }
+
+  .case-card--band > .post-card__meta,
+  .case-card--band > .case-card__role,
+  .case-card--band > .case-card__metrics,
+  .case-card--band > .post-card__title,
+  .case-card--band > .case-card__hook,
+  .case-card--band > .case-card__open {
+    grid-column: 1;
+  }
+
+  .case-card--band > .post-card__title {
+    grid-row: auto;
+  }
+
+  .case-card--compact {
+    min-height: 0;
+  }
+}
+
+// ── Tutorial header ──────────────────────────────────────────────────────────
+.article-summary {
+  display: grid;
+  grid-template-columns: minmax(8rem, 0.28fr) minmax(0, 1fr);
+  gap: var(--sp-5);
+  padding-block: var(--sp-5);
+  border-block: 1px solid var(--line-strong);
+}
+
+.article-summary__label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.article-summary ol {
+  display: grid;
+  gap: var(--sp-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: article-summary;
+}
+
+.article-summary li {
+  counter-increment: article-summary;
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  gap: var(--sp-3);
+  margin: 0;
+  line-height: 1.55;
+  color: var(--ink-1);
+}
+
+.article-summary li::before {
+  content: counter(article-summary, decimal-leading-zero);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--ink-3);
+}
+
+@media (max-width: 34rem) {
+  .article-summary {
+    grid-template-columns: 1fr;
+    gap: var(--sp-4);
+  }
+}
+
+.tutorial-header {
+  padding: var(--sp-5);
+  background: var(--surface-1);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+}
+
+.tutorial-header > p:not([class]) {
+  margin: 0 0 var(--sp-5);
+  font-size: var(--step--1);
+  line-height: 1.55;
+  color: var(--ink-1);
+}
+
+// A <dl> of dt/dd pairs laid out as auto-fit columns. `grid-auto-flow: row`
+// with each dt/dd pair occupying one column is done by making every dt start a
+// new implicit column via a subgrid-free trick: dt gets its own row above dd.
+.tutorial-header__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: var(--sp-4) var(--sp-5);
+  margin: 0;
+  padding-block-start: var(--sp-5);
+  border-block-start: 1px solid var(--line);
+}
+
+.tutorial-header__grid > dt {
+  grid-row: 1;
+}
+
+.tutorial-header__grid > dd {
+  grid-row: 2;
+  margin: 0;
+  font-size: var(--step--1);
+  line-height: 1.4;
+  color: var(--ink-1);
+}
+
+.tutorial-header__label {
+  display: block;
+  margin-block-end: var(--sp-1);
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.tutorial-header__prereqs {
+  margin: var(--sp-5) 0 0;
+  padding: var(--sp-5) 0 0;
+  border-block-start: 1px solid var(--line);
+  font-size: var(--step--1);
+}
+
+.tutorial-header__prereqs ul {
+  margin: var(--sp-3) 0 0;
+  padding-inline-start: 1.25em;
+  color: var(--ink-2);
+}
+
+@media (max-width: 34rem) {
+  .tutorial-header {
+    padding: var(--sp-4);
+  }
+
+  .tutorial-header__grid {
+    grid-template-columns: 1fr;
+    gap: var(--sp-1);
+  }
+
+  .tutorial-header__grid > dt,
+  .tutorial-header__grid > dd {
+    grid-row: auto;
+  }
+
+  .tutorial-header__grid > dt:not(:first-child) {
+    margin-block-start: var(--sp-4);
+  }
+}
+
+// ── Series nav ───────────────────────────────────────────────────────────────
+.series-nav {
+  padding: var(--sp-5);
+  background: var(--surface-1);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  font-size: var(--step--1);
+}
+
+.series-nav > p {
+  margin: 0 0 var(--sp-3);
+}
+
+.series-nav > p:not([class]) {
+  color: var(--ink-2);
+}
+
+.series-nav__list {
+  margin: var(--sp-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.series-nav__list > li {
+  padding-block: var(--sp-2);
+  margin: 0;
+}
+
+.series-nav__list > li + li {
+  border-block-start: 1px solid var(--line);
+}
+
+// Numbering is on the <ol> only. The same class is also used for the
+// prev/next <ul>, which must not be numbered.
+ol.series-nav__list {
+  counter-reset: series;
+}
+
+// The row itself is the flex container. Previously the counter lived on the <li>
+// while the <a> was display:flex — a block-level box — so the number was pushed
+// onto its own line for every linked part, while the current part (a <span>, so
+// still inline) kept its number alongside. Same list, two different layouts.
+ol.series-nav__list > li {
+  counter-increment: series;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  min-height: 44px;
+}
+
+ol.series-nav__list > li::before {
+  content: counter(series, decimal-leading-zero);
+  flex: none;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.series-nav__list a {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-height: 44px;
+  color: var(--ink-2);
+  text-decoration: none;
+}
+
+.series-nav__list a:hover {
+  color: var(--ink-1);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+// Current entry in the series is the brass signal on a post page. The marker
+// sits on the <span>, so the row is matched with :has().
+.series-nav__list > li:has([aria-current="true"]) {
+  color: var(--ink-1);
+  font-weight: 600;
+}
+
+.series-nav__list > li:has([aria-current="true"])::before {
+  color: var(--accent);
+}
+
+// ── Author card ──────────────────────────────────────────────────────────────
+// Portrait optional: the two-column grid is only applied when there is actually
+// an image, otherwise an empty 3.5rem column indents the text for no reason.
+.author-card {
+  padding: var(--sp-5);
+  background: var(--surface-1);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  font-size: var(--step--1);
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.author-card:has(img) {
+  display: grid;
+  grid-template-columns: 6.5rem 1fr;
+  gap: var(--sp-4) var(--sp-5);
+  align-items: start;
+}
+
+.author-card img {
+  width: 6.5rem;
+  height: 8.125rem;
+  border-radius: 0;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.author-card p {
+  margin: 0;
+}
+
+.author-card p + p {
+  margin-block-start: var(--sp-4);
+}
+
+.author-card strong {
+  color: var(--ink-1);
+}
+
+.author-card a:not([class]) {
+  color: var(--ink-1);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--accent) 50%, transparent);
+  text-underline-offset: 0.2em;
+}
+
+.author-card a:not([class]):hover {
+  text-decoration-color: currentcolor;
+}
+
+.author-card__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--sp-3);
+}
+
+.author-card__links a:not([class]) {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+}
+
+.author-card span[aria-hidden] {
+  margin-inline: 0.35em;
+  color: var(--ink-3);
+}
+
+.author-card__links span[aria-hidden] {
+  margin: 0;
+}
+
+.author-card__action {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3) var(--sp-4);
+}
+
+.author-card__action .btn {
+  margin: 0;
+}
+
+@media (max-width: 30rem) {
+  .author-card:has(img) {
+    grid-template-columns: 4.75rem 1fr;
+    gap: var(--sp-4);
+  }
+
+  .author-card img {
+    width: 4.75rem;
+    height: 5.9375rem;
+  }
+}
+
+@media (max-width: 23rem) {
+  .author-card:has(img) {
+    grid-template-columns: 1fr;
+  }
+
+  .author-card img {
+    width: 6.5rem;
+    height: 8.125rem;
+  }
+}
+
+// ── Related / share / staleness ──────────────────────────────────────────────
+.related {
+  padding-block-start: var(--sp-6);
+  border-block-start: 1px solid var(--line);
+}
+
+.related ul {
+  display: grid;
+  gap: var(--sp-4);
+  margin: var(--sp-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.related .card-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+  gap: 1px;
+  overflow: hidden;
+  background: var(--line-strong);
+  border: 1px solid var(--line-strong);
+}
+
+.related .post-card {
+  min-height: 15rem;
+  background: var(--surface-1);
+  border: 0;
+  border-radius: 0;
+}
+
+@media (max-width: 48rem) {
+  .related .card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .related .post-card {
+    min-height: auto;
+  }
+}
+
+.related a {
+  color: var(--ink-1);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.related a:hover {
+  color: var(--accent-hi);
+}
+
+.share {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3) var(--sp-4);
+  font-size: var(--step--1);
+  color: var(--ink-3);
+}
+
+.share a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  min-height: 44px;
+  color: var(--ink-2);
+  text-decoration: none;
+}
+
+.share a:hover {
+  color: var(--ink-1);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+// "This was written in 2024 and I have not revisited it." Warm, not alarming.
+.staleness {
+  display: flex;
+  gap: var(--sp-3);
+  padding: var(--sp-4) var(--sp-5);
+  background: color-mix(in oklab, var(--c-warn) 7%, var(--surface-1));
+  border: 1px solid color-mix(in oklab, var(--c-warn) 24%, var(--line-strong));
+  border-inline-start: 3px solid var(--c-warn);
+  border-radius: var(--r-md);
+  font-size: var(--step--1);
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.staleness p {
+  margin: 0;
+}
+
+// ── Case study blocks ────────────────────────────────────────────────────────
+.case-glance {
+  display: grid;
+  grid-template-columns: minmax(7rem, max-content) 1fr;
+  gap: var(--sp-3) var(--sp-5);
+  margin: 0;
+  padding: var(--sp-5);
+  background: var(--surface-1);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  font-size: var(--step--1);
+}
+
+.case-glance dt {
+  font-weight: 600;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  font-size: var(--step--2);
+  color: var(--ink-3);
+  padding-block-start: 0.15em;
+}
+
+.case-glance dd {
+  margin: 0;
+  color: var(--ink-1);
+}
+
+// Evidence appears before the long-form narrative so a scanning visitor can
+// decide whether the case is relevant before committing to the full read.
+.case-impact {
+  padding: var(--sp-5);
+  background: color-mix(in oklab, var(--accent-fill) 7%, var(--surface-1));
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+}
+
+.case-impact > .section-label {
+  margin-block-end: var(--sp-4);
+  font-family: var(--font-body);
+  font-size: var(--step--2);
+  letter-spacing: var(--ls-label);
+  line-height: var(--lh-ui);
+}
+
+.case-impact .stats {
+  grid-template-columns: repeat(auto-fit, minmax(min(9rem, 100%), 1fr));
+  gap: var(--sp-5);
+}
+
+.case-impact .stats li > strong {
+  font-size: var(--step-2);
+}
+
+.stats__detail {
+  margin-block-start: var(--sp-2);
+}
+
+.stats__detail summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  font-size: var(--step--2);
+  font-weight: 600;
+  color: var(--ink-3);
+  cursor: pointer;
+}
+
+.stats__detail summary::after {
+  content: "+";
+  margin-inline-start: var(--sp-2);
+  font-family: var(--font-mono);
+}
+
+.stats__detail[open] summary::after {
+  content: "−";
+}
+
+.stats__detail[open] .stats__method {
+  display: block;
+  padding-block-end: var(--sp-2);
+}
+
+.case-map {
+  padding-block: var(--sp-4);
+  border-block: 1px solid var(--line);
+}
+
+.case-map > .section-label {
+  margin-block-end: var(--sp-3);
+}
+
+.case-map ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: case-map;
+}
+
+.case-map li {
+  counter-increment: case-map;
+}
+
+.prose .case-map a {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.45em;
+  min-height: 2.75rem;
+  color: var(--ink-2);
+  font-size: var(--step--1);
+  font-weight: 550;
+  text-decoration: none;
+}
+
+.prose .case-map a::before {
+  content: counter(case-map, decimal-leading-zero);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 400;
+  color: var(--ink-3);
+}
+
+.prose .case-map a:hover {
+  color: var(--accent-hi);
+}
+
+@media (max-width: 34rem) {
+  .case-glance {
+    grid-template-columns: 1fr;
+    gap: var(--sp-1);
+  }
+
+  .case-glance dd + dt {
+    margin-block-start: var(--sp-3);
+  }
+}
+
+.case-decisions th:first-child,
+.case-decisions td:first-child {
+  width: 30%;
+}
+
+.case-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: var(--sp-5);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.case-results li {
+  padding-block-start: var(--sp-4);
+  border-block-start: 1px solid var(--line-strong);
+}
+
+.case-results strong {
+  display: block;
+  // Numerals in Inter, not Fraunces: the Fraunces subset ships only `liga` and
+  // `rvrn`, so `tabular-nums` on it is a silent no-op and stacked figures came
+  // out ragged. The wght-only subset also makes SOFT/WONK dead declarations.
+  font-family: var(--font-body);
+  font-size: var(--step-2);
+  letter-spacing: var(--ls-display);
+  line-height: 1.1;
+  color: var(--ink-1);
+  font-variant-numeric: tabular-nums;
+}
+
+.case-results span {
+  display: block;
+  margin-block-start: var(--sp-2);
+  font-size: var(--step--1);
+  line-height: 1.4;
+  color: var(--ink-2);
+}
+
+// ── Operating ledger / system path ───────────────────────────────────────────
+.system-flow {
+  margin: var(--sp-7) 0 0;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  background: var(--surface-1);
+  border: 1px solid var(--line-strong);
+}
+
+.system-flow figcaption {
+  margin-block-end: var(--sp-5);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 650;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.system-flow__track {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  border-block: 1px solid var(--line-strong);
+  list-style: none;
+}
+
+.system-flow__step {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: var(--sp-2);
+  min-width: 0;
+  margin: 0;
+  padding: var(--sp-5);
+}
+
+.system-flow__step + .system-flow__step {
+  border-inline-start: 1px solid var(--line-strong);
+}
+
+.system-flow__index {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--ink-3);
+}
+
+.system-flow__step strong {
+  font-size: var(--step-0);
+  line-height: 1.25;
+  color: var(--ink-1);
+}
+
+.system-flow__step > span:last-child {
+  font-size: var(--step--1);
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.system-flow__evidence {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3) var(--sp-6);
+  margin-block-start: var(--sp-5);
+}
+
+.system-flow__evidence p {
+  margin: 0;
+  font-size: var(--step--2);
+  line-height: 1.45;
+  color: var(--ink-3);
+}
+
+.system-flow__evidence strong {
+  margin-inline-end: 0.35em;
+  font-size: var(--step--1);
+  color: var(--ink-1);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 48rem) {
+  .system-flow__track {
+    grid-template-columns: 1fr;
+    border-block-end: 0;
+  }
+
+  .system-flow__step {
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: var(--sp-1) var(--sp-3);
+    padding-inline: 0;
+  }
+
+  .system-flow__step + .system-flow__step {
+    border-inline-start: 0;
+    border-block-start: 1px solid var(--line-strong);
+  }
+
+  .system-flow__index {
+    grid-row: 1 / span 2;
+  }
+}
+
+// ── Legacy ───────────────────────────────────────────────────────────────────
+// Existing markdown in _pages/ uses these directly. They keep working.
+.case {
+  padding-block-start: var(--sp-5);
+  margin-block-start: var(--sp-6);
+  border-block-start: 1px solid var(--line);
+}
+
+.case:first-of-type {
+  margin-block-start: 0;
+  padding-block-start: 0;
+  border-block-start: 0;
+}
+
+.case-meta span {
+  padding: 0.2em 0.7em;
+  border: 1px solid var(--line);
+  border-radius: var(--r-full);
+  font-size: var(--step--2);
+  color: var(--ink-2);
+}
+
+// ── Work index grid ──────────────────────────────────────────────────────────
+// Two up, uniform. The previous page used three different grid classes plus a
+// "feature" card variant, so four cards rendered at three different widths and
+// two different title sizes with no rule a reader could infer.
+.card-grid--work {
+  grid-template-columns: 1fr;
+  gap: 0;
+  border-block-start: 1px solid var(--line-strong);
+}
+
+@media (min-width: 48rem) {
+  .card-grid--work {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.card-grid--work > .case-card {
+  display: flex;
+  flex-direction: column;
+  padding: var(--sp-6) var(--sp-5);
+  border-block-end: 1px solid var(--line);
+  border-inline-start: 0;
+}
+
+@media (min-width: 48rem) {
+  .card-grid--work > .case-card:nth-child(odd) {
+    border-inline-end: 1px solid var(--line);
+  }
+}
+
+// Push the call to action to the bottom edge so rows align regardless of how
+// much copy each card carries.
+.card-grid--work > .case-card > .case-card__open,
+.card-grid--work > .case-card > .post-card__open {
+  margin-block-start: auto;
+  padding-block-start: var(--sp-5);
+}

@@ -1,0 +1,38 @@
+---
+layout: default
+---
+{%- comment -%}
+  Work index.
+
+  One grid, one heading. This was three sections, each with its own full-width
+  display heading and section label, for four cards in total — one of those
+  sections carried a single card under a heading taller than the card itself.
+  Each card already states its own kind in a badge, so the grouping headings were
+  restating in 60px type what the badge says in 11px, and costing about 600px of
+  vertical space to do it.
+
+  Order is practice, then independent product, then lab: broadest body of work
+  first, and a reader arriving from the résumé is looking for that one.
+{%- endcomment -%}
+{%- assign _practice   = site.work | where: "kind", "practice"   | sort: "order" -%}
+{%- assign _production = site.work | where: "kind", "production" | sort: "order" -%}
+{%- assign _labs       = site.work | where: "kind", "lab"        | sort: "order" -%}
+{%- assign _all = _practice | concat: _production | concat: _labs -%}
+
+{% include interior-hero.html variant="index" code="SYSTEM / RECORD" %}
+<div class="page page--index">
+  <div class="prose index-intro">
+    {{ content }}
+  </div>
+
+  {%- if _all.size > 0 %}
+  <section class="wrap index-section" aria-labelledby="work-title">
+    <h2 class="sr-only" id="work-title">Case studies</h2>
+    <div class="card-grid card-grid--work">
+      {%- for item in _all %}
+      {% include case-card.html item=item %}
+      {%- endfor %}
+    </div>
+  </section>
+  {%- endif %}
+</div>

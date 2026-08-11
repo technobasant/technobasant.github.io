@@ -1,0 +1,237 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// CODE
+//
+// Rouge emits:
+//   <div class="language-python highlighter-rouge">
+//     <div class="highlight">
+//       <pre class="highlight"><code>…</code></pre>
+//
+// A kramdown IAL placed after the closing fence attaches its attributes to that
+// OUTER div, so:
+//
+//     ```python
+//     …
+//     ```
+//     {: data-file="etl/ingest.py"}
+//
+// gives us `data-file` on .highlighter-rouge, and the filename header below is
+// rendered with attr() — no JS, no Liquid, no include.
+// ─────────────────────────────────────────────────────────────────────────────
+
+.highlighter-rouge {
+  --code-pad: var(--sp-5);
+
+  position: relative;
+  background: var(--code-bg);
+  border: 1px solid var(--code-border);
+  border-radius: var(--r-md);
+  font-size: var(--step--1);
+}
+
+// ── Filename header ──────────────────────────────────────────────────────────
+.highlighter-rouge[data-file]::before {
+  content: attr(data-file);
+  display: block;
+  padding: var(--sp-4) var(--code-pad);
+  // Leave room for the copy button and the language label.
+  padding-inline-end: 9rem;
+  background: var(--code-header-bg);
+  border-block-end: 1px solid var(--code-border);
+  border-start-start-radius: calc(var(--r-md) - 1px);
+  border-start-end-radius: calc(var(--r-md) - 1px);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  line-height: 1.4;
+  color: var(--ink-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.highlighter-rouge .highlight {
+  background: none;
+  border-radius: inherit;
+}
+
+// ── The pre ──────────────────────────────────────────────────────────────────
+// overflow-x: auto alone is a WCAG 2.1.1 failure — a keyboard-only user has no
+// way to reach the right-hand side of a wide block. JS adds tabindex="0" and
+// role="region" only where the content actually overflows; this styles the
+// resulting focus ring so it is visible against the well.
+.highlighter-rouge pre,
+pre.highlight {
+  margin: 0;
+  padding: var(--code-pad);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  background: none;
+  font-family: var(--font-mono);
+  font-size: inherit;
+  line-height: var(--lh-code);
+  letter-spacing: 0;
+  tab-size: 2;
+  -moz-tab-size: 2;
+  color: var(--sx-fg);
+}
+
+// When there is no filename header, the tools float over the first line.
+.highlighter-rouge:not([data-file]) pre {
+  padding-block-start: calc(var(--code-pad) + 1.1rem);
+}
+
+.highlighter-rouge pre:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -2px;
+  border-radius: calc(var(--r-md) - 1px);
+}
+
+.highlighter-rouge code {
+  font: inherit;
+  color: inherit;
+  background: none;
+  padding: 0;
+  border: 0;
+  // Rouge wraps everything in one <code>; without this a long single token
+  // still forces the scroll container rather than blowing out the page.
+  display: block;
+  min-width: max-content;
+}
+
+// Thin, theme-aware scrollbar so a horizontally scrollable block advertises
+// itself rather than looking like a clipped one.
+.highlighter-rouge pre {
+  scrollbar-width: thin;
+  scrollbar-color: var(--code-gutter) transparent;
+}
+
+.highlighter-rouge pre::-webkit-scrollbar {
+  height: 8px;
+}
+
+.highlighter-rouge pre::-webkit-scrollbar-thumb {
+  background: var(--code-gutter);
+  border-radius: var(--r-full);
+}
+
+.highlighter-rouge pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+// ── Tools (injected by site.js) ──────────────────────────────────────────────
+.code-tools {
+  position: absolute;
+  inset-block-start: var(--sp-2);
+  inset-inline-end: var(--sp-2);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  pointer-events: none;
+}
+
+.code-tools > * {
+  pointer-events: auto;
+}
+
+// With a filename header the tools sit inside that band, vertically centred on it.
+.highlighter-rouge[data-file] .code-tools {
+  inset-block-start: 3px;
+}
+
+.code-lang {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--code-meta);
+  user-select: none;
+  -webkit-user-select: none;
+  transition: opacity var(--dur-1) var(--ease-standard);
+}
+
+.copy-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.75rem;
+  height: 2.75rem;
+  padding-inline: var(--sp-3);
+  border: 1px solid var(--code-border);
+  border-radius: var(--r-sm);
+  background: var(--code-header-bg);
+  font-size: var(--step--2);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--ink-2);
+  // Hidden from sight but not from the keyboard or the accessibility tree
+  // until the block is hovered or the button is focused.
+  opacity: 0;
+  transition: opacity var(--dur-1) var(--ease-standard),
+    background-color var(--dur-1) var(--ease-standard),
+    color var(--dur-1) var(--ease-standard);
+}
+
+.highlighter-rouge:hover .copy-btn,
+.highlighter-rouge:focus-within .copy-btn,
+.copy-btn:focus-visible {
+  opacity: 1;
+}
+
+// Touch devices have no hover; show it permanently there.
+@media (hover: none) {
+  .copy-btn {
+    opacity: 1;
+  }
+}
+
+.copy-btn:hover {
+  background: var(--surface-3);
+  color: var(--ink-1);
+}
+
+.copy-btn[data-state="copied"] {
+  opacity: 1;
+  color: var(--accent);
+  border-color: color-mix(in oklab, var(--accent) 45%, transparent);
+}
+
+// ── Inline code ──────────────────────────────────────────────────────────────
+// 0.92em, not a fixed size: it has to track whatever it is sitting inside,
+// including an h3 and a table cell.
+:not(pre) > code {
+  padding: 0.15em 0.4em;
+  border-radius: var(--r-sm);
+  background: var(--code-bg-inline);
+  color: var(--code-fg-inline);
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  font-synthesis: none;
+  overflow-wrap: break-word;
+}
+
+// Inside a link the code should not fight the link colour.
+a > code,
+code > a {
+  color: inherit;
+}
+
+// A keyboard key.
+kbd {
+  display: inline-block;
+  padding: 0.1em 0.45em;
+  border: 1px solid var(--line-control);
+  border-block-end-width: 2px;
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  line-height: 1.5;
+  color: var(--ink-1);
+}
+
+samp {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  color: var(--sx-out);
+}

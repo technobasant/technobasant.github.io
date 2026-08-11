@@ -1,0 +1,26 @@
+{%- comment -%}
+  Site footer. Columns come from _data/navigation.yml `footer`; the base line is the
+  only place the build date is stated, so it can never contradict the content.
+{%- endcomment -%}
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      {%- for col in site.data.navigation.footer %}
+      <div class="footer-col">
+        <h2>{{ col.heading }}</h2>
+        <ul>
+          {%- for link in col.links %}
+          <li><a href="{% if link.url contains '://' or link.url contains 'mailto:' %}{{ link.url }}{% else %}{{ link.url | relative_url }}{% endif %}"{% if link.url contains 'github.com' or link.url contains 'linkedin.com' %} rel="me noopener"{% elsif link.url contains '://' %} rel="noopener"{% endif %}>{{ link.title }}</a></li>
+          {%- endfor %}
+        </ul>
+      </div>
+      {%- endfor %}
+    </div>
+    <p class="footer-base">
+      © {{ site.time | date: "%Y" }} Basant Bhattarai
+      <span aria-hidden="true">·</span> No trackers, no cookies
+      <span aria-hidden="true">·</span> Built with Jekyll
+      <span aria-hidden="true">·</span> Last updated {{ site.time | date: "%b %Y" }}
+    </p>
+  </div>
+</footer>

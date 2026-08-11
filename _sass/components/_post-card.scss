@@ -1,0 +1,308 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// POST CARD — the writing index and any "recent posts" list.
+//
+// No image, no excerpt truncation ellipsis, no read-more link. Title,
+// description, one date, one badge. The card is a whole click target.
+// ─────────────────────────────────────────────────────────────────────────────
+
+.post-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  min-width: 0;
+  padding: var(--sp-5);
+  background: var(--surface-1);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  transition: background-color var(--dur-2) var(--ease-standard),
+    border-color var(--dur-2) var(--ease-standard),
+    transform var(--dur-2) var(--ease-standard);
+}
+
+.post-card:hover {
+  background: var(--surface-2);
+  border-color: var(--line-control);
+  transform: translateY(-2px);
+}
+
+// Keyboard focus lands on the inner <a>, but the ring should describe the card.
+.post-card:has(a:focus-visible) {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.post-card:has(a:focus-visible) a:focus-visible {
+  outline: none;
+}
+
+.post-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2) var(--sp-3);
+  font-size: var(--step--2);
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+}
+
+.post-card__title {
+  min-width: 0;
+  margin: 0;
+  font-size: var(--step-1);
+  font-weight: 600;
+  letter-spacing: var(--ls-heading);
+  line-height: 1.3;
+}
+
+.post-card__title a {
+  min-width: 0;
+  color: var(--ink-1);
+  text-decoration: none;
+  touch-action: manipulation;
+  overflow-wrap: anywhere;
+}
+
+// .case-card reuses .post-card__title and .post-card__meta.
+.post-card:hover .post-card__title a,
+.case-card:hover .post-card__title a {
+  color: var(--accent-hi);
+}
+
+.case-card:has(a:focus-visible) {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.case-card:has(a:focus-visible) a:focus-visible {
+  outline: none;
+}
+
+.post-card__desc {
+  margin: 0;
+  font-size: var(--step--1);
+  line-height: 1.55;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+.post-card__time {
+  margin: auto 0 0;
+  padding-block-start: var(--sp-3);
+  font-size: var(--step--2);
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.post-card__open {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: var(--sp-2);
+  margin-block-start: var(--sp-2);
+  font-size: var(--step--2);
+  font-weight: 650;
+  color: var(--ink-3);
+  transition: color var(--dur-1) var(--ease-standard),
+    transform var(--dur-1) var(--ease-standard);
+  pointer-events: none;
+}
+
+.post-card:hover .post-card__open,
+.post-card:focus-within .post-card__open {
+  color: var(--accent-hi);
+  transform: translateX(2px);
+}
+
+// Homepage writing is an editorial ledger rather than a second card grid.
+.home-writing .writing-selection {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  padding: 0;
+  // The base rule paints --line-strong as a background and lets it show
+  // through a 1px gap/padding as hairlines. Here the rules are real borders
+  // instead, so that background has no gap left to show through — but it was
+  // still compositing rgba(236,232,225,.17) under the cards and dropping
+  // --ink-3 from 6.03:1 to 3.68:1. Switching the trick off means switching
+  // off both halves of it.
+  background: none;
+  border-block-start: 1px solid var(--line-strong);
+}
+
+.home-writing .post-card {
+  min-height: 18rem;
+  padding: var(--sp-6) var(--sp-5) var(--sp-6) 0;
+  background: var(--surface-1);
+  border: 0;
+  border-block-end: 1px solid var(--line-strong);
+  border-radius: 0;
+}
+
+.home-writing .post-card + .post-card {
+  padding-inline-start: var(--sp-5);
+  border-inline-start: 1px solid var(--line-strong);
+}
+
+.home-writing .post-card__title {
+  font-family: var(--font-display);
+  font-variation-settings: "SOFT" 0, "WONK" 0;
+  font-size: var(--step-2);
+  letter-spacing: var(--ls-display);
+  line-height: 1.12;
+}
+
+@media (max-width: 48rem) {
+  .home-writing .writing-selection {
+    grid-template-columns: 1fr;
+  }
+
+  .home-writing .post-card,
+  .home-writing .post-card + .post-card {
+    min-height: auto;
+    padding-inline: 0;
+    border-inline-start: 0;
+  }
+}
+
+// Writing archive: editorial rows instead of a repeated tile wall. The title
+// remains the single native link and its pseudo-element covers the whole card.
+.writing-feed {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid var(--line-strong);
+}
+
+.writing-feed > li {
+  margin: 0;
+  border-block-end: 1px solid var(--line-strong);
+}
+
+.writing-feed .post-card {
+  display: grid;
+  grid-template-columns: minmax(8rem, 0.24fr) minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  gap: var(--sp-3) clamp(1.5rem, 4vw, 4rem);
+  align-items: start;
+  padding: clamp(1.5rem, 3.5vw, 2.5rem) var(--sp-3);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
+.writing-feed .post-card:hover {
+  background: var(--surface-2);
+  transform: none;
+}
+
+.writing-feed .post-card__meta {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.writing-feed .post-card__title {
+  grid-column: 2;
+  grid-row: 1;
+  max-width: 30ch;
+  font-family: var(--font-display);
+  font-variation-settings: "SOFT" 0, "WONK" 0;
+  font-size: var(--step-2);
+  letter-spacing: var(--ls-display);
+  line-height: 1.12;
+}
+
+.writing-feed .post-card__desc {
+  grid-column: 2;
+  grid-row: 2;
+  max-width: 66ch;
+}
+
+.writing-feed .post-card__time {
+  grid-column: 1;
+  grid-row: 2;
+  margin: 0;
+  padding: 0;
+}
+
+.writing-feed .post-card__open {
+  grid-column: 3;
+  grid-row: 1 / span 2;
+  align-self: center;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.editorial-series-grid > li {
+  min-width: 0;
+}
+
+.editorial-series-grid .post-card {
+  height: 100%;
+}
+
+@media (max-width: 48rem) {
+  .writing-feed .post-card {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--sp-3) var(--sp-4);
+    padding-inline: 0;
+  }
+
+  .writing-feed .post-card__meta,
+  .writing-feed .post-card__title,
+  .writing-feed .post-card__desc,
+  .writing-feed .post-card__time {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  .writing-feed .post-card__open {
+    grid-column: 2;
+    grid-row: 3 / span 2;
+  }
+}
+
+@media (max-width: 30rem) {
+  .writing-feed .post-card {
+    grid-template-columns: 1fr;
+  }
+
+  .writing-feed .post-card__open {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}
+
+// ── Compact list variant ─────────────────────────────────────────────────────
+// Used where a whole year of posts is listed: a row, a rule, a date.
+.post-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid var(--line);
+}
+
+.post-list > li {
+  border-block-end: 1px solid var(--line);
+}
+
+.post-list a {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: var(--sp-2) var(--sp-5);
+  min-height: 44px;
+  padding-block: var(--sp-4);
+  color: var(--ink-1);
+  text-decoration: none;
+  transition: color var(--dur-1) var(--ease-standard);
+}
+
+.post-list a:hover {
+  color: var(--accent-hi);
+}
+
+.post-list time {
+  font-size: var(--step--2);
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}

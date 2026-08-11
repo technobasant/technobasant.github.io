@@ -1,0 +1,25 @@
+{%- comment -%}
+  The three things that went wrong, from _data/lab.yml.
+
+  This replaced an eight-row all-PASS matrix on the homepage. The matrix looked
+  like evidence and was closer to decoration: a constant column carries about one
+  bit, and presenting "nothing broke" in the footprint of a comparison advertises
+  a comparison that is not there. Jepsen — the standard-bearer for this kind of
+  work — states the epistemics plainly: experiments can only prove the existence
+  of errors, not their absence, and its own analyses index is a list rather than
+  a results table.
+
+  A failure carries variance, a decision, and a diagnosis. It is also the only
+  form of this material that demonstrates judgment rather than completion.
+{%- endcomment -%}
+<ol class="findings">
+  {%- for f in site.data.lab.findings %}
+  <li class="finding">
+    <p class="finding__engine">{{ f.engine }}</p>
+    <h3 class="finding__headline">
+      <a href="{{ f.url | relative_url }}">{{ f.headline }}</a>
+    </h3>
+    <p class="finding__detail">{{ f.detail | markdownify | remove: '<p>' | remove: '</p>' }}</p>
+  </li>
+  {%- endfor %}
+</ol>

@@ -1,0 +1,71 @@
+---
+permalink: /robots.txt
+layout: null
+sitemap: false
+---
+# {{ site.title }} — {{ site.url }}
+# Everything here is public and meant to be read.
+
+User-agent: *
+Allow: /
+
+# AI crawlers are allowed on purpose, not by omission. If a language model is
+# going to answer a question about my work, I would rather it read the current
+# version than a stale scrape. Canonical numbers, with the method behind each,
+# are at {{ '/llms.txt' | absolute_url }}
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-AdsBot
+Allow: /
+
+# Anthropic's current three. Claude-Web and anthropic-ai are retired names and
+# are no longer published in Anthropic's crawler documentation.
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+# Google-Extended governs Gemini training and grounding only. It has no effect
+# on Search ranking, and it does not control AI Overviews — those follow the
+# ordinary Googlebot index.
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+# Applebot powers Siri and Spotlight; Applebot-Extended governs model training.
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+Sitemap: {{ '/sitemap.xml' | absolute_url }}

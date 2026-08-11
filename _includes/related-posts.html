@@ -1,0 +1,51 @@
+{%- comment -%}
+  Related posts by tag overlap, computed in Liquid.
+
+  Deliberately NOT `site.related_posts`: without LSI (which needs classifier-reborn
+  and a slow build) that filter just returns the most recent posts, which is a lie
+  dressed as a recommendation.
+
+  Usage: {% include related-posts.html %}
+         {% include related-posts.html tags=page.tags exclude_url=page.url limit=3 %}
+{%- endcomment -%}
+{%- assign _tags  = include.tags | default: page.tags -%}
+{%- assign _limit = include.limit | default: 3 -%}
+{%- assign _self  = include.exclude_url | default: page.url -%}
+{%- assign _n = 0 -%}
+{%- capture _cards -%}
+{%- for p in site.posts -%}
+  {%- if p.url != _self -%}
+    {%- assign _common = 0 -%}
+    {%- for t in p.tags -%}
+      {%- if _tags contains t -%}{%- assign _common = _common | plus: 1 -%}{%- endif -%}
+    {%- endfor -%}
+    {%- if _common > 0 and _n < _limit -%}
+      {%- assign _n = _n | plus: 1 -%}
+      {% include post-card.html post=p %}
+    {%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- endcapture -%}
+{%- assign _related = true -%}
+{%- if _n == 0 -%}
+  {%- assign _related = false -%}
+  {%- capture _cards -%}
+  {%- for p in site.posts limit: 5 -%}
+    {%- if p.url != _self and _n < _limit -%}
+      {%- assign _n = _n | plus: 1 -%}
+      {% include post-card.html post=p %}
+    {%- endif -%}
+  {%- endfor -%}
+  {%- endcapture -%}
+{%- endif -%}
+{%- if _n > 0 %}
+<section class="related reveal" aria-labelledby="related-title">
+  <div class="section-head">
+    <h2 class="section-label" id="related-title">{% if _related %}{{ include.heading | default: "Related reading" }}{% else %}More writing{% endif %}</h2>
+    <a class="section-more" href="{{ '/writing/' | relative_url }}">All writing {% include icon.html name="arrow-right" size=14 %}</a>
+  </div>
+  <div class="card-grid">
+    {{ _cards }}
+  </div>
+</section>
+{%- endif -%}

@@ -1,0 +1,13 @@
+{%- comment -%}
+  Usage: {% include reading-time.html post=page %}
+
+  Essays and notes get a word-count estimate at 220 wpm. Tutorials get their
+  hand-set `time_estimate` verbatim: a word count is inflated by code blocks, and
+  on a tutorial the reader is typing rather than reading, so the unit is wrong.
+{%- endcomment -%}
+{%- assign _p = include.post -%}
+{%- if _p.type == "tutorial" and _p.time_estimate -%}
+{{- _p.time_estimate -}}
+{%- else -%}
+{{- _p.content | number_of_words | divided_by: 220 | plus: 1 }} min read
+{%- endif -%}
