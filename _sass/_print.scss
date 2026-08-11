@@ -191,3 +191,16 @@
     background: none;
   }
 }
+
+// A table spanning a page break loses its column headers on paper unless the
+// header group is declared repeatable.
+thead {
+  display: table-header-group;
+}
+
+// Keep a measured value and its unit together when the line breaks.
+.ledger__measure,
+.stats li > strong,
+.case-card__metric strong {
+  white-space: nowrap;
+}

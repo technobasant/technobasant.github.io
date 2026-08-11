@@ -66,7 +66,7 @@
   // negative-tracking ramp is graded to size and body copy always sits at 0;
   // a global letter-spacing is the tell in the other direction.
   --ls-body: 0em;
-  --ls-label: 0.14em;
+  --ls-label: 0.1em; // Butterick: 5-12% extra space with caps; 0.14em was over
 
   // ── Measure & containers ──────────────────────────────────────────────────
   // Measured from two surveys of sites in this genre. Prose measure clusters at
@@ -138,7 +138,11 @@
 
   --ink-1: #ece8e1; // 15.72:1
   --ink-2: #b0aca4; // 8.48:1 — warmed to match --ink-1 and the brass
-  --ink-3: #8a857c; // 5.23:1 — one temperature the whole way down
+  // Verified against every surface, not just surface-0: 6.28 / 5.88 / 5.41 /
+  // 4.85. The previous warmed value passed on the page background and failed at
+  // 4.39 on a raised panel, which is exactly the regression a single-surface
+  // contrast check misses.
+  --ink-3: #98938a;
 
   --line: rgba(236, 232, 225, 0.1);
   --line-strong: rgba(236, 232, 225, 0.17);

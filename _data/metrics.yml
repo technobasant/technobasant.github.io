@@ -17,13 +17,13 @@ lab_scenarios:
   context: "MongoDB, ScyllaDB, SolrCloud, MariaDB+Galera, Redis Cluster, Redis Sentinel, PostgreSQL, observability."
 
 lab_pg_replay_lag:
-  value: "383 µs"
+  value: "383 µs"
   label: "PostgreSQL 18 streaming replay lag"
   method: "pg_stat_replication, primary + hot standby on one host"
-  context: "write_lag measured at 104 µs on the same run."
+  context: "write_lag measured at 104 µs on the same run."
 
 lab_redis_promotion:
-  value: "~5 s"
+  value: "~5 s"
   label: "Redis Sentinel primary promotion"
   method: "wall-clock from SIGKILL of the primary to a writable replica"
   context: "Redis Cluster promoted with zero data loss, config epoch 2 → 7."

@@ -17,6 +17,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 .prose {
+  counter-reset: prose-table;
   display: grid;
   grid-template-columns:
     [full-start] minmax(var(--gutter), 1fr)
@@ -321,17 +322,19 @@
 }
 
 // ── Tables ───────────────────────────────────────────────────────────────────
+// booktabs, not a card. A box + radius + header fill + zebra is the spreadsheet
+// register; none of Jepsen, Distill, GOV.UK, the FT or SQLite uses any of the
+// four. Rules are heavy/light/heavy with nothing vertical, per booktabs' first
+// two guidelines, and the weight difference is carried by alpha rather than
+// thickness — 1px renders device-pixel-exact at every DPR while 0.05em rounds
+// unpredictably.
 .prose table {
   width: 100%;
   font-size: var(--step--1);
   line-height: 1.45;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--r-md);
-  // `separate` (not `collapse`) is what makes border-radius apply to a table.
-  // With border-spacing: 0 it is visually identical to a collapsed table.
-  border-collapse: separate;
-  border-spacing: 0;
-  overflow: hidden;
+  border-collapse: collapse;
+  border-block: 1.5px solid var(--line-strong); // \toprule + \bottomrule
+  counter-increment: prose-table;
 }
 
 .prose > .table-scroll-hint {
@@ -350,33 +353,83 @@
   display: none;
 }
 
-.prose thead {
-  background: var(--surface-1);
-}
-
 .prose th {
-  font-size: var(--step--2);
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--ink-2);
+  font-size: var(--step--1);
+  font-weight: 650;
+  letter-spacing: 0;
+  // Sentence case. Not one of Jepsen, Distill, the FT or latex-css uppercases a
+  // table header — that is a dashboard convention. Weight and the midrule do the
+  // separating.
+  text-transform: none;
+  color: var(--ink-1);
   white-space: nowrap;
+  // FT Origami: multi-line column heads sit ON the midrule rather than floating
+  // above it.
+  vertical-align: bottom;
+  // Caps beside oldstyle figures look wrong, and headers may carry years.
+  font-variant-numeric: lining-nums tabular-nums;
 }
 
-.prose th,
+.prose thead th {
+  border-block-end: 1px solid var(--line); // \midrule — the only interior rule
+  padding-block-end: 0.21em; // \aboverulesep .4ex
+}
+
+.prose tbody tr:first-child > * {
+  padding-block-start: 0.34em; // \belowrulesep .65ex — deliberately > above
+}
+
 .prose td {
   padding: var(--sp-3) var(--sp-4);
   text-align: start;
-  vertical-align: top;
-  border-bottom: 1px solid var(--line);
+  vertical-align: baseline; // digits of differing length share a baseline
+  border-block-end: 1px solid
+    color-mix(in oklab, var(--ink-1) 7%, transparent);
 }
 
-.prose tbody tr:last-child :is(td, th) {
-  border-bottom: 0;
+.prose thead th {
+  padding-inline: var(--sp-4);
 }
 
-.prose tbody tr:nth-child(even) {
-  background: color-mix(in oklab, var(--surface-2) 55%, transparent);
+// booktabs' @{} — zero the OUTER padding so the rules begin exactly at the text
+// measure. Without it the first column is indented while the rule spans full
+// width, and the table optically hangs left of the body copy. GOV.UK ships this.
+.prose tr > :first-child {
+  padding-inline-start: 0;
+}
+
+.prose tr > :last-child {
+  padding-inline-end: 0;
+}
+
+// No rule under the last row: the table's own bottom border already draws it,
+// and two adjacent rules is booktabs' second prohibition.
+.prose tbody tr:last-child > * {
+  border-block-end: 0;
+}
+
+// Numeric cells opt in. --font-prose is a serif stack and Georgia ships no
+// `tnum`, so tabular-nums inherited by a table is a silent no-op with no console
+// warning and no visual cue. Inter does carry it.
+.prose :is(td, th).n {
+  font-family: var(--font-body);
+  font-variant-numeric: tabular-nums lining-nums;
+  text-align: end;
+}
+
+.prose caption {
+  caption-side: top;
+  text-align: start;
+  padding-block-end: 0.6em;
+  font-size: 0.9em;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.prose caption::before {
+  content: "Table " counter(prose-table) ". ";
+  font-weight: 650;
+  color: var(--ink-1);
 }
 
 @media (max-width: 40rem) {

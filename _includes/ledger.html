@@ -47,7 +47,7 @@
             <span class="ledger__metric">{{ s.metric }}</span>
           </td>
           <td>
-            <span class="ledger__result ledger__result--{{ s.result }}">{{ s.result }}</span>
+            <span class="ledger__result ledger__result--{% if s.result == "untested" %}untested{% else %}measured{% endif %}">{{ s.result }}</span>
           </td>
           <td class="ledger__note">{{ s.note }}</td>
         </tr>
