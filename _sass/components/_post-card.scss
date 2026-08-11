@@ -88,6 +88,48 @@
   font-variant-numeric: tabular-nums;
 }
 
+// Homepage writing is an editorial ledger rather than a second card grid.
+.home-writing .card-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+  border-block-start: 1px solid var(--line-strong);
+}
+
+.home-writing .post-card {
+  min-height: 18rem;
+  padding: var(--sp-6) var(--sp-5) var(--sp-6) 0;
+  background: transparent;
+  border: 0;
+  border-block-end: 1px solid var(--line-strong);
+  border-radius: 0;
+}
+
+.home-writing .post-card + .post-card {
+  padding-inline-start: var(--sp-5);
+  border-inline-start: 1px solid var(--line-strong);
+}
+
+.home-writing .post-card__title {
+  font-family: var(--font-display);
+  font-variation-settings: "SOFT" 0, "WONK" 0;
+  font-size: var(--step-2);
+  letter-spacing: var(--ls-display);
+  line-height: 1.12;
+}
+
+@media (max-width: 48rem) {
+  .home-writing .card-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-writing .post-card,
+  .home-writing .post-card + .post-card {
+    min-height: auto;
+    padding-inline: 0;
+    border-inline-start: 0;
+  }
+}
+
 // ── Compact list variant ─────────────────────────────────────────────────────
 // Used where a whole year of posts is listed: a row, a rule, a date.
 .post-list {

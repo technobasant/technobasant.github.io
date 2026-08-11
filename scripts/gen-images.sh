@@ -31,7 +31,8 @@ report() {
 # ── portrait ───────────────────────────────────────────────────────────────
 # _source/portrait-master.jpg (2490x2701) is the archived master and is excluded
 # from the build. assets/images/basant_profile.jpg is the 1200x1200 square crop
-# that everything below is derived from.
+# used by author cards and structured data. The homepage uses the separate
+# editorial 4:5 master at _source/hero-portrait-v2-master.png.
 gen_portrait() {
   need sips; need cwebp; need avifenc
   echo "portrait derivatives"
@@ -48,7 +49,17 @@ gen_portrait() {
   for w in 400 800; do
     sips -Z "$w" -s format jpeg -s formatOptions 78 "$src" --out "assets/images/portrait-$w.jpg" >/dev/null
   done
+
+  local hero_src="_source/hero-portrait-v2-master.png"
+  for w in 420 840 1120; do
+    sips --resampleWidth "$w" "$hero_src" --out "$TMP/h$w.png" >/dev/null
+    cwebp -quiet -q 84 -sharp_yuv "$TMP/h$w.png" -o "assets/images/hero-portrait-v2-$w.webp"
+    avifenc -q 58 -s 4 -j all "$TMP/h$w.png" "assets/images/hero-portrait-v2-$w.avif" >/dev/null
+    sips -s format jpeg -s formatOptions 82 "$TMP/h$w.png" --out "assets/images/hero-portrait-v2-$w.jpg" >/dev/null
+  done
+
   for f in assets/images/portrait-*; do report "$f"; done
+  for f in assets/images/hero-portrait-v2-*; do report "$f"; done
 }
 
 # ── icons ──────────────────────────────────────────────────────────────────

@@ -11,12 +11,15 @@ title: Basant Bhattarai
 hero:
   eyebrow: "Senior Data & AI Platform Engineer"
   meta: "Kathmandu, Nepal · Working US and EU hours"
-  h1: "Reliable data. Accountable AI."
+  h1:
+    first: "Reliable data."
+    second: "Accountable AI."
   lede: "I design and operate the systems behind both: Kafka into Spark on Kubernetes, an Iceberg lakehouse, freshness SLOs, and a multi-agent analytics layer across %apps% integrated apps. Open-source first. Measured in uptime, latency, and cost."
   actions:
     - label: "Explore selected work"
       url: /work/
       variant: primary
+      icon: arrow-right
     - label: "How I work"
       url: /about/
       variant: ghost
@@ -25,7 +28,13 @@ hero:
       variant: link
       icon: arrow-down
   portrait:
-    base: /assets/images/portrait
+    base: /assets/images/hero-portrait-v2
+    widths: "420,840,1120"
+    raster_widths: "420,840,1120"
+    fallback_width: "840"
+    width: 1120
+    height: 1399
+    sizes: "(max-width: 56.25rem) min(88vw, 34rem), 31rem"
     alt: "Basant Bhattarai, data and AI platform engineer, Kathmandu"
     caption: "Basant Bhattarai · Kathmandu, Nepal"
 
@@ -41,6 +50,7 @@ stats:
   - analytics_delivery
 
 focus_label: "Where I’m useful"
+focus_headline: "I work where correctness, scale, and judgment meet."
 focus:
   - index: "01"
     title: "Data platforms"
@@ -57,12 +67,15 @@ focus:
 
 work:
   label: "Selected work"
+  headline: "Systems with constraints, trade-offs, and receipts."
+  blurb: "Not a tool list: the decision, what it cost, and the number it moved."
   more: "All case studies"
   more_url: /work/
 
 writing:
   label: "Recent writing"
-  blurb: "I write up the things that cost me a day to figure out."
+  headline: "Notes from the sharp edges."
+  blurb: "The things that cost me a day to figure out, written so they do not cost you one."
   more: "All writing"
   more_url: /writing/
 
