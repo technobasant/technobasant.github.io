@@ -25,9 +25,29 @@
     minmax(0, calc((var(--w-wide) - var(--w-prose)) / 2)) [wide-end]
     minmax(var(--gutter), 1fr) [full-end];
 
+  // Running text is serif; UI chrome around it stays sans. Elements that are
+  // interface rather than prose — chips, badges, buttons, tables of contents,
+  // code — opt back out below and in their own components.
+  font-family: var(--font-prose);
   font-size: var(--step-0);
   line-height: var(--lh-prose);
   color: var(--ink-1);
+}
+
+// Serifs carry more visual weight at the same nominal size, so the measure
+// tightens slightly and the tracking relaxes back to normal.
+.prose > p,
+.prose > ul,
+.prose > ol,
+.prose > blockquote,
+.prose > dl {
+  letter-spacing: 0;
+}
+
+// Structural and interface children keep the sans face.
+.prose :where(code, kbd, samp, pre) { font-family: var(--font-mono); }
+.prose :where(table, .callout__title, figcaption, .chip, .badge) {
+  font-family: var(--font-body);
 }
 
 .template-post .prose {

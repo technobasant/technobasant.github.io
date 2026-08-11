@@ -15,7 +15,19 @@
   --brand-brass-lift: #d9be8e;
 
   // ── Type families ─────────────────────────────────────────────────────────
+  // Serif for prose, sans for UI. In a survey of 26 data/infra sites the serif
+  // camp is almost exactly the infrastructure-writing camp — Brooker (Georgia),
+  // Willison (Georgia), Sivers (Georgia), Jepsen (TeX Gyre Schola), Nelhage
+  // (Vollkorn), Eaton (Merriweather), Morling (Lora) — while all-sans marks the
+  // design-engineer sites. This is genre signalling, not taste.
+  //
+  // The stack is deliberately system-only: it costs zero bytes and zero
+  // requests, which matters more than a licensed face on a site whose whole
+  // proposition is that it is fast. brandur.org ships `ui-serif` and nothing
+  // else. Iowan Old Style and Charter are excellent on Apple platforms; Georgia
+  // carries Windows and Android.
   --font-display: "Fraunces", "Fraunces Fallback", Georgia, "Times New Roman", serif;
+  --font-prose: ui-serif, "Iowan Old Style", Charter, "Bitstream Charter", Georgia, "Times New Roman", serif;
   --font-body: "Inter", "Inter Fallback", system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
 
