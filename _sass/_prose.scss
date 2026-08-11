@@ -79,6 +79,7 @@
 .prose > .callout,
 .prose > details,
 .prose > .tutorial-header,
+.prose > .article-summary,
 .prose > .staleness,
 .prose > .series-nav,
 .prose > .toc-mobile,
@@ -87,6 +88,27 @@
 .prose > .case-map,
 .prose > .case-results {
   --flow: 2rem;
+}
+
+// Verification output is part of the procedure, not an aside. A quiet rule
+// and explicit label make the command/result rhythm scannable without turning
+// every checkpoint into a heavy callout.
+.prose > .verify {
+  padding: var(--sp-3) var(--sp-4);
+  border-inline-start: 2px solid var(--accent);
+  background: color-mix(in oklab, var(--accent) 5%, transparent);
+  font-size: var(--step--1);
+  color: var(--ink-2);
+}
+
+.prose > .verify > strong:first-child {
+  margin-inline-end: 0.35em;
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--accent);
 }
 .prose > hr {
   --flow: 3rem;

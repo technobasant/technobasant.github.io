@@ -1,12 +1,15 @@
 # technobasant.github.io
 #
-#   make serve        local preview (drafts + future posts + livereload)
+#   make serve        production-shaped local preview (future posts + livereload)
+#   make serve-drafts editorial preview including unfinished drafts
 #   make build        production build, same flags as CI
+#   make content      validate published post metadata and editorial structure
 #   make check        html-proofer, internal only
 #   make verify       output assertions against _site
 #   make lighthouse   production build, then a clean server for auditing
 #   make images       regenerate portrait derivatives, icons and social cards
 #   make new-post SLUG=my-slug TITLE="My title"
+#   make new-tutorial SLUG=my-slug TITLE="My title"
 #   make clean
 
 SHELL   := /usr/bin/env bash
@@ -16,7 +19,7 @@ PORT    ?= 4000
 NOW     := $(shell TZ=Asia/Kathmandu date '+%Y-%m-%d %H:%M:%S %z')
 TODAY   := $(shell TZ=Asia/Kathmandu date '+%Y-%m-%d')
 
-.PHONY: help serve build check check-external verify jsonld lighthouse images new-post new-work clean
+.PHONY: help serve serve-drafts build content check check-external verify jsonld lighthouse images new-post new-tutorial new-work clean
 
 help:
 	@grep -E '^#   ' $(MAKEFILE_LIST) | sed 's/^#   //'
@@ -25,10 +28,16 @@ help:
 # `timezone: Asia/Kathmandu` (+0545), so a post dated later today is silently
 # dropped from a local build and you spend an hour wondering where it went.
 serve:
+	$(BUNDLE) jekyll serve --future --livereload --port $(PORT)
+
+serve-drafts:
 	$(BUNDLE) jekyll serve --drafts --future --livereload --port $(PORT)
 
 build:
 	JEKYLL_ENV=production $(BUNDLE) jekyll build --strict_front_matter --trace
+
+content:
+	$(BUNDLE) rake content
 
 check:
 	$(BUNDLE) rake check
@@ -67,6 +76,18 @@ new-post:
 	     -e 's|{{TITLE}}|$(TITLE)|g' \
 	     -e 's|{{DATE}}|$(NOW)|g' \
 	     _templates/post.md > _drafts/$(SLUG).md
+	@echo "wrote _drafts/$(SLUG).md"
+	@echo "when it is ready: mv _drafts/$(SLUG).md _posts/$(TODAY)-$(SLUG).md"
+
+new-tutorial:
+	@test -n "$(SLUG)"  || { echo 'usage: make new-tutorial SLUG=my-slug TITLE="My title"'; exit 1; }
+	@test -n "$(TITLE)" || { echo 'usage: make new-tutorial SLUG=my-slug TITLE="My title"'; exit 1; }
+	@mkdir -p _drafts
+	@test ! -f _drafts/$(SLUG).md || { echo "_drafts/$(SLUG).md already exists"; exit 1; }
+	@sed -e 's|{{SLUG}}|$(SLUG)|g' \
+	     -e 's|{{TITLE}}|$(TITLE)|g' \
+	     -e 's|{{DATE}}|$(NOW)|g' \
+	     _templates/tutorial.md > _drafts/$(SLUG).md
 	@echo "wrote _drafts/$(SLUG).md"
 	@echo "when it is ready: mv _drafts/$(SLUG).md _posts/$(TODAY)-$(SLUG).md"
 

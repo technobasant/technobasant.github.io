@@ -33,6 +33,16 @@ Or: `./scripts/serve.sh`
 | `_layouts/` | `default`, `home`, `page` |
 | `assets/css/site.css` | Dark editorial design system |
 | `_pages/` | About, Experience, Skills, Work |
-| `_posts/` | Occasional notes |
+| `_posts/` | Published essays and reproducible tutorials |
+| `_drafts/` | Unfinished outlines; excluded from the default preview |
 
-Push `master` to publish on GitHub Pages.
+`make serve` previews the same finished writing readers will see. Use
+`make serve-drafts` only while editing unfinished outlines.
+
+Run `make content` before publishing, then push `master` to publish on GitHub
+Pages.
+
+Use `make new-post SLUG=... TITLE="..."` for an essay and
+`make new-tutorial SLUG=... TITLE="..."` for a reproducible runbook. The two
+templates carry separate editorial contracts so tutorial steps, evidence, and
+failure boundaries do not collapse into generic prose.

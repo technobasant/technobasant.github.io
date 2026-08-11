@@ -74,9 +74,6 @@ exclude:
   # by nothing. Safe to delete from the repo; excluded so it never ships.
   - assets/images/basant_profile.png
   - _drafts/zzz-scaffold-test.md
-  # Superseded: duplicated _pages/about.md, had no date/layout/tags, linked from
-  # nowhere. Replaced by the three dba-poc posts. Safe to delete from the repo.
-  - _posts/2026-08-11-building-data-platforms-and-ai-products.md
 
 # ── Content ───────────────────────────────────────────────────────────────
 collections:

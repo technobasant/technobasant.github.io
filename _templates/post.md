@@ -1,58 +1,53 @@
 ---
 title: "{{TITLE}}"
-# 140-158 characters. This is the meta description AND the card blurb.
+# 120–165 characters. This is the meta description and card blurb.
 description: ""
 date: {{DATE}}
-# essay | tutorial | note
 type: essay
-# 1-3 slugs, each of which MUST already exist in _data/tags.yml
+# One to three existing slugs from _data/tags.yml.
 tags:
   - career
+toc: true
+featured: false
+# Three to five complete sentences. These render as the article's argument map.
+key_takeaways:
+  - ""
+  - ""
+  - ""
 # ── optional ──────────────────────────────────────────────────────────────
 # last_modified_at: {{DATE}}
-# series: ""
-# series_order: 1
-# featured: false
-toc: false
 # image: /assets/images/{{SLUG}}.png
 # image_alt: ""
 # canonical_url: ""
 # cross_posted_to: ""
-# work: ""            # slug of a _work/ case study this post belongs to
-# seo_title: ""       # only when the <title> should differ from `title`
-# ── tutorial only ─────────────────────────────────────────────────────────
-# repo: "https://github.com/technobasant/…"
-# level: intermediate            # beginner | intermediate | advanced
-# time_estimate: "25 minutes"
-# what_youll_build: ""
-# prerequisites:
-#   - ""
-# tested_on: ""
+# work: ""            # slug of a related _work/ case study
+# seo_title: ""       # only when the browser title should differ
 ---
 
-Open with the problem, in one short paragraph. What broke, what it cost, why the
-obvious fix was wrong. No preamble, no "in this post we will".
+Open with the tension in two short paragraphs: the decision, mistaken
+assumption, or production consequence. Do not announce the article and do not
+start with biography.
 
-<!--more-->
+## State the argument
 
-## The first section starts at h2
+Make one claim that can be disproved. Define the boundary and the terms that
+matter before listing technologies.
 
-Never author an `#` heading — the layout renders the H1 from `page.title`.
+## Show the evidence
 
-Every number in the body must come from `_data/metrics.yml`:
-`{% raw %}{{ site.data.metrics.some_key.value }}{% endraw %}`. Do not hardcode one.
+Use a measurement, failure trace, decision table, or concrete system boundary.
+Every portfolio metric comes from `_data/metrics.yml`, for example
+`{% raw %}{{ site.data.metrics.some_key.value }}{% endraw %}`.
 
-```python
-# a fenced block becomes a direct child of .prose
-print("hello")
-```
-{: data-file="path/to/file.py"}
+| Decision | Evidence | Consequence |
+| --- | --- | --- |
+| Example | What was observed | What changed |
 
-<div class="callout callout--gotcha" markdown="1">
-**The thing that will bite you.** Use `callout--note`, `--tip`, `--warn`,
-`--danger` or `--gotcha`.
+<div class="callout callout--note" markdown="1">
+**Boundary.** State what was measured and what remains an inference.
 </div>
 
-## What I would do differently
+## Make the decision useful
 
-Close with the trade-off you accepted and what you would change.
+Close with the operating rule, trade-off, or question a reader can apply. Do not
+repeat the introduction and do not end with a generic contact pitch.
