@@ -5,6 +5,7 @@ description: "A practical operating model for reliable data and AI products: con
 date: 2026-08-11 10:00:00 +0545
 last_modified_at: 2026-08-11 16:00:00 +0545
 type: essay
+editor_pick: true
 tags: [ai-agents, data-quality]
 toc: true
 level: advanced

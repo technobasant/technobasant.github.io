@@ -113,6 +113,13 @@ jobs:
       - name: Validate JSON-LD
         run: bundle exec rake jsonld
 
+      # Checks the token matrix, not the rendered sample. axe only sees the
+      # colour pairs that exist in today's markup, so a token that fails on a
+      # surface no component happens to use yet ships silently and breaks the
+      # first time someone uses it.
+      - name: Check token contrast (both themes, every surface)
+        run: bundle exec rake tokens
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:

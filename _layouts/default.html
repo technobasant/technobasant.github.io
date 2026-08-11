@@ -10,7 +10,7 @@
    Willison, Luu, MacWright, Vanlightly — is light-first. Dark remains a
    first-class theme, one click away, and is still honoured automatically for
    anyone whose system asks for it. */
-(function(){var r=document.documentElement,t='light';
+(function(){var r=document.documentElement,t='light';r.classList.add('js');
 try{var s=localStorage.getItem('theme');
 t=(s==='light'||s==='dark')?s:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
 }catch(e){}
@@ -33,7 +33,7 @@ win over it in exactly the case the user overrode their OS. {%- endcomment %}
 
   <header class="site-header">
     <div class="wrap header-inner">
-      <a class="mark" href="{{ '/' | relative_url }}">Basant<span>Bhattarai</span></a>
+      <a class="mark" href="{{ '/' | relative_url }}">Basant <span>Bhattarai</span></a>
       {% include nav.html %}
     </div>
   </header>

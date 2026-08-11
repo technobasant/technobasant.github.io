@@ -2,12 +2,22 @@
 layout: default
 ---
 {%- comment -%}
-  Work index. Independent products and labs stay distinct so a reader can tell
-  which claims come from a maintained application and which came from a test rig.
+  Work index.
+
+  One grid, one heading. This was three sections, each with its own full-width
+  display heading and section label, for four cards in total — one of those
+  sections carried a single card under a heading taller than the card itself.
+  Each card already states its own kind in a badge, so the grouping headings were
+  restating in 60px type what the badge says in 11px, and costing about 600px of
+  vertical space to do it.
+
+  Order is practice, then independent product, then lab: broadest body of work
+  first, and a reader arriving from the résumé is looking for that one.
 {%- endcomment -%}
+{%- assign _practice   = site.work | where: "kind", "practice"   | sort: "order" -%}
 {%- assign _production = site.work | where: "kind", "production" | sort: "order" -%}
-{%- assign _labs = site.work | where: "kind", "lab" | sort: "order" -%}
-{%- assign _practice = site.work | where: "kind", "practice" | sort: "order" -%}
+{%- assign _labs       = site.work | where: "kind", "lab"        | sort: "order" -%}
+{%- assign _all = _practice | concat: _production | concat: _labs -%}
 
 {% include interior-hero.html variant="index" code="SYSTEM / RECORD" %}
 <div class="page page--index">
@@ -15,56 +25,12 @@ layout: default
     {{ content }}
   </div>
 
-  {%- comment -%}
-    Professional practice comes first: it is the largest body of work, and a
-    reader arriving from a résumé is looking for it. Each entry describes the
-    method rather than the deployment — the approach that transfers, not the
-    employer's architecture. This is Brendan Gregg's move: he never published a
-    Netflix diagram, he published the USE Method, and the industry adopted it.
-  {%- endcomment -%}
-  {%- if _practice.size > 0 %}
-  <section class="wrap index-section reveal" aria-labelledby="practice-title">
-    <div class="section-head">
-      <div>
-        <p class="section-label">Professional practice</p>
-        <h2 id="practice-title">The method, not the deployment.</h2>
-      </div>
-    </div>
-    <div class="showcase-grid showcase-grid--index{% if _practice.size == 1 %} showcase-grid--solo{% elsif _practice.size == 2 %} showcase-grid--pair{% endif %}">
-      {%- for item in _practice %}
-      {% include case-card.html item=item index=forloop.index %}
-      {%- endfor %}
-    </div>
-  </section>
-  {%- endif %}
-
-  {%- if _production.size > 0 %}
-  <section class="wrap index-section reveal" aria-labelledby="production-title">
-    <div class="section-head">
-      <div>
-        <p class="section-label">Independent product</p>
-        <h2 id="production-title">Owned end to end. Shared at a safe boundary.</h2>
-      </div>
-    </div>
-    <div class="showcase-grid showcase-grid--index{% if _production.size == 1 %} showcase-grid--solo{% elsif _production.size == 2 %} showcase-grid--pair{% endif %}">
-      {%- for item in _production %}
-      {% if forloop.first %}{% include case-card.html item=item variant="feature" index=forloop.index %}{% else %}{% include case-card.html item=item index=forloop.index %}{% endif %}
-      {%- endfor %}
-    </div>
-  </section>
-  {%- endif %}
-
-  {%- if _labs.size > 0 %}
-  <section class="wrap index-section reveal" aria-labelledby="labs-title">
-    <div class="section-head">
-      <div>
-        <p class="section-label">Measured labs</p>
-        <h2 id="labs-title">Claims tested on hardware I can break and restart.</h2>
-      </div>
-    </div>
-    <div class="card-grid">
-      {%- for item in _labs %}
-      {% include case-card.html item=item index=forloop.index %}
+  {%- if _all.size > 0 %}
+  <section class="wrap index-section" aria-labelledby="work-title">
+    <h2 class="sr-only" id="work-title">Case studies</h2>
+    <div class="card-grid card-grid--work">
+      {%- for item in _all %}
+      {% include case-card.html item=item %}
       {%- endfor %}
     </div>
   </section>

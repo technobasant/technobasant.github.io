@@ -25,6 +25,9 @@
 body {
   display: flex;
   flex-direction: column;
+  // Wide tables and code own their horizontal scrolling. Nothing else may give
+  // the document itself a second axis, including at 200% text size.
+  overflow-x: clip;
 }
 
 main {

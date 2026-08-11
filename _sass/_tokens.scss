@@ -13,6 +13,7 @@
   // ── Brand constants (mode-invariant) ──────────────────────────────────────
   --brand-brass: #c4a574;
   --brand-brass-lift: #d9be8e;
+  --brand-brass-masthead: #dfb66c;
 
   // ── Type families ─────────────────────────────────────────────────────────
   // Serif for prose, sans for UI. In a survey of 26 data/infra sites the serif
@@ -146,7 +147,10 @@
 
   --line: rgba(236, 232, 225, 0.1);
   --line-strong: rgba(236, 232, 225, 0.17);
-  --line-control: #636b75; // 3.33:1 — borders that are a control's only affordance
+  // 4.00 / 3.74 / 3.44 / 3.09 on surface-0..3. Was #636b75, which cleared 3:1
+  // on surface-0 but fell to 2.74:1 on surface-3 — a control border that is a
+  // control's ONLY affordance has to hold 1.4.11 on every surface it lands on.
+  --line-control: #6b737d;
 
   --accent: #c4a574; // 8.21:1
   --accent-hi: #d9be8e; // 10.70:1
@@ -218,11 +222,16 @@
 
   --ink-1: #15181c; // 17.07:1
   --ink-2: #4c535c; // 7.46:1
-  --ink-3: #676e77; // 4.94:1
+  // Verified against every light surface, not just paper: 5.98 / 5.74 / 5.17 /
+  // 4.64 on surface-1/0/2/3. The previous #676e77 was measured on surface-0
+  // only and failed at 4.45 on --surface-2 and 4.00 on --surface-3 — the same
+  // single-surface mistake the dark --ink-3 had. `rake tokens` now blocks it.
+  --ink-3: #5d646d;
 
   --line: rgba(21, 24, 28, 0.09);
   --line-strong: rgba(21, 24, 28, 0.15);
-  --line-control: #8c8578;
+  // 3.80 / 3.97 / 3.43 / 3.08 on surface-0..3. Was #8c8578 — 2.84:1 on surface-3.
+  --line-control: #867f72;
 
   --accent: #7c5a18; // 6.04:1
   --accent-hi: #5e4310;
@@ -247,7 +256,7 @@
   --code-hl-bg: rgba(196, 165, 116, 0.26);
   --code-hl-edge: #a8823a;
   --code-gutter: #8b8578; // decorative only — 3.28:1, never text
-  --code-meta: #6e6a5e;   // 4.84:1 on --code-bg
+  --code-meta: #6b675b; // 5.06 on --code-bg, 4.71 on --code-header-bg
 
   // Callout edges
   --c-note: #7c5a18;

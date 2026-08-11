@@ -68,14 +68,21 @@
     // explicit opener hook and only fall back to the first .nav-toggle.
     var toggle = document.querySelector("[data-nav-open], .nav-toggle");
     if (!dialog || !toggle || typeof dialog.showModal !== "function") return;
+    var pageY = 0;
 
     function setExpanded(v) {
       toggle.setAttribute("aria-expanded", v ? "true" : "false");
     }
 
     toggle.addEventListener("click", function () {
+      pageY = window.scrollY;
       dialog.showModal();
       setExpanded(true);
+      // Safari and Chromium can scroll the document while moving focus into a
+      // modal dialog. The drawer is fixed, so that movement is never useful.
+      requestAnimationFrame(function () {
+        window.scrollTo(0, pageY);
+      });
     });
 
     // Clicking the backdrop reports the click on the <dialog> itself, because
@@ -94,6 +101,9 @@
 
     dialog.addEventListener("close", function () {
       setExpanded(false);
+      requestAnimationFrame(function () {
+        window.scrollTo(0, pageY);
+      });
     });
 
     // Close on navigation to an in-page anchor within the drawer.

@@ -9,6 +9,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--sp-3);
+  min-width: 0;
   padding: var(--sp-5);
   background: var(--surface-1);
   border: 1px solid var(--line-strong);
@@ -45,6 +46,7 @@
 }
 
 .post-card__title {
+  min-width: 0;
   margin: 0;
   font-size: var(--step-1);
   font-weight: 600;
@@ -53,9 +55,11 @@
 }
 
 .post-card__title a {
+  min-width: 0;
   color: var(--ink-1);
   text-decoration: none;
   touch-action: manipulation;
+  overflow-wrap: anywhere;
 }
 
 // .case-card reuses .post-card__title and .post-card__meta.
@@ -110,16 +114,24 @@
 }
 
 // Homepage writing is an editorial ledger rather than a second card grid.
-.home-writing .card-grid {
+.home-writing .writing-selection {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0;
+  padding: 0;
+  // The base rule paints --line-strong as a background and lets it show
+  // through a 1px gap/padding as hairlines. Here the rules are real borders
+  // instead, so that background has no gap left to show through — but it was
+  // still compositing rgba(236,232,225,.17) under the cards and dropping
+  // --ink-3 from 6.03:1 to 3.68:1. Switching the trick off means switching
+  // off both halves of it.
+  background: none;
   border-block-start: 1px solid var(--line-strong);
 }
 
 .home-writing .post-card {
   min-height: 18rem;
   padding: var(--sp-6) var(--sp-5) var(--sp-6) 0;
-  background: transparent;
+  background: var(--surface-1);
   border: 0;
   border-block-end: 1px solid var(--line-strong);
   border-radius: 0;
@@ -139,7 +151,7 @@
 }
 
 @media (max-width: 48rem) {
-  .home-writing .card-grid {
+  .home-writing .writing-selection {
     grid-template-columns: 1fr;
   }
 

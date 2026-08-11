@@ -10,7 +10,7 @@
   --hero-ink: #f3eee5;
   --hero-muted: #a9b2bd;
   --hero-line: rgba(243, 238, 229, 0.14);
-  --hero-accent: #dfb66c;
+  --hero-accent: var(--brand-brass-masthead);
   position: relative;
   overflow: clip;
   isolation: isolate;
@@ -91,6 +91,9 @@
 .hero h1 {
   margin: 0;
   max-width: 20ch;
+  // Deliberate exception to the serif interior mastheads: the homepage opens
+  // with a direct sans proposition, then uses italic and brass for emphasis.
+  font-family: var(--font-body);
   // Floor lowered from 2.25rem: at 390px the clamp pinned to the minimum and
   // the headline took six lines. 30px holds it to four.
   font-size: clamp(1.875rem, 3.9vw, 3.5rem);
@@ -272,116 +275,81 @@
   text-underline-offset: 0.25em;
 }
 
-// ── Focus band ───────────────────────────────────────────────────────────────
-.hero + .band,
-.band + .home-section,
-.home-section + .home-section,
-.home-section + .strip {
+// ── Outcome rail ─────────────────────────────────────────────────────────────
+.home-outcomes {
   margin-block-start: 0;
+  padding-block: clamp(3rem, 7vw, 6rem);
+  background: var(--surface-1);
+  border-block-end: 1px solid var(--line);
 }
 
-.band {
-  padding-block: var(--sp-section);
-  background: var(--surface-2);
-  border-block: 1px solid var(--line);
-}
-
-.band-title {
-  max-width: 20ch;
-  margin: 0;
-  font-family: var(--font-display);
-  font-variation-settings: "SOFT" 0, "WONK" 0;
-  font-size: var(--step-4);
-  letter-spacing: var(--ls-display);
-  line-height: 1.05;
-}
-
-// Two up, so four capability cards form a 2x2 block rather than a row of three
-// with an orphan. auto-fit would decide that for us and decide it differently at
-// every viewport width.
-.band-grid {
+.outcome-intro {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 0;
-  margin-block-start: var(--sp-7);
-  border-block-start: 1px solid var(--line-strong);
+  grid-template-columns: minmax(10rem, 0.3fr) minmax(0, 0.7fr);
+  gap: var(--sp-5) clamp(2rem, 6vw, 6rem);
+  align-items: start;
 }
 
-@media (min-width: 48rem) {
-  .band-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+.outcome-intro .section-label {
+  margin: 0;
 }
 
-.focus {
-  display: block;
-  padding: var(--sp-6) var(--sp-6) var(--sp-6) 0;
-  background: transparent;
-  border-block-end: 1px solid var(--line-strong);
-  color: inherit;
-  text-decoration: none;
-  touch-action: manipulation;
-  transition: color var(--dur-2) var(--ease-standard),
-    transform var(--dur-2) var(--ease-standard);
+.outcome-intro h2 {
+  max-width: 24ch;
+  margin: 0;
+  font-size: var(--step-3);
+  line-height: 1.15;
 }
 
-.focus + .focus {
-  padding-inline-start: var(--sp-6);
+.outcome-rail {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: var(--sp-7) 0 0;
+  padding: 0;
+  border-block: 1px solid var(--line-strong);
+  list-style: none;
+}
+
+.outcome-rail li {
+  display: grid;
+  align-content: start;
+  gap: var(--sp-2);
+  min-width: 0;
+  margin: 0;
+  padding: var(--sp-5);
+}
+
+.outcome-rail li + li {
   border-inline-start: 1px solid var(--line-strong);
 }
 
-.focus:hover {
-  transform: translateY(-4px);
-}
-
-.focus:focus-visible {
-  outline-offset: -3px;
-}
-
-// Ordinal. --ink-3, not brass. The brass on this page is the hero's primary
-// button; a numbered list of three does not need it too.
-.focus-index {
-  display: block;
-  margin-block-end: var(--sp-5);
-  font-size: var(--step--2);
-  font-weight: 600;
-  letter-spacing: var(--ls-label);
-  color: var(--accent);
+.outcome-rail strong {
+  font-family: var(--font-body);
+  font-size: var(--step-3);
+  font-weight: 620;
+  letter-spacing: var(--ls-display);
+  line-height: 1;
+  color: var(--ink-1);
   font-variant-numeric: tabular-nums;
 }
 
-.focus h2,
-.focus h3 {
-  margin: 0 0 var(--sp-3);
-  font-size: var(--step-2);
-  font-weight: 600;
-  letter-spacing: var(--ls-heading);
+.outcome-rail span {
+  font-size: var(--step--1);
+  font-weight: 650;
+  line-height: 1.35;
   color: var(--ink-1);
 }
 
-.focus p {
-  margin: 0;
-  font-size: var(--step--1);
-  line-height: 1.5;
-  color: var(--ink-2);
-}
-
-.focus-open {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-2);
-  margin-block-start: var(--sp-5);
+.outcome-rail small {
   font-size: var(--step--2);
-  font-weight: 650;
+  line-height: 1.5;
   color: var(--ink-3);
-  transition: color var(--dur-1) var(--ease-standard),
-    transform var(--dur-1) var(--ease-standard);
 }
 
-.focus:hover .focus-open,
-.focus:focus-visible .focus-open {
-  color: var(--accent-hi);
-  transform: translateX(2px);
+.hero + .home-outcomes,
+.home-outcomes + .home-section,
+.home-section + .home-section {
+  margin-block-start: 0;
 }
 
 // ── Alternating home sections ───────────────────────────────────────────────
@@ -391,6 +359,11 @@
 
 .home-writing {
   background: var(--surface-1);
+  border-block: 1px solid var(--line);
+}
+
+.home-independent {
+  background: var(--surface-2);
   border-block: 1px solid var(--line);
 }
 
@@ -422,13 +395,46 @@
   color: var(--ink-2);
 }
 
+.independent-grid,
+.writing-selection {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  padding: 1px;
+  background: var(--line-strong);
+}
+
+.current-role {
+  display: grid;
+  grid-template-columns: minmax(8rem, 0.22fr) minmax(0, 1fr) auto;
+  gap: var(--sp-4) var(--sp-6);
+  align-items: start;
+  margin-block-start: var(--sp-8);
+  padding-block: var(--sp-6);
+  border-block: 1px solid var(--line-strong);
+}
+
+.current-role > * {
+  margin: 0;
+}
+
+.current-role > p:not(.section-label) {
+  max-width: 58ch;
+  color: var(--ink-2);
+}
+
 // ── Strip (closing band: what I'm doing now / contact) ───────────────────────
 .strip-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.9fr);
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: end;
   padding-block-start: var(--sp-6);
   border-block-start: 1px solid var(--line);
+}
+
+.strip-grid > * {
+  min-width: 0;
 }
 
 .strip h2 {
@@ -446,19 +452,9 @@
 }
 
 .strip-meta > p {
-  margin: 0 0 var(--sp-4);
+  margin: 0;
   font-size: var(--step--1);
   color: var(--ink-1);
-}
-
-.strip-meta span {
-  display: block;
-  margin-block-end: var(--sp-1);
-  font-size: var(--step--2);
-  font-weight: 600;
-  letter-spacing: var(--ls-label);
-  text-transform: uppercase;
-  color: var(--ink-3);
 }
 
 .strip-links {
@@ -505,34 +501,74 @@
   }
 
   .hero-photo {
-    width: min(100%, 34rem);
+    // Keep the portrait as an identity cue, not a second mobile hero. The
+    // previous full-width treatment added almost 450px before readers reached
+    // the first piece of evidence.
+    width: min(44vw, 15rem);
     justify-self: start;
     padding-block-start: 0;
   }
 
   .hero-photo::before {
-    inset: 1rem -1rem -1rem 1rem;
+    inset: 0.65rem -0.65rem -0.65rem 0.65rem;
+  }
+
+  .outcome-rail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .outcome-rail li:nth-child(3) {
+    border-inline-start: 0;
+  }
+
+  .outcome-rail li:nth-child(n + 3) {
+    border-block-start: 1px solid var(--line-strong);
+  }
+
+  .current-role {
+    grid-template-columns: minmax(8rem, 0.25fr) minmax(0, 1fr);
+  }
+
+  .current-role > .section-more {
+    grid-column: 2;
   }
 
   .strip-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
 @media (max-width: 48rem) {
+  .outcome-intro,
+  .independent-grid,
+  .writing-selection,
+  .current-role {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .current-role > .section-more {
+    grid-column: auto;
+  }
+
   .hero-proof .stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .focus + .focus {
-    padding-inline-start: 0;
-    border-inline-start: 0;
-  }
 }
 
 @media (max-width: 30rem) {
-  .hero h1 {
-    font-size: clamp(3.8rem, 18vw, 5.25rem);
+  .outcome-rail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .outcome-rail li + li,
+  .outcome-rail li:nth-child(3) {
+    border-inline-start: 0;
+    border-block-start: 1px solid var(--line-strong);
+  }
+
+  .outcome-rail li {
+    padding-inline: 0;
   }
 
   .hero-proof .stats {

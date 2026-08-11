@@ -76,15 +76,25 @@
   size-adjust: 107.4%;
 }
 
-// Fraunces over Georgia. NOTE: these four numbers are an approximation, not
-// published metrics — Fraunces is an optical-size design and its vertical
-// metrics move with `opsz`. They are close enough to keep the shift
-// imperceptible on the one or two display lines per page that use it.
+// Fraunces over Georgia. Measured, not estimated: size-adjust is the ratio of
+// mean advance width over [A-Za-z0-9 .,:;'"!?()-—] read from each font's hmtx
+// (Fraunces instanced at wght 560–600, the two weights the display face is
+// actually set at); the vertical overrides are Fraunces' own hhea metrics
+// divided by that ratio.
+//
+// The previous ascent-override of 105% was an estimate and was ~13pp too tall,
+// so the fallback reserved a taller line box than Fraunces needed and every
+// page below the hero jumped upward on swap — 0.039 CLS on /work/. Do not
+// hand-tune these; recompute them if the subset or the weights change.
+//
+// Note the subset carries only the `wght` axis. The `font-variation-settings:
+// "SOFT" 0, "WONK" 0` declarations elsewhere are inert on this build and are
+// kept only as intent if the fuller face is ever shipped.
 @font-face {
   font-family: "Fraunces Fallback";
   src: local("Georgia"), local("Times New Roman");
-  ascent-override: 105%;
-  descent-override: 26%;
+  ascent-override: 91.6%;
+  descent-override: 23.9%;
   line-gap-override: 0%;
-  size-adjust: 104%;
+  size-adjust: 106.7%;
 }

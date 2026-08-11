@@ -44,7 +44,7 @@
 .footer-col a {
   display: inline-flex;
   align-items: center;
-  min-height: 2.25rem;
+  min-height: 2.75rem;
   color: var(--ink-2);
   text-decoration: none;
   transition: color var(--dur-1) var(--ease-standard);
@@ -80,4 +80,11 @@
 
 .footer-base a {
   color: inherit;
+}
+
+@media (max-width: 40rem) {
+  .footer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sp-5) var(--sp-4);
+  }
 }

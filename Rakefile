@@ -214,19 +214,43 @@ task :content do
 end
 
 # ── rake privacy ────────────────────────────────────────────────────────────
-# Current-tree guardrails for public material. Employer names and role history
-# are allowed; employer topology, customer figures, scale, and retired case-study
-# routes are not. Git history needs a separate, explicitly authorized cleanup.
-
-SENSITIVE_PUBLIC_PATTERNS = {
+# Current-tree guardrails for public material. Employer names, role history, and
+# the professional metrics explicitly approved in `_data/metrics.yml` are
+# allowed. Internal platform names, customer-derived counts, runtime topology,
+# and retired private routes remain blocked everywhere.
+#
+# CONFIDENTIAL — withheld everywhere. Internal platform names, runtime topology,
+# customer-derived counts and internal scale descriptions are the employer's,
+# not general skill and knowledge.
+CONFIDENTIAL_PATTERNS = {
   "legacy employer case-study route" => %r{/work/(?:uxcam-data-platform|iceberg-lakehouse-scd|app-analytics-agent-platform|serving-layer-100m-queries)/}i,
-  "private throughput or customer figure" => /\b(?:10|15)\s*TB\+?|25,?000\+?|100M\+?\s+queries|hundreds of millions of events/i,
-  "private scale description" => /multi[- ]petabyte|petabyte[- ]scale/i,
-  "private platform name" => /App Analytics Agent Platform/i,
-  "private runtime topology" => /self-managed (?:Spark|Kubernetes)/i,
-  "employer joined to implementation detail" => /UXCam.{0,100}(?:Kafka|Spark|Iceberg|Trino|ClickHouse|Milvus|LangGraph|CrewAI)/i,
-  "retired employer outcome" => /(?:99\.9% uptime|40% (?:lower|cost reduction)|50% faster|60% faster analytics)/i
+  "internal platform name" => /App Analytics Agent Platform/i,
+  "runtime topology" => /self-managed (?:Spark|Kubernetes)/i,
+  "internal scale description" => /multi[- ]petabyte|petabyte[- ]scale/i,
+  "customer-derived count" => /25,?000\+?\s*(?:mobile\s*)?apps?|500\+?\s*(?:mobile\s*)?apps?/i
 }.freeze
+
+SENSITIVE_PUBLIC_PATTERNS = CONFIDENTIAL_PATTERNS.freeze
+
+APPROVED_PROFESSIONAL_METRICS = %w[
+  experience
+  professional_platform_scale
+  professional_event_volume
+  professional_uptime
+  professional_cost_reduction
+  professional_processing_improvement
+  professional_analytics_delivery
+  professional_manual_effort
+  professional_team_delivery
+  professional_mentoring
+  professional_daily_processing
+  professional_query_volume
+  professional_query_latency
+  professional_project_team
+  professional_project_delivery
+  professional_backend_users
+  professional_test_coverage
+].freeze
 
 PUBLIC_SOURCE_GLOBS = %w[
   _posts/**/*.{md,markdown,html}
@@ -238,11 +262,10 @@ PUBLIC_SOURCE_GLOBS = %w[
   _config.yml
   index.md
   llms.txt
-  scripts/generate-resume-pdf.py
 ].freeze
 
-def privacy_findings(path, body)
-  SENSITIVE_PUBLIC_PATTERNS.filter_map do |label, pattern|
+def privacy_findings(path, body, patterns = SENSITIVE_PUBLIC_PATTERNS)
+  patterns.filter_map do |label, pattern|
     match = body.match(pattern)
     next unless match
 
@@ -251,7 +274,7 @@ def privacy_findings(path, body)
   end
 end
 
-desc "Reject employer architecture, scale, outcomes and retired private routes from public material"
+desc "Enforce the approved evidence boundary and reject confidential employer details"
 task :privacy do
   failures = []
 
@@ -266,12 +289,44 @@ task :privacy do
     end
   end
 
+  metrics_path = "_data/metrics.yml"
+  if File.exist?(metrics_path)
+    metrics = YAML.safe_load_file(metrics_path, permitted_classes: [Date]) || {}
+    professional = metrics.select { |_key, metric| metric["scope"] == "professional" }
+
+    unexpected = professional.keys - APPROVED_PROFESSIONAL_METRICS
+    unexpected.each do |key|
+      failures << "#{metrics_path}: unapproved professional metric key — #{key.inspect}"
+    end
+
+    APPROVED_PROFESSIONAL_METRICS.each do |key|
+      metric = metrics[key]
+      if metric.nil?
+        failures << "#{metrics_path}: approved professional metric is missing — #{key.inspect}"
+        next
+      end
+
+      %w[value label method source context].each do |field|
+        failures << "#{metrics_path}: #{key}.#{field} is required" if metric[field].to_s.strip.empty?
+      end
+    end
+  end
+
+  # The generator and PDF share the site's public evidence boundary. Exact
+  # professional figures are governed by the metrics allowlist above; the
+  # confidential patterns still reject internal names, topology, and
+  # customer-derived counts.
+  resume_src = "scripts/generate-resume-pdf.py"
+  if File.exist?(resume_src)
+    failures.concat(privacy_findings(resume_src, File.read(resume_src), CONFIDENTIAL_PATTERNS))
+  end
+
   resume_pdf = "assets/basant-bhattarai-resume.pdf"
   if File.exist?(resume_pdf)
     if system("command -v pdftotext >/dev/null 2>&1")
       text, status = Open3.capture2("pdftotext", resume_pdf, "-")
       if status.success?
-        failures.concat(privacy_findings(resume_pdf, text))
+        failures.concat(privacy_findings(resume_pdf, text, CONFIDENTIAL_PATTERNS))
       else
         failures << "#{resume_pdf}: pdftotext could not inspect the public résumé"
       end
@@ -454,4 +509,143 @@ task :verify do
   v.report!
 end
 
-task default: %i[content privacy check verify jsonld]
+# ─────────────────────────────────────────────────────────────────────────────
+# TOKEN CONTRAST
+#
+# Two bugs motivated this task, both the same shape: a colour was measured
+# against ONE background, shipped, and then failed on a raised panel that a
+# component was free to place it on. Dark --ink-3 passed 5.23:1 on --surface-0
+# and failed 4.39:1 on a panel; light --ink-3 passed 4.94:1 on --surface-0 and
+# failed 4.45:1 on --surface-2 and 4.00:1 on --surface-3.
+#
+# axe cannot catch this class reliably, because it only sees the combinations
+# that happen to exist in today's markup — light --surface-3 had no --ink-3 text
+# on it, so the 4.00:1 pair was invisible to it. A component added later would
+# have shipped the failure silently. This checks the token matrix instead of the
+# rendered sample: every general-purpose text token against every surface it is
+# permitted to land on, in both themes.
+# ─────────────────────────────────────────────────────────────────────────────
+TOKENS_FILE = "_sass/_tokens.scss".freeze
+
+# Any surface a component may set as a background. A text token has to clear
+# AA on all of them, not on whichever one it was first sampled against.
+SURFACES = %w[surface-0 surface-1 surface-2 surface-3].freeze
+
+# 4.5:1 — body-weight text tokens used freely across surfaces.
+TEXT_TOKENS = %w[ink-1 ink-2 ink-3 accent accent-hi].freeze
+
+# Tokens that are NOT free to land anywhere: each is checked only against the
+# backgrounds it is actually painted on. Pairing them against all four surfaces
+# would be a false failure, and a gate that cries wolf gets switched off.
+#   code-meta      .code-lang, only ever inside .highlighter-rouge
+#   accent-on      solid brass fills — .btn--primary and .skip-link. Note this
+#                  is --accent-fill, NOT --accent: in light mode --accent is
+#                  brass darkened for text weight and is not a fill.
+SCOPED_PAIRS = [
+  ["code-meta",      "code-bg",        4.5],
+  ["code-meta",      "code-header-bg", 4.5],
+  ["accent-on",      "accent-fill",    4.5],
+  ["sel-fg",         "sel-bg",         4.5],
+  ["code-fg-inline", "code-bg",        4.5],
+  ["sx-fg",          "code-bg",        4.5],
+  ["sx-out",         "code-bg",        4.5]
+].freeze
+
+# 3:1 — WCAG 1.4.11. A border that is a control's only affordance, and the
+# focus ring, are non-text contrast, not text.
+NONTEXT_TOKENS = %w[focus line-control].freeze
+
+def parse_theme_tokens(body, from_line, to_line)
+  body.lines[from_line...to_line].each_with_object({}) do |line, acc|
+    next unless (m = line.match(/^\s*--([a-z0-9-]+):\s*(#[0-9a-fA-F]{3,8}|rgba?\([^)]*\))\s*;/))
+
+    acc[m[1]] = m[2].strip
+  end
+end
+
+def srgb_to_linear(channel)
+  c = channel / 255.0
+  c <= 0.04045 ? c / 12.92 : (((c + 0.055) / 1.055)**2.4)
+end
+
+def parse_color(value)
+  if (m = value.match(/^#([0-9a-fA-F]{6})$/))
+    [m[1][0, 2].to_i(16), m[1][2, 2].to_i(16), m[1][4, 2].to_i(16), 1.0]
+  elsif (m = value.match(/^#([0-9a-fA-F]{3})$/))
+    m[1].chars.map { |c| (c * 2).to_i(16) } + [1.0]
+  elsif (m = value.match(%r{^rgba?\(\s*([\d.]+)[,\s]+([\d.]+)[,\s]+([\d.]+)(?:[,\s/]+([\d.]+))?\s*\)$}))
+    [m[1].to_f.round, m[2].to_f.round, m[3].to_f.round, (m[4] || 1).to_f]
+  end
+end
+
+def composite(fg, bg)
+  a = fg[3]
+  (0..2).map { |i| (a * fg[i] + (1 - a) * bg[i]).round } + [1.0]
+end
+
+def luminance(rgb)
+  0.2126 * srgb_to_linear(rgb[0]) +
+    0.7152 * srgb_to_linear(rgb[1]) +
+    0.0722 * srgb_to_linear(rgb[2])
+end
+
+def contrast(fg, bg)
+  fg = composite(fg, bg) if fg[3] < 1.0
+  a = luminance(fg)
+  b = luminance(bg)
+  a, b = b, a if b > a
+  (a + 0.05) / (b + 0.05)
+end
+
+desc "Every text token must clear AA on every surface it can land on, both themes"
+task :tokens do
+  abort "tokens: #{TOKENS_FILE} not found" unless File.exist?(TOKENS_FILE)
+
+  body   = File.read(TOKENS_FILE)
+  lines  = body.lines
+  dark_i  = lines.index { |l| l.include?('[data-theme="dark"]') }
+  light_i = lines.index { |l| l.include?('[data-theme="light"]') }
+  abort "tokens: could not locate the dark and light blocks" unless dark_i && light_i
+
+  base   = parse_theme_tokens(body, 0, dark_i)
+  themes = {
+    "dark"  => base.merge(parse_theme_tokens(body, dark_i, light_i)),
+    "light" => base.merge(parse_theme_tokens(body, light_i, lines.length))
+  }
+
+  failures = []
+  checked  = 0
+
+  themes.each do |theme, tok|
+    pairs = TEXT_TOKENS.product(SURFACES).map { |f, b| [f, b, 4.5] } +
+            NONTEXT_TOKENS.product(SURFACES).map { |f, b| [f, b, 3.0] } +
+            SCOPED_PAIRS
+
+    pairs.each do |fg_name, bg_name, floor|
+      fg_raw = tok[fg_name]
+      bg_raw = tok[bg_name]
+      next unless fg_raw && bg_raw
+
+      fg = parse_color(fg_raw)
+      bg = parse_color(bg_raw)
+      next unless fg && bg
+
+      checked += 1
+      ratio = contrast(fg, bg)
+      next if ratio >= floor
+
+      failures << format("%-5s --%-15s on --%-10s %.2f:1 (needs %.1f:1)",
+                         theme, fg_name, bg_name, ratio, floor)
+    end
+  end
+
+  if failures.empty?
+    puts "tokens: ok — #{checked} token pair(s) clear AA across both themes"
+  else
+    warn "tokens: #{failures.length} failing pair(s)"
+    failures.each { |f| warn "  #{f}" }
+    abort "tokens: FAILED"
+  end
+end
+
+task default: %i[content privacy check verify jsonld tokens]

@@ -1,18 +1,13 @@
 ---
 layout: default
 ---
-{%- comment -%}
-  Home. Every string comes from `index.md`; every number comes from the data files.
-  The hero introduces the person and proposition first, then a full-width proof
-  rail makes the evidence scannable without crowding the headline column.
-{%- endcomment -%}
 {%- assign _hero = page.hero -%}
 
 <section class="hero">
   <div class="wrap wrap--shell hero-grid">
     <div class="hero-copy">
       <p class="eyebrow">{{ _hero.eyebrow }}</p>
-      <h1><span>{{ _hero.h1.first }}</span><span>{{ _hero.h1.second }}</span></h1>
+      <h1 aria-label="{{ _hero.h1.first }} {{ _hero.h1.second }}"><span>{{ _hero.h1.first }}</span><span>{{ _hero.h1.second }}</span></h1>
       <p class="lede">{{ _hero.lede }}</p>
       {%- if _hero.meta %}<p class="hero-meta">{{ _hero.meta }}</p>{% endif -%}
       <div class="actions">
@@ -21,12 +16,6 @@ layout: default
         {%- endfor %}
       </div>
     </div>
-    {%- comment -%}
-      Optional by design. Homepage portraits appear on 2 of 26 data/infra sites
-      and 2 of 44 senior-engineer sites surveyed — the credential in this genre
-      is the writing, not the face. Omit `hero.portrait` in index.md and the
-      headline gets the full measure instead of half of it.
-    {%- endcomment -%}
     {%- if _hero.portrait %}
     <figure class="hero-photo">
       {%- include picture.html
@@ -44,99 +33,68 @@ layout: default
     </figure>
     {%- endif -%}
   </div>
-  {%- comment -%}
-    Not a stats strip. A scan of 44 senior-engineer sites found zero with a
-    big-number card grid, zero with a years-of-experience claim, and zero with a
-    skills grid — those read as portfolio-template furniture. Where respected
-    engineers do publish numbers, the numbers sit inside a sentence, welded to a
-    date and a proper noun, and every one counts something the author personally
-    made and a reader can go check. That is what this is.
-  {%- endcomment -%}
-  {%- if page.evidence %}
-  <div class="wrap wrap--shell hero-proof">
-    <p class="hero-proof__line">{{ page.evidence.body }}</p>
-    {%- if page.evidence.url %}
-    <p class="hero-proof__more">
-      <a href="{{ page.evidence.url | relative_url }}">{{ page.evidence.cta }}</a>
-    </p>
-    {%- endif -%}
-  </div>
-  {%- endif -%}
 </section>
 
-{%- comment -%}
-  The evidence, immediately, as the first thing below the fold.
+<section class="home-outcomes" aria-labelledby="outcomes-title">
+  <div class="wrap wrap--shell">
+    <div class="outcome-intro">
+      <p class="section-label">{{ page.outcomes.label }}</p>
+      <h2 id="outcomes-title">{{ page.outcomes.headline }}</h2>
+    </div>
+    <ul class="outcome-rail">
+      {%- for key in page.outcomes.keys -%}
+        {%- assign outcome = site.data.metrics[key] -%}
+        <li>
+          <strong>{{ outcome.value }}</strong>
+          <span>{{ outcome.label }}</span>
+          <small>{{ outcome.context }}</small>
+        </li>
+      {%- endfor -%}
+    </ul>
+    {% include system-flow.html variant="platform" %}
+  </div>
+</section>
 
-  This was an eight-row all-PASS matrix. It looked like evidence and was closer
-  to decoration: a constant column carries about one bit, and presenting "nothing
-  broke" in the footprint of a comparison advertises a comparison that is not
-  there. Jepsen states the epistemics plainly — experiments prove the existence
-  of errors, not their absence — and its own analyses index is a list, not a
-  results table. Across 20 sites in this genre, none lead with a table.
-
-  Three failures carry variance, a decision and a diagnosis, which is what
-  demonstrates judgment rather than completion. The matrix still exists, on the
-  lab page, where its framing and its caveats live with it.
-{%- endcomment -%}
-{%- if site.data.lab %}
-<section class="home-section home-ledger reveal" aria-labelledby="ledger-title">
+{%- assign _professional_work = site.work | where: "kind", "practice" | sort: "order" -%}
+<section class="home-section home-work reveal" aria-labelledby="professional-title">
   <div class="wrap wrap--shell">
     <div class="section-head">
       <div>
-        <p class="section-label">{{ page.ledger.label | default: "Receipts" }}</p>
-        <h2 id="ledger-title">{{ page.ledger.headline | default: "Eight things I did to a database, and what came back." }}</h2>
-        {%- if page.ledger.blurb %}<p class="section-blurb">{{ page.ledger.blurb }}</p>{% endif -%}
+        <p class="section-label">{{ page.professional.label }}</p>
+        <h2 id="professional-title">{{ page.professional.headline }}</h2>
+        <p>{{ page.professional.blurb }}</p>
       </div>
     </div>
-    {% include findings.html %}
-    <p class="section-more-row">
-      <a class="section-more" href="{{ '/work/multi-engine-ha-lab/' | relative_url }}">All eight scenarios, the rig, and the numbers {% include icon.html name="arrow-right" size=14 %}</a>
-    </p>
-  </div>
-</section>
-{%- endif -%}
-
-<section class="band reveal" aria-labelledby="focus-title">
-  <div class="wrap">
-    <p class="section-label">{{ page.focus_label }}</p>
-    <h2 class="band-title" id="focus-title">{{ page.focus_headline }}</h2>
-    <div class="band-grid">
-      {%- for f in page.focus %}
-      <a class="focus" href="{{ f.url | relative_url }}">
-        <span class="focus-index">{{ f.index }}</span>
-        <h3>{{ f.title }}</h3>
-        <p>{{ f.blurb }}</p>
-        <span class="focus-open" aria-hidden="true">Explore {% include icon.html name="arrow-right" size=14 %}</span>
-      </a>
+    <div class="case-bands">
+      {%- for item in _professional_work limit: 2 %}
+      {% include case-card.html item=item variant="band" heading="h3" index=forloop.index %}
       {%- endfor %}
     </div>
+    <p><a class="section-more" href="{{ page.professional.more_url | relative_url }}">{{ page.professional.more }} {% include icon.html name="arrow-right" size=14 %}</a></p>
   </div>
 </section>
 
-{%- assign _featured_work = site.work | where: "featured", true | sort: "order" -%}
-{%- if _featured_work.size > 0 %}
-<section class="home-section home-work reveal" aria-labelledby="work-title">
-  <div class="wrap">
+{%- assign _independent_product = site.work | where: "kind", "production" | first -%}
+{%- assign _lab = site.work | where: "kind", "lab" | first -%}
+<section class="home-section home-independent reveal" aria-labelledby="independent-title">
+  <div class="wrap wrap--shell">
     <div class="section-head">
       <div>
-        <p class="section-label">{{ page.work.label }}</p>
-        <h2 id="work-title">{{ page.work.headline }}</h2>
-        <p>{{ page.work.blurb }}</p>
+        <p class="section-label">{{ page.independent.label }}</p>
+        <h2 id="independent-title">{{ page.independent.headline }}</h2>
+        <p>{{ page.independent.blurb }}</p>
       </div>
     </div>
-    <div class="showcase-grid{% if _featured_work.size == 1 %} showcase-grid--solo{% elsif _featured_work.size == 2 %} showcase-grid--pair{% endif %}">
-      {%- for item in _featured_work limit: 3 %}
-      {% if forloop.first %}{% include case-card.html item=item variant="feature" index=forloop.index %}{% else %}{% include case-card.html item=item index=forloop.index %}{% endif %}
-      {%- endfor %}
+    <div class="independent-grid">
+      {% include case-card.html item=_independent_product variant="compact" heading="h3" %}
+      {% include case-card.html item=_lab variant="compact" heading="h3" %}
     </div>
-    <p><a class="section-more" href="{{ page.work.more_url | relative_url }}">{{ page.work.more }} {% include icon.html name="arrow-right" size=14 %}</a></p>
   </div>
 </section>
-{%- endif %}
 
 {%- if site.posts.size > 0 %}
 <section class="home-section home-writing reveal" aria-labelledby="writing-title">
-  <div class="wrap">
+  <div class="wrap wrap--shell">
     <div class="section-head">
       <div>
         <p class="section-label">{{ page.writing.label }}</p>
@@ -144,35 +102,27 @@ layout: default
         <p>{{ page.writing.blurb }}</p>
       </div>
     </div>
-    <div class="card-grid">
-      {%- for post in site.posts limit: 3 %}
-      {% include post-card.html post=post %}
+    {%- assign _editor_picks = site.posts | where: "editor_pick", true -%}
+    {%- assign _lead_post = _editor_picks | first -%}
+    <div class="writing-selection">
+      {%- if _lead_post -%}
+      {% include post-card.html post=_lead_post %}
+      {%- endif -%}
+      {%- for post in site.posts -%}
+        {%- if post.url != _lead_post.url and forloop.index <= 3 -%}
+        {% include post-card.html post=post %}
+        {%- endif -%}
       {%- endfor %}
     </div>
-    <p>
+    <p class="section-more-row">
       <a class="section-more" href="{{ page.writing.more_url | relative_url }}">{{ page.writing.more }} {% include icon.html name="arrow-right" size=14 %}</a>
       <a class="section-more" href="{{ '/writing/feed.xml' | relative_url }}">{% include icon.html name="rss" size=14 %} RSS</a>
     </p>
+    <aside class="current-role" aria-labelledby="currently-title">
+      <p class="section-label" id="currently-title">{{ page.currently.label }}</p>
+      <p>{{ page.currently.body }}</p>
+      <a class="section-more" href="{{ page.currently.cta_url | relative_url }}">{{ page.currently.cta }} {% include icon.html name="arrow-right" size=14 %}</a>
+    </aside>
   </div>
 </section>
 {%- endif %}
-
-{%- assign _av = site.data.availability -%}
-<section class="strip reveal" aria-labelledby="currently-title">
-  <div class="wrap strip-grid">
-    <div>
-      <h2 class="section-label" id="currently-title">{{ page.currently.label }}</h2>
-      <p>{{ page.currently.body }}</p>
-    </div>
-    <div class="strip-meta">
-      <p><span>Availability</span> {{ _av.headline }}</p>
-      <p><span>Capacity</span> {{ _av.hours }}</p>
-      <p><span>Hours</span> {{ _av.coverage }}</p>
-      <p><span>Response</span> {{ _av.response }}</p>
-      <p><span>Updated</span> <time datetime="{{ _av.updated | date: '%Y-%m-%d' }}">{{ _av.updated | date: "%B %-d, %Y" }}</time></p>
-      <p class="strip-links">
-        <a class="btn btn--primary" href="{{ page.currently.cta_url | relative_url }}">{{ page.currently.cta }} {% include icon.html name="arrow-right" size=14 %}</a>
-      </p>
-    </div>
-  </div>
-</section>

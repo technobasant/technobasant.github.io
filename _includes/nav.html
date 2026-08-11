@@ -12,8 +12,6 @@
   {%- elsif item.url != "/" and page.url contains item.url -%}{%- assign _current = true -%}{%- endif -%}
   <a class="nav__link" href="{{ item.url | relative_url }}"{% if _current %} aria-current="page"{% endif %}>{{ item.title }}</a>
   {%- endfor -%}
-  {%- assign _cta = site.data.navigation.cta -%}
-  <a class="nav__cta" href="{{ _cta.url | relative_url }}"{% if page.url == _cta.url %} aria-current="page"{% endif %}>{{ _cta.title }}</a>
 </nav>
 
 <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme">
@@ -39,7 +37,5 @@
     {%- elsif item.url != "/" and page.url contains item.url -%}{%- assign _current = true -%}{%- endif -%}
     <a class="nav__link" href="{{ item.url | relative_url }}"{% if _current %} aria-current="page"{% endif %}>{{ item.title }}</a>
     {%- endfor -%}
-    {%- assign _cta = site.data.navigation.cta -%}
-    <a class="nav__cta" href="{{ _cta.url | relative_url }}"{% if page.url == _cta.url %} aria-current="page"{% endif %}>{{ _cta.title }}</a>
   </nav>
 </dialog>

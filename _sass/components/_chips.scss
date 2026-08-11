@@ -123,3 +123,11 @@ button.chip:hover {
 .badge--practice {
   color: var(--accent);
 }
+
+@media (max-width: 30rem) {
+  .badge {
+    min-width: 0;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+}
