@@ -1,0 +1,51 @@
+---
+layout: default
+---
+{%- comment -%}
+  Topic hub. The hand-written intro in the page body is what separates this from a
+  thin machine archive — it is the reason the page can rank at all, so it renders
+  before the list, not after it.
+
+  Front matter: `tag: <slug>` (must exist in _data/tags.yml).
+{%- endcomment -%}
+{%- assign _t = site.data.tags | where: "slug", page.tag | first -%}
+{%- assign _posts = site.tags[page.tag] -%}
+{%- assign _count = _posts | size -%}
+{%- assign _tag_slugs = site.data.tags | map: "slug" -%}
+
+<div class="page">
+  <div class="prose">
+    <header class="page-head">
+      <p class="eyebrow">{{ page.eyebrow | default: "Topic" }}</p>
+      <h1>{{ page.title | default: _t.name }}</h1>
+      {%- assign _lede = page.description | default: _t.blurb %}
+      {%- if _lede %}
+      <p class="lede">{{ _lede }}</p>
+      {%- endif %}
+    </header>
+    {{ content }}
+  </div>
+
+  <section class="wrap reveal" aria-labelledby="tag-posts-title">
+    <div class="section-head">
+      <h2 class="section-label" id="tag-posts-title">{{ _count }} post{% unless _count == 1 %}s{% endunless %}</h2>
+      <a class="section-more" href="{{ '/writing/' | relative_url }}">All writing {% include icon.html name="arrow-right" size=14 %}</a>
+    </div>
+    {%- if _count > 0 %}
+    <div class="card-grid">
+      {%- for post in _posts %}
+      {% include post-card.html post=post %}
+      {%- endfor %}
+    </div>
+    {%- else %}
+    <p>Nothing published under this topic yet.</p>
+    {%- endif %}
+  </section>
+
+  <section class="wrap reveal" aria-labelledby="other-topics-title">
+    <div class="section-head">
+      <h2 class="section-label" id="other-topics-title">Other topics</h2>
+    </div>
+    {% include tag-chips.html tags=_tag_slugs counts=true %}
+  </section>
+</div>

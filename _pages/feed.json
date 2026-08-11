@@ -1,0 +1,43 @@
+---
+layout: null
+permalink: /writing/feed.json
+sitemap: false
+---
+{
+  "version": "https://jsonfeed.org/version/1.1",
+  "title": {{ site.title | append: " — Writing" | jsonify }},
+  "home_page_url": {{ "/writing/" | absolute_url | jsonify }},
+  "feed_url": {{ "/writing/feed.json" | absolute_url | jsonify }},
+  "description": {{ "Notes from operating data platforms and databases at scale. Mostly the things that cost me a day." | jsonify }},
+  "language": {{ site.lang | default: "en" | jsonify }},
+  "icon": {{ site.author.avatar | absolute_url | jsonify }},
+  "favicon": {{ "/assets/favicon.svg" | absolute_url | jsonify }},
+  "authors": [
+    {
+      "name": {{ site.author.name | jsonify }},
+      "url": {{ site.url | jsonify }},
+      "avatar": {{ site.author.avatar | absolute_url | jsonify }}
+    }
+  ],
+  "items": [
+{%- assign feed_posts = site.posts | where_exp: "p", "p.hidden != true" -%}
+{% for post in feed_posts limit: 30 %}
+    {
+      "id": {{ post.url | absolute_url | jsonify }},
+      "url": {{ post.url | absolute_url | jsonify }},
+      "title": {{ post.title | jsonify }},
+      "content_html": {{ post.content | jsonify }},
+      "summary": {{ post.description | default: post.excerpt | strip_html | strip_newlines | strip | jsonify }},
+      "date_published": {{ post.date | date_to_xmlschema | jsonify }},
+      "date_modified": {{ post.last_modified_at | default: post.date | date_to_xmlschema | jsonify }},
+      "tags": {% if post.tags and post.tags != empty %}{{ post.tags | jsonify }}{% else %}[]{% endif %},
+      "authors": [
+        {
+          "name": {{ site.author.name | jsonify }},
+          "url": {{ site.url | jsonify }}
+        }
+      ]
+    }{% unless forloop.last %},{% endunless %}
+{%- endfor %}
+  ]
+}

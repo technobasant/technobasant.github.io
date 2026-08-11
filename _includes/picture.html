@@ -1,0 +1,24 @@
+{%- comment -%}
+  Responsive <picture>: AVIF + WebP sources over a raster fallback, with explicit
+  intrinsic dimensions so nothing shifts while it loads.
+
+  Params
+    base            path without the "-WIDTHw.ext" suffix, e.g. /assets/images/portrait
+    widths          comma list for the AVIF/WebP srcsets (default "400,800,1200")
+    raster_widths   comma list for the fallback <img> srcset (default: none — src only)
+    ext             fallback extension (default "jpg")
+    fallback_width  which raster width the <img> src points at (default "800")
+    alt width height sizes class loading decoding fetchpriority
+{%- endcomment -%}
+{%- assign _base = include.base | relative_url -%}
+{%- assign _widths = include.widths | default: "400,800,1200" | split: "," -%}
+{%- assign _ext = include.ext | default: "jpg" -%}
+{%- assign _fw = include.fallback_width | default: "800" -%}
+{%- capture _avif -%}{%- for w in _widths -%}{{ _base }}-{{ w }}.avif {{ w }}w{%- unless forloop.last -%}, {% endunless -%}{%- endfor -%}{%- endcapture -%}
+{%- capture _webp -%}{%- for w in _widths -%}{{ _base }}-{{ w }}.webp {{ w }}w{%- unless forloop.last -%}, {% endunless -%}{%- endfor -%}{%- endcapture -%}
+{%- capture _raster -%}{%- if include.raster_widths -%}{%- assign _rw = include.raster_widths | split: "," -%}{%- for w in _rw -%}{{ _base }}-{{ w }}.{{ _ext }} {{ w }}w{%- unless forloop.last -%}, {% endunless -%}{%- endfor -%}{%- endif -%}{%- endcapture -%}
+<picture>
+  <source type="image/avif" srcset="{{ _avif }}"{% if include.sizes %} sizes="{{ include.sizes }}"{% endif %}>
+  <source type="image/webp" srcset="{{ _webp }}"{% if include.sizes %} sizes="{{ include.sizes }}"{% endif %}>
+  <img src="{{ _base }}-{{ _fw }}.{{ _ext }}"{% if _raster != "" %} srcset="{{ _raster }}"{% endif %}{% if include.sizes and _raster != "" %} sizes="{{ include.sizes }}"{% endif %} alt="{{ include.alt | escape }}"{% if include.width %} width="{{ include.width }}"{% endif %}{% if include.height %} height="{{ include.height }}"{% endif %}{% if include.class %} class="{{ include.class }}"{% endif %}{% if include.loading %} loading="{{ include.loading }}"{% endif %}{% if include.fetchpriority %} fetchpriority="{{ include.fetchpriority }}"{% endif %} decoding="{{ include.decoding | default: 'async' }}">
+</picture>

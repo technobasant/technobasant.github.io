@@ -1,0 +1,21 @@
+{%- comment -%}
+  Usage: {% include post-card.html post=post %}
+  Optional: heading="h2" (default h3)
+{%- endcomment -%}
+{%- assign _p = include.post -%}
+{%- assign _h = include.heading | default: "h3" -%}
+{%- assign _type = _p.type | default: "essay" -%}
+{%- case _type -%}
+  {%- when "tutorial" -%}{%- assign _label = "Tutorial" -%}
+  {%- when "note" -%}{%- assign _label = "Note" -%}
+  {%- else -%}{%- assign _label = "Essay" -%}
+{%- endcase -%}
+<article class="post-card">
+  <p class="post-card__meta">
+    <time datetime="{{ _p.date | date_to_xmlschema }}">{{ _p.date | date: "%b %-d, %Y" }}</time>
+    <span class="badge badge--{{ _type }}">{{ _label }}</span>
+  </p>
+  <{{ _h }} class="post-card__title"><a href="{{ _p.url | relative_url }}">{{ _p.title }}</a></{{ _h }}>
+  <p class="post-card__desc">{{ _p.description | default: _p.excerpt | strip_html | normalize_whitespace | strip | truncate: 180 }}</p>
+  <p class="post-card__time">{% include reading-time.html post=_p %}</p>
+</article>

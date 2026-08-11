@@ -1,13 +1,25 @@
 ---
 layout: default
 ---
-<article class="page wrap">
-  <header class="page-head">
-    <p class="eyebrow">{{ page.eyebrow | default: "Profile" }}</p>
-    <h1>{{ page.title }}</h1>
-    {% if page.excerpt %}<p class="lede">{{ page.excerpt }}</p>{% endif %}
-  </header>
+{%- comment -%}
+  Standard content page. The head sits inside `.prose` on purpose: as a direct child
+  of the prose grid it lands in the `content` track, so the H1 is optically aligned
+  with the body copy under it without a single extra rule.
+
+  `page.eyebrow` is legacy front matter that existing pages still use — keep it.
+{%- endcomment -%}
+{%- assign _lede = page.description | default: page.excerpt -%}
+<article class="page">
   <div class="prose">
+    <header class="page-head">
+      {%- if page.eyebrow %}
+      <p class="eyebrow">{{ page.eyebrow }}</p>
+      {%- endif %}
+      <h1>{{ page.title }}</h1>
+      {%- if _lede %}
+      <p class="lede">{{ _lede | strip_html | normalize_whitespace | strip }}</p>
+      {%- endif %}
+    </header>
     {{ content }}
   </div>
 </article>

@@ -1,0 +1,39 @@
+{%- comment -%}
+  The contract block at the top of a tutorial: what you get, how long it takes, what
+  it was tested against, and what you need before you start. Stated up front so a
+  reader can bail in ten seconds instead of at step four.
+{%- endcomment -%}
+<section class="tutorial-header" aria-label="About this tutorial">
+  {%- if page.what_youll_build %}
+  <p class="tutorial-header__label">What you'll build</p>
+  <p>{{ page.what_youll_build }}</p>
+  {%- endif %}
+  <dl class="tutorial-header__grid">
+    {%- if page.time_estimate %}
+    <dt class="tutorial-header__label">Time</dt>
+    <dd>{{ page.time_estimate }}</dd>
+    {%- endif %}
+    {%- if page.level %}
+    <dt class="tutorial-header__label">Level</dt>
+    <dd>{{ page.level | capitalize }}</dd>
+    {%- endif %}
+    {%- if page.tested_on %}
+    <dt class="tutorial-header__label">Tested on</dt>
+    <dd>{{ page.tested_on }}</dd>
+    {%- endif %}
+    {%- if page.repo %}
+    <dt class="tutorial-header__label">Code</dt>
+    <dd><a href="{{ page.repo }}" rel="noopener">{{ page.repo | remove: "https://" | remove: "github.com/" }}</a></dd>
+    {%- endif %}
+  </dl>
+  {%- if page.prerequisites and page.prerequisites.size > 0 %}
+  <div class="tutorial-header__prereqs">
+    <p class="tutorial-header__label">Before you start</p>
+    <ul>
+      {%- for item in page.prerequisites %}
+      <li>{{ item }}</li>
+      {%- endfor %}
+    </ul>
+  </div>
+  {%- endif %}
+</section>

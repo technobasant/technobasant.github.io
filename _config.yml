@@ -1,17 +1,59 @@
+# ── Identity ──────────────────────────────────────────────────────────────
 title: "Basant Bhattarai"
-subtitle: "Senior Data & AI Engineer · Platform Architect"
+subtitle: "Senior Data & AI Platform Engineer"
+tagline: "I build data platforms that stay correct under load — and the AI agents that sit on top of them."
 email: technobasant9@gmail.com
 description: >-
-  Senior Data & AI Engineer and platform architect with 9+ years building
-  lakehouses, streaming systems, production agentic AI, and full-stack products
-  at multi-TB scale. Kathmandu · collaborating with US and EU teams.
+  Basant Bhattarai — Senior Data & AI Platform Engineer. Nine years in software,
+  six of them owning production data platforms: Kafka into Spark on Kubernetes,
+  an Iceberg lakehouse, freshness SLOs, and a multi-agent analytics layer over
+  25,000+ integrated mobile apps. Kathmandu, working US and EU hours.
 url: "https://technobasant.github.io"
 baseurl: ""
 repository: "technobasant/technobasant.github.io"
+lang: en
 
+# Site-wide social-card fallback (1200×630 PNG — never AVIF/WebP, LinkedIn and
+# Slack will not render those as og:image).
+og_image: "/assets/og/og-default.png"
+
+author:
+  name: "Basant Bhattarai"
+  role: "Senior Data & AI Platform Engineer"
+  location: "Kathmandu, Nepal"
+  locality: "Kathmandu"
+  country: "NP"
+  avatar: "/assets/images/portrait-800.jpg"
+  email: "technobasant9@gmail.com"
+  linkedin: "https://www.linkedin.com/in/technobasant"
+  github: "https://github.com/technobasant"
+  bio: >-
+    Senior Data Engineer at UXCam, where I own the data platform and the
+    app-analytics agent stack.
+
+# ── Build ─────────────────────────────────────────────────────────────────
 markdown: kramdown
-permalink: pretty
+highlighter: rouge
+permalink: /writing/:title/          # posts only; pages declare explicit permalinks
 timezone: Asia/Kathmandu
+future: false
+excerpt_separator: "<!--more-->"
+
+kramdown:
+  input: GFM
+  hard_wrap: false
+  auto_ids: true
+  toc_levels: 2..3
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    block:
+      line_numbers: false
+
+sass:
+  sass_dir: _sass
+  style: compressed
+  sourcemap: never
+  quiet_deps: true
 
 include:
   - _pages
@@ -19,32 +61,49 @@ include:
 exclude:
   - Gemfile
   - Gemfile.lock
+  - Rakefile
+  - Makefile
   - README.md
   - scripts
   - vendor
+  - node_modules
+  - _source
+  - _templates
   - "*.prev.jpg"
+  # Unused: mislabeled JPEG (1024x1024, 172KB) with a .png extension, referenced
+  # by nothing. Safe to delete from the repo; excluded so it never ships.
+  - assets/images/basant_profile.png
+  - _drafts/zzz-scaffold-test.md
+  # Superseded: duplicated _pages/about.md, had no date/layout/tags, linked from
+  # nowhere. Replaced by the three dba-poc posts. Safe to delete from the repo.
+  - _posts/2026-08-11-building-data-platforms-and-ai-products.md
 
+# ── Content ───────────────────────────────────────────────────────────────
+collections:
+  work:
+    output: true
+    permalink: /work/:name/
+
+defaults:
+  - scope: { path: "", type: pages }
+    values:
+      layout: page
+  - scope: { path: "", type: posts }
+    values:
+      layout: post
+      type: essay
+      toc: false
+  - scope: { path: "", type: work }
+    values:
+      layout: case
+      kind: production
+
+# ── Plugins ───────────────────────────────────────────────────────────────
 plugins:
   - jekyll-sitemap
   - jekyll-feed
+  - jekyll-redirect-from
 
-defaults:
-  - scope:
-      path: ""
-      type: pages
-    values:
-      layout: page
-  - scope:
-      path: ""
-      type: posts
-    values:
-      layout: page
-
-author:
-  name: "Basant Bhattarai"
-  role: "Senior Data & AI Engineer · Platform Architect · Full-Stack"
-  location: "Kathmandu, Nepal"
-  avatar: "/assets/images/basant_profile.jpg"
-  email: "technobasant9@gmail.com"
-  linkedin: "https://www.linkedin.com/in/technobasant"
-  github: "https://github.com/technobasant"
+feed:
+  path: /writing/feed.xml
+  posts_limit: 30

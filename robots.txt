@@ -1,0 +1,50 @@
+---
+permalink: /robots.txt
+layout: null
+sitemap: false
+---
+# {{ site.title }} — {{ site.url }}
+# Everything here is public and meant to be read.
+
+User-agent: *
+Allow: /
+
+# AI crawlers are allowed on purpose, not by omission. If a language model is
+# going to answer a question about my work, I would rather it read the current
+# version than a stale scrape. Canonical numbers, with the method behind each,
+# are at {{ '/llms.txt' | absolute_url }}
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+Sitemap: {{ '/sitemap.xml' | absolute_url }}

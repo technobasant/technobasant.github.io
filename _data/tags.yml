@@ -1,0 +1,82 @@
+# The 13 canonical tags. NOTHING is a tag unless it appears here.
+# 1-3 tags per post, hard cap. Each needs a hand-written blurb — that intro is
+# what turns a tag page from a thin machine archive into a topic hub that can rank.
+# `og` names a card in /assets/og/; `featured` surfaces the tag on /writing/.
+
+- slug: spark
+  name: "Apache Spark"
+  blurb: "Running Spark at ten terabytes a day: shuffle tuning, executor sizing, Kubernetes scheduling, and what it costs when you get partitioning wrong."
+  og: og-spark.png
+  featured: true
+
+- slug: kafka-streaming
+  name: "Kafka & streaming"
+  blurb: "Ingestion that survives replay, late events, duplicate deliveries and producers you do not control. Kafka, Kinesis, Structured Streaming, CDC."
+  og: og-streaming.png
+  featured: true
+
+- slug: iceberg-lakehouse
+  name: "Iceberg & the lakehouse"
+  blurb: "Table formats in production: schema evolution, slowly-changing dimensions at petabyte scale, snapshot expiry, compaction cadence, and the storage bill."
+  og: og-lakehouse.png
+  featured: true
+
+- slug: postgres
+  name: "PostgreSQL"
+  blurb: "Replication, point-in-time recovery, promotion, connection limits, and the version-upgrade surprises that only show up in production."
+  og: og-databases.png
+  featured: true
+
+- slug: clickhouse
+  name: "ClickHouse"
+  blurb: "Column-store analytics: MergeTree design, partition and ordering keys, materialised views, and keeping log tables from eating the disk."
+  og: og-databases.png
+  featured: false
+
+- slug: distributed-databases
+  name: "Distributed databases"
+  blurb: "Quorum, sharding, failover and backup across MongoDB, ScyllaDB, Redis, MariaDB/Galera and Solr — measured on a rig rather than quoted from a docs page."
+  og: og-databases.png
+  featured: true
+
+- slug: kubernetes
+  name: "Kubernetes"
+  blurb: "Stateful data workloads on Kubernetes: autoscaling Spark, operators, resource shaping, and the cost model that made the migration worth it."
+  og: og-kubernetes.png
+  featured: false
+
+- slug: ai-agents
+  name: "AI agents in production"
+  blurb: "Agents whose outputs land in typed, audited tables rather than chat transcripts. LangGraph, CrewAI, Google-ADK, MCP, structured contracts and fallbacks."
+  og: og-agents.png
+  featured: true
+
+- slug: rag
+  name: "RAG"
+  blurb: "Retrieval over corpora that keep growing: chunking, metadata filters, index choice, and the TTL and compaction policy that stops a vector store becoming a landfill."
+  og: og-agents.png
+  featured: false
+
+- slug: observability-slo
+  name: "Observability & SLOs"
+  blurb: "What to measure when 'uptime' means nothing for a data platform: freshness SLIs, burn-rate alerts, lineage, and alerts that should actually page someone."
+  og: og-observability.png
+  featured: true
+
+- slug: data-quality
+  name: "Data quality & contracts"
+  blurb: "Validation, reconciliation, quarantine and tolerant readers — for when the producer is twenty-five thousand apps on SDK versions you cannot recall."
+  og: og-observability.png
+  featured: false
+
+- slug: cost-finops
+  name: "Cost & FinOps"
+  blurb: "Where the money actually goes in a data platform, and the levers that move it: storage layout, compaction, instance shape, and retention nobody wanted to own."
+  og: og-default.png
+  featured: false
+
+- slug: career
+  name: "Career & craft"
+  blurb: "Notes on ownership, mentoring, review culture, and the difference between contributing to a system and being on call for it."
+  og: og-default.png
+  featured: false

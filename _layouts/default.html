@@ -1,88 +1,42 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ site.lang | default: 'en' }}">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% if page.title and page.layout != 'home' %}{{ page.title }} · {{ site.title }}{% else %}{{ site.title }} — {{ site.subtitle }}{% endif %}</title>
-  <meta name="description" content="{{ page.excerpt | default: site.description | strip_html | strip_newlines | truncate: 160 }}">
-  <meta name="author" content="{{ site.author.name }}">
-  <link rel="canonical" href="{{ page.url | absolute_url }}">
-  <meta property="og:title" content="{% if page.title and page.layout != 'home' %}{{ page.title }} · {{ site.title }}{% else %}{{ site.title }} — {{ site.subtitle }}{% endif %}">
-  <meta property="og:description" content="{{ page.excerpt | default: site.description | strip_html | strip_newlines | truncate: 160 }}">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="{{ page.url | absolute_url }}">
-  <meta property="og:image" content="{{ site.author.avatar | absolute_url }}">
-  <meta name="twitter:card" content="summary">
-  <link rel="icon" href="{{ '/assets/favicon.svg' | relative_url }}" type="image/svg+xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<script>
+(function(){var r=document.documentElement,t='dark';
+try{var s=localStorage.getItem('theme');
+t=(s==='light'||s==='dark')?s:(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');
+}catch(e){}
+r.setAttribute('data-theme',t);r.style.colorScheme=t;})();
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark light">
+{%- comment -%} One theme-color, no `media` — site.js repaints it from the resolved
+--surface-0 token on load and on every toggle, so a second media-scoped meta would
+win over it in exactly the case the user overrode their OS. {%- endcomment %}
+<meta name="theme-color" content="#0D0F12">
+{% include head/meta.html %}
   <link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}">
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Person",
-    "name": "{{ site.author.name }}",
-    "url": "{{ site.url }}",
-    "image": "{{ site.author.avatar | absolute_url }}",
-    "jobTitle": "{{ site.author.role }}",
-    "email": "mailto:{{ site.author.email }}",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Kathmandu",
-      "addressCountry": "NP"
-    },
-    "sameAs": [
-      "{{ site.author.linkedin }}",
-      "{{ site.author.github }}"
-    ],
-    "knowsAbout": [
-      "Data platforms",
-      "Apache Spark",
-      "Apache Kafka",
-      "Apache Iceberg",
-      "Agentic AI",
-      "LangChain",
-      "PostgreSQL",
-      "ClickHouse",
-      "Kubernetes",
-      "Full-stack engineering"
-    ]
-  }
-  </script>
+  {% feed_meta %}
+  <link rel="alternate" type="application/feed+json" title="{{ site.title | escape }}" href="{{ '/writing/feed.json' | relative_url }}">
+{% include head/jsonld.html %}
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
+
   <header class="site-header">
     <div class="wrap header-inner">
       <a class="mark" href="{{ '/' | relative_url }}">Basant<span>Bhattarai</span></a>
-      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>
-        <span class="sr-only">Menu</span>
-        <span></span><span></span>
-      </button>
-      <nav id="site-nav" class="nav" aria-label="Primary">
-        {% for item in site.data.navigation.main %}
-          <a href="{{ item.url | relative_url }}"{% if page.url == item.url %} aria-current="page"{% endif %}>{{ item.title }}</a>
-        {% endfor %}
-        <a class="nav-cta" href="mailto:{{ site.author.email }}">Email</a>
-      </nav>
+      {% include nav.html %}
     </div>
   </header>
 
-  <main id="main">
+  <main id="main" tabindex="-1">
     {{ content }}
   </main>
 
-  <footer class="site-footer">
-    <div class="wrap footer-inner">
-      <p>© {{ 'now' | date: '%Y' }} {{ site.author.name }} · {{ site.author.location }}</p>
-      <p class="footer-links">
-        <a href="{{ site.author.linkedin }}">LinkedIn</a>
-        <a href="{{ site.author.github }}">GitHub</a>
-        <a href="mailto:{{ site.author.email }}">Email</a>
-      </p>
-    </div>
-  </footer>
+  {% include footer.html %}
+
   <script src="{{ '/assets/js/site.js' | relative_url }}" defer></script>
 </body>
 </html>
