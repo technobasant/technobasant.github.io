@@ -21,7 +21,7 @@ scenarios:
     value: "383"
     unit: "µs"
     metric: "replay lag"
-    result: pass
+    result: "replay lag 383 µs"
     note: "Timeline advanced 1 → 2 on promotion. write_lag measured 104 µs on the same run."
 
   - engine: "Redis"
@@ -31,7 +31,7 @@ scenarios:
     value: "~5"
     unit: "s"
     metric: "to writable"
-    result: pass
+    result: "promoted in ~5 s"
     note: "Old primary was auto-demoted to replica on rejoin rather than fighting for the role."
 
   - engine: "Redis"
@@ -41,7 +41,7 @@ scenarios:
     value: "2 → 7"
     unit: ""
     metric: "config epoch"
-    result: pass
+    result: "0 keys lost"
     note: "All 16,384 slots stayed covered. No acknowledged write was lost."
 
   - engine: "MariaDB + Galera"
@@ -51,7 +51,7 @@ scenarios:
     value: "300"
     unit: ""
     metric: "converged on all 3"
-    result: pass
+    result: "300 / 300 / 300"
     note: "Certification failures logged on two nodes — the counter still agreed everywhere afterwards."
 
   - engine: "MongoDB"
@@ -61,7 +61,7 @@ scenarios:
     value: "49,607 / 50,393"
     unit: ""
     metric: "shard split"
-    result: pass
+    result: "49,607 / 50,393"
     note: "A targeted query hit one shard; an unqualified filter scatter-gathered to both."
 
   - engine: "ScyllaDB"
@@ -71,7 +71,7 @@ scenarios:
     value: "3 / 3"
     unit: ""
     metric: "replicas held key"
-    result: pass
+    result: "reads served at RF=3"
     note: "Restore needed the table's upload/ subdirectory; a TRUNCATE marker hides older SSTables."
 
   - engine: "SolrCloud"
@@ -81,7 +81,7 @@ scenarios:
     value: "6"
     unit: ""
     metric: "numFound, still served"
-    result: pass
+    result: "kept answering"
     note: "Cluster went ORANGE, kept answering, and returned to GREEN unattended."
 
   - engine: "Prometheus + Grafana"
@@ -91,8 +91,18 @@ scenarios:
     value: "500 / 500"
     unit: ""
     metric: "keyspace hits/misses"
-    result: pass
+    result: "all engines observed"
     note: "Every engine above was observed through the same dashboard rather than by hand."
+
+  - engine: "Network partition"
+    version: "—"
+    topology: "—"
+    probe: "Asymmetric partition"
+    value: "not testable"
+    unit: ""
+    metric: "on one host"
+    result: "untested"
+    note: "One Docker host cannot produce a split network. Every failover above is process death, not partition — and partition is the case that actually causes split-brain. This row is the limit of the rig."
 
 # The findings. This is what the homepage shows instead of the all-PASS matrix.
 #

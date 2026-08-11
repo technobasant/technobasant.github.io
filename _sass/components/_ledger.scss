@@ -154,24 +154,14 @@
 // Pass/fail must not rely on colour alone: the glyph carries it, the colour only
 // reinforces. WCAG 1.4.1.
 .ledger__result {
-  font-family: var(--font-mono);
-  font-size: var(--step--2);
-  font-weight: 500;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums lining-nums;
   white-space: nowrap;
 }
 
-.ledger__result--pass { color: var(--c-tip); }
-.ledger__result--fail { color: var(--c-danger); }
-
-.ledger__result::before {
-  content: "✓";
-  margin-inline-end: 0.5ch;
-  font-weight: 600;
-}
-
-.ledger__result--fail::before { content: "✕"; }
+.ledger__result--measured { color: var(--ink-1); }
 
 // The note is the reason this is not a stats strip: each row carries the thing
 // that only shows up if you actually ran it.
@@ -329,4 +319,22 @@
   font-family: var(--font-mono);
   font-size: 0.9em;
   color: var(--code-fg-inline);
+}
+
+// Results are measured consequences, not verdicts. `0 keys lost` is falsifiable;
+// `PASS` is an assertion whose definition lives elsewhere. The one `untested`
+// row is the honest limit of the rig, and it is the row that makes the other
+// eight believable — a table with no unfavourable row is a dashboard.
+.ledger__result--untested {
+  color: var(--ink-3);
+  font-style: italic;
+}
+
+.ledger__result--untested::before {
+  content: "—";
+  font-style: normal;
+}
+
+.ledger tbody tr:has(.ledger__result--untested) {
+  color: var(--ink-3);
 }

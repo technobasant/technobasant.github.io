@@ -250,7 +250,16 @@
         if (overflows) {
           table.setAttribute("tabindex", "0");
           table.dataset.overflowing = "true";
-          if (!table.hasAttribute("aria-label")) {
+          // Naming precedence is aria-labelledby > aria-label > <caption>. A
+          // generic aria-label here would silently outrank a real caption and
+          // the table would announce as "Scrollable data table 1" instead of
+          // its title, so point at the caption whenever one exists.
+          var caption = table.querySelector("caption");
+          if (caption) {
+            if (!caption.id) caption.id = "table-caption-" + (index + 1);
+            table.removeAttribute("aria-label");
+            table.setAttribute("aria-labelledby", caption.id);
+          } else if (!table.hasAttribute("aria-label")) {
             table.setAttribute("aria-label", "Scrollable data table " + (index + 1));
           }
 
