@@ -1,7 +1,7 @@
 /*
  * site.js — plain ES, no bundler, loaded with `defer`.
  *
- * Six independent modules, each of which returns immediately if the elements
+ * Independent modules, each of which returns immediately if the elements
  * it owns are not on the page. Nothing here is required for the page to be
  * readable, navigable or themed: the no-flash theme script runs inline in the
  * head, the mobile nav is a native <dialog>, and reveals and the progress bar
@@ -231,7 +231,38 @@
     });
   })();
 
-  /* ── 4b · Share row "Copy link" ─────────────────────────────────────────
+  /* ── 4b · Scrollable data tables ────────────────────────────────────────
+   * On narrow screens tables stay tables rather than becoming mislabeled card
+   * stacks. When they overflow, make the scroll region keyboard reachable and
+   * announce what it is; otherwise keep it out of the tab order.
+   */
+  (function tables() {
+    var tables = document.querySelectorAll(".prose table");
+    if (!tables.length) return;
+
+    Array.prototype.forEach.call(tables, function (table, index) {
+      var check = function () {
+        var overflows = table.scrollWidth > table.clientWidth + 1;
+        if (overflows) {
+          table.setAttribute("tabindex", "0");
+          if (!table.hasAttribute("aria-label")) {
+            table.setAttribute("aria-label", "Scrollable data table " + (index + 1));
+          }
+        } else {
+          table.removeAttribute("tabindex");
+          if (/^Scrollable data table /.test(table.getAttribute("aria-label") || "")) {
+            table.removeAttribute("aria-label");
+          }
+        }
+      };
+
+      check();
+      if ("ResizeObserver" in window) new ResizeObserver(check).observe(table);
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(check);
+    });
+  })();
+
+  /* ── 4c · Share row "Copy link" ─────────────────────────────────────────
    * The anchor's href is the canonical URL, so with JS off it simply navigates
    * there — the correct no-JS baseline. With JS we intercept and copy instead.
    */

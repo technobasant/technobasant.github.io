@@ -13,7 +13,7 @@ scale: "Multi-petabyte table footprint; 10 TB+ landing per day; years of history
 stack: [Apache Iceberg, Apache Spark, PySpark, Amazon S3, AWS Glue Data Catalog, Trino, dbt, Databricks, Unity Catalog]
 metrics: [storage_cost, daily_volume]
 tags: [iceberg-lakehouse, spark, cost-finops]
-image: /assets/og/og-default-v2.png
+image: /assets/og/og-default-v3.png
 image_alt: "Basant Bhattarai — Reliable data. Accountable AI."
 ---
 

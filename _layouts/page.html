@@ -1,25 +1,10 @@
 ---
 layout: default
 ---
-{%- comment -%}
-  Standard content page. The head sits inside `.prose` on purpose: as a direct child
-  of the prose grid it lands in the `content` track, so the H1 is optically aligned
-  with the body copy under it without a single extra rule.
-
-  `page.eyebrow` is legacy front matter that existing pages still use — keep it.
-{%- endcomment -%}
 {%- assign _lede = page.description | default: page.excerpt -%}
-<article class="page">
+{% include interior-hero.html variant="page" lede=_lede %}
+<article class="page page--body">
   <div class="prose">
-    <header class="page-head">
-      {%- if page.eyebrow %}
-      <p class="eyebrow">{{ page.eyebrow }}</p>
-      {%- endif %}
-      <h1>{{ page.title }}</h1>
-      {%- if _lede %}
-      <p class="lede">{{ _lede | strip_html | normalize_whitespace | strip }}</p>
-      {%- endif %}
-    </header>
     {{ content }}
   </div>
 </article>

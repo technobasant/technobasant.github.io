@@ -13,7 +13,7 @@ scale: "100M+ queries a day across four engines, serving dashboards for 25,000+ 
 stack: [Trino, ClickHouse, Citus, TimescaleDB, PostgreSQL, Apache Iceberg, Apache Spark, Amazon S3, Prometheus, Grafana]
 metrics: [query_volume, query_latency]
 tags: [clickhouse, postgres, distributed-databases]
-image: /assets/og/og-default-v2.png
+image: /assets/og/og-default-v3.png
 image_alt: "Basant Bhattarai — Reliable data. Accountable AI."
 ---
 

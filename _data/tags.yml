@@ -72,11 +72,11 @@
 - slug: cost-finops
   name: "Cost & FinOps"
   blurb: "Where the money actually goes in a data platform, and the levers that move it: storage layout, compaction, instance shape, and retention nobody wanted to own."
-  og: og-default-v2.png
+  og: og-default-v3.png
   featured: false
 
 - slug: career
   name: "Career & craft"
   blurb: "Notes on ownership, mentoring, review culture, and the difference between contributing to a system and being on call for it."
-  og: og-default-v2.png
+  og: og-default-v3.png
   featured: false

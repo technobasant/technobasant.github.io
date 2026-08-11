@@ -1,8 +1,11 @@
 ---
 title: Résumé
 eyebrow: Career
+headline: "Nine years from backend systems to data and AI platforms."
+hero_code: "CAREER / LOG"
+page_class: page-resume
 permalink: /resume/
-description: "Nine years in software, six of them owning production data platforms. Role scope, what I owned at each step, and a skills matrix that admits its limits."
+description: "Nine years in software, six in production data engineering: platform ownership, database reliability, governed AI delivery, leadership, and evidence for every major claim."
 redirect_from:
   - /experience/
   - /skills/
@@ -20,6 +23,7 @@ A résumé lists what I did. This is the part it cannot show: what changed about
 - **2022–2024 · UXCam, Data Engineer.** The brief widened to storage, serving and cost — Iceberg underneath, query engines in front, then the migration onto Kubernetes. Making the numbers arrive stopped being enough; they had to stay correct and stay affordable.
 - **Feb 2024 · UXCam, Senior Data Engineer.** Took the platform end to end — ingestion, transformation, serving, governance, and the pager that comes with all four.
 - **2024–2026 · UXCam, Senior Data Engineer.** Built and now own the AI layer on top of the platform, under the same rule as everything below it: agent output lands in typed, validated tables or it does not ship.
+{: .career-timeline }
 
 ## Scope
 
@@ -27,7 +31,7 @@ A résumé lists what I did. This is the part it cannot show: what changed about
 |---|---|---|---|---|
 | Senior Data Engineer, UXCam | 2024 – present | The data platform end to end, plus the agent layer built on it | IC; mentor to {{ site.data.metrics.mentored.value }} engineers | Kafka → Spark on self-managed Kubernetes at {{ site.data.metrics.daily_volume.value }}/day, Iceberg, dbt + Airflow, Trino and ClickHouse serving, Databricks + Unity Catalog, Milvus. {{ site.data.metrics.apps.value }} integrated apps upstream. |
 | Data Engineer, UXCam | 2020 – 2024 | Ingestion, transformation, and the serving layer in front of them | IC on the data team | Spark/PySpark, Airflow, Iceberg, Kinesis, Trino, ClickHouse, Citus, TimescaleDB, AWS and EKS. |
-| ClickHomes — a personal project | 2024 – present | All of it, alone: schema, pipelines, backend, frontend, deploys | Solo | PostgreSQL (OLTP) and ClickHouse (OLAP), FastAPI, Celery, Next.js, Docker on a VPS. |
+| ClickHomes — Founder & Lead Engineer | 2024 – present | All of it, alone: schema, pipelines, backend, frontend, deploys | Solo | PostgreSQL (OLTP) and ClickHouse (OLAP), FastAPI, Celery, Next.js, Docker on a VPS. |
 | Multi-engine HA lab — personal | 2026 | The test plan, the rig, and the write-up | Solo | MongoDB, ScyllaDB, SolrCloud, MariaDB + Galera, Redis, PostgreSQL 18, on one host. |
 | Project Leader, SVCET | 2019 – 2020 | Delivery of an NLP dialogue system | 4 developers | Python NLP and deep-learning stack. |
 | Software Developer (Backend & Data), SV Technology | 2017 – 2019 | Backend APIs and the PostgreSQL schemas behind them | IC | Python, FastAPI, PostgreSQL, Jenkins. |

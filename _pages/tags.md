@@ -1,12 +1,23 @@
 ---
 title: Topics
 eyebrow: Writing
+headline: "Browse by system, failure mode, or layer."
+hero_code: "TOPIC / INDEX"
+page_class: page-topics
 permalink: /writing/tags/
-description: "Thirteen topics I write about — Spark, Kafka, Iceberg, Postgres, ClickHouse, Kubernetes, agents, RAG, SLOs, data contracts, cost and career notes."
+description: "Published field notes organized by system, failure mode, and platform layer — from distributed databases and PostgreSQL to streaming, Iceberg, agents, and SLOs."
 ---
 
-Thirteen topics, and nothing outside them. A tag exists here only if I have operated the thing in production or measured it on a rig I built, which keeps the list short and the archive worth reading.
-{% for t in site.data.tags %}{% assign n = site.posts | where_exp: "p", "p.tags contains t.slug" | size %}
-**[{{ t.name }}](/writing/tags/{{ t.slug }}/)**{% if n > 0 %} <span class="chip chip--count">{{ n }} post{% unless n == 1 %}s{% endunless %}</span>{% endif %} — {{ t.blurb }}
-{% endfor %}
+<div class="topic-index is-wide">
+{% assign visible_index = 0 %}
+{% for t in site.data.tags %}{% assign n = site.posts | where_exp: "p", "p.tags contains t.slug" | size %}{% if n > 0 %}
+{% assign visible_index = visible_index | plus: 1 %}
+<a class="topic-index__item" href="/writing/tags/{{ t.slug }}/">
+  <span class="topic-index__number" aria-hidden="true">{% if visible_index < 10 %}0{% endif %}{{ visible_index }}</span>
+  <span class="topic-index__copy"><strong>{{ t.name }}</strong><span>{{ t.blurb }}</span></span>
+  <span class="topic-index__count">{{ n }} post{% unless n == 1 %}s{% endunless %}</span>
+</a>
+{% endif %}{% endfor %}
+</div>
+
 Everything is also available as [RSS](/writing/feed.xml) or [JSON Feed](/writing/feed.json).

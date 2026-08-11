@@ -9,33 +9,32 @@ layout: default
 {%- assign _kind = page.kind | default: "production" -%}
 {%- if _kind == "lab" -%}{%- assign _kind_label = "Lab" -%}{%- else -%}{%- assign _kind_label = "Production" -%}{%- endif -%}
 {%- assign _av = site.data.availability -%}
+{%- assign _lede = page.hook | default: page.description -%}
 
-<article class="page">
-  <div class="prose">
-    <header class="page-head">
-      <p class="eyebrow">{{ page.eyebrow | default: "Case study" }}</p>
+<header class="interior-hero interior-hero--case" data-code="SYSTEM / RECORD">
+  <div class="wrap wrap--shell interior-hero__inner interior-hero__inner--article">
+    <div class="interior-hero__rail">
+      <p class="interior-hero__eyebrow">{{ page.eyebrow | default: "Case study" }} · {{ _kind_label }}</p>
+      <dl class="article-facts">
+        {%- if page.org %}<div><dt>Organization</dt><dd>{{ page.org }}</dd></div>{% endif %}
+        {%- if page.period %}<div><dt>Period</dt><dd>{{ page.period }}</dd></div>{% endif %}
+        {%- if page.role %}<div><dt>Role</dt><dd>{{ page.role }}</dd></div>{% endif %}
+      </dl>
+    </div>
+    <div class="interior-hero__content">
       <h1>{{ page.title }}</h1>
-      {%- assign _lede = page.hook | default: page.description %}
-      {%- if _lede %}
-      <p class="lede">{{ _lede }}</p>
-      {%- endif %}
-    </header>
+      {%- if _lede %}<p class="lede">{{ _lede }}</p>{% endif %}
+      <p class="interior-hero__status"><span class="badge badge--{{ _kind }}">{{ _kind_label }}</span> Evidence, constraints, trade-offs, and operations.</p>
+    </div>
+  </div>
+</header>
 
-    <dl class="case-glance">
-      <dt>Status</dt>
-      <dd><span class="badge badge--{{ _kind }}">{{ _kind_label }}</span></dd>
-      {%- if page.role %}
-      <dt>Role</dt>
-      <dd>{{ page.role }}</dd>
-      {%- endif %}
-      {%- if page.org %}
-      <dt>Organization</dt>
-      <dd>{{ page.org }}</dd>
-      {%- endif %}
-      {%- if page.period %}
-      <dt>Period</dt>
-      <dd>{{ page.period }}</dd>
-      {%- endif %}
+<article class="page page--case">
+  <div class="prose">
+    <div class="case-evidence is-wide">
+      <section class="case-brief" aria-labelledby="brief-title">
+        <h2 class="section-label" id="brief-title">System brief</h2>
+        <dl class="case-glance">
       {%- if page.team %}
       <dt>Team</dt>
       <dd>{{ page.team }}</dd>
@@ -56,7 +55,8 @@ layout: default
         {%- if page.live_url %}<a href="{{ page.live_url }}" rel="noopener">Live</a>{% endif -%}
       </dd>
       {%- endif %}
-    </dl>
+        </dl>
+      </section>
 
     {%- if page.metrics and page.metrics.size > 0 %}
     <section class="case-impact" aria-labelledby="impact-title">
@@ -75,6 +75,7 @@ layout: default
       </ul>
     </section>
     {%- endif %}
+    </div>
 
     <nav class="case-map" aria-label="Case study sections">
       <p class="section-label">In this case study</p>

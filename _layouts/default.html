@@ -21,7 +21,7 @@ win over it in exactly the case the user overrode their OS. {%- endcomment %}
   <link rel="alternate" type="application/feed+json" title="{{ site.title | escape }}" href="{{ '/writing/feed.json' | relative_url }}">
 {% include head/jsonld.html %}
 </head>
-<body>
+<body class="template-{{ page.layout | default: 'page' }}{% if page.page_class %} {{ page.page_class }}{% endif %}">
   <a class="skip-link" href="#main">Skip to content</a>
 
   <header class="site-header">

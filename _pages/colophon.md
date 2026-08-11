@@ -1,6 +1,8 @@
 ---
 title: Colophon
 eyebrow: Meta
+headline: "Small, inspectable, and owned end to end."
+hero_code: "BUILD / NOTES"
 permalink: /colophon/
 description: "How this site is built: Jekyll, hand-written SCSS, self-hosted fonts, GitHub Actions — no analytics, no trackers, no cookies, and AI crawlers allowed."
 ---

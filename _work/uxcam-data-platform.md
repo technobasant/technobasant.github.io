@@ -13,7 +13,7 @@ scale: "10 TB+ and hundreds of millions of events a day from 25,000+ integrated 
 stack: [Apache Kafka, Amazon Kinesis, Apache Spark, PySpark, Apache Airflow, dbt, Apache Iceberg, Kubernetes, Amazon S3, Trino, Databricks, Prometheus, Grafana, OpenTelemetry]
 metrics: [daily_volume, processing_speed, infra_cost, uptime]
 tags: [spark, kubernetes, cost-finops]
-image: /assets/og/og-default-v2.png
+image: /assets/og/og-default-v3.png
 image_alt: "Basant Bhattarai — Reliable data. Accountable AI."
 ---
 

@@ -30,7 +30,7 @@ LINE = "#232830"
 
 SITE = "technobasant.github.io"
 NAME = "Basant Bhattarai"
-ROLE = "Senior Data & AI Platform Engineer"
+ROLE = "Senior Data & AI Engineer · Platform & Database Reliability"
 
 # The brass B, as a path so no font is involved in the mark itself.
 B_PATH = (

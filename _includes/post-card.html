@@ -11,6 +11,7 @@
   {%- else -%}{%- assign _label = "Essay" -%}
 {%- endcase -%}
 <article class="post-card">
+  {%- if include.index %}<span class="post-card__index" aria-hidden="true">0{{ include.index }}</span>{% endif %}
   <p class="post-card__meta">
     <time datetime="{{ _p.date | date_to_xmlschema }}">{{ _p.date | date: "%b %-d, %Y" }}</time>
     <span class="badge badge--{{ _type }}">{{ _label }}</span>

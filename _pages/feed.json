@@ -8,7 +8,7 @@ sitemap: false
   "title": {{ site.title | append: " — Writing" | jsonify }},
   "home_page_url": {{ "/writing/" | absolute_url | jsonify }},
   "feed_url": {{ "/writing/feed.json" | absolute_url | jsonify }},
-  "description": {{ "Notes from operating data platforms and databases at scale. Mostly the things that cost me a day." | jsonify }},
+  "description": {{ "Reproducible field notes from operating data platforms, databases, and governed AI systems." | jsonify }},
   "language": {{ site.lang | default: "en" | jsonify }},
   "icon": {{ site.author.avatar | absolute_url | jsonify }},
   "favicon": {{ "/assets/favicon.svg" | absolute_url | jsonify }},
