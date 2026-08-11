@@ -94,6 +94,12 @@ jobs:
       - name: Validate published writing
         run: bundle exec rake content
 
+      - name: Install PDF text inspector
+        run: sudo apt-get update && sudo apt-get install -y poppler-utils
+
+      - name: Reject confidential public details
+        run: bundle exec rake privacy
+
       - name: Assert output shape
         run: bundle exec rake verify
 

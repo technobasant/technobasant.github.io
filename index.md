@@ -5,16 +5,13 @@ title: Basant Bhattarai
 # Every string the home page says lives here. `_layouts/home.html` decides where
 # things render and never what they say.
 #
-# `%apps%` in the lede is substituted from _data/metrics.yml at build time, so the
-# only number on this page still has a single source of truth.
-
 hero:
   eyebrow: "Senior Data & AI Engineer · Platform & Database Reliability"
   meta: "Kathmandu, Nepal · Working US and EU hours"
   h1:
     first: "Reliable data."
     second: "Accountable AI."
-  lede: "Nine years from backend services to production data infrastructure. Today I design and operate Kafka into Spark on Kubernetes, an Iceberg lakehouse, database serving, freshness SLOs, and a governed multi-agent analytics layer across %apps% integrated apps."
+  lede: "Nine years from backend services to production data and AI systems. I focus on the contracts, recovery paths, and operating decisions that keep those systems trustworthy under change."
   actions:
     - label: "Explore selected work"
       url: /work/
@@ -38,28 +35,25 @@ hero:
     alt: "Basant Bhattarai, data and AI platform engineer, Kathmandu"
     caption: "Basant Bhattarai · Kathmandu, Nepal"
 
-# Five metrics, by key, from _data/metrics.yml. Four unqualified percentages read
-# like a résumé; five qualified ones read like someone who owns a dashboard — so the
-# method microcopy under each number is the point, not decoration.
-stats_label: "Selected outcomes"
+# Only personal, reproducible evidence is published here. Employer scale,
+# topology, customer, cost, and reliability figures stay private.
+stats_label: "Public evidence"
 stats:
-  - daily_volume
-  - apps
-  - uptime
-  - infra_cost
-  - analytics_delivery
+  - experience
+  - lab_scenarios
+  - clickhomes_migrations
 
 focus_label: "Where I’m useful"
 focus_headline: "I work where correctness, scale, and judgment meet."
 focus:
   - index: "01"
     title: "Data platforms"
-    url: /work/uxcam-data-platform/
-    blurb: "Kafka → Spark → Iceberg → dbt/Airflow on Kubernetes. Data contracts, freshness SLIs, lineage, and a cost budget somebody actually reads."
+    url: /about/
+    blurb: "Data contracts, freshness objectives, replay, lineage, and ownership boundaries that remain useful when the implementation changes."
   - index: "02"
-    title: "Agentic AI in production"
-    url: /work/app-analytics-agent-platform/
-    blurb: "LangGraph, CrewAI, Google-ADK, MCP. Agents whose outputs land in typed, audited tables — not chat transcripts."
+    title: "Governed AI products"
+    url: /writing/building-data-platforms-and-ai-products/
+    blurb: "Typed outputs, provenance, evaluation, and policy checks for AI-assisted workflows that affect real product state."
   - index: "03"
     title: "Databases under pressure"
     url: /work/multi-engine-ha-lab/
@@ -81,7 +75,7 @@ writing:
 
 currently:
   label: "Currently"
-  body: "Senior Data Engineer at UXCam. I own the data platform end to end — ingestion, the Iceberg lakehouse, the serving layer, and the agent platform on top — along with the pager that comes with it. I mentor the engineers who work in it and hold the line on reliability, governance and cost."
+  body: "Senior Data Engineer based in Kathmandu. My current work sits between data-platform reliability, database serving, and governed AI delivery. Employer architecture and operational figures are intentionally not published here; the writing focuses on portable methods and reproducible personal labs."
   cta: "Work with me"
   cta_url: /hire/
 ---

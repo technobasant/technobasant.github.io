@@ -1,12 +1,14 @@
 ---
 title: Writing
 eyebrow: Field notes
-headline: "Field notes from systems with consequences."
+headline: "Notes from the workbench, not the press release."
 layout: writing-index
 permalink: /writing/
-description: "Reproducible notes from operating data platforms and databases: the failure, the evidence, the repair, and the detail that usually gets left out."
+description: "Technical essays and reproducible tutorials about data, databases, and reliable AI: the evidence, the trade-off, the repair, and the parts usually skipped."
 redirect_from:
   - /blog/
   - /notes/
   - /posts/
 ---
+
+I write after I have reproduced the failure, checked the command, and found the trade-off worth carrying forward. What ends up here is the method rather than the deployment — the part that transfers to your system, not mine.

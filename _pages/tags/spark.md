@@ -4,7 +4,7 @@ title: Apache Spark
 eyebrow: Topic
 permalink: /writing/tags/spark/
 tag: spark
-description: "Running Spark at ten terabytes a day: shuffle tuning, executor sizing, Kubernetes scheduling, and what it costs when you get partitioning wrong."
+description: "Practical Spark work: shuffle diagnosis, executor sizing, partitioning, skew, and the evidence to collect before touching a configuration."
 ---
 
-I have run Spark since 2020, and almost always self-managed on Kubernetes rather than on somebody else's runtime — which means executor sizing, shuffle behavior and scheduling are my problem rather than a support ticket. At {{ site.data.metrics.daily_volume.value }} a day the failure modes stop being interesting and start being expensive: a skewed join key that spills to disk, a partition count that was correct when the table was a tenth of its current size, an autoscaler adding executors to a stage bound by one straggling task. These posts are about that layer — what I measure before touching a config, which knobs turned out not to matter, and the difference between a job that is slow and a job that is slow because it is spilling.
+I have worked with Spark since 2020. The useful diagnosis usually starts with the stage graph, skew, spill, partition size, and one stubborn task—not with a copied configuration checklist. These notes focus on what I measure before changing a knob, how I separate a scheduling problem from a data-layout problem, and how to make a performance claim reproducible on data that can be shared safely.

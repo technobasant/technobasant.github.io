@@ -4,10 +4,12 @@
 #   make serve-drafts editorial preview including unfinished drafts
 #   make build        production build, same flags as CI
 #   make content      validate published post metadata and editorial structure
+#   make privacy      reject confidential architecture, figures and retired routes
 #   make check        html-proofer, internal only
 #   make verify       output assertions against _site
 #   make lighthouse   production build, then a clean server for auditing
 #   make images       regenerate portrait derivatives, icons and social cards
+#   make resume-pdf   regenerate the privacy-safe downloadable résumé
 #   make new-post SLUG=my-slug TITLE="My title"
 #   make new-tutorial SLUG=my-slug TITLE="My title"
 #   make clean
@@ -19,7 +21,7 @@ PORT    ?= 4000
 NOW     := $(shell TZ=Asia/Kathmandu date '+%Y-%m-%d %H:%M:%S %z')
 TODAY   := $(shell TZ=Asia/Kathmandu date '+%Y-%m-%d')
 
-.PHONY: help serve serve-drafts build content check check-external verify jsonld lighthouse images new-post new-tutorial new-work clean
+.PHONY: help serve serve-drafts build content privacy check check-external verify jsonld lighthouse images resume-pdf new-post new-tutorial new-work clean
 
 help:
 	@grep -E '^#   ' $(MAKEFILE_LIST) | sed 's/^#   //'
@@ -38,6 +40,9 @@ build:
 
 content:
 	$(BUNDLE) rake content
+
+privacy:
+	$(BUNDLE) rake privacy
 
 check:
 	$(BUNDLE) rake check
@@ -66,6 +71,9 @@ lighthouse: build
 
 images:
 	./scripts/gen-images.sh
+
+resume-pdf:
+	uv run --with reportlab scripts/generate-resume-pdf.py assets/basant-bhattarai-resume.pdf
 
 new-post:
 	@test -n "$(SLUG)"  || { echo 'usage: make new-post SLUG=my-slug TITLE="My title"'; exit 1; }

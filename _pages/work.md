@@ -1,12 +1,12 @@
 ---
 title: Selected work
 eyebrow: Case studies
-headline: "Architecture decisions under real constraints."
+headline: "Systems I built, broke on purpose, and measured."
 layout: work-index
 permalink: /work/
-description: "Production data platforms, database systems, governed agents, and a founder-built product — documented through constraints, decisions, trade-offs, operations, and measured outcomes."
+description: "Independent product work and reproducible database labs, documented through constraints, decisions, trade-offs, operations, and public evidence."
 redirect_from:
   - /projects/
 ---
 
-Each of these is written the same way: what the system had to do, the decision that turned out to matter, the trade-off I accepted, and the number it moved. Where something did not work, that is in there too — a case study with no discarded options is a brochure.
+Each page states the constraint I was working under, the decision that mattered, the trade-off I accepted, and the measurement that settled it. Where a claim is testable, the commands are here and you can run them yourself.

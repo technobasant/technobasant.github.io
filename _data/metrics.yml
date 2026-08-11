@@ -1,132 +1,11 @@
-# Canonical metrics. SINGLE SOURCE OF TRUTH.
-# Never hardcode a number in markdown or a layout — reference it by key from here.
-# Every entry carries the method it was measured by; that microcopy is what makes
-# the number credible. Conservative values are deliberate: when two self-reported
-# figures conflicted across CV versions, the lower one is published.
-
-daily_volume:
-  value: "10 TB+"
-  label: "ingested and transformed daily"
-  method: "Spark job metrics"
-  window: "2026"
-  context: "Grew from ~5 TB/day in 2021. Paired with 'hundreds of millions of events per day'."
-
-daily_events:
-  value: "100s of millions"
-  label: "events per day"
-  method: "Kafka topic throughput"
-  window: "2026"
-  context: "Co-metric for daily_volume — harder to dispute than a byte count."
-
-apps:
-  value: "25,000+"
-  label: "integrated mobile apps"
-  method: "apps with an active SDK integration"
-  window: "2026"
-  context: "Integrated apps, not paying customers. Never put a customer count on the same page."
-
-uptime:
-  value: "99.9%"
-  label: "serving availability"
-  method: "Prometheus blackbox probes, rolling 30-day"
-  window: "2022–2026"
-  context: "Platform serving endpoints."
-
-infra_cost:
-  value: "40%"
-  label: "data-infrastructure cost cut"
-  method: "before/after monthly spend on the data platform"
-  window: "Kubernetes migration, 2023"
-  context: "Data-infrastructure spend specifically — not the whole cloud bill."
-
-analytics_delivery:
-  value: "60%"
-  label: "faster analytics delivery"
-  method: "median turnaround on recurring analytics requests vs the pre-agent request queue"
-  window: "measured over two quarters"
-
-analyst_effort:
-  value: "75%"
-  label: "less manual analyst effort"
-  method: "analyst hours on recurring reporting, before vs after the agent platform"
-  window: "2024–2025"
-
-processing_speed:
-  value: "50%"
-  label: "faster batch and stream processing"
-  method: "wall-clock on the daily ETL DAG, before vs after the Spark/PySpark rewrite"
-  window: "2021–2022"
-  context: "At 5 TB/day at the time of measurement."
-
-storage_cost:
-  value: "35%"
-  label: "lower storage cost"
-  method: "S3 bytes-stored billing line, before vs after Iceberg migration"
-  window: "2022–2023"
-  context: "Multi-petabyte table footprint."
-
-query_volume:
-  value: "100M+"
-  label: "queries per day"
-  method: "engine-side query counters across Trino, ClickHouse, Citus, TimescaleDB"
-  window: "2023–2024"
-
-query_latency:
-  value: "50%"
-  label: "p95 query latency reduction"
-  method: "engine query logs, before vs after repartitioning and model redesign"
-  window: "2023"
-
-data_quality:
-  value: "99.5%"
-  label: "of streamed records pass all contract checks"
-  method: "null, type, range and referential checks, measured continuously by the quality framework"
-  window: "rolling"
-
-videos:
-  value: "1M+"
-  label: "session videos processed per month"
-  method: "RAG ingest pipeline counters"
-  window: "2025–2026"
-
-mentored:
-  value: "5"
-  label: "engineers mentored"
-  method: "direct code review, architecture review and pairing"
-  window: "2024–2026"
-
-team_delivery:
-  value: "30%"
-  label: "faster team delivery"
-  method: "cycle time on data-platform tickets after standardising pipeline patterns"
-  window: "2024–2025"
+# Public metrics are limited to reproducible personal work. Employer throughput,
+# topology, cost, reliability, customer and team figures do not belong in this
+# repository, even when they appeared in an older résumé or public talk.
 
 experience:
   value: "9 years"
-  label: "in software, 6 of them owning production data platforms"
-  method: "2017–2026; data-platform ownership from 2020"
-  context: "States the distinction before anyone asks. 2017–2019 was backend; 2019–2020 was a project lead role."
-
-# --- pre-2020 (SVCET, SV Technology) ---
-
-intent_recognition:
-  value: "90%"
-  label: "intent recognition"
-  method: "held-out test set for the NLP dialogue system"
-  window: "SVCET, 2019–2020"
-  context: "The client acceptance threshold. Team of four; delivered two weeks early."
-
-api_users:
-  value: "10,000+"
-  label: "users on the backend APIs"
-  method: "registered accounts on the Python/FastAPI services"
-  window: "SV Technology, 2017–2019"
-
-test_coverage:
-  value: "85%"
-  label: "test coverage on those services"
-  method: "line coverage in CI"
-  window: "SV Technology, 2017–2019"
+  label: "in software engineering"
+  method: "role history from 2017–2026"
 
 # --- multi-engine HA lab (personal, measured) ---
 
@@ -155,4 +34,4 @@ clickhomes_migrations:
   value: "90+"
   label: "SQL migrations"
   method: "versioned migration files in the repo"
-  context: "Dual PostgreSQL (OLTP) / ClickHouse (OLAP) schema."
+  context: "Personal project; count taken from the versioned migration directory."

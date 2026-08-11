@@ -7,14 +7,13 @@ layout: default
   rail makes the evidence scannable without crowding the headline column.
 {%- endcomment -%}
 {%- assign _hero = page.hero -%}
-{%- assign _apps = site.data.metrics.apps.value -%}
 
 <section class="hero">
   <div class="wrap wrap--shell hero-grid">
     <div class="hero-copy">
       <p class="eyebrow">{{ _hero.eyebrow }}</p>
       <h1><span>{{ _hero.h1.first }}</span><span>{{ _hero.h1.second }}</span></h1>
-      <p class="lede">{{ _hero.lede | replace: "%apps%", _apps }}</p>
+      <p class="lede">{{ _hero.lede }}</p>
       {%- if _hero.meta %}<p class="hero-meta">{{ _hero.meta }}</p>{% endif -%}
       <div class="actions">
         {%- for action in _hero.actions %}
@@ -64,6 +63,7 @@ layout: default
         <span class="focus-index">{{ f.index }}</span>
         <h3>{{ f.title }}</h3>
         <p>{{ f.blurb }}</p>
+        <span class="focus-open" aria-hidden="true">Explore {% include icon.html name="arrow-right" size=14 %}</span>
       </a>
       {%- endfor %}
     </div>
@@ -81,7 +81,7 @@ layout: default
         <p>{{ page.work.blurb }}</p>
       </div>
     </div>
-    <div class="showcase-grid">
+    <div class="showcase-grid{% if _featured_work.size == 1 %} showcase-grid--solo{% elsif _featured_work.size == 2 %} showcase-grid--pair{% endif %}">
       {%- for item in _featured_work limit: 3 %}
       {% if forloop.first %}{% include case-card.html item=item variant="feature" index=forloop.index %}{% else %}{% include case-card.html item=item index=forloop.index %}{% endif %}
       {%- endfor %}

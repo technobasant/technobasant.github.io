@@ -19,4 +19,5 @@
   <{{ _h }} class="post-card__title"><a href="{{ _p.url | relative_url }}">{{ _p.title }}</a></{{ _h }}>
   <p class="post-card__desc">{{ _p.description | default: _p.excerpt | strip_html | normalize_whitespace | strip | truncate: 180 }}</p>
   <p class="post-card__time">{% include reading-time.html post=_p %}</p>
+  <span class="post-card__open" aria-hidden="true">Read the {{ _label | downcase }} {% include icon.html name="arrow-right" size=14 %}</span>
 </article>
