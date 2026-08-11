@@ -241,17 +241,42 @@
     if (!tables.length) return;
 
     Array.prototype.forEach.call(tables, function (table, index) {
+      var hint = null;
+      var hintId = "table-scroll-hint-" + (index + 1);
+      var originalDescribedBy = table.getAttribute("aria-describedby") || "";
+
       var check = function () {
         var overflows = table.scrollWidth > table.clientWidth + 1;
         if (overflows) {
           table.setAttribute("tabindex", "0");
+          table.dataset.overflowing = "true";
           if (!table.hasAttribute("aria-label")) {
             table.setAttribute("aria-label", "Scrollable data table " + (index + 1));
           }
+
+          if (!hint) {
+            hint = document.createElement("p");
+            hint.className = "table-scroll-hint";
+            hint.id = hintId;
+            hint.textContent = "Swipe or use arrow keys to compare every column →";
+            table.insertAdjacentElement("beforebegin", hint);
+          }
+          hint.hidden = false;
+          table.setAttribute(
+            "aria-describedby",
+            [originalDescribedBy, hintId].filter(Boolean).join(" ")
+          );
         } else {
           table.removeAttribute("tabindex");
+          delete table.dataset.overflowing;
           if (/^Scrollable data table /.test(table.getAttribute("aria-label") || "")) {
             table.removeAttribute("aria-label");
+          }
+          if (hint) hint.hidden = true;
+          if (originalDescribedBy) {
+            table.setAttribute("aria-describedby", originalDescribedBy);
+          } else {
+            table.removeAttribute("aria-describedby");
           }
         }
       };

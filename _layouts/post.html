@@ -24,19 +24,27 @@ biggest liability of a tutorial blog into a trust signal costs one paragraph. {%
 {%- assign _cutoff = site.time | date: '%s' | minus: 31557600 -%}
 {%- assign _stale = false -%}
 {%- if _type == "tutorial" and _eff_ts < _cutoff -%}{%- assign _stale = true -%}{%- endif -%}
+{%- assign _published_day = page.date | date: "%Y-%m-%d" -%}
+{%- assign _updated_day = page.last_modified_at | date: "%Y-%m-%d" -%}
+{%- assign _show_updated = false -%}
+{%- if page.last_modified_at and _updated_day != _published_day -%}{%- assign _show_updated = true -%}{%- endif -%}
 
 <div class="progress" aria-hidden="true"></div>
 
 <header class="interior-hero interior-hero--post" data-code="FIELD / NOTE">
   <div class="wrap wrap--shell interior-hero__inner interior-hero__inner--article">
     <div class="interior-hero__rail">
-      <p class="interior-hero__eyebrow">{{ _label }} · From production systems</p>
+      <nav class="article-breadcrumb article-breadcrumb--rail" aria-label="Breadcrumb">
+        <a href="{{ '/writing/' | relative_url }}">Writing</a>
+        <span aria-hidden="true">/</span>
+        <span>{{ _label }}</span>
+      </nav>
       <dl class="article-facts">
         <div>
           <dt>Published</dt>
           <dd><time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%b %-d, %Y" }}</time></dd>
         </div>
-        {%- if page.last_modified_at %}
+        {%- if _show_updated %}
         <div>
           <dt>Updated</dt>
           <dd><time datetime="{{ page.last_modified_at | date_to_xmlschema }}">{{ page.last_modified_at | date: "%b %-d, %Y" }}</time></dd>
@@ -49,6 +57,11 @@ biggest liability of a tutorial blog into a trust signal costs one paragraph. {%
       </dl>
     </div>
     <div class="interior-hero__content">
+      <nav class="article-breadcrumb article-breadcrumb--mobile" aria-label="Breadcrumb">
+        <a href="{{ '/writing/' | relative_url }}">Writing</a>
+        <span aria-hidden="true">/</span>
+        <span>{{ _label }}</span>
+      </nav>
       <h1>{{ page.title }}</h1>
       {%- if page.description %}<p class="lede">{{ page.description }}</p>{% endif %}
       {% include tag-chips.html tags=page.tags %}

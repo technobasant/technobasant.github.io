@@ -63,6 +63,7 @@ This is the same discipline used for any unreliable producer. Models happen to f
 | Retrieval | Passages inserted into a prompt | Source identity, retrieval score, filter context and trace |
 | Model result | Final answer string | Typed record, confidence state, validator result and provenance |
 | Product action | Immediate side effect | Policy check, idempotency key, audit event and compensating path |
+{: aria-label="Four governed-agent boundaries and their contract maturity" }
 
 This does not remove uncertainty. It makes uncertainty queryable. That difference is what allows evaluation, incident review, and gradual automation instead of a binary choice between a demo and blind trust.
 
