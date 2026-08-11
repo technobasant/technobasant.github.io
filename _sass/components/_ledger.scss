@@ -1,0 +1,260 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// LEDGER — a results matrix typeset as a published table rather than a
+// dashboard. This is the homepage's primary evidence, so it follows scientific
+// table convention rather than web-app convention.
+//
+// Rules follow LaTeX booktabs: no vertical rules ever, three horizontal rules
+// of differing weight (heavy top, light under the header, heavy bottom), and no
+// zebra striping. Zebra exists to help the eye track rows in a spreadsheet;
+// generous row spacing does the same job without the visual noise, and every
+// publisher that cares — Tufte, booktabs, the FT — drops it.
+//
+// The caption sits ABOVE the table, which is the convention for tables in
+// scientific publishing (figures caption below, tables above), and it carries
+// the apparatus. A number without its method is decoration.
+// ─────────────────────────────────────────────────────────────────────────────
+
+.ledger {
+  --ledger-rule: color-mix(in oklab, var(--ink-1) 62%, transparent);
+  --ledger-hair: color-mix(in oklab, var(--ink-1) 16%, transparent);
+  margin: 0;
+}
+
+.ledger__caption {
+  display: block;
+  max-width: 62ch;
+  margin-block-end: var(--sp-5);
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  line-height: 1.5;
+  color: var(--ink-2);
+  text-align: start;
+}
+
+.ledger__caption b {
+  display: block;
+  margin-block-end: var(--sp-2);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 500;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.ledger__scroll {
+  // A wide table must be reachable by keyboard when it scrolls. JS adds
+  // tabindex + role + label only when it actually overflows, so we do not
+  // litter the tab order on wide viewports.
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+.ledger__scroll:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.ledger table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+  // Tabular figures so a column of numbers forms a straight edge. Without this,
+  // proportional digits make 383 and 104 different widths and the column wobbles.
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+// ── Rules: heavy, hair, heavy. Nothing vertical. ─────────────────────────────
+.ledger thead th {
+  padding: 0 var(--sp-4) var(--sp-3);
+  border-block-start: 1.5px solid var(--ledger-rule);
+  border-block-end: 1px solid var(--ledger-hair);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: start;
+  white-space: nowrap;
+  color: var(--ink-3);
+}
+
+.ledger thead th:first-child { padding-inline-start: 0; }
+.ledger thead th:last-child { padding-inline-end: 0; }
+
+.ledger tbody td {
+  padding: var(--sp-4);
+  border-block-end: 1px solid
+    color-mix(in oklab, var(--ink-1) 8%, transparent);
+  font-size: var(--step--1);
+  line-height: 1.45;
+  color: var(--ink-2);
+  vertical-align: baseline;
+}
+
+.ledger tbody td:first-child { padding-inline-start: 0; }
+.ledger tbody td:last-child { padding-inline-end: 0; }
+
+.ledger tbody tr:last-child td {
+  border-block-end: 1.5px solid var(--ledger-rule);
+}
+
+// ── Cells ────────────────────────────────────────────────────────────────────
+.ledger__engine {
+  font-weight: 600;
+  color: var(--ink-1);
+  white-space: nowrap;
+}
+
+.ledger__version {
+  margin-inline-start: 0.4ch;
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  font-weight: 400;
+  color: var(--ink-3);
+}
+
+.ledger__probe {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  color: var(--ink-2);
+}
+
+// The measured value. Right-aligned so the numerals stack, with the unit split
+// off into its own span at a smaller size — the scientific convention, and it
+// stops "µs" from competing with the digit it qualifies.
+.ledger__measure {
+  text-align: end;
+  white-space: nowrap;
+}
+
+.ledger__value {
+  font-size: var(--step-0);
+  font-weight: 600;
+  color: var(--ink-1);
+}
+
+.ledger__unit {
+  margin-inline-start: 0.25ch;
+  font-size: 0.8em;
+  font-weight: 400;
+  color: var(--ink-3);
+}
+
+.ledger__metric {
+  display: block;
+  margin-block-start: 0.35em;
+  font-size: var(--step--2);
+  line-height: 1.3;
+  color: var(--ink-3);
+  text-align: end;
+  white-space: normal;
+}
+
+// Pass/fail must not rely on colour alone: the glyph carries it, the colour only
+// reinforces. WCAG 1.4.1.
+.ledger__result {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.ledger__result--pass { color: var(--c-tip); }
+.ledger__result--fail { color: var(--c-danger); }
+
+.ledger__result::before {
+  content: "✓";
+  margin-inline-end: 0.5ch;
+  font-weight: 600;
+}
+
+.ledger__result--fail::before { content: "✕"; }
+
+// The note is the reason this is not a stats strip: each row carries the thing
+// that only shows up if you actually ran it.
+.ledger__note {
+  max-width: 46ch;
+  font-size: var(--step--2);
+  line-height: 1.5;
+  color: var(--ink-3);
+}
+
+// ── Below 60rem the matrix becomes a definition list per engine ──────────────
+// A horizontally scrolling eight-column table is unusable on a phone. Rather
+// than shrink it, the same markup restacks: each row becomes its own block with
+// the measured value promoted to the top right.
+@media (max-width: 60rem) {
+  .ledger thead { display: none; }
+
+  .ledger table,
+  .ledger tbody,
+  .ledger tbody tr,
+  .ledger tbody td {
+    display: block;
+    width: 100%;
+  }
+
+  .ledger tbody tr {
+    padding-block: var(--sp-5);
+    border-block-end: 1px solid var(--ledger-hair);
+  }
+
+  .ledger tbody tr:first-child {
+    border-block-start: 1.5px solid var(--ledger-rule);
+  }
+
+  .ledger tbody tr:last-child {
+    border-block-end: 1.5px solid var(--ledger-rule);
+  }
+
+  .ledger tbody td {
+    padding: 0;
+    border: 0;
+  }
+
+  .ledger tbody td + td { margin-block-start: var(--sp-2); }
+
+  .ledger__measure,
+  .ledger__metric {
+    text-align: start;
+  }
+
+  .ledger__metric { display: inline; margin-inline-start: 0.6ch; }
+}
+
+// ── Homepage ledger section ──────────────────────────────────────────────────
+// The section that carries the matrix. Tighter above than a normal section
+// because the hero's closing line hands directly into it — the two are one
+// argument, and a full --sp-section gap between them read as a mistake.
+.home-ledger {
+  // Explicit both ways: .home-section sets padding-block on both edges, and only
+  // overriding the start left a gap that read as a mistake between the hero's
+  // closing line and the table it hands into.
+  padding-block: clamp(2rem, 3.5vw, 3rem) var(--sp-section);
+  background: var(--surface-0);
+}
+
+// The matrix is the widest thing on the site, so its heading gets more room
+// than the default 20ch or it breaks onto three lines.
+.home-ledger .section-head {
+  display: block;
+}
+
+.home-ledger .section-head h2 {
+  max-width: 34ch;
+}
+
+.section-blurb {
+  max-width: 58ch;
+  margin-block: var(--sp-4) 0;
+  font-size: var(--step--1);
+  line-height: 1.55;
+  color: var(--ink-2);
+}
+
+.section-more-row {
+  margin-block: var(--sp-6) 0;
+}

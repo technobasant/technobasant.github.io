@@ -9,9 +9,9 @@ hero:
   eyebrow: "Senior Data & AI Engineer · Platform & Database Reliability"
   meta: "Kathmandu, Nepal · Working US and EU hours"
   h1:
-    first: "Reliable data."
-    second: "Accountable AI."
-  lede: "Nine years from backend services to production data and AI systems. I focus on the contracts, recovery paths, and operating decisions that keep those systems trustworthy under change."
+    first: "I break databases"
+    second: "on purpose."
+  lede: "Then I publish what came back. Nine years on data platforms and the systems that decide whether their output can be trusted — and a standing habit of testing the recovery claims rather than repeating them."
   actions:
     - label: "Explore selected work"
       url: /work/
@@ -44,10 +44,15 @@ hero:
 # years-of-experience claim, and zero with a skills grid. Where engineers of this
 # kind do publish numbers, the numbers live in a sentence, attached to hardware
 # the author owns and results a reader can reproduce.
+# The matrix below the fold is the evidence now, so this line only has to hand
+# the reader over to it.
 evidence:
-  body: "Most recently I wrote a common test plan and ran it against six database engines — MongoDB, ScyllaDB, SolrCloud, MariaDB with Galera, Redis and PostgreSQL — on a single machine I own. Eight failover scenarios, every command and measurement published, including a PostgreSQL 18 replay lag of 383 µs and a Redis Sentinel promotion at roughly five seconds."
-  cta: "Read the lab, the rig, and the numbers"
-  url: /work/multi-engine-ha-lab/
+  body: "Everything below this line is something I ran on hardware I own, with the commands and the numbers published. Nothing on this page is a figure from an employer's dashboard."
+
+ledger:
+  label: "Receipts"
+  headline: "Eight things I did to a database, and what came back."
+  blurb: "One test plan, six engines, one host. The interesting column is the last one — the detail that only shows up after you kill the process."
 
 focus_label: "Where I’m useful"
 focus_headline: "I work where correctness, scale, and judgment meet."

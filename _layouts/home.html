@@ -64,6 +64,35 @@ layout: default
   {%- endif -%}
 </section>
 
+{%- comment -%}
+  The evidence, immediately, as the first thing below the fold.
+
+  This is the one section on the site that a reader cannot get anywhere else and
+  cannot fake: eight things I did to a database and what came back. It sits here
+  rather than three sections down because everything above it is a claim and
+  everything in it is a measurement, and the sooner a stranger crosses that line
+  the better. It is deliberately NOT a stats strip — every row names the engine,
+  the topology, the exact thing I did to it, the number, and the detail that only
+  appears once you have actually killed the process.
+{%- endcomment -%}
+{%- if site.data.lab %}
+<section class="home-section home-ledger reveal" aria-labelledby="ledger-title">
+  <div class="wrap wrap--shell">
+    <div class="section-head">
+      <div>
+        <p class="section-label">{{ page.ledger.label | default: "Receipts" }}</p>
+        <h2 id="ledger-title">{{ page.ledger.headline | default: "Eight things I did to a database, and what came back." }}</h2>
+        {%- if page.ledger.blurb %}<p class="section-blurb">{{ page.ledger.blurb }}</p>{% endif -%}
+      </div>
+    </div>
+    {% include ledger.html %}
+    <p class="section-more-row">
+      <a class="section-more" href="{{ '/work/multi-engine-ha-lab/' | relative_url }}">The rig, the commands, and the failures {% include icon.html name="arrow-right" size=14 %}</a>
+    </p>
+  </div>
+</section>
+{%- endif -%}
+
 <section class="band reveal" aria-labelledby="focus-title">
   <div class="wrap">
     <p class="section-label">{{ page.focus_label }}</p>
