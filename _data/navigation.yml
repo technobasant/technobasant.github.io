@@ -1,11 +1,9 @@
 main:
-  - title: "About"
+  - title: About
     url: /about/
-  - title: "Experience"
+  - title: Experience
     url: /experience/
-  - title: "Skills"
+  - title: Skills
     url: /skills/
-  - title: "Projects"
+  - title: Work
     url: /projects/
-  - title: "Notes"
-    url: /posts/

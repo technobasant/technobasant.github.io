@@ -1,0 +1,28 @@
+# Basant Bhattarai
+
+> Senior Data & AI Engineer · Platform Architect · Full-Stack
+> Kathmandu, Nepal · Collaborates with US and EU teams
+
+## Summary
+
+Builds and operates multi-TB data platforms (Kafka, Spark, Iceberg, dbt, Airflow on Kubernetes), production agentic AI systems (LangChain, LangGraph, CrewAI, Google-ADK, RAG), and full-stack products (FastAPI, Next.js, PostgreSQL/ClickHouse). Track record includes 40% infra cost reduction, 50% faster processing, 60% faster analytics delivery, 99.9% uptime.
+
+## Primary experience
+
+- Senior Data Engineer, UXCam (2024–present): company data platform + analytics agent platform
+- Data Engineer, UXCam (2020–2024): lakehouse, streaming quality, Kubernetes migration
+- Earlier: project leadership (NLP) and backend/data engineering (FastAPI, PostgreSQL)
+
+## Site map
+
+- / — Home
+- /about/ — Profile and consulting availability
+- /experience/ — Career detail
+- /skills/ — Technical domains
+- /projects/ — Selected case studies
+
+## Contact
+
+- Email: technobasant9@gmail.com
+- LinkedIn: https://www.linkedin.com/in/technobasant
+- GitHub: https://github.com/technobasant

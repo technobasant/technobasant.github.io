@@ -1,61 +1,54 @@
 ---
 permalink: /projects/
-title: "Projects"
-excerpt: "Selected platforms and products — data, AI, and full-stack."
-toc: true
+title: Selected work
+eyebrow: Case studies
+excerpt: Systems where architecture, data, AI, and product had to meet production constraints.
 ---
 
-## [ClickHomes](https://clickhomes.ai) — AI-native real-estate platform
+Staff portfolios earn trust with **problem → approach → outcome**, not logo walls. Three pieces of work that show how I operate.
 
-**Role:** Founder & lead engineer · 2024 – Present  
-**Stack:** FastAPI · Next.js 16 / React 19 · PostgreSQL / PostGIS · ClickHouse · Celery · Redis · LangChain agents · Docker
+<div class="case" markdown="1">
 
-Outcome platform for buyers, sellers, agents, and admins — public discovery, decision tools, CRM, and AI assistance in one continuous product.
+## UXCam — company data platform
 
-**Highlights**
+<span class="case-meta"><span>Platform</span><span>2020 – Present</span><span>Spark · Kafka · Iceberg · K8s</span></span>
 
-- Dual-database architecture: **PostgreSQL** for operational state, **ClickHouse** for listings and analytics
-- Mandated **RESO** ETL path (Connector → Transformer → Gold Loader) with typed schemas
-- Production **AgentService** (LangChain / LangGraph) for chat, lead summary, and tool-using workflows
-- Static-export-capable frontend, auth/RBAC, feature flags, and ops tooling on a bare VPS
+**Problem.** Mobile analytics at multi-TB / day needs a platform that is fast enough for product, correct enough for finance-grade metrics, and cheap enough to survive growth — without collapsing into a pile of one-off jobs.
 
----
+**Approach.** Rebuilt ETL in Spark/PySpark, automated with Airflow, then moved the estate onto Kubernetes. Designed an Iceberg lakehouse with SCD patterns, quality gates on streaming paths, and governed Databricks / Unity Catalog where collaboration mattered. Defined freshness SLOs and OpenTelemetry-backed observability.
+
+**Outcome.** **50%** faster processing on **5TB+/day**, **35%** storage cost reduction, **40%** infra cost down after K8s migration, **99.9%** uptime, **100M+** queries/day after engine and schema work.
+
+</div>
+
+<div class="case" markdown="1">
 
 ## UXCam — App Analytics Agent Platform
 
-**Role:** Senior Data Engineer · 2024 – Present  
-**Stack:** Google-ADK · LangChain · CrewAI · LangGraph · MCP · Milvus · MLflow · Spark · Kafka
+<span class="case-meta"><span>Agentic AI</span><span>2024 – Present</span><span>LangGraph · CrewAI · ADK · Milvus</span></span>
 
-Multi-agent analytics platform across **25K+ mobile apps**:
+**Problem.** Analysts could not keep pace with insight demand across **25K+** apps. Raw LLM chat was not an answer — outputs had to land in structures the rest of the platform trusts.
 
-- Cut analytics delivery time **60%** and analyst manual effort **75%**
-- RAG pipelines on Milvus processing **1M+ videos/month**
-- MLOps with MLflow improving recommendation personalization **~25%**
+**Approach.** Built a multi-agent analytics platform (Google-ADK, LangChain, CrewAI, MCP, LangGraph) with tool-using workflows, RAG on Milvus for video-scale corpora, and MLflow for MLOps. Emphasized structured contracts, fallbacks, and observability over demo UX.
 
----
+**Outcome.** **60%** faster analytics delivery, **75%** less analyst manual effort, **1M+ videos/month** through RAG paths, measurable personalization lift.
 
-## UXCam — Data platform & lakehouse
+</div>
 
-**Role:** Data Engineer → Senior · 2020 – Present  
-**Stack:** Spark / PySpark · Kafka · Iceberg · dbt · Airflow · Trino · ClickHouse · Kubernetes · AWS / GCP
+<div class="case" markdown="1">
 
-Company-scale mobile analytics data platform:
+## ClickHomes — AI-native real-estate platform
 
-- **10TB+ / hundreds of millions of events daily**
-- Iceberg lakehouse with SCD patterns; **35%** storage cost reduction
-- K8s migration: **40%** infra cost down, **99.9%** uptime
-- Streaming quality framework at **99.5%** accuracy
+<span class="case-meta"><span>Product</span><span>2024 – Present</span><span>FastAPI · Next.js · PG · ClickHouse</span></span>
 
----
+**Problem.** Real-estate outcomes (buy, sell, lease, agent CRM) need one continuous system — public discovery, decision tools, operational CRM, and AI assistance — without lying about data quality or forcing capture before value.
 
-## Earlier work
+**Approach.** Founded and lead-engineered the platform: **PostgreSQL** for OLTP, **ClickHouse** for listings/analytics, mandatory RESO transformation pipeline (Connector → Transformer → Gold), AgentService for LLM work, static-export-capable Next.js frontend, auth/RBAC, and production ops on Docker/VPS.
 
-- **Intelligent Dialogue System** (SVCET, 2019–2020) — NLP project leadership; **90%** intent recognition  
-- **Backend & data APIs** (SV Technology, 2017–2019) — FastAPI + PostgreSQL at **85%** test coverage
+**Outcome.** A live product at [clickhomes.ai](https://clickhomes.ai) with dual-database invariants, typed load boundaries, and AI features that persist into operational records rather than disposable chat.
+
+</div>
 
 ---
 
-## Open source & code
-
-- GitHub: [github.com/technobasant](https://github.com/technobasant)
-- Site source: [technobasant.github.io](https://github.com/technobasant/technobasant.github.io)
+More code and experiments: [github.com/technobasant](https://github.com/technobasant).
