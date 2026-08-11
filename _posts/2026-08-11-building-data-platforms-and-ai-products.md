@@ -8,6 +8,15 @@ type: essay
 tags: [ai-agents, data-quality]
 toc: true
 level: advanced
+cover:
+  base: "/assets/images/editorial-data-platform-ai-v1"
+  widths: "840,1600"
+  raster_widths: "840,1600"
+  fallback_width: "1600"
+  width: 1600
+  height: 900
+  alt: "Abstract event streams passing through governed data layers into a product decision surface"
+  caption: "A reliable product boundary carries contracts, provenance, and recovery paths across every layer."
 key_takeaways:
   - "A data platform is only reliable when its promise is stated from the consumer's side: what is queryable, how fresh it is, and who owns the failure."
   - "Agent output should cross a typed, validated, auditable boundary before it can change a product or become a record another system trusts."
