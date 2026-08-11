@@ -11,17 +11,17 @@ tier1:
   heading: "Sustained production experience"
   blurb: "Technologies I have operated, debugged, and reviewed as part of long-lived systems."
   items:
-    - { name: "Python", since: 2017, scale: "Backend services, data pipelines, automation, and AI tooling", evidence: /resume/, evidence_label: "Career summary" }
+    - { name: "Python", since: 2017, scale: "Backend services, data pipelines, automation, and AI tooling" }
     - { name: "SQL", since: 2017, scale: "Transactional, analytical, and reliability work", evidence: /writing/postgresql-18-docker-volume-path-change/, evidence_label: "PostgreSQL tutorial" }
-    - { name: "Apache Spark / PySpark", since: 2020, scale: "Batch and streaming data processing", evidence: /resume/, evidence_label: "Career summary" }
-    - { name: "Apache Kafka", since: 2020, scale: "Event-driven and streaming systems", evidence: /resume/, evidence_label: "Career summary" }
-    - { name: "Apache Airflow", since: 2020, scale: "Workflow orchestration, replay, and recovery design", evidence: /resume/, evidence_label: "Career summary" }
-    - { name: "Apache Iceberg", since: 2022, scale: "Table evolution, maintenance, and data modeling", evidence: /resume/, evidence_label: "Career summary" }
-    - { name: "dbt", since: 2021, scale: "Transformation contracts, testing, and documentation", evidence: /resume/, evidence_label: "Career summary" }
+    - { name: "Apache Spark / PySpark", since: 2020, scale: "Batch and streaming data processing" }
+    - { name: "Apache Kafka", since: 2020, scale: "Event-driven and streaming systems" }
+    - { name: "Apache Airflow", since: 2020, scale: "Workflow orchestration, replay, and recovery design" }
+    - { name: "Apache Iceberg", since: 2022, scale: "Table evolution, maintenance, and data modeling" }
+    - { name: "dbt", since: 2021, scale: "Transformation contracts, testing, and documentation" }
     - { name: "PostgreSQL", since: 2017, scale: "Application data, replication, recovery, and upgrades", evidence: /writing/postgresql-18-docker-volume-path-change/, evidence_label: "PostgreSQL tutorial" }
-    - { name: "ClickHouse", since: 2021, scale: "Analytical modeling and operational practice", evidence: /resume/, evidence_label: "Career summary" }
-    - { name: "Trino", since: 2021, scale: "Federated SQL and query modeling", evidence: /resume/, evidence_label: "Career summary" }
-    - { name: "Kubernetes", since: 2022, scale: "Container orchestration and data workloads", evidence: /resume/, evidence_label: "Career summary" }
+    - { name: "ClickHouse", since: 2021, scale: "Analytical modeling and operational practice" }
+    - { name: "Trino", since: 2021, scale: "Federated SQL and query modeling" }
+    - { name: "Kubernetes", since: 2022, scale: "Container orchestration and data workloads" }
     - { name: "Prometheus + Grafana", since: 2021, scale: "Service and data-reliability signals", evidence: /work/multi-engine-ha-lab/, evidence_label: "Reliability lab" }
 
 tier2:

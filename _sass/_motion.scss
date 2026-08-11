@@ -11,30 +11,21 @@
 //     IntersectionObserver, no flash of invisible content.
 // ─────────────────────────────────────────────────────────────────────────────
 
-@keyframes reveal {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-// The hidden state lives ONLY inside this @supports block. That is the whole
-// point: a browser without scroll-driven animation, or a user whose JS or CSS
-// half-loaded, renders the content immediately at full opacity. There is no
-// state in which content is stuck invisible.
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .reveal {
-      animation: reveal var(--dur-3) var(--ease-out) both;
-      animation-timeline: view();
-      animation-range: entry 8% cover 26%;
-    }
-  }
-}
+// Entrance reveals are removed. Two reasons, both measured rather than
+// aesthetic.
+//
+// The animation faded opacity from 0, and Lighthouse scrolls a page to capture
+// its full-page screenshot — so it audited elements mid-fade and found real
+// contrast failures: --ink-3 at ~0.72 opacity computes to #6f6c67, which is
+// 3.5:1 on --surface-0 against a 4.5:1 requirement. That is not a measurement
+// artefact. Every scrolling reader passed through the same sub-threshold state;
+// the audit just happened to sample it.
+//
+// And the reference tier does not do this. NN/g measured that animations over
+// 500ms cause readers to scroll past before the fade completes, and their
+// guidance is animate once, one element type, never on mobile. The sites in this
+// genre that read as most considered — Jepsen, Brooker, danluu — animate
+// nothing at all. `.reveal` stays in the markup as an inert hook.
 
 // Height animation without animating height. Wrap the collapsible content in a
 // single child; the parent animates its row from 0fr to 1fr.
@@ -82,7 +73,7 @@
   // `.progress` is deliberately NOT in this list: it is an informational
   // indicator, not decoration, and a 2px bar tracking the scrollbar is not
   // motion a vestibular-sensitive reader needs protecting from.
-  .reveal {
+  .reveal { // retained as an inert hook; no animation is attached
     animation-name: none !important;
     animation-timeline: auto !important;
     opacity: 1 !important;
