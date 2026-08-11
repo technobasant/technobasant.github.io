@@ -38,12 +38,16 @@
 // rendering fault rather than a device. Nothing in either survey of this genre
 // uses decorative background lettering.
 
+// The portrait column is deliberately narrow. A half-viewport photograph is the
+// portfolio-template shape and it squeezed the headline onto four lines; at
+// ~17rem it reads as an editorial portrait beside the claim instead of
+// competing with it, and the headline keeps its measure.
 .hero-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(24rem, 0.72fr);
-  gap: clamp(2rem, 5vw, 6rem);
-  align-items: stretch;
-  min-height: min(48rem, calc(100svh - var(--header-h)));
+  grid-template-columns: minmax(0, 1fr) 19rem;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+  min-height: 0;
 }
 
 // Without a portrait the headline takes the whole measure instead of half of
@@ -150,25 +154,25 @@
 // ── Portrait ─────────────────────────────────────────────────────────────────
 .hero-photo {
   position: relative;
-  width: min(100%, 31rem);
+  width: 100%;
   margin: 0;
-  align-self: end;
+  align-self: center;
   justify-self: stretch;
-  padding-block-start: clamp(2rem, 5vw, 4rem);
   z-index: 1;
 }
 
+// A single offset rule, not a frame-within-a-frame. Enough to say the placement
+// was intentional; not so much that it decorates.
 .hero-photo::before {
   content: "";
   position: absolute;
-  inset: calc(clamp(2rem, 5vw, 4rem) + 1rem) -1rem 1rem 1rem;
+  inset: 0.9rem -0.9rem -0.9rem 0.9rem;
   z-index: -1;
-  border: 1px solid rgba(223, 182, 108, 0.55);
+  border: 1px solid rgba(223, 182, 108, 0.45);
 }
 
 .hero-photo img {
   width: 100%;
-  max-height: 43rem;
   aspect-ratio: 4 / 5;
   object-fit: cover;
   object-position: center top;

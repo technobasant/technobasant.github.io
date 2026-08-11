@@ -24,20 +24,20 @@ hero:
       url: /assets/basant-bhattarai-resume.pdf
       variant: link
       icon: arrow-down
-  # Portrait removed from the homepage: the background is a generated
-  # circuit-board render, which is the strongest amateur signal a technical site
-  # can carry, and homepage portraits are rare in this genre anyway. The square
-  # crop still serves the post author card and the Person structured data.
-  portrait_disabled:
+  # The studio portrait, 4:5. Kept to an editorial column width rather than a
+  # half-viewport block: the surveys warn against the large hero-photo shape,
+  # which also squeezed the headline onto four lines, not against having a face
+  # on your own site. A portrait earns its place here because the page carries a
+  # consulting CTA.
+  portrait:
     base: /assets/images/hero-portrait-v2
     widths: "420,840,1120"
     raster_widths: "420,840,1120"
     fallback_width: "840"
     width: 1120
     height: 1399
-    sizes: "(max-width: 56.25rem) min(88vw, 34rem), 31rem"
-    alt: "Basant Bhattarai, data and AI platform engineer, Kathmandu"
-    caption: "Basant Bhattarai · Kathmandu, Nepal"
+    sizes: "(max-width: 56.25rem) 168px, 19rem"
+    alt: "Basant Bhattarai"
 
 # Not a stats strip. Two independent surveys — 44 senior-engineer sites and 26
 # data/infra sites — found zero with a big-number card grid, zero with a
