@@ -1,0 +1,58 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// HEADER
+// ─────────────────────────────────────────────────────────────────────────────
+
+.site-header {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 40;
+  background: color-mix(in oklab, var(--surface-0) 82%, transparent);
+  border-block-end: 1px solid var(--line);
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .site-header {
+    -webkit-backdrop-filter: blur(14px) saturate(1.4);
+    backdrop-filter: blur(14px) saturate(1.4);
+  }
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+  // The one and only definition of the header's height. The mobile drawer, the
+  // scroll-padding and the sticky TOC all derive from this token.
+  min-height: var(--header-h);
+}
+
+// ── Wordmark ─────────────────────────────────────────────────────────────────
+.mark {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin-inline-end: auto;
+  font-family: var(--font-display);
+  font-variation-settings: "SOFT" 0, "WONK" 0;
+  font-size: var(--step-1);
+  font-weight: 600;
+  letter-spacing: var(--ls-display);
+  line-height: 1;
+  color: var(--ink-1);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.mark span {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  font-weight: 500;
+  letter-spacing: var(--ls-body);
+  color: var(--ink-3);
+}
+
+@media (max-width: 34rem) {
+  .mark span {
+    display: none;
+  }
+}

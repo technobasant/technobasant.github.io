@@ -1,0 +1,90 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// FONTS — self-hosted, pre-subset variable woff2 from Fontsource.
+// No Google Fonts, no CDN, no render-blocking third party.
+//
+// Paths are relative to /assets/css/site.css so they survive any baseurl.
+// The files are already latin-subset; `unicode-range` is declared so the
+// browser never substitutes them for scripts they cannot render.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ── Inter (body) ─────────────────────────────────────────────────────────────
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../fonts/inter-latin-wght-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191,
+    U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+// Italic is rare in this content (em, cite, figcaption). `optional` means it
+// never blocks paint and never reflows: if it is not already cached we render
+// the fallback for this visit and the real face is warm for the next one.
+@font-face {
+  font-family: "Inter";
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: optional;
+  src: url("../fonts/inter-latin-wght-italic.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191,
+    U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+// ── Fraunces (display only — h1, section h2, stat numerals) ──────────────────
+@font-face {
+  font-family: "Fraunces";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../fonts/fraunces-latin-wght-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191,
+    U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+// ── JetBrains Mono (code) ────────────────────────────────────────────────────
+// font-synthesis: none — a faux-bold monospace breaks the advance grid and
+// makes highlighted keywords jitter against their neighbours.
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  font-synthesis: none;
+  src: url("../fonts/jetbrains-mono-latin-400-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191,
+    U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Metric-override fallbacks. These re-shape a local system font so its ascent,
+// descent and advance width match the webfont, which drives the font-swap
+// layout shift to ~0 without preloading anything.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// Inter over Arial — overrides taken from Fontsource's published metrics.
+@font-face {
+  font-family: "Inter Fallback";
+  src: local("Arial"), local("Helvetica Neue"), local("Liberation Sans");
+  ascent-override: 90.2%;
+  descent-override: 22.48%;
+  line-gap-override: 0%;
+  size-adjust: 107.4%;
+}
+
+// Fraunces over Georgia. NOTE: these four numbers are an approximation, not
+// published metrics — Fraunces is an optical-size design and its vertical
+// metrics move with `opsz`. They are close enough to keep the shift
+// imperceptible on the one or two display lines per page that use it.
+@font-face {
+  font-family: "Fraunces Fallback";
+  src: local("Georgia"), local("Times New Roman");
+  ascent-override: 105%;
+  descent-override: 26%;
+  line-gap-override: 0%;
+  size-adjust: 104%;
+}

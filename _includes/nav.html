@@ -1,0 +1,45 @@
+{%- comment -%}
+  Header navigation. Two parallel renderings of the same link list:
+  - `.nav` is the always-present desktop nav, hidden by CSS below the breakpoint.
+  - `.nav-dialog` is a native <dialog>. `showModal()` gives Esc-to-close, a focus
+    trap, focus restoration, `inert` on the background and scroll lock from the UA,
+    so there is no hand-rolled trap anywhere in this codebase.
+{%- endcomment -%}
+<nav class="nav" aria-label="Primary">
+  {%- for item in site.data.navigation.main -%}
+  {%- assign _current = false -%}
+  {%- if page.url == item.url -%}{%- assign _current = true -%}
+  {%- elsif item.url != "/" and page.url contains item.url -%}{%- assign _current = true -%}{%- endif -%}
+  <a class="nav__link" href="{{ item.url | relative_url }}"{% if _current %} aria-current="page"{% endif %}>{{ item.title }}</a>
+  {%- endfor -%}
+  {%- assign _cta = site.data.navigation.cta -%}
+  <a class="nav__cta" href="{{ _cta.url | relative_url }}"{% if page.url == _cta.url %} aria-current="page"{% endif %}>{{ _cta.title }}</a>
+</nav>
+
+<button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to light theme">
+  {%- include icon.html name="contrast" size=20 -%}
+</button>
+
+<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav-dialog" aria-haspopup="dialog" data-nav-open data-nav-toggle>
+  <span class="sr-only">Menu</span>
+  {%- include icon.html name="menu" size=22 -%}
+</button>
+
+<dialog class="nav-dialog" id="site-nav-dialog" aria-label="Primary" data-nav-dialog>
+  <form method="dialog">
+    <button class="nav-toggle" type="submit" data-nav-close>
+      <span class="sr-only">Close menu</span>
+      {%- include icon.html name="close" size=22 -%}
+    </button>
+  </form>
+  <nav aria-label="Primary, mobile">
+    {%- for item in site.data.navigation.main -%}
+    {%- assign _current = false -%}
+    {%- if page.url == item.url -%}{%- assign _current = true -%}
+    {%- elsif item.url != "/" and page.url contains item.url -%}{%- assign _current = true -%}{%- endif -%}
+    <a class="nav__link" href="{{ item.url | relative_url }}"{% if _current %} aria-current="page"{% endif %}>{{ item.title }}</a>
+    {%- endfor -%}
+    {%- assign _cta = site.data.navigation.cta -%}
+    <a class="nav__cta" href="{{ _cta.url | relative_url }}"{% if page.url == _cta.url %} aria-current="page"{% endif %}>{{ _cta.title }}</a>
+  </nav>
+</dialog>

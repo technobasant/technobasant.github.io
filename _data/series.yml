@@ -1,0 +1,6 @@
+# Post series. Posts reference these by `series:` slug + `series_order:` integer.
+
+- slug: failover-lab
+  title: "The failover lab"
+  blurb: "Six database engines, eight failover scenarios, one laptop. Every claim in this series was measured on the rig, not quoted from a docs page."
+  status: in-progress    # in-progress | complete

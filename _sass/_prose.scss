@@ -1,0 +1,360 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// PROSE — the load-bearing layout primitive.
+//
+// A named-line grid with three usable column spans:
+//
+//   full     edge to edge of the viewport
+//   wide     52rem — code blocks, tables, figures
+//   content  62ch  — everything else
+//
+// Authors write plain markdown. A fenced code block widens out of the measure
+// on its own because Rouge's wrapper is a direct child of .prose. No wrapper
+// divs, no Liquid, no classes to remember.
+//
+// CSS grid does NOT collapse child margins, so vertical rhythm uses the owl
+// model with a per-element --flow override. That makes spacing deterministic:
+// the gap between any two blocks is exactly one number, set by the block below.
+// ─────────────────────────────────────────────────────────────────────────────
+
+.prose {
+  display: grid;
+  grid-template-columns:
+    [full-start] minmax(var(--gutter), 1fr)
+    [wide-start] minmax(0, calc((var(--w-wide) - var(--w-prose)) / 2))
+    [content-start] min(var(--w-prose), 100% - var(--gutter) * 2) [content-end]
+    minmax(0, calc((var(--w-wide) - var(--w-prose)) / 2)) [wide-end]
+    minmax(var(--gutter), 1fr) [full-end];
+
+  font-size: var(--step-0);
+  line-height: var(--lh-prose);
+  color: var(--ink-1);
+}
+
+.prose > * {
+  grid-column: content;
+  min-width: 0;
+}
+
+.prose > .highlighter-rouge,
+.prose > table,
+.prose > figure,
+.prose > .is-wide {
+  grid-column: wide;
+}
+
+.prose > .is-bleed {
+  grid-column: full;
+}
+
+// ── Flow ─────────────────────────────────────────────────────────────────────
+.prose > * {
+  margin-block: 0;
+}
+
+.prose > * + * {
+  margin-block-start: var(--flow, 1.15em);
+}
+
+.prose > h2 {
+  --flow: 2.75rem;
+}
+.prose > h3 {
+  --flow: 2rem;
+}
+.prose > h4 {
+  --flow: 1.5rem;
+}
+// A heading and the paragraph it introduces are one unit.
+.prose > h2 + *,
+.prose > h3 + *,
+.prose > h4 + * {
+  --flow: 0.7rem;
+}
+.prose > .highlighter-rouge {
+  --flow: 1.75rem;
+}
+.prose > table,
+.prose > figure,
+.prose > blockquote,
+.prose > .callout,
+.prose > details,
+.prose > .tutorial-header,
+.prose > .staleness,
+.prose > .series-nav,
+.prose > .toc-mobile,
+.prose > .case-glance,
+.prose > .case-results {
+  --flow: 2rem;
+}
+.prose > hr {
+  --flow: 3rem;
+  margin-block-end: 3rem;
+}
+.prose > ul,
+.prose > ol,
+.prose > dl {
+  --flow: 1.15em;
+}
+
+// ── Headings ─────────────────────────────────────────────────────────────────
+// The layout renders the H1 from page.title; content markdown starts at ##.
+.prose > h1 {
+  display: none;
+}
+
+.prose h2 {
+  font-family: var(--font-display);
+  font-variation-settings: "SOFT" 0, "WONK" 0;
+  font-size: var(--step-3);
+  letter-spacing: var(--ls-display);
+  line-height: 1.15;
+}
+
+.prose h3 {
+  font-size: var(--step-1);
+  line-height: 1.3;
+}
+
+.prose h4 {
+  font-size: var(--step-0);
+  font-weight: 700;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+// Anchor links on headings, if the layout adds them. Invisible until hover or
+// keyboard focus, and never part of the text a screen reader announces first.
+.prose :is(h2, h3, h4) > .anchor {
+  margin-inline-start: 0.4em;
+  color: var(--ink-3);
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity var(--dur-1) var(--ease-standard);
+}
+
+.prose :is(h2, h3, h4):hover > .anchor,
+.prose .anchor:focus-visible {
+  opacity: 1;
+}
+
+// ── Body copy ────────────────────────────────────────────────────────────────
+// Body is --ink-1, inherited from `.prose` itself. The previous stylesheet set
+// `.prose p, .prose li { color: var(--muted) }` — four thousand words of
+// tutorial in secondary ink. Secondary ink is for captions, ledes and
+// metadata; it is applied explicitly to those and nowhere else, so there is no
+// blanket rule here to fight with.
+
+.prose > * strong,
+.prose > strong,
+.prose > * b {
+  font-weight: 650;
+}
+
+.prose em {
+  font-style: italic;
+}
+
+// `:not([class])` throughout the element-level rules below. Components live
+// inside .prose all the time — tag chips in the post head, the series nav, the
+// tutorial header's definition list — and a bare `.prose a` (0,1,1) would beat
+// `.chip` (0,1,0) and paint underlines through every one of them. Authored
+// markdown never carries a class, so this is an exact split with no
+// specificity arms race.
+.prose a:not([class]) {
+  color: var(--ink-1);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--accent) 55%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  transition: color var(--dur-1) var(--ease-standard),
+    text-decoration-color var(--dur-1) var(--ease-standard);
+}
+
+.prose a:not([class]):hover {
+  color: var(--accent-hi);
+  text-decoration-color: currentcolor;
+}
+
+// ── Lists ────────────────────────────────────────────────────────────────────
+.prose :is(ul, ol):not([class]) {
+  padding-inline-start: 1.35em;
+}
+
+.prose :is(ul, ol):not([class]) > li + li,
+.prose :is(ul, ol):not([class]) > li > :is(ul, ol) {
+  margin-block-start: 0.45em;
+}
+
+.prose :is(ul, ol):not([class]) > li::marker {
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.prose dl:not([class]) {
+  display: grid;
+  grid-template-columns: minmax(6rem, auto) 1fr;
+  gap: var(--sp-2) var(--sp-5);
+}
+
+.prose dl:not([class]) > dt {
+  font-weight: 650;
+  color: var(--ink-2);
+}
+
+.prose dl:not([class]) > dd {
+  margin: 0;
+}
+
+// Task lists (GFM)
+.prose li.task-list-item {
+  list-style: none;
+  margin-inline-start: -1.35em;
+}
+
+.prose input[type="checkbox"] {
+  margin-inline-end: 0.5em;
+  accent-color: var(--accent);
+}
+
+// ── Blockquote ───────────────────────────────────────────────────────────────
+.prose blockquote {
+  padding-inline-start: var(--sp-5);
+  border-inline-start: 2px solid var(--line-strong);
+  color: var(--ink-2);
+  font-size: var(--step-1);
+  line-height: 1.5;
+}
+
+.prose blockquote p + p {
+  margin-block-start: 0.8em;
+}
+
+.prose blockquote cite {
+  display: block;
+  margin-block-start: var(--sp-3);
+  font-size: var(--step--1);
+  font-style: normal;
+  color: var(--ink-3);
+}
+
+// ── Tables ───────────────────────────────────────────────────────────────────
+.prose table {
+  width: 100%;
+  font-size: var(--step--1);
+  line-height: 1.45;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  // `separate` (not `collapse`) is what makes border-radius apply to a table.
+  // With border-spacing: 0 it is visually identical to a collapsed table.
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+}
+
+.prose thead {
+  background: var(--surface-1);
+}
+
+.prose th {
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.prose th,
+.prose td {
+  padding: var(--sp-3) var(--sp-4);
+  text-align: start;
+  vertical-align: top;
+  border-bottom: 1px solid var(--line);
+}
+
+.prose tbody tr:last-child :is(td, th) {
+  border-bottom: 0;
+}
+
+.prose tbody tr:nth-child(even) {
+  background: color-mix(in oklab, var(--surface-2) 55%, transparent);
+}
+
+@media (max-width: 40rem) {
+  // Last resort on narrow screens: let the table scroll rather than force a
+  // 300px-wide four-column squeeze.
+  .prose > table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}
+
+// ── Figures ──────────────────────────────────────────────────────────────────
+.prose figure {
+  margin: 0;
+}
+
+.prose figure img,
+.prose > img {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+}
+
+.prose figcaption {
+  margin-block-start: var(--sp-3);
+  font-size: var(--step--1);
+  line-height: 1.45;
+  color: var(--ink-3);
+  text-wrap: pretty;
+}
+
+// ── Details / disclosure ─────────────────────────────────────────────────────
+// `:not([class])` again: .toc-mobile is a <details> living inside .prose and
+// brings its own chrome.
+.prose details:not([class]) {
+  padding: var(--sp-4) var(--sp-5);
+  background: var(--surface-1);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+}
+
+.prose details:not([class]) > summary {
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--ink-1);
+}
+
+.prose details:not([class])[open] > summary {
+  margin-block-end: var(--sp-4);
+  padding-block-end: var(--sp-3);
+  border-block-end: 1px solid var(--line);
+}
+
+// ── Footnotes (kramdown) ─────────────────────────────────────────────────────
+.prose .footnotes {
+  --flow: 3rem;
+  padding-block-start: var(--sp-5);
+  border-block-start: 1px solid var(--line);
+  font-size: var(--step--1);
+  color: var(--ink-2);
+}
+
+.prose sup[role="doc-noteref"] a,
+.prose .footnote {
+  text-decoration: none;
+  font-variant-numeric: tabular-nums;
+}
+
+// ── Horizontal rule ──────────────────────────────────────────────────────────
+.prose hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+}
+
+// ── First-child guard ────────────────────────────────────────────────────────
+.prose > :first-child {
+  margin-block-start: 0;
+}

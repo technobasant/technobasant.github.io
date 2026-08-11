@@ -1,0 +1,85 @@
+---
+layout: default
+---
+{%- comment -%}
+  Writing index. No pagination: under roughly forty posts a single page loads faster
+  than the first page of a paginated set, and it stays findable with Cmd-F, by a
+  crawler, and by an LLM reading the page whole.
+
+  Order is deliberate — "Start here" before "most recent", because a first-time
+  visitor should land on the best work, not the newest.
+{%- endcomment -%}
+{%- assign _featured = site.posts | where: "featured", true -%}
+{%- assign _tag_slugs = site.data.tags | map: "slug" -%}
+
+<div class="page">
+  <div class="prose">
+    <header class="page-head">
+      {%- if page.eyebrow %}
+      <p class="eyebrow">{{ page.eyebrow }}</p>
+      {%- endif %}
+      <h1>{{ page.title }}</h1>
+      {%- if page.description %}
+      <p class="lede">{{ page.description }}</p>
+      {%- endif %}
+    </header>
+    {{ content }}
+  </div>
+
+  {%- if _featured.size > 0 %}
+  <section class="wrap reveal" aria-labelledby="start-here-title">
+    <div class="section-head">
+      <h2 class="section-label" id="start-here-title">Start here</h2>
+    </div>
+    <div class="card-grid">
+      {%- for post in _featured limit: 3 %}
+      {% include post-card.html post=post %}
+      {%- endfor %}
+    </div>
+  </section>
+  {%- endif %}
+
+  <section class="wrap reveal" aria-labelledby="topics-title">
+    <div class="section-head">
+      <h2 class="section-label" id="topics-title">Topics</h2>
+      <a class="section-more" href="{{ '/writing/tags/' | relative_url }}">All topics {% include icon.html name="arrow-right" size=14 %}</a>
+    </div>
+    {% include tag-chips.html tags=_tag_slugs counts=true %}
+  </section>
+
+  {%- if site.data.series and site.data.series.size > 0 %}
+  <section class="wrap reveal" aria-labelledby="series-title">
+    <div class="section-head">
+      <h2 class="section-label" id="series-title">Series</h2>
+    </div>
+    <div class="card-grid">
+      {%- for s in site.data.series -%}
+      {%- assign _parts = site.posts | where: "series", s.slug | sort: "series_order" -%}
+      <article class="post-card">
+        <p class="post-card__meta">
+          <span class="badge">{% if s.status == "complete" %}Complete{% else %}In progress{% endif %}</span>
+          <span>{{ _parts.size }} part{% unless _parts.size == 1 %}s{% endunless %}</span>
+        </p>
+        <h3 class="post-card__title">{% if _parts.size > 0 %}<a href="{{ _parts.first.url | relative_url }}">{{ s.title }}</a>{% else %}{{ s.title }}{% endif %}</h3>
+        <p class="post-card__desc">{{ s.blurb }}</p>
+      </article>
+      {%- endfor %}
+    </div>
+  </section>
+  {%- endif %}
+
+  {%- if site.posts.size > 0 %}
+  <section class="wrap reveal" aria-labelledby="archive-title">
+    <p class="section-label" id="archive-title">All posts</p>
+    {%- assign _years = site.posts | group_by_exp: "p", "p.date | date: '%Y'" -%}
+    {%- for year in _years %}
+    <h2>{{ year.name }}</h2>
+    <div class="card-grid">
+      {%- for post in year.items %}
+      {% include post-card.html post=post %}
+      {%- endfor %}
+    </div>
+    {%- endfor %}
+  </section>
+  {%- endif %}
+</div>

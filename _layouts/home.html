@@ -1,83 +1,127 @@
 ---
 layout: default
 ---
+{%- comment -%}
+  Home. Every string on this page comes from `index.md` front matter; every number
+  comes from `_data/metrics.yml` or `_data/availability.yml`. This layout decides
+  placement only.
+
+  `%apps%` in the hero lede is the one templated number — substituted from
+  metrics.yml so the headline claim cannot drift from the metrics file.
+
+  DOM order on the hero is headline → metrics → portrait, deliberately: on a 390px
+  viewport the claim and the proof have to be one above-the-fold unit, and no
+  `order: -1` trick is needed to get there.
+{%- endcomment -%}
+{%- assign _hero = page.hero -%}
+{%- assign _apps = site.data.metrics.apps.value -%}
+
 <section class="hero">
   <div class="wrap hero-grid">
     <div class="hero-copy">
-      <p class="eyebrow">Staff-level data &amp; AI systems</p>
-      <h1>Basant&nbsp;Bhattarai</h1>
-      <p class="role">Senior Data &amp; AI Engineer · Platform Architect · Full-Stack</p>
-      <p class="lede">
-        I design, build, and operate the systems that move high-volume data into
-        reliable products — lakehouses and streaming platforms, production agentic AI,
-        and the APIs and interfaces that sit on top. Open-source first. Measured by
-        uptime, cost, and delivery speed.
-      </p>
+      <p class="eyebrow">{{ _hero.eyebrow }}</p>
+      <h1>{{ _hero.h1 }}</h1>
+      <p class="lede">{{ _hero.lede | replace: "%apps%", _apps }}</p>
       <div class="actions">
-        <a class="btn btn-primary" href="{{ '/experience/' | relative_url }}">Experience</a>
-        <a class="btn btn-ghost" href="{{ '/projects/' | relative_url }}">Selected work</a>
-        <a class="btn btn-ghost" href="{{ '/about/' | relative_url }}">About</a>
+        {%- for action in _hero.actions %}
+        <a class="btn btn--{{ action.variant | default: 'ghost' }}" href="{{ action.url | relative_url }}">{{ action.label }}{% if action.icon %} {% include icon.html name=action.icon size=14 %}{% endif %}</a>
+        {%- endfor %}
       </div>
-      <ul class="stats" aria-label="Selected outcomes">
-        <li><strong>9+</strong><span>years building platforms</span></li>
-        <li><strong>15TB+</strong><span>daily data at scale</span></li>
-        <li><strong>99.9%</strong><span>platform uptime</span></li>
-        <li><strong>40%</strong><span>infra cost reduction</span></li>
+      <ul class="stats" aria-label="{{ page.stats_label | default: 'Selected outcomes' }}">
+        {%- for key in page.stats -%}
+        {%- assign m = site.data.metrics[key] -%}
+        {%- if m %}
+        <li>
+          <strong>{{ m.value }}</strong>
+          <span>{{ m.label }}</span>
+          <span class="stats__method">{{ m.method }}</span>
+        </li>
+        {%- endif -%}
+        {%- endfor %}
       </ul>
     </div>
     <figure class="hero-photo">
-      <img
-        src="{{ site.author.avatar | relative_url }}"
-        alt="Portrait of Basant Bhattarai"
-        width="600"
-        height="600"
-        loading="eager"
-        decoding="async">
+      {%- include picture.html
+          base=_hero.portrait.base
+          widths="400,800,1200"
+          ext="jpg"
+          fallback_width="800"
+          sizes="(max-width: 56.25rem) 260px, 380px"
+          width=1200
+          height=1200
+          alt=_hero.portrait.alt
+          fetchpriority="high" -%}
     </figure>
   </div>
 </section>
 
-<section class="band">
+<section class="band reveal" aria-labelledby="focus-title">
   <div class="wrap">
-    <p class="section-label">What I own end to end</p>
+    <h2 class="section-label" id="focus-title">{{ page.focus_label }}</h2>
     <div class="band-grid">
-      <a class="focus" href="{{ '/experience/' | relative_url }}">
-        <span class="focus-index">01</span>
-        <h2>Data platforms</h2>
-        <p>Kafka → Spark / Iceberg / dbt / Airflow on Kubernetes. Freshness SLOs, contracts, lineage, FinOps — systems that stay correct under load.</p>
+      {%- for f in page.focus %}
+      <a class="focus" href="{{ f.url | relative_url }}">
+        <span class="focus-index">{{ f.index }}</span>
+        <h3>{{ f.title }}</h3>
+        <p>{{ f.blurb }}</p>
       </a>
-      <a class="focus" href="{{ '/skills/' | relative_url }}">
-        <span class="focus-index">02</span>
-        <h2>AI systems</h2>
-        <p>LangChain, LangGraph, CrewAI, Google-ADK, RAG, MCP. Agents that write structured outputs into governed stores — not demos glued to production.</p>
-      </a>
-      <a class="focus" href="{{ '/projects/' | relative_url }}">
-        <span class="focus-index">03</span>
-        <h2>Product engineering</h2>
-        <p>FastAPI, Next.js, dual OLTP/OLAP design, auth/RBAC, and operational runbooks — architecture that ships and survives.</p>
-      </a>
+      {%- endfor %}
     </div>
   </div>
 </section>
 
-<section class="wrap strip">
-  <div class="strip-grid">
+{%- assign _featured_work = site.work | where: "featured", true | sort: "order" -%}
+{%- if _featured_work.size > 0 %}
+<section class="reveal" aria-labelledby="work-title">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 class="section-label" id="work-title">{{ page.work.label }}</h2>
+    </div>
+    <div class="card-grid">
+      {%- for item in _featured_work limit: 3 %}
+      {% include case-card.html item=item %}
+      {%- endfor %}
+    </div>
+    <p><a class="section-more" href="{{ page.work.more_url | relative_url }}">{{ page.work.more }} {% include icon.html name="arrow-right" size=14 %}</a></p>
+  </div>
+</section>
+{%- endif %}
+
+{%- if site.posts.size > 0 %}
+<section class="reveal" aria-labelledby="writing-title">
+  <div class="wrap">
+    <div class="section-head">
+      <h2 class="section-label" id="writing-title">{{ page.writing.label }}</h2>
+      <p>{{ page.writing.blurb }}</p>
+    </div>
+    <div class="card-grid">
+      {%- for post in site.posts limit: 3 %}
+      {% include post-card.html post=post %}
+      {%- endfor %}
+    </div>
+    <p>
+      <a class="section-more" href="{{ page.writing.more_url | relative_url }}">{{ page.writing.more }} {% include icon.html name="arrow-right" size=14 %}</a>
+      <a class="section-more" href="{{ '/writing/feed.xml' | relative_url }}">{% include icon.html name="rss" size=14 %} RSS</a>
+    </p>
+  </div>
+</section>
+{%- endif %}
+
+{%- assign _av = site.data.availability -%}
+<section class="strip reveal" aria-labelledby="currently-title">
+  <div class="wrap strip-grid">
     <div>
-      <h2>Currently</h2>
-      <p>
-        Senior Data Engineer at <a href="https://uxcam.com">UXCam</a>, owning the company data platform
-        and the app-analytics agent stack across tens of thousands of mobile apps — mentoring engineers
-        and holding the bar on reliability and governance.
-      </p>
+      <h2 class="section-label" id="currently-title">{{ page.currently.label }}</h2>
+      <p>{{ page.currently.body }}</p>
     </div>
     <div class="strip-meta">
-      <p><span>Based in</span> Kathmandu, Nepal</p>
-      <p><span>Collaborates with</span> US &amp; EU teams</p>
-      <p><span>Stack focus</span> Python · Spark · Kafka · K8s · AI agents</p>
+      <p><span>Availability</span> {{ _av.headline }}</p>
+      <p><span>Capacity</span> {{ _av.hours }}</p>
+      <p><span>Hours</span> {{ _av.coverage }}</p>
+      <p><span>Response</span> {{ _av.response }}</p>
+      <p><span>Updated</span> <time datetime="{{ _av.updated | date: '%Y-%m-%d' }}">{{ _av.updated | date: "%B %-d, %Y" }}</time></p>
       <p class="strip-links">
-        <a href="{{ site.author.linkedin }}">LinkedIn</a>
-        <a href="{{ site.author.github }}">GitHub</a>
-        <a href="mailto:{{ site.author.email }}">Email</a>
+        <a class="btn btn--primary" href="{{ page.currently.cta_url | relative_url }}">{{ page.currently.cta }} {% include icon.html name="arrow-right" size=14 %}</a>
       </p>
     </div>
   </div>

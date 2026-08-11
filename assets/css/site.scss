@@ -1,0 +1,46 @@
+---
+# Empty front matter — this is what tells Jekyll to run the file through Sass
+# and emit /assets/css/site.css. Do not remove it.
+---
+
+// ─────────────────────────────────────────────────────────────────────────────
+// "Warm Archive" — the whole design system, in load order.
+//
+// Order matters: tokens define the variables everything else reads, the reset
+// establishes the base layer, components come after the primitives they
+// specialise, and print comes last so it can override anything.
+//
+// Dart Sass @use, so each partial is loaded exactly once no matter how many
+// times it is referenced.
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ── Foundations ──────────────────────────────────────────────────────────────
+@use "tokens";
+@use "fonts";
+@use "reset";
+@use "typography";
+@use "layout";
+
+// ── Primitives ───────────────────────────────────────────────────────────────
+@use "prose";
+@use "syntax";
+
+// ── Components ───────────────────────────────────────────────────────────────
+@use "components/header";
+@use "components/nav";
+@use "components/theme-toggle";
+@use "components/buttons";
+@use "components/hero";
+@use "components/cards";
+@use "components/post-card";
+@use "components/chips";
+@use "components/callouts";
+@use "components/code";
+@use "components/toc";
+@use "components/progress";
+@use "components/footer";
+
+// ── Cross-cutting ────────────────────────────────────────────────────────────
+@use "motion";
+@use "utilities";
+@use "print";

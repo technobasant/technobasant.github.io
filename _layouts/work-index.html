@@ -1,0 +1,51 @@
+---
+layout: default
+---
+{%- comment -%}
+  Work index. Two groups, and the split is the point: "Production" means it carried
+  real traffic and a pager, "Lab" means it was measured on a rig. Mixing them would
+  make every claim on the page weaker.
+{%- endcomment -%}
+{%- assign _production = site.work | where: "kind", "production" | sort: "order" -%}
+{%- assign _labs = site.work | where: "kind", "lab" | sort: "order" -%}
+
+<div class="page">
+  <div class="prose">
+    <header class="page-head">
+      {%- if page.eyebrow %}
+      <p class="eyebrow">{{ page.eyebrow }}</p>
+      {%- endif %}
+      <h1>{{ page.title }}</h1>
+      {%- if page.description %}
+      <p class="lede">{{ page.description }}</p>
+      {%- endif %}
+    </header>
+    {{ content }}
+  </div>
+
+  {%- if _production.size > 0 %}
+  <section class="wrap reveal" aria-labelledby="production-title">
+    <div class="section-head">
+      <h2 class="section-label" id="production-title">Production systems</h2>
+    </div>
+    <div class="card-grid">
+      {%- for item in _production %}
+      {% include case-card.html item=item %}
+      {%- endfor %}
+    </div>
+  </section>
+  {%- endif %}
+
+  {%- if _labs.size > 0 %}
+  <section class="wrap reveal" aria-labelledby="labs-title">
+    <div class="section-head">
+      <h2 class="section-label" id="labs-title">Labs</h2>
+    </div>
+    <div class="card-grid">
+      {%- for item in _labs %}
+      {% include case-card.html item=item %}
+      {%- endfor %}
+    </div>
+  </section>
+  {%- endif %}
+</div>

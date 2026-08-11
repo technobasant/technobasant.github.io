@@ -1,0 +1,39 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// THEME TOGGLE
+//
+// One button, two icons, CSS decides which is visible from the theme on <html>.
+// The JS only flips the attribute and rewrites the aria-label; it never touches
+// icon visibility.
+// ─────────────────────────────────────────────────────────────────────────────
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  color: var(--ink-2);
+  background: transparent;
+  transition: background-color var(--dur-1) var(--ease-standard),
+    border-color var(--dur-1) var(--ease-standard),
+    color var(--dur-1) var(--ease-standard);
+}
+
+.theme-toggle:hover {
+  background: var(--surface-2);
+  border-color: var(--line-strong);
+  color: var(--ink-1);
+}
+
+// The layout uses a single contrast glyph — a circle half filled — rather than
+// a sun/moon pair. Flipping it 180° in light mode makes the filled half point
+// at the theme you would switch TO, which is what the aria-label says.
+.theme-toggle .icon {
+  transition: rotate var(--dur-3) var(--ease-standard);
+}
+
+:root[data-theme="light"] .theme-toggle .icon {
+  rotate: 180deg;
+}

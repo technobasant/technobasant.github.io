@@ -1,0 +1,32 @@
+{%- comment -%}
+  Usage: {% include case-card.html item=doc %}
+  Optional: heading="h2" (default h3)
+
+  The headline metric is looked up by key in _data/metrics.yml — the card can never
+  carry a number the metrics file does not vouch for.
+{%- endcomment -%}
+{%- assign _c = include.item -%}
+{%- assign _h = include.heading | default: "h3" -%}
+{%- assign _kind = _c.kind | default: "production" -%}
+{%- if _kind == "lab" -%}{%- assign _kind_label = "Lab" -%}{%- else -%}{%- assign _kind_label = "Production" -%}{%- endif -%}
+<article class="case-card">
+  <p class="post-card__meta">
+    <span class="badge badge--{{ _kind }}">{{ _kind_label }}</span>
+    {%- if _c.period %}<span>{{ _c.period }}</span>{% endif -%}
+  </p>
+  <{{ _h }} class="post-card__title"><a href="{{ _c.url | relative_url }}">{{ _c.title }}</a></{{ _h }}>
+  <p class="case-card__hook">{{ _c.hook | default: _c.description }}</p>
+  {%- for key in _c.metrics limit: 2 -%}
+  {%- assign m = site.data.metrics[key] -%}
+  {%- if m %}
+  <p class="case-card__metric"><strong>{{ m.value }}</strong> <span>{{ m.label }}</span></p>
+  {%- endif -%}
+  {%- endfor %}
+  {%- if _c.stack and _c.stack.size > 0 %}
+  <ul class="case-card__stack">
+    {%- for s in _c.stack limit: 6 %}
+    <li><span class="chip">{{ s }}</span></li>
+    {%- endfor %}
+  </ul>
+  {%- endif %}
+</article>

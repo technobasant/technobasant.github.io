@@ -1,0 +1,225 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// TOKENS — the single source of truth.
+//
+// Two themes, switched by `data-theme` on <html>. Dark is the default and is
+// also attached to bare `:root` so the page is never unstyled if the no-flash
+// inline script fails to run.
+//
+// Contrast ratios in the comments are computed against the theme's --surface-0
+// and are not to be changed without recomputing.
+// ─────────────────────────────────────────────────────────────────────────────
+
+:root {
+  // ── Brand constants (mode-invariant) ──────────────────────────────────────
+  --brand-brass: #c4a574;
+  --brand-brass-lift: #d9be8e;
+
+  // ── Type families ─────────────────────────────────────────────────────────
+  --font-display: "Fraunces", "Fraunces Fallback", Georgia, "Times New Roman", serif;
+  --font-body: "Inter", "Inter Fallback", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  // ── Fluid type ramp ───────────────────────────────────────────────────────
+  // Utopia-style: min at 320px viewport, max at 1200px. Body is 17px on desktop.
+  // 12→13 · 14→15 · 16→17 · 18→20 · 20→24 · 23→30 · 27→40 · 40→68
+  --step--2: clamp(0.75rem, 0.727rem + 0.12vw, 0.8125rem);
+  --step--1: clamp(0.875rem, 0.852rem + 0.114vw, 0.9375rem);
+  --step-0: clamp(1rem, 0.977rem + 0.114vw, 1.0625rem);
+  --step-1: clamp(1.125rem, 1.08rem + 0.227vw, 1.25rem);
+  --step-2: clamp(1.25rem, 1.159rem + 0.455vw, 1.5rem);
+  --step-3: clamp(1.4375rem, 1.278rem + 0.795vw, 1.875rem);
+  --step-4: clamp(1.6875rem, 1.392rem + 1.477vw, 2.5rem);
+  --step-5: clamp(2.5rem, 1.859rem + 3.2vw, 4.25rem);
+
+  // ── Line height ───────────────────────────────────────────────────────────
+  --lh-display: 1.03;
+  --lh-heading: 1.18;
+  --lh-ui: 1.4;
+  --lh-prose: 1.65;
+  --lh-code: 1.6;
+
+  // ── Tracking ──────────────────────────────────────────────────────────────
+  --ls-display: -0.028em;
+  --ls-heading: -0.018em;
+  --ls-body: -0.005em;
+  --ls-label: 0.14em;
+
+  // ── Measure & containers ──────────────────────────────────────────────────
+  --measure: 62ch;
+  --measure-lede: 46ch;
+  --measure-wide: 52rem;
+
+  --w-prose: var(--measure);
+  --w-wide: 52rem;
+  --w-page: 69rem;
+  --w-shell: 84rem;
+
+  // ── Space ─────────────────────────────────────────────────────────────────
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4rem;
+  --sp-9: 6rem;
+  --sp-10: 8rem;
+
+  --gutter: clamp(1.25rem, 5vw, 2.5rem);
+  --sp-section: clamp(3.5rem, 8vw, 7rem);
+
+  // Single source of truth for the sticky header. Nothing may hardcode this.
+  --header-h: 4.25rem;
+
+  // ── Radius ────────────────────────────────────────────────────────────────
+  --r-sm: 3px; // inline code, small chips
+  --r-md: 6px; // buttons, cards, code blocks, callouts
+  --r-lg: 10px; // large panels, photographs
+  --r-full: 999px; // tag pills ONLY
+
+  // ── Motion ────────────────────────────────────────────────────────────────
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-1: 120ms;
+  --dur-2: 200ms;
+  --dur-3: 320ms;
+  --dur-4: 520ms;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DARK (default)
+// ─────────────────────────────────────────────────────────────────────────────
+:root,
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --surface-0: #0d0f12;
+  --surface-1: #14171c;
+  --surface-2: #1b1f26;
+  --surface-3: #232830;
+
+  --ink-1: #ece8e1; // 15.72:1
+  --ink-2: #a6aeb8; // 8.56:1
+  --ink-3: #7d8792; // 5.26:1
+
+  --line: rgba(236, 232, 225, 0.1);
+  --line-strong: rgba(236, 232, 225, 0.17);
+  --line-control: #636b75; // 3.33:1 — borders that are a control's only affordance
+
+  --accent: #c4a574; // 8.21:1
+  --accent-hi: #d9be8e; // 10.70:1
+  --accent-fill: #c4a574;
+  --accent-on: #16120b;
+  --accent-tint: color-mix(in oklab, var(--accent) 12%, transparent);
+
+  --focus: #c4a574;
+  --sel-bg: #c4a574;
+  --sel-fg: #0d0f12;
+
+  --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 8px 24px -8px rgba(0, 0, 0, 0.55);
+  --shadow-3: 0 28px 80px -20px rgba(0, 0, 0, 0.6);
+
+  // Code
+  --code-bg: #14171c;
+  --code-bg-inline: rgba(196, 165, 116, 0.09);
+  --code-fg-inline: #d9be8e;
+  --code-border: rgba(236, 232, 225, 0.14);
+  --code-header-bg: #191d23;
+  --code-hl-bg: rgba(196, 165, 116, 0.1);
+  --code-hl-edge: var(--accent);
+  --code-gutter: #5e6874;
+
+  // Callout edges — all ≥3:1 against --surface-1
+  --c-note: #c4a574;
+  --c-tip: #8fbf8f;
+  --c-warn: #e0b36a;
+  --c-danger: #e0757a;
+  --c-gotcha: #e0b36a;
+
+  // Syntax — "Brass Editorial"
+  --sx-fg: #d6d1c9;
+  --sx-comment: #828c98;
+  --sx-key: #c9a96e;
+  --sx-str: #9bbf9e;
+  --sx-num: #d9a276;
+  --sx-fn: #8fb6d9;
+  --sx-type: #d8c79a;
+  --sx-attr: #b7c4d0;
+  --sx-op: #a9b2bc;
+  --sx-punc: #8a939e;
+  --sx-ins: #8fbf8f;
+  --sx-del: #e08a8e;
+  --sx-err: #e0757a;
+  --sx-out: #9aa3ad;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// LIGHT — warm paper, not white. Brass is darkened to #7C5A18 for text-weight
+// use; true brass survives as --accent-fill for decorative fills only.
+// ─────────────────────────────────────────────────────────────────────────────
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --surface-0: #fbfaf8;
+  --surface-1: #ffffff;
+  --surface-2: #f1eee8;
+  --surface-3: #e7e2d9;
+
+  --ink-1: #15181c; // 17.07:1
+  --ink-2: #4c535c; // 7.46:1
+  --ink-3: #676e77; // 4.94:1
+
+  --line: rgba(21, 24, 28, 0.09);
+  --line-strong: rgba(21, 24, 28, 0.15);
+  --line-control: #8c8578;
+
+  --accent: #7c5a18; // 6.04:1
+  --accent-hi: #5e4310;
+  --accent-fill: #c4a574;
+  --accent-on: #16120b;
+  --accent-tint: color-mix(in oklab, var(--accent-fill) 24%, transparent);
+
+  --focus: #7c5a18;
+  --sel-bg: #e8d4ac;
+  --sel-fg: #15181c;
+
+  --shadow-1: 0 1px 2px rgba(30, 26, 18, 0.06);
+  --shadow-2: 0 8px 24px -10px rgba(30, 26, 18, 0.14);
+  --shadow-3: 0 28px 70px -24px rgba(30, 26, 18, 0.2);
+
+  // Code
+  --code-bg: #f5f2ec;
+  --code-bg-inline: rgba(124, 90, 24, 0.1);
+  --code-fg-inline: #6b4e14;
+  --code-border: rgba(21, 24, 28, 0.12);
+  --code-header-bg: #eeeae2;
+  --code-hl-bg: rgba(196, 165, 116, 0.26);
+  --code-hl-edge: #a8823a;
+  --code-gutter: #8b8578;
+
+  // Callout edges
+  --c-note: #7c5a18;
+  --c-tip: #2e6b3a;
+  --c-warn: #8a5f1c;
+  --c-danger: #a32d33;
+  --c-gotcha: #8a5f1c;
+
+  // Syntax
+  --sx-fg: #22262b;
+  --sx-comment: #66707c;
+  --sx-key: #8a5f1c;
+  --sx-str: #3c6a48;
+  --sx-num: #97511f;
+  --sx-fn: #2c5a85;
+  --sx-type: #6e5520;
+  --sx-attr: #3f4a57;
+  --sx-op: #4e555e;
+  --sx-punc: #66707c;
+  --sx-ins: #2e6b3a;
+  --sx-del: #a32d33;
+  --sx-err: #a32d33;
+  --sx-out: #5a626c;
+}

@@ -1,0 +1,83 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// FOOTER
+// ─────────────────────────────────────────────────────────────────────────────
+
+.site-footer {
+  margin-block-start: var(--sp-section);
+  padding-block: var(--sp-7) var(--sp-6);
+  border-block-start: 1px solid var(--line);
+  font-size: var(--step--1);
+  color: var(--ink-2);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: var(--sp-6) var(--sp-5);
+}
+
+.footer-col h2,
+.footer-col h3,
+.footer-col > strong {
+  display: block;
+  margin: 0 0 var(--sp-3);
+  font-family: var(--font-body);
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.footer-col ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.footer-col p {
+  margin: 0 0 var(--sp-3);
+  max-width: 28ch;
+  line-height: 1.55;
+}
+
+.footer-col a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.25rem;
+  color: var(--ink-2);
+  text-decoration: none;
+  transition: color var(--dur-1) var(--ease-standard);
+}
+
+.footer-col a:hover {
+  color: var(--ink-1);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+// This is a single <p> of inline text with aria-hidden middots between the
+// clauses. Deliberately NOT flex: text nodes become anonymous flex items and
+// `space-between` would shred the line.
+.footer-base {
+  margin-block-start: var(--sp-7);
+  padding-block-start: var(--sp-5);
+  border-block-start: 1px solid var(--line);
+  font-size: var(--step--2);
+  line-height: 1.7;
+  color: var(--ink-3);
+  text-wrap: pretty;
+}
+
+.footer-base p {
+  margin: 0;
+}
+
+.footer-base span[aria-hidden] {
+  margin-inline: 0.4em;
+  color: var(--line-control);
+}
+
+.footer-base a {
+  color: inherit;
+}

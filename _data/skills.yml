@@ -1,0 +1,99 @@
+# Three-tier honesty model. Rendered at /resume/#skills.
+# Tiers 1+2 also drive `knowsAbout` in the Person JSON-LD, so the schema can
+# never drift from the page.
+#
+# The framing line above the tiers does the work:
+#   "Tiers are self-assessed and deliberately conservative.
+#    If it's in Tier 1, I've debugged it at 3 a.m."
+
+note: >-
+  Tiers are self-assessed and deliberately conservative. If something is in Tier 1,
+  I have debugged it at 3 a.m. Tier 3 is a complete list, not a highlight reel —
+  it is there so you can see the edge of what I claim.
+
+tier1:
+  heading: "In production for years. I'm on call for these."
+  blurb: "Twelve technologies I have operated under load, at cost, with a pager attached."
+  items:
+    - { name: "Python",              since: 2017, scale: "every pipeline, service and agent below",           evidence: /work/uxcam-data-platform/ }
+    - { name: "SQL",                 since: 2017, scale: "modelling and tuning across 6 engines",             evidence: /work/serving-layer-100m-queries/ }
+    - { name: "Apache Spark / PySpark", since: 2020, scale: "10 TB+/day on self-managed Kubernetes",          evidence: /work/uxcam-data-platform/ }
+    - { name: "Apache Kafka",        since: 2020, scale: "hundreds of millions of events/day",                evidence: /work/uxcam-data-platform/ }
+    - { name: "Apache Airflow",      since: 2020, scale: "the daily DAG behind the whole platform",           evidence: /work/uxcam-data-platform/ }
+    - { name: "Apache Iceberg",      since: 2022, scale: "multi-petabyte tables, SCD, schema evolution",      evidence: /work/iceberg-lakehouse-scd/ }
+    - { name: "dbt",                 since: 2021, scale: "the transformation layer and its contracts",        evidence: /work/uxcam-data-platform/ }
+    - { name: "PostgreSQL",          since: 2017, scale: "OLTP, replication, PITR, promotion",                evidence: /work/clickhomes/ }
+    - { name: "ClickHouse",          since: 2021, scale: "OLAP serving at 100M+ queries/day",                 evidence: /work/serving-layer-100m-queries/ }
+    - { name: "Trino",               since: 2021, scale: "federated ad-hoc across the estate",                evidence: /work/serving-layer-100m-queries/ }
+    - { name: "Kubernetes",          since: 2022, scale: "the full data infrastructure, 40% cheaper",         evidence: /work/uxcam-data-platform/ }
+    - { name: "Prometheus + Grafana", since: 2021, scale: "freshness SLIs, burn-rate alerts, on-call",        evidence: /work/uxcam-data-platform/ }
+
+tier2:
+  heading: "Shipped with. In production, smaller surface."
+  blurb: "Used to deliver real systems, but a narrower blast radius than Tier 1."
+  groups:
+    - name: "AI & agents"
+      items: [LangGraph, LangChain, CrewAI, "Google-ADK", MCP, Milvus, MLflow, Pydantic]
+    - name: "Data platform"
+      items: ["Databricks + Unity Catalog", "Amazon Kinesis", "Spark Structured Streaming", "Debezium / CDC", "Delta Lake"]
+    - name: "Databases"
+      items: [Redis, MongoDB, Citus, TimescaleDB]
+    - name: "Product & infra"
+      items: [FastAPI, Celery, "Next.js", Terraform, Docker, "GitHub Actions", Helm]
+
+tier3:
+  heading: "Working knowledge. Evaluated, prototyped, or run in a lab."
+  blurb: "The long tail. Honest about where the depth stops."
+  items:
+    - Apache Flink
+    - Apache Beam
+    - Prefect
+    - LlamaIndex
+    - AutoGen
+    - Haystack
+    - Semantic Kernel
+    - DSPy
+    - OpenAI Agents SDK
+    - Pinecone
+    - pgvector
+    - Chroma
+    - FAISS
+    - Weaviate
+    - ScyllaDB
+    - "MariaDB + Galera"
+    - SolrCloud
+    - Elasticsearch
+    - Apache Druid
+    - Snowflake
+    - BigQuery
+    - Amazon Redshift
+    - DuckDB
+    - Hadoop
+    - Apache Hive
+    - Scala
+    - Java
+    - Azure Synapse
+    - Azure Data Factory
+    - Power BI
+    - Tableau
+    - Looker
+    - Superset
+    - Metabase
+    - PyTorch
+    - Polars
+    - PyArrow
+    - Ansible
+    - Jenkins
+    - LangSmith
+    - Langfuse
+    - Opik
+    - OpenTelemetry
+    - Datadog
+
+clouds:
+  - name: AWS
+    items: [S3, EKS, Lambda, Glue, Athena, Redshift, Kinesis, EMR, RDS, "Step Functions", Bedrock, SageMaker]
+  - name: GCP
+    items: [BigQuery, Dataflow, Dataproc, Datastream, "Pub/Sub", "Cloud Composer", GKE, "Vertex AI"]
+  - name: Azure
+    items: [Synapse, "Data Factory", Databricks, ADLS, "Event Hubs", AKS, "Azure ML"]

@@ -1,0 +1,23 @@
+* text=auto eol=lf
+
+# Never let the checkout filter touch these — a CRLF pass corrupts them and the
+# diff noise is useless anyway.
+*.woff2 binary
+*.woff  binary
+*.ttf   binary
+*.otf   binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.avif  binary
+*.webp  binary
+*.pdf   binary
+
+# Resolver output. Tracked and reviewable, but not the author's prose.
+Gemfile.lock linguist-generated=true
+
+# Not application code — keeps the repo's language stats honest.
+assets/fonts/** linguist-vendored
+_site/** linguist-generated

@@ -1,0 +1,255 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// HOME — hero, focus band, strip.
+//
+// The photograph is the only warm object above the fold. There is no radial
+// glow behind it and no gradient on <body>: depth is the portrait, one
+// hairline-separated grid, and the brass on the single primary action.
+// ─────────────────────────────────────────────────────────────────────────────
+
+.hero {
+  // Bottom spacing comes from the shared `section + section` rule.
+  padding-block-start: clamp(2.5rem, 7vw, 5rem);
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: end;
+}
+
+.hero-copy {
+  min-width: 0;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: var(--step-5);
+}
+
+.hero .role {
+  margin-block-start: var(--sp-5);
+}
+
+.hero .lede {
+  margin-block-start: var(--sp-4);
+}
+
+.hero .actions {
+  margin-block-start: var(--sp-6);
+}
+
+// ── Portrait ─────────────────────────────────────────────────────────────────
+// A single offset brass plate behind the image. Flat fill, no blur, no glow —
+// it reads as a printed registration mark, which is the whole idea.
+.hero-photo {
+  position: relative;
+  margin: 0;
+  isolation: isolate;
+}
+
+.hero-photo::before {
+  content: "";
+  position: absolute;
+  inset: 9% -9% -7% 15%;
+  z-index: -1;
+  background: var(--accent-tint);
+  border-radius: var(--r-lg);
+}
+
+.hero-photo img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  object-position: center 18%;
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-3);
+}
+
+// ── Stats ────────────────────────────────────────────────────────────────────
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: var(--sp-5) var(--sp-4);
+  margin: var(--sp-8) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stats li {
+  padding-block-start: var(--sp-4);
+  border-block-start: 1px solid var(--line-strong);
+}
+
+.stats li > strong {
+  display: block;
+  font-size: var(--step-2);
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--ink-1);
+}
+
+.stats li > span {
+  display: block;
+  margin-block-start: var(--sp-2);
+  font-size: var(--step--1);
+  line-height: 1.35;
+  color: var(--ink-2);
+}
+
+// How the number was measured. Deliberately quiet, deliberately present.
+.stats__method {
+  display: block;
+  margin-block-start: var(--sp-2);
+  font-size: var(--step--2);
+  line-height: 1.35;
+  color: var(--ink-3);
+}
+
+// ── Focus band ───────────────────────────────────────────────────────────────
+// One-pixel gaps filled by the parent's background give hairline dividers that
+// stay crisp at every zoom level without doubling up at the seams.
+.band-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1px;
+  background: var(--line-strong);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  overflow: hidden;
+}
+
+.focus {
+  display: block;
+  padding: var(--sp-6) var(--sp-5);
+  background: var(--surface-1);
+  color: inherit;
+  text-decoration: none;
+  transition: background-color var(--dur-2) var(--ease-standard);
+}
+
+.focus:hover {
+  background: var(--surface-2);
+}
+
+.focus:focus-visible {
+  outline-offset: -3px;
+}
+
+// Ordinal. --ink-3, not brass. The brass on this page is the hero's primary
+// button; a numbered list of three does not need it too.
+.focus-index {
+  display: block;
+  margin-block-end: var(--sp-5);
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: var(--ls-label);
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.focus h2,
+.focus h3 {
+  margin: 0 0 var(--sp-3);
+  font-size: var(--step-1);
+  font-weight: 600;
+  letter-spacing: var(--ls-heading);
+  color: var(--ink-1);
+}
+
+.focus p {
+  margin: 0;
+  font-size: var(--step--1);
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+// ── Strip (closing band: what I'm doing now / contact) ───────────────────────
+.strip-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.9fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  padding-block-start: var(--sp-6);
+  border-block-start: 1px solid var(--line);
+}
+
+.strip h2 {
+  margin: 0 0 var(--sp-4);
+  font-family: var(--font-display);
+  font-variation-settings: "SOFT" 0, "WONK" 0;
+  font-size: var(--step-3);
+  letter-spacing: var(--ls-display);
+}
+
+.strip p {
+  margin: 0;
+  max-width: var(--measure-lede);
+  color: var(--ink-2);
+}
+
+.strip-meta > p {
+  margin: 0 0 var(--sp-4);
+  font-size: var(--step--1);
+  color: var(--ink-1);
+}
+
+.strip-meta span {
+  display: block;
+  margin-block-end: var(--sp-1);
+  font-size: var(--step--2);
+  font-weight: 600;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.strip-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-4) var(--sp-5);
+  margin-block-start: var(--sp-5);
+  font-size: var(--step--1);
+  font-weight: 600;
+}
+
+// `:not(.btn)` — the closing strip carries the page's one primary action, and
+// a .btn in here must keep its own plate, not become an underlined text link.
+.strip-links a:not(.btn) {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--ink-1);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--accent) 45%, transparent);
+  text-underline-offset: 0.22em;
+}
+
+.strip-links a:not(.btn):hover {
+  color: var(--accent-hi);
+  text-decoration-color: currentcolor;
+}
+
+// ── Responsive ───────────────────────────────────────────────────────────────
+// Breakpoint matches the `sizes` attribute the picture include ships with:
+// `(max-width: 56.25rem) 260px, 380px`. If one moves, the other must.
+@media (max-width: 56.25rem) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  // No `order: -1`. The layout puts headline → metrics → portrait in the DOM
+  // deliberately, so the claim and its proof are one above-the-fold unit on a
+  // 390px screen. Reordering here would undo that.
+  .hero-photo {
+    width: min(16.25rem, 60%);
+  }
+
+  .hero-photo::before {
+    inset: 8% -8% -6% 16%;
+  }
+
+  .strip-grid {
+    grid-template-columns: 1fr;
+  }
+}

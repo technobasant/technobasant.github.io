@@ -1,0 +1,113 @@
+{%- comment -%}
+  ONE parameterised SEO block for every page type. Layouts include it and pass nothing;
+  everything is derived from `page`, `site` and `_data/tags.yml`.
+
+  Front-matter overrides: seo_title, description, canonical_url, image, image_alt, noindex.
+{%- endcomment -%}
+
+{%- assign _is_home = false -%}
+{%- assign _is_post = false -%}
+{%- assign _is_case = false -%}
+{%- assign _is_tag  = false -%}
+{%- if page.layout == 'home' -%}{%- assign _is_home = true -%}{%- endif -%}
+{%- if page.layout == 'post' or page.collection == 'posts' -%}{%- assign _is_post = true -%}{%- endif -%}
+{%- if page.layout == 'case' or page.collection == 'work' -%}{%- assign _is_case = true -%}{%- endif -%}
+{%- if page.layout == 'tag' -%}{%- assign _is_tag = true -%}{%- endif -%}
+
+{%- comment -%} Tag pages: pull the canonical name/blurb/card out of _data/tags.yml {%- endcomment -%}
+{%- assign _tag = nil -%}
+{%- assign _tag_count = 0 -%}
+{%- if _is_tag and page.tag -%}
+  {%- assign _tag = site.data.tags | where: "slug", page.tag | first -%}
+  {%- assign _tag_posts = site.tags[page.tag] -%}
+  {%- assign _tag_count = _tag_posts | size -%}
+{%- endif -%}
+{%- assign _tag_name = _tag.name | default: page.title -%}
+
+{%- comment -%} ---- title ---- {%- endcomment -%}
+{%- capture _title -%}
+{%- if page.seo_title -%}{{ page.seo_title }}
+{%- elsif _is_home -%}Basant Bhattarai — Senior Data & AI Platform Engineer
+{%- elsif _is_post -%}{{ page.title }} — Basant Bhattarai
+{%- elsif _is_case -%}{{ page.title }} · Case study · Basant Bhattarai
+{%- elsif _is_tag -%}{{ _tag_name }} — {{ _tag_count }} posts · Basant Bhattarai
+{%- elsif page.title -%}{{ page.title }} · Basant Bhattarai
+{%- else -%}Basant Bhattarai
+{%- endif -%}
+{%- endcapture -%}
+{%- assign _title = _title | strip -%}
+
+{%- comment -%} ---- description ---- {%- endcomment -%}
+{%- capture _desc -%}
+{%- if page.description -%}{{ page.description }}
+{%- elsif _is_tag and _tag.blurb -%}{{ _tag.blurb }}
+{%- elsif page.excerpt -%}{{ page.excerpt }}
+{%- else -%}{{ site.description }}
+{%- endif -%}
+{%- endcapture -%}
+{%- assign _desc = _desc | strip_html | normalize_whitespace | strip | truncate: 160 -%}
+
+{%- comment -%} ---- canonical ---- {%- endcomment -%}
+{%- assign _canon = page.canonical_url | default: page.url | absolute_url -%}
+
+{%- comment -%} ---- social card: page.image -> first tag's card -> site default. Always PNG. ---- {%- endcomment -%}
+{%- assign _img = "" -%}
+{%- if page.image and page.image contains ".png" -%}{%- assign _img = page.image -%}{%- endif -%}
+{%- if _img == "" and page.tags and page.tags.size > 0 -%}
+  {%- assign _first = page.tags | first -%}
+  {%- assign _t = site.data.tags | where: "slug", _first | first -%}
+  {%- if _t.og -%}{%- assign _img = "/assets/og/" | append: _t.og -%}{%- endif -%}
+{%- endif -%}
+{%- if _img == "" and _tag.og -%}{%- assign _img = "/assets/og/" | append: _tag.og -%}{%- endif -%}
+{%- if _img == "" -%}{%- assign _img = site.og_image -%}{%- endif -%}
+{%- assign _img = _img | absolute_url -%}
+{%- assign _img_alt = page.image_alt | default: page.title | default: site.title -%}
+
+{%- comment -%} ---- article? ---- {%- endcomment -%}
+{%- assign _is_article = false -%}
+{%- if _is_post or _is_case -%}{%- assign _is_article = true -%}{%- endif -%}
+{%- assign _large_card = false -%}
+{%- if _is_post or _is_case or _is_home -%}{%- assign _large_card = true -%}{%- endif -%}
+  <title>{{ _title | escape }}</title>
+  <meta name="description" content="{{ _desc | escape }}">
+  <meta name="author" content="{{ site.author.name | escape }}">
+  <link rel="canonical" href="{{ _canon }}">
+{%- if page.noindex or page.url contains '404' %}
+  <meta name="robots" content="noindex,nofollow">
+{%- else %}
+  <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+{%- endif %}
+
+  <meta property="og:site_name" content="{{ site.title | escape }}">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:type" content="{% if _is_article %}article{% else %}website{% endif %}">
+  <meta property="og:title" content="{{ _title | escape }}">
+  <meta property="og:description" content="{{ _desc | escape }}">
+  <meta property="og:url" content="{{ _canon }}">
+  <meta property="og:image" content="{{ _img }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="{{ _img_alt | escape }}">
+{%- if _is_article %}
+  <meta property="article:author" content="{{ site.author.name | escape }}">
+{%- if page.date %}
+  <meta property="article:published_time" content="{{ page.date | date_to_xmlschema }}">
+  <meta property="article:modified_time" content="{{ page.last_modified_at | default: page.date | date_to_xmlschema }}">
+{%- endif %}
+{%- for t in page.tags %}
+{%- assign _tt = site.data.tags | where: "slug", t | first %}
+  <meta property="article:tag" content="{{ _tt.name | default: t | escape }}">
+{%- endfor %}
+{%- endif %}
+
+  <meta name="twitter:card" content="{% if _large_card %}summary_large_image{% else %}summary{% endif %}">
+  <meta name="twitter:title" content="{{ _title | escape }}">
+  <meta name="twitter:description" content="{{ _desc | escape }}">
+  <meta name="twitter:image" content="{{ _img }}">
+  <meta name="twitter:image:alt" content="{{ _img_alt | escape }}">
+
+  <link rel="preload" href="{{ '/assets/fonts/inter-latin-wght-normal.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ '/assets/fonts/fraunces-latin-wght-normal.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
+
+  <link rel="icon" href="{{ '/assets/favicon.svg' | relative_url }}" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="{{ '/assets/apple-touch-icon.png' | relative_url }}">

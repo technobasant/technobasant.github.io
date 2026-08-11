@@ -1,0 +1,98 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// MOTION
+//
+// Rules of the house:
+//   · Never `transition: all`. Only colour, background-color, border-color,
+//     opacity, transform, translate, outline-color and box-shadow animate.
+//     Those are the properties the compositor can handle without a relayout.
+//   · Never animate height/width/margin/padding/top/left. Height changes use
+//     the grid-template-rows 0fr → 1fr trick below.
+//   · Entrance reveals are pure CSS scroll-driven animation. No JS, no
+//     IntersectionObserver, no flash of invisible content.
+// ─────────────────────────────────────────────────────────────────────────────
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+// The hidden state lives ONLY inside this @supports block. That is the whole
+// point: a browser without scroll-driven animation, or a user whose JS or CSS
+// half-loaded, renders the content immediately at full opacity. There is no
+// state in which content is stuck invisible.
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal var(--dur-3) var(--ease-out) both;
+      animation-timeline: view();
+      animation-range: entry 8% cover 26%;
+    }
+  }
+}
+
+// Height animation without animating height. Wrap the collapsible content in a
+// single child; the parent animates its row from 0fr to 1fr.
+.collapse {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--dur-3) var(--ease-standard);
+}
+
+.collapse > * {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.collapse.is-open,
+[open] > .collapse {
+  grid-template-rows: 1fr;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// REDUCED MOTION
+//
+// NOTE: an `animation-duration: 0.01ms` override does NOT stop a scroll-driven
+// animation — a view() or scroll() timeline is progress-based, so duration is
+// ignored entirely. The only way to kill one is by name: set animation-name to
+// none and drop the timeline back to `auto`. Everything below is the one place
+// in this codebase where !important is permitted.
+// ─────────────────────────────────────────────────────────────────────────────
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  // Scroll-driven entrance animation, killed properly.
+  // `.progress` is deliberately NOT in this list: it is an informational
+  // indicator, not decoration, and a 2px bar tracking the scrollbar is not
+  // motion a vestibular-sensitive reader needs protecting from.
+  .reveal {
+    animation-name: none !important;
+    animation-timeline: auto !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .btn:hover,
+  .post-card:hover,
+  .case-card:hover,
+  .focus:hover {
+    transform: none !important;
+  }
+}
