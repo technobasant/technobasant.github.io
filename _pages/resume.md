@@ -11,9 +11,8 @@ redirect_from:
   - /skills/
 ---
 
-<p><a class="btn btn--primary" href="{{ '/assets/basant-bhattarai-resume.pdf' | relative_url }}">Download the privacy-safe PDF</a></p>
+<p><a class="btn btn--primary" href="{{ '/assets/basant-bhattarai-resume.pdf' | relative_url }}">Download the PDF</a></p>
 
-This public résumé names employers and responsibilities, but intentionally leaves out proprietary architecture, customer information, operational scale, security posture, and internal performance figures.
 
 ## Career shape
 
@@ -23,7 +22,6 @@ A résumé usually flattens a career into a list. The more useful story is how t
 - **2019–2020 · SVCET, India.** Led a small team delivering an NLP dialogue system. It was my first time being accountable for a plan assembled by more than one person.
 - **2020–2024 · UXCam, Data Engineer.** Worked across ingestion, transformation, data modeling, orchestration, and analytical serving. The job expanded from making data arrive to keeping it correct, recoverable, and affordable.
 - **2024–present · UXCam, Senior Data Engineer.** Own broader platform and AI-product outcomes: reliability, governance, design review, operational readiness, and the boundaries where automated output becomes trusted data.
-- **2024–present · Independent work.** Build ClickHomes as a personal product and run reproducible database reliability labs outside my employment.
 {: .career-timeline }
 
 ## Experience at a glance
@@ -32,8 +30,6 @@ A résumé usually flattens a career into a list. The more useful story is how t
 |---|---|---|
 | Senior Data Engineer, UXCam | 2024 – present | Data-platform and AI-product reliability, governance, architecture review, and technical leadership |
 | Data Engineer, UXCam | 2020 – 2024 | Batch and streaming pipelines, data modeling, orchestration, storage, serving, and operations |
-| ClickHomes — Founder & Lead Engineer | 2024 – present | Personal product engineering across data modeling, application development, and operations |
-| Multi-engine HA lab — personal | 2026 | Reproducible failover test plans, measurements, and technical write-ups |
 | Project Leader, SVCET | 2019 – 2020 | Planning and delivery of an NLP dialogue-system project with a small team |
 | Software Developer, SV Technology | 2017 – 2019 | Python backend services, PostgreSQL schema work, reporting, and CI |
 
@@ -54,20 +50,6 @@ A résumé usually flattens a career into a list. The more useful story is how t
 - Improved recovery and change safety by treating schema evolution, replay, late data, and backfills as designed interfaces instead of emergency procedures.
 - Tuned distributed processing and query workloads by starting with the read path, measurement, and data layout before changing infrastructure settings.
 - Worked with teams across time zones to turn product questions into maintainable datasets and operational workflows.
-
-## Independent work
-
-### ClickHomes — personal product
-
-**2024 – present** · [clickhomes.ai](https://clickhomes.ai)
-
-I am the founder and sole engineer. The public case study explains the product boundary, data-contract principles, and migration discipline without exposing deployment topology, partner feeds, security controls, or private business information. The repository carries more than {{ site.data.metrics.clickhomes_migrations.value }} versioned {{ site.data.metrics.clickhomes_migrations.label }}. [Read the public case study](/work/clickhomes/).
-
-### Multi-engine high-availability lab
-
-**2026** · personal and reproducible
-
-I wrote a common test plan and ran {{ site.data.metrics.lab_scenarios.value }} {{ site.data.metrics.lab_scenarios.label }} across several database engines on hardware I control. Results include a PostgreSQL 18 replay-lag measurement of {{ site.data.metrics.lab_pg_replay_lag.value }} and a Redis Sentinel promotion measurement of {{ site.data.metrics.lab_redis_promotion.value }}. [See the rig, commands, and results](/work/multi-engine-ha-lab/).
 
 ## Earlier roles
 

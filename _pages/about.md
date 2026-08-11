@@ -10,7 +10,6 @@ description: "Nine years across backend engineering, data platforms, database re
 
 I am a Senior Data & AI Engineer in Kathmandu. Over nine years, my work has moved from Python backend services and PostgreSQL schemas to the harder seams between data, databases, APIs, and AI-assisted products. I care about the part that begins after a successful demo: defining what a system promises, making that promise observable, and giving the person on call a safe way to repair it.
 
-I currently work at UXCam. This site deliberately does not publish employer architecture, customer figures, internal operating metrics, or security details. The writing focuses on portable engineering methods, public documentation, and experiments that I can reproduce independently.
 
 ## How I work
 

@@ -1,6 +1,6 @@
 ---
 title: "Making model output into records you can audit"
-hook: "The boundary I put between a language model and anything a product depends on"
+hook: "Typed outputs, provenance on every record, evaluation before rollout, and a fallback that is a real path"
 description: "How I ship AI features that other workflows can rely on: typed outputs, provenance, evaluation before rollout, and a fallback that is a real path rather than an apology."
 kind: practice
 order: 2
@@ -9,16 +9,12 @@ role: "Senior Data Engineer"
 org: "UXCam"
 period: "2024 – present"
 team: "Global team, working US and EU hours"
-scale: "Described at the level the product is publicly an analytics tool. No prompts, architecture, model choices, vendor terms or usage figures."
+scale: "AI features in a production analytics product"
 stack: [Python, Pydantic, LangGraph, LangChain, CrewAI, "Google-ADK", MCP, Milvus, MLflow, PostgreSQL]
 tags: [ai-agents, data-quality, rag]
 image: /assets/og/og-agents.png
 image_alt: "AI agents in production — Basant Bhattarai"
 ---
-
-## What this page is
-
-The same rule as the [platform page](/work/data-platform-practice/): the method, not the deployment. No prompts, no model selection, no vendor arrangements, no usage numbers. What follows is the design position I hold, which is portable and arguable — and I would rather be argued with than believed.
 
 ## Context
 
