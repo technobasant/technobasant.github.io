@@ -30,6 +30,18 @@
   color: var(--ink-1);
 }
 
+.template-post .prose {
+  font-size: clamp(1.0625rem, 1.02rem + 0.18vw, 1.1875rem);
+  line-height: 1.7;
+  counter-reset: article-section;
+}
+
+.template-post .prose > p:first-of-type {
+  font-size: var(--step-1);
+  line-height: 1.65;
+  color: var(--ink-1);
+}
+
 .prose > * {
   grid-column: content;
   min-width: 0;
@@ -132,6 +144,32 @@
   font-size: var(--step-3);
   letter-spacing: var(--ls-display);
   line-height: 1.15;
+}
+
+.template-post .prose > h2 {
+  counter-increment: article-section;
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr);
+  gap: var(--sp-4);
+  align-items: start;
+}
+
+.template-post .prose > h2::before {
+  content: counter(article-section, decimal-leading-zero);
+  padding-block-start: 0.22em;
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0;
+  color: var(--accent);
+}
+
+@media (max-width: 30rem) {
+  .template-post .prose > h2 {
+    grid-template-columns: 1fr;
+    gap: var(--sp-2);
+  }
 }
 
 .prose h3 {
@@ -274,6 +312,22 @@
   border-collapse: separate;
   border-spacing: 0;
   overflow: hidden;
+}
+
+.prose > .table-scroll-hint {
+  grid-column: wide;
+  display: flex;
+  align-items: center;
+  min-height: 2rem;
+  margin-block-end: calc(var(--sp-3) * -1);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  line-height: 1.4;
+  color: var(--ink-3);
+}
+
+.prose > .table-scroll-hint[hidden] {
+  display: none;
 }
 
 .prose thead {

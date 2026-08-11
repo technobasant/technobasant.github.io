@@ -13,8 +13,15 @@
   line-height: 1.4;
 }
 
+// The layout emits both variants so no JavaScript is needed to construct a
+// table of contents. Only one may participate in layout at a time.
+.post-shell > .toc {
+  display: none;
+}
+
 @media (min-width: 68.75rem) {
-  .toc {
+  .post-shell > .toc {
+    display: block;
     max-height: calc(100dvh - var(--header-h) - var(--sp-8));
     overflow-y: auto;
     overscroll-behavior: contain;
