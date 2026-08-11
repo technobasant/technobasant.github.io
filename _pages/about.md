@@ -1,13 +1,42 @@
 ---
 permalink: /about/
 title: "About"
+excerpt: "Senior Data & AI Engineer with full-stack product experience."
 ---
 
-Basant is a professional Data Architect and Backend developer. He has expertise in the architecture of Database Systems and Data Applications including Postgres, MySQL, Oracle, and MongoDB. His specialties lie in Distributed Systems primarily used for Data Warehousing and Data Analytics which include but are not limited to Citus Data, Redshift, Spark, Trino/PrestoSQL, Athena, Glue, and Hadoop systems.
+# Basant Bhattarai
 
-He is a seasoned Data and  DevOps engineer with hands-on experience in the Administration and configuration of Linux servers for on-premise setup, the configuration of Database servers, clusters, and Services as well as in the cloud services including AWS, Digital Ocean, Azure, and Google Cloud. He enjoys writing Web Applications and APIs in python using Flask and Django frameworks.
+**Senior Data & AI Engineer · Full-Stack**  
+Kathmandu, Nepal · Working with global (US / EU) teams  
 
-In past, he has worked as a Backend Developer, Database Administrator, and Linux System Administrator in various organizations and currently working as Data Engineer which involves developing Spark ETL Data pipelines and Managing distributed Systems for Big Data Analytics.
+[Email](mailto:technobasant9@gmail.com) ·
+[LinkedIn](https://www.linkedin.com/in/technobasant) ·
+[GitHub](https://github.com/technobasant) ·
+[ClickHomes](https://clickhomes.ai)
 
-Basant is a CS graduate with B. Tech in  Computer Science and Engineering(CSE) from JNTU Anantapur, AP, India.
+## Profile
 
+Senior data and AI engineer with **9+ years** building and operating scalable, low-latency **data platforms** that process **15TB+ and hundreds of millions of events daily** across **AWS, GCP, and Azure**.
+
+I work **open-source-first** — Kafka, Spark, Apache Iceberg, Trino, dbt, and Airflow on Kubernetes — across **ingestion, transformation, and BI / reverse-ETL consumption**, with the governance, observability, and reliability (**SLOs, 99.9% uptime**) that production data products demand.
+
+I also ship production **AI / agentic systems** (LangChain, LangGraph, CrewAI, Google-ADK, RAG) and the **databases** behind them — PostgreSQL, MongoDB, Cassandra / ScyllaDB, Redis, MySQL, ClickHouse — including HA, backup/DR, tuning, and security.
+
+On the product side I build **full-stack applications**: FastAPI backends, Next.js / React frontends, dual OLTP/OLAP architectures, and AI-native user journeys (as founder/lead engineer of [ClickHomes](https://clickhomes.ai)).
+
+**Selected outcomes:** 40% lower infrastructure cost · 50% faster processing · 60% faster analytics delivery · 99.5% streaming data-quality accuracy.
+
+## Education
+
+**B.Tech, Computer Science and Engineering**  
+JNTUA College of Engineering, Anantapur, India · 2015 – 2019
+
+## Languages
+
+- **English** — C1 / proficient  
+- **Nepali** — native
+
+## Availability
+
+Open to senior data & AI engineering roles and selective freelance (**15–30+ hrs/week**).  
+Typical coverage: **US business hours** and **EU afternoon/evening** (working from NPT evenings/nights).
