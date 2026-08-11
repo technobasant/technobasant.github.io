@@ -77,7 +77,6 @@ material.
 - Email: {{ site.author.email }}
 - GitHub: {{ site.author.github }}
 - LinkedIn: {{ site.author.linkedin }}
-- Location: {{ site.author.location }} (UTC+5:45)
 
 Consulting status: {{ site.data.availability.status }} — {{ site.data.availability.headline }},
 {{ site.data.availability.hours }}, covering {{ site.data.availability.coverage }}.
