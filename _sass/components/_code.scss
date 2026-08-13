@@ -196,6 +196,20 @@ pre.highlight {
   border-color: color-mix(in oklab, var(--accent) 45%, transparent);
 }
 
+@media (max-width: 30rem) {
+  .highlighter-rouge {
+    --code-pad: var(--sp-4);
+  }
+
+  .highlighter-rouge[data-file]::before {
+    padding-inline-end: 4.5rem;
+  }
+
+  .code-lang {
+    display: none;
+  }
+}
+
 // ── Inline code ──────────────────────────────────────────────────────────────
 // 0.92em, not a fixed size: it has to track whatever it is sitting inside,
 // including an h3 and a table cell.

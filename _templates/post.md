@@ -16,6 +16,15 @@ key_takeaways:
   - ""
 # ── optional ──────────────────────────────────────────────────────────────
 # last_modified_at: {{DATE}}
+cover:
+  base: "/assets/images/editorial-{{SLUG}}-v1"
+  widths: "840,1600"
+  raster_widths: "840,1600"
+  fallback_width: "1600"
+  width: 1600
+  height: 900
+  alt: "Describe the scene; no UI chrome, no logos."
+  caption: "One sentence that states the operating claim the image is standing in for."
 # image: /assets/images/{{SLUG}}.png
 # image_alt: ""
 # canonical_url: ""

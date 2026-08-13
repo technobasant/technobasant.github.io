@@ -33,6 +33,16 @@ biggest liability of a tutorial blog into a trust signal costs one paragraph. {%
 
 <header class="interior-hero interior-hero--post" data-code="FIELD / NOTE">
   <div class="wrap wrap--shell interior-hero__inner interior-hero__inner--article">
+    <div class="interior-hero__content">
+      <nav class="article-breadcrumb article-breadcrumb--mobile" aria-label="Breadcrumb">
+        <a href="{{ '/writing/' | relative_url }}">Writing</a>
+        <span aria-hidden="true">/</span>
+        <span>{{ _label }}</span>
+      </nav>
+      <h1>{{ page.title }}</h1>
+      {%- if page.description %}<p class="lede">{{ page.description }}</p>{% endif %}
+      {% include tag-chips.html tags=page.tags %}
+    </div>
     <div class="interior-hero__rail">
       <nav class="article-breadcrumb article-breadcrumb--rail" aria-label="Breadcrumb">
         <a href="{{ '/writing/' | relative_url }}">Writing</a>
@@ -56,36 +66,25 @@ biggest liability of a tutorial blog into a trust signal costs one paragraph. {%
         </div>
       </dl>
     </div>
-    <div class="interior-hero__content">
-      <nav class="article-breadcrumb article-breadcrumb--mobile" aria-label="Breadcrumb">
-        <a href="{{ '/writing/' | relative_url }}">Writing</a>
-        <span aria-hidden="true">/</span>
-        <span>{{ _label }}</span>
-      </nav>
-      <h1>{{ page.title }}</h1>
-      {%- if page.description %}<p class="lede">{{ page.description }}</p>{% endif %}
-      {% include tag-chips.html tags=page.tags %}
-    </div>
+    {%- if page.cover %}
+    <figure class="article-hero__media">
+      {%- include picture.html
+          base=page.cover.base
+          widths=page.cover.widths
+          raster_widths=page.cover.raster_widths
+          ext="jpg"
+          fallback_width=page.cover.fallback_width
+          sizes="(max-width: 64rem) calc(100vw - 32px), 30rem"
+          width=page.cover.width
+          height=page.cover.height
+          alt=page.cover.alt
+          loading="eager"
+          fetchpriority="high" -%}
+      {%- if page.cover.caption %}<figcaption>{{ page.cover.caption }}</figcaption>{% endif -%}
+    </figure>
+    {%- endif %}
   </div>
 </header>
-
-{%- if page.cover %}
-<figure class="article-cover wrap wrap--shell">
-  {%- include picture.html
-      base=page.cover.base
-      widths=page.cover.widths
-      raster_widths=page.cover.raster_widths
-      ext="jpg"
-      fallback_width=page.cover.fallback_width
-      sizes="(max-width: 900px) calc(100vw - 32px), 1320px"
-      width=page.cover.width
-      height=page.cover.height
-      alt=page.cover.alt
-      loading="eager"
-      fetchpriority="high" -%}
-  {%- if page.cover.caption %}<figcaption>{{ page.cover.caption }}</figcaption>{% endif -%}
-</figure>
-{%- endif %}
 
 <div class="post-shell">
   {%- if page.toc %}
@@ -100,6 +99,10 @@ biggest liability of a tutorial blog into a trust signal costs one paragraph. {%
 
       {% include article-summary.html %}
 
+      {%- if page.toc %}
+      {% include toc.html content=content mobile=true %}
+      {%- endif %}
+
       {%- if _stale %}
       <aside class="staleness">
         <p>Last verified against {{ page.tested_on | default: "the versions listed above" }} in {{ _eff | date: "%B %Y" }}. Versions move; if something drifted, <a href="mailto:{{ site.author.email }}?subject={{ page.title | uri_escape }}">email me</a>.</p>
@@ -108,10 +111,6 @@ biggest liability of a tutorial blog into a trust signal costs one paragraph. {%
 
       {%- if page.series %}
       {% include series-nav.html %}
-      {%- endif %}
-
-      {%- if page.toc %}
-      {% include toc.html content=content mobile=true %}
       {%- endif %}
 
       {{ content }}

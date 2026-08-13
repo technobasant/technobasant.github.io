@@ -10,6 +10,15 @@ series: self-hosted-ops
 series_order: 3
 featured: true
 toc: true
+cover:
+  base: "/assets/images/editorial-stalwart-mail-v1"
+  widths: "840,1600"
+  raster_widths: "840,1600"
+  fallback_width: "1600"
+  width: 1600
+  height: 900
+  alt: "Brass envelopes entering a self-hosted Stalwart MX vault while a public cloud silhouette fades"
+  caption: "Mail is not up when the container starts. It is up when Gmail reports SPF, DKIM, and DMARC pass."
 level: intermediate
 time_estimate: "~60 min hands-on"
 what_youll_build: "IMAP and SMTP for you@yourdomain.com on Stalwart, with DNS that Gmail will accept and an admin UI that does not fight your existing HTTPS site."

@@ -1,8 +1,33 @@
 ---
 layout: default
 ---
-{%- assign _lede = page.description | default: page.excerpt -%}
-{% include interior-hero.html variant="page" lede=_lede %}
+{%- assign _lede = page.lede | default: page.description | default: page.excerpt -%}
+{%- if page.page_class == "page-about" -%}
+<header class="about-profile">
+  <div class="wrap wrap--shell about-profile__inner">
+    <div class="about-profile__copy">
+      <p class="eyebrow">{{ page.eyebrow }}</p>
+      <h1>{{ page.headline | default: page.title }}</h1>
+      <p class="lede">{{ _lede | strip_html | normalize_whitespace | strip }}</p>
+    </div>
+    <figure class="about-profile__portrait">
+      {%- include picture.html
+          base="/assets/images/hero-portrait-v2"
+          widths="420,840,1120"
+          raster_widths="420,840,1120"
+          ext="jpg"
+          fallback_width="840"
+          sizes="(max-width: 48rem) 38vw, 19rem"
+          width=1120
+          height=1399
+          alt="Basant Bhattarai"
+          fetchpriority="high" -%}
+    </figure>
+  </div>
+</header>
+{%- else -%}
+{% include interior-hero.html variant="page" stacked=true lede=_lede %}
+{%- endif -%}
 <article class="page page--body">
   <div class="prose">
     {{ content }}

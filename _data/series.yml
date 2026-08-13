@@ -23,3 +23,10 @@
   register_label: "Follow-along runbook"
   blurb: "Want a free VPN, a private remote desktop, or a mailbox for your domain? Three follow-along setups with fully OSS tools, plus the one thing each guide usually gets wrong."
   status: complete
+
+- slug: rhel8-pg-ansible
+  title: "RHEL 8 Postgres lab on Apple Silicon"
+  register: runbook
+  register_label: "Follow-along runbook"
+  blurb: "Dedicated pgBackRest TLS, then Postgres clients, on generic/rhel8 under QEMU—Ansible-only config on the amd64 fabric from the networking post."
+  status: in-progress

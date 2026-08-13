@@ -1,11 +1,12 @@
 ---
 title: Résumé
+seo_title: "Basant Bhattarai Résumé — Senior Big Data & Agentic AI Engineer"
 eyebrow: Career
-headline: "Nine years from backend systems to data and AI platforms."
+headline: "Nine years across big data pipelines, platforms, and production AI systems."
 hero_code: "CAREER / LOG"
 page_class: page-resume
 permalink: /resume/
-description: "Nine years in software engineering, spanning platform ownership, database reliability, governed AI delivery, mentoring, and independent systems work."
+description: "Senior Data & AI Engineer across Spark/PySpark, Kafka, Airflow, lakehouse architecture, distributed serving, and governed agentic AI systems."
 redirect_from:
   - /experience/
   - /skills/
@@ -28,8 +29,8 @@ redirect_from:
 
 | Role | Period | Scope |
 |---|---|---|
-| Senior Data Engineer, UXCam | 2024 – present | Data-platform and AI-product reliability, governance, architecture review, and technical leadership |
-| Data Engineer, UXCam | 2020 – 2024 | Batch and streaming pipelines, data modeling, orchestration, storage, serving, and operations |
+| Senior Data Engineer, UXCam | 2024 – present | Big-data platform and agentic AI reliability, governance, architecture review, and technical leadership |
+| Data Engineer, UXCam | 2020 – 2024 | Spark batch and streaming pipelines, orchestration, lakehouse storage, analytical serving, and operations |
 | Project Leader, SVCET | 2019 – 2020 | Planning and delivery of an NLP dialogue-system project with a small team |
 | Software Developer, SV Technology | 2017 – 2019 | Python backend services, PostgreSQL schema work, reporting, and CI |
 
@@ -38,7 +39,7 @@ redirect_from:
 **February 2024 – present** · Working with a global team
 
 - Own reliability and governance for a {{ site.data.metrics.professional_platform_scale.value }} platform processing {{ site.data.metrics.professional_event_volume.value }} events daily, with {{ site.data.metrics.professional_uptime.value }} uptime, explicit service objectives, incident-ready runbooks, and reviewable data contracts.
-- Design the boundary where model output becomes product state: typed schemas, provenance, evaluation before rollout, and a recovery path that fails honestly.
+- Build production agentic AI workflows where model output becomes governed product state: typed schemas, provenance, retrieval, evaluation, bounded tools, and honest fallback paths.
 - Delivered {{ site.data.metrics.professional_analytics_delivery.value }} faster analytics workflows with {{ site.data.metrics.professional_manual_effort.value }} less manual effort while retaining review and fallback paths.
 - Mentor {{ site.data.metrics.professional_mentoring.value }} engineers through pairing, code review, and written design feedback; team delivery time improved {{ site.data.metrics.professional_team_delivery.value }}.
 
@@ -64,8 +65,8 @@ redirect_from:
     <p>PostgreSQL, ClickHouse, Trino, Citus, TimescaleDB, Redis, and MongoDB across modeling, partitioning, replication, backup, recovery, and query performance. <a href="/work/multi-engine-ha-lab/">Evidence: measured failover lab</a>.</p>
   </li>
   <li>
-    <h3>Governed AI delivery</h3>
-    <p>Typed outputs, provenance, retrieval, evaluation, tool boundaries, human review, and fallback paths with Python, Pydantic, LangGraph, LangChain, MCP, Milvus, and MLflow. <a href="/work/governed-ai-delivery/">Evidence: governed AI case study</a>.</p>
+    <h3>Agentic AI systems</h3>
+    <p>Production agent workflows with typed outputs, provenance, retrieval, evaluation, bounded tools, human review, tracing, and fallback paths using Python, Pydantic, LangGraph, LangChain, MCP, Milvus, and MLflow. <a href="/work/governed-ai-delivery/">Evidence: governed AI case study</a>.</p>
   </li>
   <li>
     <h3>Technical leadership</h3>

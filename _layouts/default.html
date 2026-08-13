@@ -30,11 +30,18 @@ win over it in exactly the case the user overrode their OS. {%- endcomment %}
 </head>
 <body class="template-{{ page.layout | default: 'page' }}{% if page.page_class %} {{ page.page_class }}{% endif %}">
   <a class="skip-link" href="#main">Skip to content</a>
+  {%- if page.layout == "writing-index" %}
+  <a class="skip-link" href="#writing-find">Skip to search</a>
+  {%- endif %}
 
   <header class="site-header">
-    <div class="wrap header-inner">
-      <a class="mark" href="{{ '/' | relative_url }}">Basant <span>Bhattarai</span></a>
-      {% include nav.html %}
+    <div class="wrap wrap--shell header-inner">
+      <a class="mark" href="{{ '/' | relative_url }}">
+        <span class="mark__name">Basant <span>Bhattarai</span></span>
+      </a>
+      <div class="header-cluster">
+        {% include nav.html %}
+      </div>
     </div>
   </header>
 
@@ -44,6 +51,6 @@ win over it in exactly the case the user overrode their OS. {%- endcomment %}
 
   {% include footer.html %}
 
-  <script src="{{ '/assets/js/site.js' | relative_url }}" defer></script>
+  <script src="{{ '/assets/js/site.js' | relative_url }}?v={{ site.time | date: '%s' }}" defer></script>
 </body>
 </html>

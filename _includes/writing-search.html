@@ -1,0 +1,37 @@
+{%- comment -%}
+  Lowercase haystack for the writing catalog filter. Usage:
+    data-search="{% include writing-search.html post=post %}"
+    data-search="{% include writing-search.html work=item %}"
+{%- endcomment -%}
+{%- assign _hay = "" -%}
+{%- if include.post -%}
+  {%- assign _doc = include.post -%}
+  {%- assign _hay = _doc.title | append: " " | append: _doc.description -%}
+  {%- if _doc.series -%}
+    {%- assign _sm = site.data.series | where: "slug", _doc.series | first -%}
+    {%- assign _hay = _hay | append: " " | append: _doc.series | append: " " | append: _sm.title | append: " " | append: _sm.blurb -%}
+  {%- endif -%}
+  {%- if _doc.cover.alt -%}{%- assign _hay = _hay | append: " " | append: _doc.cover.alt -%}{%- endif -%}
+  {%- if _doc.cover.caption -%}{%- assign _hay = _hay | append: " " | append: _doc.cover.caption -%}{%- endif -%}
+  {%- if _doc.what_youll_build -%}{%- assign _hay = _hay | append: " " | append: _doc.what_youll_build -%}{%- endif -%}
+{%- elsif include.work -%}
+  {%- assign _doc = include.work -%}
+  {%- assign _hay = _doc.title | append: " " | append: _doc.hook | append: " " | append: _doc.description | append: " " | append: _doc.kind | append: " use case work" -%}
+  {%- if _doc.stack -%}
+    {%- assign _hay = _hay | append: " " | append: _doc.stack | join: " " -%}
+  {%- endif -%}
+  {%- if _doc.problem -%}{%- assign _hay = _hay | append: " " | append: _doc.problem -%}{%- endif -%}
+{%- endif -%}
+{%- if _doc.tags -%}
+  {%- for slug in _doc.tags -%}
+    {%- assign _tn = site.data.tags | where: "slug", slug | first -%}
+    {%- assign _hay = _hay | append: " " | append: slug | append: " " | append: _tn.name | append: " " | append: _tn.blurb -%}
+  {%- endfor -%}
+{%- endif -%}
+{%- assign _body = _doc.content | strip_html | normalize_whitespace | truncate: 2400, "" -%}
+{%- assign _hay = _hay | append: " " | append: _body -%}
+{%- if include.raw -%}
+{{- _hay | strip_html | normalize_whitespace | downcase -}}
+{%- else -%}
+{{- _hay | strip_html | normalize_whitespace | downcase | escape -}}
+{%- endif -%}

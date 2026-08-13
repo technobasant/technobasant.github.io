@@ -20,12 +20,14 @@ internal performance figures are intentionally excluded.
 {{ site.data.metrics.experience.value }} {{ site.data.metrics.experience.label }}
 ({{ site.data.metrics.experience.method }}).
 
-At UXCam he works on production data and AI systems with responsibility spanning
-reliability, governance, architecture review, and operational readiness. Public
-materials intentionally describe that scope without disclosing the company's
-system design or internal metrics. Outside the day job he runs a multi-engine
-high-availability lab where claims are published with a reproducible test plan
-and builds the independent work listed below.
+At UXCam he works across production big-data and agentic AI systems, spanning
+high-volume ingestion, Spark/PySpark processing, orchestration, lakehouse
+modeling, analytical serving, reliability, governance, evaluation, architecture
+review, and operational readiness. Public materials intentionally describe that
+scope without disclosing the company's system design or internal metrics.
+Outside the day job he runs a multi-engine high-availability lab where claims
+are published with a reproducible test plan and builds the independent work
+listed below.
 
 Roles: Senior Data Engineer at UXCam (Feb 2024 – present); Data Engineer at UXCam
 (Feb 2020 – Feb 2024); Project Leader at SVCET, India (2019–2020); Software Developer

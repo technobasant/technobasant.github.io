@@ -72,6 +72,8 @@
   <meta name="description" content="{{ _desc | escape }}">
   <meta name="author" content="{{ site.author.name | escape }}">
   <link rel="canonical" href="{{ _canon }}">
+  <link rel="alternate" type="text/plain" title="LLM briefing" href="{{ '/llms.txt' | relative_url }}">
+  <link rel="alternate" type="text/plain" title="AI discovery" href="{{ '/ai.txt' | relative_url }}">
 {%- if page.noindex or page.url contains '404' %}
   <meta name="robots" content="noindex,nofollow">
 {%- else %}
