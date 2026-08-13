@@ -1,167 +1,45 @@
 ---
 layout: default
 ---
-{%- comment -%}
-  Editorial writing index. One lead story establishes hierarchy; the remaining
-  archive is a semantic list of whole-card native links. No client-side routing
-  or click handler is needed, so open-in-new-tab, link previews, and keyboard
-  navigation continue to work normally.
-{%- endcomment -%}
-{%- assign _editor_picks = site.posts | where: "editor_pick", true -%}
-{%- assign _lead = _editor_picks | first -%}
-{%- unless _lead -%}{%- assign _lead = site.posts | first -%}{%- endunless -%}
-{%- assign _tag_slugs = site.data.tags | map: "slug" -%}
-{%- assign _lead_type = _lead.type | default: "essay" -%}
-{%- case _lead_type -%}
-  {%- when "tutorial" -%}{%- assign _lead_label = "Tutorial" -%}
-  {%- when "note" -%}{%- assign _lead_label = "Note" -%}
-  {%- else -%}{%- assign _lead_label = "Essay" -%}
-{%- endcase -%}
+{%- assign _catalog_total = site.posts.size -%}
 
-{% include interior-hero.html variant="index" code="FIELD / NOTES" %}
+{% include interior-hero.html variant="index" code="FIELD / NOTES" stacked=true %}
+{% include writing-find.html %}
 <div class="page page--index page--writing">
-  {%- assign _intro = content | strip -%}
-  {%- if _intro != "" %}
-  <div class="prose index-intro writing-intro">
-    {{ content }}
+  <div id="writing-catalog" class="writing-shell writing-shell--simple wrap wrap--shell">
+    <div class="writing-main">
+      <section class="writing-catalog-section" aria-labelledby="writing-catalog-title">
+        <div class="writing-index-head">
+          <h2 id="writing-catalog-title">Writing</h2>
+          <p class="writing-index-head__note" id="writing-catalog-note">{{ _catalog_total }} notes</p>
+          <a class="section-more" href="{{ '/writing/tags/' | relative_url }}">Browse topics {% include icon.html name="arrow-right" size=14 %}</a>
+        </div>
+
+        <ol id="writing-results" class="writing-feed">
+          {%- for post in site.posts -%}
+          <li>
+            {% include post-card.html post=post heading="h3" %}
+          </li>
+          {%- endfor %}
+        </ol>
+
+        <p class="writing-empty" id="writing-empty" hidden>
+          No writing matches those filters.
+          <button type="button" class="btn" data-writing-clear>Clear filters</button>
+        </p>
+      </section>
+    </div>
   </div>
-  {%- endif %}
 
-  {%- if _lead %}
-  <section class="wrap index-section writing-lead-section reveal" aria-labelledby="lead-story-title">
-    <div class="section-head writing-section-head">
-      <div>
-        <p class="section-label">Editor’s pick</p>
-        <p class="writing-section-note">One considered place to begin.</p>
-      </div>
-    </div>
-    <article class="writing-feature">
-      <a class="writing-feature__link" href="{{ _lead.url | relative_url }}" aria-labelledby="lead-story-title">
-        {%- if _lead.cover %}
-        <div class="writing-feature__media">
-          {%- include picture.html
-              base=_lead.cover.base
-              widths=_lead.cover.widths
-              raster_widths=_lead.cover.raster_widths
-              ext="jpg"
-              fallback_width=_lead.cover.fallback_width
-              sizes="(max-width: 768px) calc(100vw - 32px), 58vw"
-              width=_lead.cover.width
-              height=_lead.cover.height
-              alt=_lead.cover.alt
-              loading="eager"
-              fetchpriority="high" -%}
-        </div>
-        {%- endif %}
-        <div class="writing-feature__copy">
-          <p class="post-card__meta">
-            <span class="badge badge--{{ _lead_type }}">{{ _lead_label }}</span>
-            <time datetime="{{ _lead.date | date_to_xmlschema }}">{{ _lead.date | date: "%b %-d, %Y" }}</time>
-            <span>{% include reading-time.html post=_lead %}</span>
-          </p>
-          <h2 id="lead-story-title">{{ _lead.title }}</h2>
-          <p>{{ _lead.description | default: _lead.excerpt | strip_html | normalize_whitespace | strip }}</p>
-          <span class="writing-feature__open" aria-hidden="true">Read the {{ _lead_label | downcase }} {% include icon.html name="arrow-right" size=15 %}</span>
-        </div>
-      </a>
-    </article>
-  </section>
-  {%- endif %}
-
-  <section class="wrap index-section index-section--compact writing-topics reveal" aria-labelledby="topics-title">
-    <div class="section-head writing-section-head">
-      <div>
-        <p class="section-label" id="topics-title">Browse by topic</p>
-        <p class="writing-section-note">Follow a problem, not a publishing date.</p>
-      </div>
-      <a class="section-more" href="{{ '/writing/tags/' | relative_url }}">All topics {% include icon.html name="arrow-right" size=14 %}</a>
-    </div>
-    {% include tag-chips.html tags=_tag_slugs counts=true nonempty=true %}
-  </section>
-
-  {%- assign _ops_posts = site.posts | where: "series", "self-hosted-ops" -%}
-  {%- if site.posts.size > 1 %}
-  <section class="wrap index-section reveal" aria-labelledby="latest-title">
-    <div class="section-head writing-section-head">
-      <div>
-        <p class="section-label">Platform and AI practice</p>
-        <h2 id="latest-title">Design decisions, failure modes, and operating evidence.</h2>
-      </div>
-    </div>
-    <ol class="writing-feed">
-      {%- for post in site.posts -%}
-      {%- unless post.url == _lead.url or post.series == "self-hosted-ops" %}
-      <li>{% include post-card.html post=post heading="h3" %}</li>
-      {%- endunless -%}
-      {%- endfor %}
-    </ol>
-  </section>
-  {%- endif %}
-
-  {%- if _ops_posts.size > 0 %}
-  <section class="wrap index-section reveal" aria-labelledby="ops-writing-title">
-    <div class="section-head writing-section-head">
-      <div>
-        <p class="section-label">Self-hosted operations</p>
-        <h2 id="ops-writing-title">Follow-along infrastructure tutorials.</h2>
-        <p class="writing-section-note">A secondary runbook series: RustDesk, WireGuard, and Stalwart Mail on infrastructure you control.</p>
-      </div>
-    </div>
-    <ol class="writing-feed">
-      {%- for post in _ops_posts -%}
-      <li>{% include post-card.html post=post heading="h3" %}</li>
-      {%- endfor %}
-    </ol>
-  </section>
-  {%- endif %}
-
-  {%- if site.data.series and site.data.series.size > 0 %}
-  <section class="wrap index-section reveal" aria-labelledby="series-title">
-    <div class="section-head writing-section-head">
-      <div>
-        <p class="section-label">Series</p>
-        <h2 id="series-title">A problem followed farther than one post.</h2>
-      </div>
-    </div>
-    <ul class="card-grid editorial-series-grid">
-      {%- for s in site.data.series -%}
-      {%- unless s.slug == "self-hosted-ops" -%}
-      {%- assign _parts = site.posts | where: "series", s.slug | sort: "series_order" -%}
-      {%- if _parts.size > 0 %}
-      <li>
-        <article class="post-card">
-          {%- comment -%}
-            The register badge distinguishes measured work from a runbook. A
-            reader deciding whether to trust a number needs to know which one
-            they are looking at before they start reading, not after.
-          {%- endcomment -%}
-          <p class="post-card__meta">
-            {%- if s.register_label %}
-            <span class="badge badge--{{ s.register | default: 'note' }}">{{ s.register_label }}</span>
-            {%- endif %}
-            <span>{{ _parts.size }} part{% unless _parts.size == 1 %}s{% endunless %}</span>
-            <span>{% if s.status == "complete" %}Complete{% else %}In progress{% endif %}</span>
-          </p>
-          <h3 class="post-card__title"><a href="{{ _parts.first.url | relative_url }}">{{ s.title }}</a></h3>
-          <p class="post-card__desc">{{ s.blurb }}</p>
-          <span class="post-card__open" aria-hidden="true">Open the series {% include icon.html name="arrow-right" size=14 %}</span>
-        </article>
-      </li>
-      {%- endif %}
-      {%- endunless -%}
-      {%- endfor %}
-    </ul>
-  </section>
-  {%- endif %}
-
-  <aside class="wrap writing-subscribe reveal" aria-labelledby="follow-writing-title">
+  <aside class="wrap wrap--shell writing-subscribe reveal" aria-labelledby="follow-writing-title">
     <div>
-      <p class="section-label">No algorithmic feed</p>
-      <h2 id="follow-writing-title">Use RSS, or return when you need the answer.</h2>
+      <p class="section-label">Follow the work</p>
+      <h2 id="follow-writing-title">Use RSS. No algorithmic feed.</h2>
     </div>
     <div class="writing-subscribe__actions">
       <a class="btn btn--primary" href="{{ '/writing/feed.xml' | relative_url }}">{% include icon.html name="rss" size=15 %} RSS feed</a>
       <a class="btn" href="{{ '/writing/feed.json' | relative_url }}">JSON feed</a>
     </div>
   </aside>
+  {% include writing-index-data.html %}
 </div>

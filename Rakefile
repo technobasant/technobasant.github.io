@@ -181,6 +181,16 @@ task :content do
     end
     failures << "#{path}: links must use /work/, not the retired /projects/ route" if body.include?("/projects/")
 
+    cover = data["cover"]
+    unless cover.is_a?(Hash) && cover["base"].to_s.start_with?("/assets/") && cover["alt"].to_s.length >= 24
+      failures << "#{path}: cover is required (base under /assets/, alt ≥ 24 characters)"
+    end
+    if cover.is_a?(Hash) && cover["base"].to_s != ""
+      fallback = cover["fallback_width"] || "1600"
+      raster = "#{cover['base'].delete_prefix('/')}-#{fallback}.jpg"
+      failures << "#{path}: cover raster missing (#{raster})" unless File.exist?(raster)
+    end
+
     verify_count = body.scan(/^\*\*Verify\.\*\*/).size
     styled_verify_count = body.scan(/^\{:\s*\.verify\s*\}$/).size
     if verify_count != styled_verify_count
@@ -481,11 +491,14 @@ task :verify do
     end
 
     writing_doc = Nokogiri::HTML(File.read(File.join(SITE_DIR, "writing/index.html")))
-    feature = writing_doc.at_css("a.writing-feature__link[href] h2")
-    failures << "writing index: lead story is not one native linked feature" unless feature
+    writing_cards = writing_doc.css(".writing-feed .post-card")
+    linked_writing_cards = writing_cards.count { |card| card.at_css(".post-card__title > a[href]") }
+    unless writing_cards.any? && linked_writing_cards == writing_cards.length
+      failures << "writing index: every list item must have one native title link"
+    end
 
     if failures.empty? && card_count.positive?
-      v.ok "#{card_count} cards and the lead story use native links with clear affordances"
+      v.ok "#{card_count} cards use native title links with clear affordances"
     else
       failures.each { |failure| v.bad(failure) }
     end

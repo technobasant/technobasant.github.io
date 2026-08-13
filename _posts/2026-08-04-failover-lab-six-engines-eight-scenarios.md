@@ -9,6 +9,15 @@ series: failover-lab
 series_order: 1
 featured: true
 toc: true
+cover:
+  base: "/assets/images/editorial-failover-lab-v1"
+  widths: "840,1600"
+  raster_widths: "840,1600"
+  fallback_width: "1600"
+  width: 1600
+  height: 900
+  alt: "Six database engines on one laptop: a failed primary smoking, a neighbor wearing the crown"
+  caption: "Eight scenarios on one 8-CPU rig. A failover test is incomplete until quorum, acknowledged writes, and recovery are measured."
 level: intermediate
 time_estimate: "~45 min hands-on"
 what_youll_build: "A three-node MongoDB replica set on Docker that keeps accepting majority writes after you kill its primary, plus the host settings the other five engines in the series need."

@@ -1,0 +1,16 @@
+{%- comment -%}
+  JSON catalog for client-side search. jsonify owns escaping.
+{%- endcomment -%}
+<script type="application/json" id="writing-index-data">
+[
+{%- for post in site.posts -%}
+{%- capture _text -%}{% include writing-search.html post=post raw=true %}{%- endcapture -%}
+{%- case post.type -%}
+{%- when "tutorial" -%}{%- assign _label = "Tutorial" -%}
+{%- when "note" -%}{%- assign _label = "Note" -%}
+{%- else -%}{%- assign _label = "Essay" -%}
+{%- endcase -%}
+{"id":{{ post.url | jsonify }},"url":{{ post.url | relative_url | jsonify }},"title":{{ post.title | jsonify }},"kind":{{ post.type | default: "essay" | jsonify }},"label":{{ _label | jsonify }},"tags":{{ post.tags | jsonify }},"series":{{ post.series | jsonify }},"blurb":{{ post.description | jsonify }},"text":{{ _text | jsonify }}}{% unless forloop.last %},{% endunless %}
+{%- endfor -%}
+]
+</script>

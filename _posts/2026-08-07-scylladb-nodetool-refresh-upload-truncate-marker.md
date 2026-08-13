@@ -10,6 +10,15 @@ series: failover-lab
 series_order: 2
 featured: true
 toc: true
+cover:
+  base: "/assets/images/editorial-scylla-refresh-v1"
+  widths: "840,1600"
+  raster_widths: "840,1600"
+  fallback_width: "1600"
+  width: 1600
+  height: 900
+  alt: "Scylla node with SSTable discs; only the upload tray glows, a TRUNCATE marker hides older files"
+  caption: "nodetool refresh only reads upload/, and a TRUNCATE marker keeps pre-truncate SSTables invisible even when the files are back."
 level: advanced
 time_estimate: "~40 min hands-on"
 what_youll_build: "A three-node ScyllaDB cluster at RF=3 that survives a node loss at QUORUM, and a snapshot restore that actually returns your rows instead of zero."

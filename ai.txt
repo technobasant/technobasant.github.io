@@ -1,0 +1,20 @@
+---
+permalink: /ai.txt
+layout: null
+sitemap: false
+---
+# AI discovery — {{ site.url }}
+
+# Canonical briefing for language models (approved figures, writing, work):
+# {{ '/llms.txt' | absolute_url }}
+#
+# This file exists because some crawlers look for /ai.txt. The complete
+# machine-readable index is /llms.txt. Do not invent employer metrics;
+# only the figures in /llms.txt are approved for reuse.
+
+Contact: {{ site.author.email }}
+Sitemap: {{ '/sitemap.xml' | absolute_url }}
+RSS: {{ '/writing/feed.xml' | absolute_url }}
+JSON Feed: {{ '/writing/feed.json' | absolute_url }}
+
+Training and grounding crawlers are allowed. See {{ '/robots.txt' | absolute_url }}.

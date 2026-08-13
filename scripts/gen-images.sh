@@ -6,9 +6,11 @@
 #   ./scripts/gen-images.sh portrait
 #   ./scripts/gen-images.sh icons
 #   ./scripts/gen-images.sh og
+#   ./scripts/gen-images.sh covers
 #
 # Requires: sips (macOS), cwebp + avifenc (brew install webp libavif),
-#           rsvg-convert (brew install librsvg). No ImageMagick.
+#           rsvg-convert (brew install librsvg), python3 + Pillow (mark cutout).
+#           No ImageMagick.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
@@ -60,6 +62,27 @@ gen_portrait() {
 
   for f in assets/images/portrait-*; do report "$f"; done
   for f in assets/images/hero-portrait-v2-*; do report "$f"; done
+
+  # Navbar mark: alpha cutout at _source/mark-portrait-master.png. JPEG would
+  # bake a studio plate that fights both light and dark headers; PNG/WebP/AVIF
+  # let --surface-2 show through. sips flattens alpha, so Pillow resizes.
+  echo "mark portrait"
+  local mark_src="_source/mark-portrait-master.png"
+  python3 -c "from PIL import Image" >/dev/null 2>&1 || { echo "missing: python3 + Pillow" >&2; exit 1; }
+  python3 - "$mark_src" <<'PY'
+import sys
+from PIL import Image
+src = sys.argv[1]
+im = Image.open(src).convert("RGBA")
+for w in (128, 256):
+    im.resize((w, w), Image.Resampling.LANCZOS).save(f"assets/images/mark-portrait-{w}.png")
+PY
+  for w in 128 256; do
+    cwebp -quiet -q 90 -alpha_q 100 "assets/images/mark-portrait-$w.png" -o "assets/images/mark-portrait-$w.webp"
+    avifenc -q 62 -s 4 -j all "assets/images/mark-portrait-$w.png" "assets/images/mark-portrait-$w.avif" >/dev/null
+    rm -f "assets/images/mark-portrait-$w.jpg"
+  done
+  for f in assets/images/mark-portrait-*; do report "$f"; done
 }
 
 # ── icons ──────────────────────────────────────────────────────────────────
@@ -90,10 +113,38 @@ gen_og() {
   python3 scripts/gen-og.py
 }
 
+# ── editorial covers ───────────────────────────────────────────────────────
+# Masters live in _source/covers/*-master.png (excluded from the Jekyll build).
+# Each published post references /assets/images/<stem>-{840,1600}.{jpg,webp,avif}.
+gen_covers() {
+  need sips; need cwebp; need avifenc
+  echo "editorial covers"
+  shopt -s nullglob
+  local masters=(_source/covers/*-master.png)
+  if [[ ${#masters[@]} -eq 0 ]]; then
+    echo "  no masters in _source/covers"
+    return 0
+  fi
+  local src stem base tmpw
+  for src in "${masters[@]}"; do
+    stem="$(basename "$src" -master.png)"
+    echo "  $stem"
+    sips --resampleHeightWidth 900 1600 "$src" --out "$TMP/${stem}-1600.png" >/dev/null
+    sips --resampleHeightWidth 506 840 "$src" --out "$TMP/${stem}-840.png" >/dev/null
+    for tmpw in 840 1600; do
+      cwebp -quiet -q 82 -sharp_yuv "$TMP/${stem}-$tmpw.png" -o "assets/images/${stem}-$tmpw.webp"
+      avifenc -q 56 -s 4 -j all "$TMP/${stem}-$tmpw.png" "assets/images/${stem}-$tmpw.avif" >/dev/null
+      sips -s format jpeg -s formatOptions 82 "$TMP/${stem}-$tmpw.png" --out "assets/images/${stem}-$tmpw.jpg" >/dev/null
+      report "assets/images/${stem}-$tmpw.jpg"
+    done
+  done
+}
+
 case "$TARGET" in
-  all)      gen_portrait; gen_icons; gen_og ;;
+  all)      gen_portrait; gen_icons; gen_og; gen_covers ;;
   portrait) gen_portrait ;;
   icons)    gen_icons ;;
   og)       gen_og ;;
-  *) echo "usage: $0 [all|portrait|icons|og]" >&2; exit 1 ;;
+  covers)   gen_covers ;;
+  *) echo "usage: $0 [all|portrait|icons|og|covers]" >&2; exit 1 ;;
 esac

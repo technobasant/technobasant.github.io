@@ -19,18 +19,21 @@ layout: default
 {%- assign _labs       = site.work | where: "kind", "lab"        | sort: "order" -%}
 {%- assign _all = _practice | concat: _production | concat: _labs -%}
 
-{% include interior-hero.html variant="index" code="SYSTEM / RECORD" %}
+{% include interior-hero.html variant="index" code="SYSTEM / RECORD" stacked=true %}
 <div class="page page--index">
-  <div class="prose index-intro">
+  {%- assign _intro = content | strip -%}
+  {%- if _intro != "" %}
+  <div class="prose index-intro wrap wrap--shell">
     {{ content }}
   </div>
+  {%- endif %}
 
   {%- if _all.size > 0 %}
-  <section class="wrap index-section" aria-labelledby="work-title">
+  <section class="wrap wrap--shell index-section" aria-labelledby="work-title">
     <h2 class="sr-only" id="work-title">Case studies</h2>
-    <div class="card-grid card-grid--work">
+    <div class="portfolio-work__list portfolio-work__list--index">
       {%- for item in _all %}
-      {% include case-card.html item=item %}
+      {% include case-card.html item=item variant="portfolio" index=forloop.index %}
       {%- endfor %}
     </div>
   </section>

@@ -12,6 +12,9 @@
   --hero-line: rgba(243, 238, 229, 0.14);
   --hero-accent: var(--brand-brass-masthead);
   position: relative;
+  display: grid;
+  align-items: center;
+  min-height: calc(100svh - var(--header-h));
   overflow: clip;
   isolation: isolate;
   padding: 0;
@@ -44,9 +47,11 @@
 // competing with it, and the headline keeps its measure.
 .hero-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 19rem;
-  gap: clamp(2rem, 5vw, 4rem);
+  grid-template-columns: minmax(0, 38rem) 15rem;
+  justify-content: space-between;
+  gap: clamp(1.75rem, 4vw, 3.5rem);
   align-items: center;
+  width: 100%;
   min-height: 0;
 }
 
@@ -64,7 +69,7 @@
 .hero-copy {
   min-width: 0;
   align-self: center;
-  padding-block: clamp(4rem, 9vw, 7.5rem);
+  padding-block: clamp(1.25rem, 3vw, 2.25rem);
   position: relative;
   z-index: 2;
 }
@@ -73,7 +78,7 @@
   display: flex;
   align-items: center;
   gap: var(--sp-3);
-  margin-block-end: var(--sp-5);
+  margin-block-end: var(--sp-4);
   color: var(--hero-accent);
 }
 
@@ -90,14 +95,14 @@
 // at all. 36→56px still reads as display type and holds each clause on one line.
 .hero h1 {
   margin: 0;
-  max-width: 20ch;
+  max-width: 18ch;
   // Deliberate exception to the serif interior mastheads: the homepage opens
   // with a direct sans proposition, then uses italic and brass for emphasis.
   font-family: var(--font-body);
-  // Floor lowered from 2.25rem: at 390px the clamp pinned to the minimum and
-  // the headline took six lines. 30px holds it to four.
-  font-size: clamp(1.875rem, 3.9vw, 3.5rem);
-  line-height: 1.02;
+  // 28→42px. 56px against a 20px lede was a 2.8× jump and left a hole under
+  // the claim that the next section then sliced at the fold.
+  font-size: clamp(1.75rem, 3.1vw, 2.625rem);
+  line-height: 1.08;
   color: var(--hero-ink);
 }
 
@@ -116,8 +121,10 @@
 }
 
 .hero .lede {
-  margin-block-start: var(--sp-5);
-  max-width: 48ch;
+  margin-block-start: var(--sp-3);
+  max-width: 42ch;
+  font-size: var(--step-0);
+  line-height: 1.5;
   color: var(--hero-muted);
 }
 
@@ -133,7 +140,7 @@
 }
 
 .hero .actions {
-  margin-block-start: var(--sp-6);
+  margin-block-start: var(--sp-4);
 }
 
 .hero .btn--primary {
@@ -159,10 +166,11 @@
 // ── Portrait ─────────────────────────────────────────────────────────────────
 .hero-photo {
   position: relative;
-  width: 100%;
+  width: 15rem;
+  max-width: 100%;
   margin: 0;
   align-self: center;
-  justify-self: stretch;
+  justify-self: end;
   z-index: 1;
 }
 
@@ -278,7 +286,7 @@
 // ── Outcome rail ─────────────────────────────────────────────────────────────
 .home-outcomes {
   margin-block-start: 0;
-  padding-block: clamp(3rem, 7vw, 6rem);
+  padding-block: clamp(2.25rem, 4vw, 3.5rem);
   background: var(--surface-1);
   border-block-end: 1px solid var(--line);
 }
@@ -295,16 +303,16 @@
 }
 
 .outcome-intro h2 {
-  max-width: 24ch;
+  max-width: 28ch;
   margin: 0;
-  font-size: var(--step-3);
-  line-height: 1.15;
+  font-size: var(--step-2);
+  line-height: 1.2;
 }
 
 .outcome-rail {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  margin: var(--sp-7) 0 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: var(--sp-5) 0 0;
   padding: 0;
   border-block: 1px solid var(--line-strong);
   list-style: none;
@@ -319,13 +327,17 @@
   padding: var(--sp-5);
 }
 
-.outcome-rail li + li {
+.outcome-rail li:nth-child(even) {
   border-inline-start: 1px solid var(--line-strong);
+}
+
+.outcome-rail li:nth-child(n + 3) {
+  border-block-start: 1px solid var(--line-strong);
 }
 
 .outcome-rail strong {
   font-family: var(--font-body);
-  font-size: var(--step-3);
+  font-size: var(--step-2);
   font-weight: 620;
   letter-spacing: var(--ls-display);
   line-height: 1;
@@ -334,20 +346,29 @@
 }
 
 .outcome-rail span {
-  font-size: var(--step--1);
+  font-size: var(--step-0);
   font-weight: 650;
   line-height: 1.35;
   color: var(--ink-1);
 }
 
 .outcome-rail small {
-  font-size: var(--step--2);
+  font-size: var(--step--1);
   line-height: 1.5;
   color: var(--ink-3);
 }
 
+.home-path {
+  padding-block: var(--sp-7) var(--sp-8);
+}
+
+.home-path .system-flow {
+  margin: 0;
+}
+
 .hero + .home-outcomes,
-.home-outcomes + .home-section,
+.home-outcomes + .home-path,
+.home-path + .home-section,
 .home-section + .home-section {
   margin-block-start: 0;
 }
@@ -493,19 +514,13 @@
   }
 
   .hero-copy {
-    padding-block: clamp(3.5rem, 12vw, 6rem) var(--sp-6);
-  }
-
-  .hero::after {
-    display: none;
+    padding-block: clamp(1.35rem, 5.5vw, 2.25rem) var(--sp-4);
   }
 
   .hero-photo {
-    // Keep the portrait as an identity cue, not a second mobile hero. The
-    // previous full-width treatment added almost 450px before readers reached
-    // the first piece of evidence.
-    width: min(44vw, 15rem);
+    width: min(36vw, 9.5rem);
     justify-self: start;
+    margin-block-end: var(--sp-5);
     padding-block-start: 0;
   }
 
@@ -515,14 +530,6 @@
 
   .outcome-rail {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .outcome-rail li:nth-child(3) {
-    border-inline-start: 0;
-  }
-
-  .outcome-rail li:nth-child(n + 3) {
-    border-block-start: 1px solid var(--line-strong);
   }
 
   .current-role {
@@ -561,8 +568,8 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .outcome-rail li + li,
-  .outcome-rail li:nth-child(3) {
+  .outcome-rail li:nth-child(even),
+  .outcome-rail li:nth-child(n + 3) {
     border-inline-start: 0;
     border-block-start: 1px solid var(--line-strong);
   }

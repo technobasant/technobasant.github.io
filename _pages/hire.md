@@ -1,11 +1,12 @@
 ---
 title: Work with me
+seo_title: "Big Data Platform & Agentic AI Consulting — Basant Bhattarai"
 eyebrow: Consulting
-headline: "Bring me the system that is expensive, slow, or hard to trust."
+headline: "Bring me the big data pipeline or AI agent system that must scale reliably."
 hero_code: "SCOPE / DECIDE"
 page_class: page-hire
 permalink: /hire/
-description: "Senior consulting on data platforms, database reliability, and governed AI systems — focused engagements with an explicit decision, measurable outcome, and clean handoff."
+description: "Senior consulting on Spark pipelines, lakehouse platforms, distributed data systems, and governed agentic AI—focused on scale, reliability, observability, and cost."
 ---
 
 I take one or two engagements at a time, alongside a full-time role. That constraint is the point: it keeps the work to problems where senior judgement is the bottleneck, not headcount.

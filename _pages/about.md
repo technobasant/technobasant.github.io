@@ -1,14 +1,16 @@
 ---
 title: About
+seo_title: "About Basant Bhattarai — Big Data & Agentic AI Engineer"
 eyebrow: Profile
-headline: "I build systems that stay trustworthy after the demo."
+headline: "I architect big data platforms and agentic AI systems for production."
 hero_code: "OPERATE / OWN"
 page_class: page-about
 permalink: /about/
-description: "Nine years across backend engineering, data platforms, database reliability, and governed AI systems — plus the principles I use to operate them."
+description: "About Basant Bhattarai: a Senior Data & AI Engineer specializing in Spark pipelines, lakehouse platforms, distributed systems, and production AI agents."
+lede: "From Kafka ingestion and Spark processing to Iceberg storage, analytical serving, and governed AI agents, I design the full lifecycle for scale, resilience, and cost."
 ---
 
-I am a Senior Data & AI Engineer based in Kathmandu, Nepal. Over {{ site.data.metrics.experience.value }}, my work has moved from Python backend services and PostgreSQL schemas to the harder seams between data, databases, APIs, and AI-assisted products. I care about the part after a successful demo: what the system promises, how we know it is keeping that promise, and how another engineer repairs it safely.
+I am a Senior Data & AI Engineer based in Kathmandu, Nepal. Over {{ site.data.metrics.experience.value }}, my work has moved from Python backend services to high-volume Kafka ingestion, Spark/PySpark processing, Airflow orchestration, lakehouse modeling, distributed analytical serving, and production agentic AI. I work close to system internals: finding throughput and reliability limits, designing for recovery, integrating security and observability, and controlling cost before scale turns an architectural weakness into an operational problem.
 
 
 ## Operating principles
@@ -22,7 +24,7 @@ I am a Senior Data & AI Engineer based in Kathmandu, Nepal. Over {{ site.data.me
 
 ## What I am doing now
 
-At UXCam I work on production data and AI systems, with the weight on reliability, governance, database serving and evaluation.
+At UXCam I work across production big-data pipelines and AI systems, with the weight on Spark processing, platform reliability, governance, analytical serving, agent evaluation, and operational readiness.
 
 Outside that I keep a multi-engine failover lab with restartable scenarios, published commands and measured outcomes, and I build an independent product where I own every layer from the schema to the deployment.
 

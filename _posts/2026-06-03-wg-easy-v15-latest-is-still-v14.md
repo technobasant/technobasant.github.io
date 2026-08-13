@@ -10,6 +10,15 @@ series: self-hosted-ops
 series_order: 2
 featured: true
 toc: true
+cover:
+  base: "/assets/images/editorial-wireguard-v15-v1"
+  widths: "840,1600"
+  raster_widths: "840,1600"
+  fallback_width: "1600"
+  width: 1600
+  height: 900
+  alt: "WireGuard-green tunnel from laptop and phone through a pinned VPS; the latest path crumbles"
+  caption: "wg-easy :latest still resolves to v14. Pin :15 or the hostname never sticks."
 level: intermediate
 time_estimate: "~25 min hands-on"
 what_youll_build: "A free WireGuard VPN on your VPS: scan a QR on your phone, and your public IP becomes the server IP."

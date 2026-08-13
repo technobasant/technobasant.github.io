@@ -1,12 +1,12 @@
 # ── Identity ──────────────────────────────────────────────────────────────
 title: "Basant Bhattarai"
-subtitle: "Senior Data & AI Engineer · Platform & Database Reliability"
-tagline: "I build data platforms that stay correct under load — and the AI agents that sit on top of them."
+subtitle: "Senior Data & AI Engineer · Big Data Platforms & Agentic AI"
+tagline: "I architect high-volume data pipelines and governed AI agents for production."
 email: technobasant9@gmail.com
 description: >-
-  Basant Bhattarai — Senior Data & AI Engineer. Nine years across backend
-  engineering, production data platforms, database reliability, and governed
-  AI systems. Working US and EU hours.
+  Basant Bhattarai — Senior Data & AI Engineer specializing in Spark pipelines,
+  big-data platforms, lakehouse architecture, distributed serving, and governed
+  agentic AI systems. Working US and EU hours.
 url: "https://technobasant.github.io"
 baseurl: ""
 repository: "technobasant/technobasant.github.io"
@@ -18,15 +18,15 @@ og_image: "/assets/og/og-default-v3.png"
 
 author:
   name: "Basant Bhattarai"
-  role: "Senior Data & AI Engineer · Platform & Database Reliability"
+  role: "Senior Data & AI Engineer · Big Data Platforms & Agentic AI"
   location: "Kathmandu, Nepal"
   avatar: "/assets/images/hero-portrait-v2-840.jpg"
   email: "technobasant9@gmail.com"
   linkedin: "https://www.linkedin.com/in/technobasant"
   github: "https://github.com/technobasant"
   bio: >-
-    Senior Data Engineer focused on reliable data platforms, database systems,
-    and governed AI products.
+    Senior Data & AI Engineer focused on Spark pipelines, lakehouse platforms,
+    distributed systems, and governed agentic AI products.
 
 # ── Build ─────────────────────────────────────────────────────────────────
 markdown: kramdown
