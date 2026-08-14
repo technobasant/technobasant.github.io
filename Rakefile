@@ -657,4 +657,198 @@ task :tokens do
   end
 end
 
-task default: %i[content privacy check verify jsonld tokens]
+# css:deadwood is deliberately NOT in the default list yet — it currently
+# reports ~230 unreachable selectors, which is a real backlog to work through,
+# not a regression to block on. Add it here once it is green.
+task default: %i[content privacy check verify jsonld tokens css:literals css:budget]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CSS HYGIENE
+#
+# `rake tokens` proves the token matrix is sound. It cannot prove the
+# stylesheet actually uses it — a hardcoded hex is invisible to a token audit
+# no matter what surface it lands on. Three shipped AA failures came from
+# exactly that gap: a `.writing-find` block that kept a dark-only palette while
+# rendering on paper gave the ⌘K hint 1.85:1 and the search field's focus ring
+# 1.82:1, and a stray `#737e89` gave `.article-facts dt` 3.96:1.
+#
+# These three tasks close the gap from the other side, and unlike a screenshot
+# diff they are platform-independent, so they belong in CI.
+# ─────────────────────────────────────────────────────────────────────────────
+CSS_BUILT = "_site/assets/css/site.css".freeze
+
+# Where a raw colour is the correct answer.
+LITERAL_EXEMPT = {
+  "_sass/_tokens.scss"  => "literals are the point — this is where colour is defined",
+  "_sass/_print.scss"   => "paper is one fixed surface; the print palette is deliberately absolute",
+  "_sass/_syntax.scss"  => "Rouge token colours are defined here and audited by SCOPED_PAIRS"
+}.freeze
+
+# A mask stop carries alpha, not colour — `#000` there has no visual meaning.
+LITERAL_OK_LINE = /mask-image|mask:/.freeze
+
+desc "No raw colour literals in the component layer — everything through tokens"
+task :"css:literals" do
+  offenders = []
+
+  Dir["_sass/**/*.scss"].sort.each do |path|
+    next if LITERAL_EXEMPT.key?(path)
+
+    in_block_comment = false
+    File.readlines(path).each_with_index do |line, i|
+      # Strip comments before matching, or the explanatory prose that documents
+      # a past failure ("the ⌘K hint (#a9b2bd on --surface-2) measured 1.85:1")
+      # trips the gate that the fix installed.
+      in_block_comment = true  if line =~ %r{/\*} && line !~ %r{\*/}
+      was_comment = in_block_comment
+      in_block_comment = false if line =~ %r{\*/}
+      next if was_comment
+
+      code = line.sub(%r{//.*$}, "").sub(%r{/\*.*?\*/}, "")
+      next if code =~ LITERAL_OK_LINE
+
+      hits = code.scan(/#[0-9a-fA-F]{3,8}\b|\brgba?\(\s*\d/)
+      next if hits.empty?
+
+      offenders << format("%s:%d  %s", path, i + 1, code.strip)
+    end
+  end
+
+  if offenders.empty?
+    exempt = LITERAL_EXEMPT.keys.length
+    puts "css:literals: ok — component layer is token-only (#{exempt} documented exemption(s))"
+  else
+    warn "css:literals: #{offenders.length} raw colour literal(s)"
+    offenders.each { |o| warn "  #{o}" }
+    warn "  Use a token, or add a documented entry to LITERAL_EXEMPT."
+    abort "css:literals: FAILED"
+  end
+end
+
+# Ratchet this down as dead rules go; never up without saying why in the commit.
+CSS_GZIP_CEILING = 25_000
+
+desc "The built stylesheet must stay under its gzip budget"
+task :"css:budget" do
+  unless File.exist?(CSS_BUILT)
+    puts "css:budget: SKIP — #{CSS_BUILT} not built"
+    next
+  end
+
+  require "zlib"
+  require "stringio"
+  raw = File.binread(CSS_BUILT)
+  io = StringIO.new
+  Zlib::GzipWriter.wrap(io, Zlib::BEST_COMPRESSION) { |gz| gz.write(raw) }
+  gzip = io.string.bytesize
+
+  pct = (gzip * 100.0 / CSS_GZIP_CEILING).round
+  line = format("css:budget: %s — %d B gzip (%d B raw), %d%% of the %d B ceiling",
+                gzip <= CSS_GZIP_CEILING ? "ok" : "OVER", gzip, raw.bytesize, pct, CSS_GZIP_CEILING)
+
+  if gzip <= CSS_GZIP_CEILING
+    puts line
+  else
+    abort line
+  end
+end
+
+# Classes that only ever exist after site.js runs, so no built HTML contains
+# them. Each one is a real hook — grep site.js before adding to this list.
+JS_ONLY_SELECTORS = %w[
+  code-tools code-lang copy-btn sr-live table-scroll-hint
+  writing-suggest__hit writing-suggest__kind writing-suggest__title
+  writing-suggest__blurb is-active is-filtering is-hit is-empty
+].freeze
+
+# Selectors that cannot appear in built HTML by construction:
+#   .js …            progressive-enhancement gate; the inline bootstrap in
+#                    default.html adds `js` to <html> at runtime
+#   [open] [hidden]  set by dialog.showModal() and the catalog filter
+#   [aria-expanded]  toggled by the nav and the search combobox
+DEADWOOD_RUNTIME = /(^|\s)\.js(\s|$)|\[open\]|\[hidden\]|\[aria-expanded/.freeze
+
+# Markup a template emits only under a condition that is false today. Unlike
+# dead code, these come back on their own: `.staleness` renders the moment a
+# tutorial passes its one-year freshness cutoff (_layouts/post.html:26).
+DEADWOOD_CONDITIONAL = %w[.staleness].freeze
+
+# Selectors that style AUTHORED CONTENT rather than template markup. For these,
+# "matches nothing today" means "nobody has written one yet" — not "dead".
+#
+# The distinction matters and it is not academic. `.highlight` covers the Rouge
+# token classes; the corpus currently uses a subset, and deleting the rest
+# breaks highlighting the first time someone writes a language that emits one.
+# `.prose ol ol` and `.callout li` are the same shape: legitimate authoring
+# choices that `_templates/tutorial.md` actively scaffolds.
+#
+# Template-driven selectors get no such benefit of the doubt. If no layout or
+# include can emit `.hero-photo`, it is unreachable, full stop.
+DEADWOOD_CONTENT_ROOTS = %w[
+  .highlight .prose .callout .verify .checklist .footnotes .ledger__
+].freeze
+
+desc "Every selector in the built CSS must match something in the built HTML"
+task :"css:deadwood" do
+  unless File.exist?(CSS_BUILT)
+    puts "css:deadwood: SKIP — #{CSS_BUILT} not built"
+    next
+  end
+
+  docs = Dir["_site/**/*.html"].map { |f| Nokogiri::HTML5(File.read(f)) }
+  abort "css:deadwood: no built HTML found" if docs.empty?
+
+  css = File.read(CSS_BUILT)
+  # Drop at-rule preludes and declaration blocks; keep the selector text.
+  css = css.gsub(%r{/\*.*?\*/}m, "")
+  selectors = css.scan(/(?:^|[};])\s*([^{}@;]+?)\s*\{/).flatten
+
+  seen = {}
+  selectors.each do |group|
+    group.split(",").each do |sel|
+      sel = sel.strip
+      next if sel.empty? || sel.start_with?("%", "from", "to") || sel =~ /^\d/
+      # Nokogiri has no view state: strip pseudo-classes and pseudo-elements
+      # and test the structural remainder. `:hover` on a real element is fine;
+      # a selector whose *element* part matches nothing is the finding.
+      # Alternation is ordered longest-first on purpose. With `focus` listed
+      # before `focus-visible`, `.btn--primary:focus-visible` strips to
+      # `.btn--primary-visible`, matches nothing, and gets reported as dead —
+      # which is how this task first "found" eight live selectors.
+      probe = sel.gsub(/::[a-z-]+(\([^)]*\))?/, "")
+                 .gsub(/:(focus-within|focus-visible|first-of-type|last-of-type|only-child|first-child|last-child|nth-child\([^)]*\)|nth-of-type\([^)]*\)|not\([^)]*\)|where\([^)]*\)|has\([^)]*\)|is\([^)]*\)|disabled|checked|visited|active|target|empty|hover|focus)/, "")
+                 .strip
+      next if probe.empty? || probe == "*"
+      # Bare element selectors (`h5`, `hr`, `video`, `textarea`, `select`) come
+      # from _reset.scss and _prose.scss. They are the base layer: absent today
+      # only because nobody has authored that element yet, exactly like the
+      # content roots below. A stylesheet that styles `h5` only once an `h5`
+      # exists is not a stylesheet.
+      next unless probe =~ /[.#\[]/
+      next if JS_ONLY_SELECTORS.any? { |c| probe.include?(c) }
+      next if DEADWOOD_CONTENT_ROOTS.any? { |r| probe.start_with?(r) }
+      next if DEADWOOD_CONDITIONAL.any? { |r| probe.start_with?(r) }
+      next if probe =~ DEADWOOD_RUNTIME
+      seen[probe] ||= sel
+    end
+  end
+
+  dead = seen.reject do |probe, _|
+    docs.any? do |doc|
+      begin
+        doc.at_css(probe)
+      rescue StandardError
+        true # a selector Nokogiri cannot parse is not evidence of death
+      end
+    end
+  end
+
+  if dead.empty?
+    puts "css:deadwood: ok — all #{seen.length} selector(s) match rendered markup"
+  else
+    warn "css:deadwood: #{dead.length} of #{seen.length} selector(s) match nothing in #{docs.length} built pages"
+    dead.values.sort.first(60).each { |s| warn "  #{s}" }
+    warn "  ... and #{dead.length - 60} more" if dead.length > 60
+    abort "css:deadwood: FAILED"
+  end
+end
