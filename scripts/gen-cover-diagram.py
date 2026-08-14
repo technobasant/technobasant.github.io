@@ -117,7 +117,35 @@ def patroni_pg18() -> str:
     return "".join(body)
 
 
-DIAGRAMS = {"patroni-pg18": patroni_pg18}
+def pgbackrest_patroni() -> str:
+    """One repo, two cluster members, and the two places config lives."""
+    body = [
+        f'<rect width="{W}" height="{H}" fill="{PAPER}"/>',
+        f'<text x="150" y="190" font-family="{MONO}" font-size="30" letter-spacing="6" '
+        f'fill="{ACCENT}">BACKUP INTO A MOVING CLUSTER</text>',
+        f'<text x="150" y="300" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">The primary moves.</text>',
+        f'<text x="150" y="382" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">The repo has to not care.</text>',
+        node_box(150, 520, 620, 210, "pgBackRest repo", "192.168.105.140", "pg1-host + pg2-host", accent=True),
+        node_box(1000, 470, 600, 195, "pgn1", "192.168.105.141", "replica"),
+        node_box(1000, 755, 600, 195, "pgn2", "192.168.105.142", "leader"),
+        arrow(780, 590, 990, 555, "archive-push", dashed=True, up=True),
+        arrow(780, 660, 990, 840, "backup", dashed=True, up=True),
+        f'<text x="1680" y="545" font-family="{MONO}" font-size="27" fill="{MUTED}">archive_mode</text>',
+        f'<text x="1680" y="583" font-family="{MONO}" font-size="27" fill="{ACCENT}">\u2192 the DCS</text>',
+        f'<text x="1680" y="835" font-family="{MONO}" font-size="27" fill="{MUTED}">create_replica</text>',
+        f'<text x="1680" y="873" font-family="{MONO}" font-size="27" fill="{ACCENT}">\u2192 local yml</text>',
+        f'<line x1="150" y1="1120" x2="{W - 150}" y2="1120" stroke="{LINE}" stroke-width="2"/>',
+        f'<text x="150" y="1195" font-family="{MONO}" font-size="30" fill="{MUTED}">'
+        f'stanza \u00b7 full backup \u00b7 replica rebuild \u00b7 point-in-time restore</text>',
+        f'<text x="{W - 150}" y="1195" font-family="{MONO}" font-size="30" fill="{ACCENT}" '
+        f'text-anchor="end">pgBackRest 2.59 \u00b7 PostgreSQL 18.6</text>',
+    ]
+    return "".join(body)
+
+
+DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patroni}
 
 
 def svg_for(name: str) -> str:
