@@ -10,20 +10,18 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
-  border: 1px solid var(--line);
-  border-radius: var(--r-md);
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 0;
+  border-radius: var(--r-full);
   color: var(--ink-2);
   background: transparent;
   transition: background-color var(--dur-1) var(--ease-standard),
-    border-color var(--dur-1) var(--ease-standard),
     color var(--dur-1) var(--ease-standard);
 }
 
 .theme-toggle:hover {
   background: var(--surface-2);
-  border-color: var(--line-strong);
   color: var(--ink-1);
 }
 

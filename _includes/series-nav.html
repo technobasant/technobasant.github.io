@@ -2,6 +2,11 @@
   Series navigation.
     {% include series-nav.html %}            → "Part N of M" + prev/next
     {% include series-nav.html full=true %}  → the full ordered list (bottom of post)
+
+  Both render on the same post, so they cannot share an aria-label: two <nav>
+  landmarks with the identical name is axe's landmark-unique, and a screen
+  reader listing the page's landmarks would show "Series: The failover lab"
+  twice with no way to tell which is the jump-list and which is the pager.
 {%- endcomment -%}
 {%- assign _parts = site.posts | where: "series", page.series | sort: "series_order" -%}
 {%- assign _total = _parts | size -%}
@@ -18,22 +23,35 @@
     {%- unless forloop.last -%}{%- assign _prev_ni = forloop.index -%}{%- assign _next = _parts[_prev_ni] -%}{%- endunless -%}
   {%- endif -%}
 {%- endfor -%}
-<nav class="series-nav" aria-label="Series: {{ _title | escape }}">
-  <p class="section-label">Part {{ _index }} of {{ _total }} <span aria-hidden="true">·</span> {{ _title }}{% if _meta.status == "in-progress" %} <span>(in progress)</span>{% endif %}</p>
+{%- if include.full -%}
+  {%- assign _nav_label = _title | escape | prepend: "All parts of " -%}
+{%- else -%}
+  {%- assign _nav_label = _title | escape | prepend: "Previous and next in " -%}
+{%- endif -%}
+<nav class="series-nav{% if include.full %} series-nav--full{% if _total > 1 %} series-nav--multi{% endif %}{% endif %}" aria-label="{{ _nav_label }}">
   {%- if include.full %}
-  {%- if _meta.blurb %}<p>{{ _meta.blurb }}</p>{% endif %}
+  <div class="series-nav__head">
+    <div class="series-nav__meta">
+      <span class="section-label">Series</span>
+      <span>Part {{ _index }} of {{ _total }}</span>
+      {%- if _meta.status == "in-progress" %}<span class="series-nav__status">In progress</span>{% endif %}
+    </div>
+    <h2 class="series-nav__title">{{ _title }}</h2>
+    {%- if _meta.blurb %}<p class="series-nav__blurb">{{ _meta.blurb }}</p>{% endif %}
+  </div>
   <ol class="series-nav__list">
     {%- for p in _parts %}
     <li>{% if p.url == page.url %}<span aria-current="true">{{ p.title }}</span>{% else %}<a href="{{ p.url | relative_url }}">{{ p.title }}</a>{% endif %}</li>
     {%- endfor %}
   </ol>
   {%- else %}
+  <p class="section-label">Part {{ _index }} of {{ _total }} <span aria-hidden="true">·</span> {{ _title }}{% if _meta.status == "in-progress" %} <span>(in progress)</span>{% endif %}</p>
   <ul class="series-nav__list">
     {%- if _prev %}
-    <li><a href="{{ _prev.url | relative_url }}" rel="prev">{% include icon.html name="arrow-left" size=16 %} Previous: {{ _prev.title }}</a></li>
+    <li><a href="{{ _prev.url | relative_url }}" rel="prev" aria-label="Previous: {{ _prev.title | escape }}">{% include icon.html name="arrow-left" size=16 %}<span><span class="series-nav__direction">Previous</span><span class="series-nav__link-title">{{ _prev.title }}</span></span></a></li>
     {%- endif %}
     {%- if _next %}
-    <li><a href="{{ _next.url | relative_url }}" rel="next">Next: {{ _next.title }} {% include icon.html name="arrow-right" size=16 %}</a></li>
+    <li><a href="{{ _next.url | relative_url }}" rel="next" aria-label="Next: {{ _next.title | escape }}"><span><span class="series-nav__direction">Next</span><span class="series-nav__link-title">{{ _next.title }}</span></span>{% include icon.html name="arrow-right" size=16 %}</a></li>
     {%- endif %}
   </ul>
   {%- endif %}

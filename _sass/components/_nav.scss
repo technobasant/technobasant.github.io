@@ -13,7 +13,7 @@ $nav-bp: 54rem;
 .nav {
   display: flex;
   align-items: center;
-  gap: var(--sp-5);
+  gap: var(--sp-1);
   font-size: var(--step--1);
   font-weight: 500;
 }
@@ -25,6 +25,10 @@ $nav-bp: 54rem;
 :root:not(.js) .header-inner {
   flex-wrap: wrap;
   padding-block: var(--sp-2);
+}
+
+:root:not(.js) .header-cluster {
+  display: contents;
 }
 
 :root:not(.js) .nav {
@@ -45,7 +49,8 @@ $nav-bp: 54rem;
   position: relative;
   display: inline-flex;
   align-items: center;
-  min-height: 44px;
+  min-height: var(--header-h);
+  padding-inline: 0.7rem;
   color: var(--ink-2);
   text-decoration: none;
   transition: color var(--dur-1) var(--ease-standard);
@@ -64,34 +69,13 @@ $nav-bp: 54rem;
 .nav__link[aria-current="page"]::after {
   content: "";
   position: absolute;
-  inset-inline: 0;
-  inset-block-end: calc(50% - 0.95em);
+  inset-inline: 0.7rem;
+  inset-block-end: 0;
   height: 2px;
-  border-radius: var(--r-full);
+  border-radius: 0;
   background: var(--accent);
 }
 
-// ── Header CTA ───────────────────────────────────────────────────────────────
-// Quiet by default. The primary brass action lives in the hero, not up here —
-// two brass buttons in one viewport is one too many.
-.nav__cta {
-  display: inline-flex;
-  align-items: center;
-  min-height: 2.25rem;
-  padding-inline: var(--sp-4);
-  border: 1px solid var(--line-control);
-  border-radius: var(--r-md);
-  color: var(--ink-1);
-  font-weight: 600;
-  text-decoration: none;
-  transition: background-color var(--dur-1) var(--ease-standard),
-    border-color var(--dur-1) var(--ease-standard);
-}
-
-.nav__cta:hover {
-  background: var(--surface-2);
-  border-color: var(--ink-3);
-}
 
 // ── Hamburger / close ────────────────────────────────────────────────────────
 // The same class is used for the header trigger and the drawer's close button.
@@ -99,14 +83,14 @@ $nav-bp: 54rem;
   display: none;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
-  border: 1px solid var(--line);
-  border-radius: var(--r-md);
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 0;
+  border-radius: var(--r-full);
   color: var(--ink-1);
   background: transparent;
   transition: background-color var(--dur-1) var(--ease-standard),
-    border-color var(--dur-1) var(--ease-standard);
+    color var(--dur-1) var(--ease-standard);
 }
 
 .js .nav-toggle {
@@ -115,13 +99,12 @@ $nav-bp: 54rem;
 
 .nav-toggle:hover {
   background: var(--surface-2);
-  border-color: var(--line-strong);
 }
 
 // Scoped to the header: the drawer's close button carries the same class and
 // must stay visible if the viewport is widened while the drawer is open.
 @media (min-width: $nav-bp) {
-  .js .header-inner > .nav-toggle {
+  .js .header-cluster > .nav-toggle {
     display: none;
   }
 }
@@ -129,28 +112,32 @@ $nav-bp: 54rem;
 // ── Mobile drawer ────────────────────────────────────────────────────────────
 .nav-dialog {
   position: fixed;
-  inset: 0 0 0 auto;
-  width: min(20rem, 100%);
+  inset: 0;
+  width: 100%;
   max-width: 100%;
   height: 100dvh;
   max-height: 100dvh;
-  // Pin to the inline-end edge instead of the UA's centred box.
-  margin: 0 0 0 auto;
-  padding-block-start: max(var(--sp-5), env(safe-area-inset-top));
-  padding-block-end: max(var(--sp-7), env(safe-area-inset-bottom));
+  margin: 0;
+  padding-block-start: max(var(--sp-4), env(safe-area-inset-top));
+  padding-block-end: max(var(--sp-6), env(safe-area-inset-bottom));
   padding-inline-start: max(var(--gutter), env(safe-area-inset-left));
   padding-inline-end: max(var(--gutter), env(safe-area-inset-right));
-  background: var(--surface-1);
+  background:
+    radial-gradient(circle at 88% 16%, var(--accent-tint), transparent 18rem),
+    var(--surface-0);
   color: var(--ink-1);
   border: 0;
-  border-inline-start: 1px solid var(--line-strong);
-  box-shadow: var(--shadow-3);
   overflow-y: auto;
   overscroll-behavior: contain;
 }
 
+.nav-dialog[open] {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+
 .nav-dialog::backdrop {
-  background: rgba(0, 0, 0, 0.55);
+  background: var(--surface-0);
 }
 
 @supports (backdrop-filter: blur(1px)) {
@@ -163,19 +150,23 @@ $nav-bp: 54rem;
 // the drawer animates both ways without a JS class dance.
 @media (prefers-reduced-motion: no-preference) {
   .nav-dialog {
-    translate: 100% 0;
+    translate: 0 -1rem;
+    opacity: 0;
     transition: translate var(--dur-2) var(--ease-out),
+      opacity var(--dur-2) var(--ease-out),
       overlay var(--dur-2) var(--ease-out) allow-discrete,
       display var(--dur-2) var(--ease-out) allow-discrete;
   }
 
   .nav-dialog[open] {
     translate: 0 0;
+    opacity: 1;
   }
 
   @starting-style {
     .nav-dialog[open] {
-      translate: 100% 0;
+      translate: 0 -1rem;
+      opacity: 0;
     }
   }
 
@@ -197,26 +188,44 @@ $nav-bp: 54rem;
   }
 }
 
-// The close button is wrapped in <form method="dialog"> so it closes natively.
-.nav-dialog > form {
+.nav-dialog .nav-toggle {
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+}
+
+.nav-dialog__head {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   min-height: calc(var(--header-h) - var(--sp-5));
   align-items: center;
-  margin-block-end: var(--sp-4);
+  padding-block-end: var(--sp-4);
+  border-block-end: 1px solid var(--line);
+}
+
+.nav-dialog__head p,
+.nav-dialog__head form {
+  margin: 0;
 }
 
 .nav-dialog nav {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  font-size: var(--step-1);
+  justify-content: start;
+  padding-block: var(--sp-6);
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 10vw, 3.25rem);
+  line-height: 1.05;
 }
 
 .nav-dialog .nav__link {
-  min-height: 52px;
-  padding-block: var(--sp-3);
+  min-height: 4rem;
+  padding-block: var(--sp-4);
+  padding-inline: 0;
   border-block-end: 1px solid var(--line);
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 10vw, 3.25rem);
+  line-height: 1.05;
   color: var(--ink-1);
 }
 
@@ -228,8 +237,14 @@ $nav-bp: 54rem;
   border-radius: var(--r-full);
 }
 
-.nav-dialog .nav__cta {
-  justify-content: center;
-  min-height: 48px;
-  margin-block-start: var(--sp-5);
+.nav-dialog__note {
+  max-width: 34ch;
+  margin: 0;
+  padding-block-start: var(--sp-5);
+  border-block-start: 1px solid var(--line);
+  font-size: var(--step--1);
+  line-height: 1.55;
+  color: var(--ink-2);
 }
+
+

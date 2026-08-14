@@ -15,13 +15,13 @@ layout: default
 
 {%- assign _lede = page.description | default: _t.blurb -%}
 {%- assign _title = page.headline | default: page.title | default: _t.name -%}
-{% include interior-hero.html variant="tag" code="TOPIC / INDEX" headline=_title lede=_lede %}
+{% include interior-hero.html variant="tag" code="TOPIC / INDEX" stacked=true headline=_title lede=_lede %}
 <div class="page page--index page--tag">
   <div class="prose index-intro">
     {{ content }}
   </div>
 
-  <section class="wrap index-section reveal" aria-labelledby="tag-posts-title">
+  <section class="wrap wrap--shell index-section reveal" aria-labelledby="tag-posts-title">
     <div class="section-head">
       <h2 class="section-label" id="tag-posts-title">{{ _count }} post{% unless _count == 1 %}s{% endunless %}</h2>
       <a class="section-more" href="{{ '/writing/' | relative_url }}">All writing {% include icon.html name="arrow-right" size=14 %}</a>
@@ -37,7 +37,7 @@ layout: default
     {%- endif %}
   </section>
 
-  <section class="wrap index-section index-section--compact reveal" aria-labelledby="other-topics-title">
+  <section class="wrap wrap--shell index-section index-section--compact reveal" aria-labelledby="other-topics-title">
     <div class="section-head">
       <h2 class="section-label" id="other-topics-title">Other topics</h2>
     </div>

@@ -439,7 +439,7 @@
   color: var(--ink-1);
 }
 
-@media (max-width: 40rem) {
+@media (max-width: 68.75rem) {
   // Wide table internals can contribute their intrinsic width to the page even
   // when the table itself scrolls. Contain that overflow at the prose shell so
   // the document never acquires a second horizontal scrollbar; the table and

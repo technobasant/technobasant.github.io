@@ -6,8 +6,7 @@
 // No !important here on purpose — the contract permits it only inside the
 // prefers-reduced-motion block. Nothing else in this codebase positions
 // .sr-only, so plain `absolute` wins on its own.
-.sr-only,
-.visually-hidden {
+.sr-only {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -62,30 +61,4 @@
   white-space: nowrap;
 }
 
-.no-wrap {
-  white-space: nowrap;
-}
 
-.text-muted {
-  color: var(--ink-2);
-}
-
-.text-meta {
-  color: var(--ink-3);
-  font-size: var(--step--1);
-}
-
-// Minimum tap target. Applied to any control whose visual box is smaller than
-// 44×44 — the box stays small, the hit area does not.
-.tap-44 {
-  position: relative;
-}
-
-.tap-44::after {
-  content: "";
-  position: absolute;
-  inset: 50% auto auto 50%;
-  width: max(100%, 44px);
-  height: max(100%, 44px);
-  translate: -50% -50%;
-}

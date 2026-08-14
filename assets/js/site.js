@@ -151,7 +151,7 @@
       });
     }
 
-    Array.prototype.forEach.call(blocks, function (block) {
+    Array.prototype.forEach.call(blocks, function (block, blockIndex) {
       var pre = block.querySelector("pre");
       if (!pre) return;
 
@@ -222,10 +222,16 @@
         if (overflows && !pre.hasAttribute("tabindex")) {
           pre.setAttribute("tabindex", "0");
           pre.setAttribute("role", "region");
+          // A named region is a landmark, and a tutorial with nine bash blocks
+          // was minting nine landmarks all called "bash code, scrollable" —
+          // axe's landmark-unique, and useless in a landmark list. Prefer the
+          // filename, which is already unique and meaningful; fall back to the
+          // language plus the block's position in the article.
           pre.setAttribute(
             "aria-label",
             (block.getAttribute("data-file") ||
-              (lang ? lang + " code" : "Code")) + ", scrollable"
+              (lang ? lang + " code" : "Code") + " block " + (blockIndex + 1)) +
+              ", scrollable"
           );
         } else if (!overflows && pre.hasAttribute("tabindex")) {
           pre.removeAttribute("tabindex");
@@ -478,5 +484,593 @@
     addEventListener("scroll", onScroll, { passive: true });
     addEventListener("resize", onScroll, { passive: true });
     paint();
+  })();
+
+  /* ── 7 · Writing catalog ────────────────────────────────────────────────
+   * JSON index + combobox. The form never navigates: action is an in-page
+   * hash, submit is cancelled, and results render into a listbox while the
+   * catalog below is filtered. Cached copies of site.js are busted via ?v=.
+   */
+  (function writingCatalog() {
+    var form = document.getElementById("writing-find");
+    var catalog = document.getElementById("writing-catalog");
+    var dataEl = document.getElementById("writing-index-data");
+    if (!form || !catalog) return;
+
+    var input = document.getElementById("writing-q");
+    var suggest = document.getElementById("writing-suggest");
+    var status = document.getElementById("writing-status");
+    var empty = document.getElementById("writing-empty");
+    var note = document.getElementById("writing-catalog-note");
+    var title = document.getElementById("writing-catalog-title");
+    var page = document.querySelector(".page--writing");
+    var lead = document.querySelector("[data-catalog-lead]");
+    var list = document.getElementById("writing-results");
+    var typeInputs = form.querySelectorAll('input[name="type"]');
+    var topicLinks = catalog.querySelectorAll("[data-filter-topic]");
+    var seriesLinks = catalog.querySelectorAll("[data-filter-series]");
+    var clears = document.querySelectorAll("[data-writing-clear]");
+    var items = catalog.querySelectorAll("[data-catalog-item]");
+    var active = -1;
+    var ranked = [];
+    var index = [];
+
+    try {
+      index = dataEl ? JSON.parse(dataEl.textContent) : [];
+    } catch (err) {
+      index = [];
+    }
+
+    if (!index.length) {
+      Array.prototype.forEach.call(items, function (el) {
+        index.push({
+          id: el.getAttribute("data-id") || "",
+          url: (el.querySelector("a[href]") || {}).getAttribute("href") || "",
+          title: (el.querySelector(".post-card__title") || el).textContent.trim(),
+          kind: el.getAttribute("data-kind") || "",
+          label: el.getAttribute("data-kind") || "Writing",
+          tags: (el.getAttribute("data-tags") || "").split(/\s+/),
+          series: el.getAttribute("data-series") || "",
+          blurb: (el.querySelector(".post-card__desc, .case-card__hook") || {}).textContent || "",
+          text: (el.getAttribute("data-search") || "") + " " + (el.textContent || "")
+        });
+      });
+    }
+
+    var byId = {};
+    Array.prototype.forEach.call(items, function (el, i) {
+      var id = el.getAttribute("data-id") || "";
+      var row = el.closest("li") || el;
+      row.setAttribute("data-origin", String(i));
+      if (id) byId[id] = { el: el, row: row };
+    });
+
+    var STOP = {
+      a: 1, an: 1, and: 1, as: 1, at: 1, by: 1, for: 1, from: 1, in: 1,
+      into: 1, of: 1, on: 1, or: 1, the: 1, to: 1, with: 1, your: 1
+    };
+    var ALIASES = {
+      pg: ["postgres", "postgresql", "pgbackrest"],
+      postgres: ["postgresql", "pgbackrest", "pg"],
+      postgresql: ["postgres", "pgbackrest", "pg"],
+      pgbackrest: ["postgres", "postgresql", "backup", "tls"],
+      backup: ["pgbackrest", "postgres", "replica"],
+      wg: ["wireguard", "vpn", "wgeasy"],
+      wireguard: ["vpn", "wg", "wgeasy"],
+      vpn: ["wireguard", "wg"],
+      scylla: ["scylladb", "nodetool", "sstable", "cassandra"],
+      scylladb: ["scylla", "nodetool", "sstable"],
+      rustdesk: ["hbbs", "hbbr", "relay", "remote"],
+      stalwart: ["mail", "smtp", "imap", "mx", "mailbox"],
+      mail: ["stalwart", "mailbox", "smtp"],
+      vagrant: ["qemu", "amd64", "vmnet", "apple"],
+      qemu: ["vagrant", "amd64", "vmnet"],
+      amd64: ["vagrant", "qemu", "x86"],
+      failover: ["ha", "replica", "primary", "cluster"],
+      ansible: ["rhel", "pgbackrest", "playbook"]
+    };
+    var TAG_EXPAND = {
+      postgres: "postgresql postgres pg pgbackrest backup replica wal tls ansible rhel",
+      "self-hosted": "vpn wireguard rustdesk stalwart mail mailbox vps docker relay mx smtp",
+      "distributed-databases": "scylla scylladb mongodb redis mysql galera failover ha replica cluster",
+      "ai-agents": "agent rag llm model provenance",
+      "data-quality": "contract schema lineage replay",
+      "iceberg-lakehouse": "iceberg lakehouse spark",
+      "observability-slo": "slo prometheus grafana"
+    };
+
+    function fold(s) {
+      return String(s || "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function dist(a, b) {
+      if (a === b) return 0;
+      if (!a) return b.length;
+      if (!b) return a.length;
+      var prev = [];
+      var j;
+      for (j = 0; j <= b.length; j++) prev[j] = j;
+      for (var i = 1; i <= a.length; i++) {
+        var cur = [i];
+        for (j = 1; j <= b.length; j++) {
+          var cost = a.charAt(i - 1) === b.charAt(j - 1) ? 0 : 1;
+          var ins = cur[j - 1] + 1;
+          var del = prev[j] + 1;
+          var sub = prev[j - 1] + cost;
+          cur[j] = ins < del ? (ins < sub ? ins : sub) : del < sub ? del : sub;
+        }
+        prev = cur;
+      }
+      return prev[b.length];
+    }
+
+    function tokenHits(hay, compactHay, token) {
+      if (!token) return 0;
+      if (hay.indexOf(token) !== -1) return 24 + Math.min(token.length, 10);
+      if (compactHay.indexOf(token) !== -1) return 20;
+      var words = hay.split(" ");
+      var allow = token.length >= 6 ? 2 : token.length >= 4 ? 1 : 0;
+      var best = 0;
+      for (var i = 0; i < words.length; i++) {
+        var w = words[i];
+        if (!w) continue;
+        if (w.indexOf(token) !== -1) best = Math.max(best, 18);
+        else if (token.length >= 4 && w.length >= 4 && token.indexOf(w) !== -1) best = Math.max(best, 14);
+        else if (allow && Math.abs(w.length - token.length) <= allow && dist(w, token) <= allow) {
+          best = Math.max(best, 12);
+        }
+      }
+      return best;
+    }
+
+    function hayOf(doc) {
+      if (doc._hay) return doc._hay;
+      var tags = doc.tags || [];
+      var extra = "";
+      for (var i = 0; i < tags.length; i++) {
+        if (TAG_EXPAND[tags[i]]) extra += " " + TAG_EXPAND[tags[i]];
+      }
+      doc._hay = fold([doc.title, doc.blurb, doc.kind, doc.label, doc.series, tags.join(" "), doc.text, extra].join(" "));
+      return doc._hay;
+    }
+
+    function queryScore(hay, q) {
+      var folded = fold(q);
+      if (!folded) return 1;
+      var compactHay = hay.replace(/ /g, "");
+      var compactQ = folded.replace(/ /g, "");
+      var score = 0;
+      if (hay.indexOf(folded) !== -1) score += 80;
+      else if (compactQ.length >= 4 && compactHay.indexOf(compactQ) !== -1) score += 55;
+      var raw = folded.split(" ");
+      var toks = [];
+      for (var t = 0; t < raw.length; t++) {
+        if (raw[t] && raw[t].length > 1 && !STOP[raw[t]]) toks.push(raw[t]);
+      }
+      if (!toks.length) toks = raw.filter(Boolean);
+      var hits = 0;
+      for (var i = 0; i < toks.length; i++) {
+        var token = toks[i];
+        var s = tokenHits(hay, compactHay, token);
+        if (!s && ALIASES[token]) {
+          for (var k = 0; k < ALIASES[token].length && !s; k++) {
+            s = Math.floor(tokenHits(hay, compactHay, ALIASES[token][k]) * 0.85);
+          }
+        }
+        if (s) hits += 1;
+        score += s;
+      }
+      if (!hits) return 0;
+      if (toks.length > 1 && hits < toks.length) {
+        if (compactQ.length >= 5 && compactHay.indexOf(compactQ) !== -1) score += 20;
+        else if (hits < Math.ceil(toks.length / 2)) return 0;
+        else score -= (toks.length - hits) * 6;
+      }
+      return score;
+    }
+
+    function kindMatches(kind, type) {
+      if (!type || type === "all") return true;
+      if (type === "essay") return kind === "essay" || kind === "note";
+      return kind === type;
+    }
+
+    function stateFromForm() {
+      var typeEl = form.querySelector('input[name="type"]:checked');
+      return {
+        q: (input && input.value ? input.value : "").trim(),
+        type: typeEl ? typeEl.value : "all",
+        topic: form.getAttribute("data-topic") || "",
+        series: form.getAttribute("data-series") || ""
+      };
+    }
+
+    function stateFromURL() {
+      var p = new URLSearchParams(location.search);
+      return {
+        q: (p.get("q") || "").trim(),
+        type: p.get("type") || "all",
+        topic: p.get("topic") || "",
+        series: p.get("series") || ""
+      };
+    }
+
+    function applyToForm(state) {
+      if (input) input.value = state.q;
+      var type = state.type || "all";
+      var found = false;
+      Array.prototype.forEach.call(typeInputs, function (el) {
+        el.checked = el.value === type;
+        if (el.checked) found = true;
+      });
+      if (!found && typeInputs[0]) typeInputs[0].checked = true;
+      form.setAttribute("data-topic", state.topic || "");
+      form.setAttribute("data-series", state.series || "");
+    }
+
+    function writeURL(state) {
+      var p = new URLSearchParams();
+      if (state.q) p.set("q", state.q);
+      if (state.type && state.type !== "all") p.set("type", state.type);
+      if (state.topic) p.set("topic", state.topic);
+      if (state.series) p.set("series", state.series);
+      var qs = p.toString();
+      var next = location.pathname + (qs ? "?" + qs : "") + (qs ? "" : location.hash);
+      var cur = location.pathname + location.search + (qs ? "" : location.hash);
+      if (next !== cur) history.replaceState(null, "", next);
+    }
+
+    function filtering(state) {
+      return !!(state.q || (state.type && state.type !== "all") || state.topic || state.series);
+    }
+
+    function scoreDoc(doc, state) {
+      if (!kindMatches(doc.kind, state.type)) return 0;
+      var tags = doc.tags || [];
+      if (state.topic && tags.indexOf(state.topic) === -1) return 0;
+      if (state.series && doc.series !== state.series) return 0;
+      if (!state.q) return 1;
+      var s = queryScore(hayOf(doc), state.q);
+      if (fold(doc.title).indexOf(fold(state.q)) !== -1) s += 40;
+      return s;
+    }
+
+    function escapeRe(s) {
+      return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
+
+    function fillMarked(node, text, toks) {
+      node.textContent = "";
+      if (!text) return;
+      if (!toks.length) {
+        node.textContent = text;
+        return;
+      }
+      var re;
+      try {
+        re = new RegExp("(" + toks.map(escapeRe).join("|") + ")", "ig");
+      } catch (e) {
+        node.textContent = text;
+        return;
+      }
+      var parts = String(text).split(re);
+      for (var i = 0; i < parts.length; i++) {
+        if (!parts[i]) continue;
+        if (i % 2) {
+          var mark = document.createElement("mark");
+          mark.textContent = parts[i];
+          node.appendChild(mark);
+        } else {
+          node.appendChild(document.createTextNode(parts[i]));
+        }
+      }
+    }
+
+    function queryToks(q) {
+      var folded = fold(q);
+      var raw = folded.split(" ");
+      var toks = [];
+      for (var i = 0; i < raw.length; i++) {
+        if (raw[i] && raw[i].length > 1 && !STOP[raw[i]]) toks.push(raw[i]);
+      }
+      return toks;
+    }
+
+    function closeSuggest() {
+      if (!suggest || !input) return;
+      suggest.hidden = true;
+      input.setAttribute("aria-expanded", "false");
+      input.removeAttribute("aria-activedescendant");
+      active = -1;
+    }
+
+    function setActive(n) {
+      var opts = suggest ? suggest.querySelectorAll("[role='option']") : [];
+      if (!opts.length) {
+        active = -1;
+        return;
+      }
+      if (n < 0) n = opts.length - 1;
+      if (n >= opts.length) n = 0;
+      active = n;
+      for (var i = 0; i < opts.length; i++) {
+        var on = i === active;
+        opts[i].classList.toggle("is-active", on);
+        opts[i].setAttribute("aria-selected", on ? "true" : "false");
+        if (on) {
+          input.setAttribute("aria-activedescendant", opts[i].id);
+          opts[i].scrollIntoView({ block: "nearest" });
+        }
+      }
+    }
+
+    function openHit(i) {
+      var hit = ranked[i];
+      if (hit && hit.url) location.assign(hit.url);
+    }
+
+    function renderSuggest(state, hits) {
+      if (!suggest || !input) return;
+      suggest.textContent = "";
+      if (!state.q || !hits.length) {
+        closeSuggest();
+        return;
+      }
+      var toks = queryToks(state.q);
+      var max = Math.min(hits.length, 8);
+      for (var i = 0; i < max; i++) {
+        var doc = hits[i];
+        var opt = document.createElement("li");
+        opt.id = "writing-opt-" + i;
+        opt.setAttribute("role", "option");
+        opt.setAttribute("aria-selected", "false");
+        opt.className = "writing-suggest__hit";
+        opt.setAttribute("data-index", String(i));
+
+        var kind = document.createElement("span");
+        kind.className = "writing-suggest__kind";
+        kind.textContent = doc.label || doc.kind || "Writing";
+        var name = document.createElement("span");
+        name.className = "writing-suggest__title";
+        fillMarked(name, doc.title, toks);
+        var blurb = document.createElement("span");
+        blurb.className = "writing-suggest__blurb";
+        blurb.textContent = doc.blurb || "";
+
+        opt.appendChild(kind);
+        opt.appendChild(name);
+        if (doc.blurb) opt.appendChild(blurb);
+        suggest.appendChild(opt);
+      }
+      suggest.hidden = false;
+      input.setAttribute("aria-expanded", "true");
+      active = -1;
+    }
+
+    function restoreOrder() {
+      if (!list) return;
+      var rows = Array.prototype.slice.call(list.children);
+      rows.sort(function (a, b) {
+        return (+a.getAttribute("data-origin") || 0) - (+b.getAttribute("data-origin") || 0);
+      });
+      for (var i = 0; i < rows.length; i++) list.appendChild(rows[i]);
+    }
+
+    function paintRail(state) {
+      Array.prototype.forEach.call(topicLinks, function (a) {
+        var on = state.topic && a.getAttribute("data-filter-topic") === state.topic;
+        if (on) a.setAttribute("aria-current", "true");
+        else a.removeAttribute("aria-current");
+      });
+      Array.prototype.forEach.call(seriesLinks, function (a) {
+        var on = state.series && a.getAttribute("data-filter-series") === state.series;
+        if (on) a.setAttribute("aria-current", "true");
+        else a.removeAttribute("aria-current");
+      });
+    }
+
+    function paint(opts) {
+      opts = opts || {};
+      var state = stateFromForm();
+      var live = filtering(state);
+      ranked = [];
+      for (var i = 0; i < index.length; i++) {
+        var score = scoreDoc(index[i], state);
+        if (score > 0) {
+          var hit = index[i];
+          hit.score = score;
+          ranked.push(hit);
+        }
+      }
+      ranked.sort(function (a, b) {
+        return b.score - a.score;
+      });
+
+      var visible = {};
+      for (var r = 0; r < ranked.length; r++) visible[ranked[r].id] = ranked[r];
+
+      Array.prototype.forEach.call(items, function (el) {
+        var id = el.getAttribute("data-id") || "";
+        var row = el.closest("li") || el;
+        var show = !!visible[id];
+        row.hidden = !show;
+        row.classList.toggle("is-hit", show && live && !!state.q);
+      });
+
+      if (lead) lead.hidden = !!state.q || (live && scoreDoc({
+        id: lead.getAttribute("data-id"),
+        kind: lead.getAttribute("data-kind"),
+        tags: (lead.getAttribute("data-tags") || "").split(/\s+/),
+        series: lead.getAttribute("data-series") || "",
+        title: "",
+        text: "",
+        blurb: ""
+      }, state) <= 0 && !!state.q);
+
+      if (lead && state.q) lead.hidden = true;
+
+      if (list && state.q) {
+        for (r = 0; r < ranked.length; r++) {
+          var node = byId[ranked[r].id];
+          if (node && node.row && node.row.parentNode === list) list.appendChild(node.row);
+        }
+      } else {
+        restoreOrder();
+      }
+
+      if (empty) empty.hidden = ranked.length !== 0;
+      Array.prototype.forEach.call(clears, function (btn) {
+        btn.hidden = !live;
+      });
+      if (page) page.classList.toggle("is-filtering", live);
+      paintRail(state);
+
+      var n = ranked.length;
+      var total = index.length;
+      if (status) {
+        status.textContent = live
+          ? n + (n === 1 ? " result" : " results") + (state.q ? " for “" + state.q + "”" : "") + "."
+          : total + " pieces.";
+      }
+      if (title) title.textContent = live ? (n === 1 ? "1 result" : n + " results") : "Index";
+      if (note) {
+        note.textContent = live
+          ? "Showing " + n + " of " + total
+          : total + " pieces";
+      }
+
+      if (opts.suggest !== false) renderSuggest(state, ranked);
+      writeURL(state);
+    }
+
+    function clearFilters() {
+      form.setAttribute("data-topic", "");
+      form.setAttribute("data-series", "");
+      if (input) input.value = "";
+      if (typeInputs[0]) typeInputs[0].checked = true;
+      closeSuggest();
+      paint({ suggest: false });
+      if (input) input.focus();
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (active >= 0) {
+        openHit(active);
+        return;
+      }
+      paint({ suggest: true });
+      if (ranked.length === 1) openHit(0);
+    });
+
+    if (input) {
+      input.addEventListener("input", function () {
+        paint({ suggest: true });
+      });
+      input.addEventListener("search", function () {
+        paint({ suggest: true });
+      });
+      input.addEventListener("focus", function () {
+        var state = stateFromForm();
+        if (state.q) paint({ suggest: true });
+      });
+      input.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          if (suggest && suggest.hidden) paint({ suggest: true });
+          setActive(active + 1);
+        } else if (e.key === "ArrowUp") {
+          e.preventDefault();
+          setActive(active - 1);
+        } else if (e.key === "Enter") {
+          e.preventDefault();
+          if (active >= 0) openHit(active);
+          else if (ranked.length === 1) openHit(0);
+          else {
+            closeSuggest();
+            if (list) list.scrollIntoView({ block: "start" });
+          }
+        } else if (e.key === "Escape") {
+          e.preventDefault();
+          if (suggest && !suggest.hidden) closeSuggest();
+          else clearFilters();
+        }
+      });
+    }
+
+    if (suggest) {
+      suggest.addEventListener("mousedown", function (e) {
+        var hit = e.target.closest("[data-index]");
+        if (!hit) return;
+        e.preventDefault();
+        openHit(+hit.getAttribute("data-index"));
+      });
+    }
+
+    Array.prototype.forEach.call(typeInputs, function (el) {
+      el.addEventListener("change", function () {
+        paint({ suggest: true });
+      });
+    });
+
+    Array.prototype.forEach.call(topicLinks, function (a) {
+      a.addEventListener("click", function (e) {
+        e.preventDefault();
+        var slug = a.getAttribute("data-filter-topic") || "";
+        var cur = form.getAttribute("data-topic") || "";
+        form.setAttribute("data-topic", cur === slug ? "" : slug);
+        paint({ suggest: false });
+        closeSuggest();
+      });
+    });
+
+    Array.prototype.forEach.call(seriesLinks, function (a) {
+      a.addEventListener("click", function (e) {
+        e.preventDefault();
+        var slug = a.getAttribute("data-filter-series") || "";
+        var cur = form.getAttribute("data-series") || "";
+        form.setAttribute("data-series", cur === slug ? "" : slug);
+        paint({ suggest: false });
+        closeSuggest();
+      });
+    });
+
+    Array.prototype.forEach.call(clears, function (btn) {
+      btn.addEventListener("click", clearFilters);
+    });
+
+    document.addEventListener("click", function (e) {
+      if (!form.contains(e.target)) closeSuggest();
+    });
+
+    addEventListener("popstate", function () {
+      applyToForm(stateFromURL());
+      paint({ suggest: false });
+    });
+
+    addEventListener("keydown", function (e) {
+      if (e.defaultPrevented || e.altKey || e.ctrlKey) return;
+      var t = e.target;
+      var typing =
+        t &&
+        (t.tagName === "INPUT" ||
+          t.tagName === "TEXTAREA" ||
+          t.tagName === "SELECT" ||
+          t.isContentEditable);
+      var slash = e.key === "/" && !e.metaKey && !typing;
+      var cmdK = (e.key === "k" || e.key === "K") && e.metaKey && !typing;
+      if (!slash && !cmdK) return;
+      if (!input) return;
+      e.preventDefault();
+      input.focus();
+      input.select();
+    });
+
+    applyToForm(stateFromURL());
+    paint({ suggest: false });
   })();
 })();

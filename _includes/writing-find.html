@@ -1,0 +1,46 @@
+{%- comment -%}
+  Writing catalog find bar. Lives immediately under the interior masthead so
+  title, lede and search share the first viewport. Sticky after that.
+{%- endcomment -%}
+{%- assign _tutorials = site.posts | where: "type", "tutorial" -%}
+{%- assign _essays = site.posts | where: "type", "essay" -%}
+{%- assign _notes = site.posts | where: "type", "note" -%}
+{%- assign _essay_feed = _essays | concat: _notes -%}
+{%- assign _catalog_total = site.posts.size -%}
+<form id="writing-find" class="writing-find" role="search" action="#writing-catalog" method="get">
+  <div class="writing-find__frame wrap wrap--shell">
+    <div class="writing-find__console">
+      <label class="sr-only" for="writing-q">Search writing</label>
+      <div class="writing-find__combo">
+        <span class="writing-find__icon" aria-hidden="true">{% include icon.html name="search" size=18 %}</span>
+        <input id="writing-q" name="q" type="search" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="writing-suggest" aria-haspopup="listbox" autocomplete="off" spellcheck="false" enterkeyhint="search" placeholder="Search Postgres, pgBackRest, WireGuard…">
+        <kbd class="writing-find__kbd" aria-hidden="true">⌘K</kbd>
+        <button type="button" class="writing-find__wipe" data-writing-clear hidden aria-label="Clear search">
+          {% include icon.html name="close" size=16 %}
+        </button>
+      </div>
+      <ul id="writing-suggest" class="writing-suggest" role="listbox" hidden></ul>
+    </div>
+
+    <div class="writing-find__toolbar">
+      <div class="writing-find__types" role="radiogroup" aria-label="Kind of writing">
+        <label class="writing-find__type">
+          <input type="radio" name="type" value="all" checked>
+          <span>All <span class="writing-find__n">{{ _catalog_total }}</span></span>
+        </label>
+        <label class="writing-find__type">
+          <input type="radio" name="type" value="tutorial">
+          <span>Tutorials <span class="writing-find__n">{{ _tutorials.size }}</span></span>
+        </label>
+        <label class="writing-find__type">
+          <input type="radio" name="type" value="essay">
+          <span>Essays <span class="writing-find__n">{{ _essay_feed.size }}</span></span>
+        </label>
+      </div>
+      <p id="writing-status" class="writing-find__status" role="status" aria-live="polite">{{ _catalog_total }} pieces.</p>
+    </div>
+    <noscript>
+      <p class="writing-find__noscript">Live search needs JavaScript. Every tutorial and essay is listed below.</p>
+    </noscript>
+  </div>
+</form>

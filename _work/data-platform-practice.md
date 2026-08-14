@@ -26,7 +26,7 @@ The platform sits downstream of producers it cannot control. Payloads drift, old
 
 ## My role
 
-I grew from pipeline delivery into end-to-end platform ownership: processing, orchestration, storage layout, analytical serving, observability, recovery, and the design reviews connecting them. I led the core ETL rebuild and Kubernetes migration, set reliability and governance expectations, and mentored engineers so the operating model did not depend on one person.
+I grew from pipeline delivery into end-to-end system ownership: processing, orchestration, storage layout, the databases underneath serving, observability, recovery, and the design reviews connecting them. I led the core ETL rebuild and Kubernetes migration, set reliability and governance expectations, and mentored engineers so the operating model did not depend on one person.
 
 ## Constraints
 
@@ -40,7 +40,7 @@ I grew from pipeline delivery into end-to-end platform ownership: processing, or
 
 The path is intentionally legible: ingest events, validate and govern them at a clear storage boundary, serve models designed around real read paths, and preserve a recovery route that can replay without duplicating state.
 
-The processing layer moved to Spark/PySpark with Airflow orchestration. Lakehouse tables used explicit partition and schema-evolution rules instead of letting each job invent them. Kubernetes provided a common scheduling and scaling boundary. Trino, ClickHouse, Citus, and TimescaleDB were tuned from the query shape and data layout outward, not from infrastructure knobs inward.
+The processing layer moved to Spark/PySpark with Airflow orchestration. Lakehouse tables used explicit partition and schema-evolution rules instead of letting each job invent them. Kubernetes provided a common scheduling and scaling boundary. PostgreSQL, Trino, ClickHouse, Citus, and TimescaleDB were operated as part of the same system: query shape, data layout, replication, and recovery—not infrastructure knobs treated in isolation.
 
 Reliability was defined at the dataset boundary. The meaningful signal is event time to queryable, measured per dataset with a named owner—not whether a DAG turned green.
 

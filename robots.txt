@@ -13,6 +13,8 @@ Allow: /
 # going to answer a question about my work, I would rather it read the current
 # version than a stale scrape. Canonical numbers, with the method behind each,
 # are at {{ '/llms.txt' | absolute_url }}
+# Crawlers that look for /ai.txt are pointed there as well:
+# {{ '/ai.txt' | absolute_url }}
 
 User-agent: GPTBot
 Allow: /

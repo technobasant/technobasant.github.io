@@ -13,19 +13,13 @@ main:
     url: /about/
 
 footer:
-  - heading: Site
+  - heading: Navigate
     links:
       - { title: Work,          url: /work/ }
       - { title: Writing,       url: /writing/ }
       - { title: Résumé,        url: /resume/ }
       - { title: About,         url: /about/ }
       - { title: Work with me,  url: /hire/ }
-  - heading: Writing
-    links:
-      - { title: All posts, url: /writing/ }
-      - { title: Topics,    url: /writing/tags/ }
-      - { title: RSS,       url: /writing/feed.xml }
-      - { title: JSON Feed, url: /writing/feed.json }
   - heading: Elsewhere
     links:
       - { title: GitHub,   url: "https://github.com/technobasant",          external: true }
@@ -34,5 +28,7 @@ footer:
   - heading: Meta
     links:
       - { title: "Résumé (PDF)", url: /assets/basant-bhattarai-resume.pdf }
+      - { title: "RSS feed",     url: /writing/feed.xml }
+      - { title: "JSON feed",    url: /writing/feed.json }
       - { title: llms.txt,       url: /llms.txt }
       - { title: Colophon,       url: /colophon/ }

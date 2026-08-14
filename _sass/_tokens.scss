@@ -1,9 +1,10 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // TOKENS — the single source of truth.
 //
-// Two themes, switched by `data-theme` on <html>. Dark is the default and is
-// also attached to bare `:root` so the page is never unstyled if the no-flash
-// inline script fails to run.
+// Two themes, switched by `data-theme` on <html>. Light is attached to bare
+// `:root` as well, so the page is never unstyled if the no-flash inline script
+// fails to run — and so the fallback matches the light-first default that
+// script documents, rather than contradicting it.
 //
 // Contrast ratios in the comments are computed against the theme's --surface-0
 // and are not to be changed without recomputing.
@@ -14,6 +15,18 @@
   --brand-brass: #c4a574;
   --brand-brass-lift: #d9be8e;
   --brand-brass-masthead: #dfb66c;
+
+  // Mode-invariant on purpose, and named so `rake css:literals` can hold the
+  // line without pretending these are theme colours.
+  //
+  // --media-mat is the letterbox behind `object-fit: cover`. A photograph looks
+  // the same in both themes, and a paper-white plate behind a dark editorial
+  // cover flashes on every theme switch. It never carries text, so it is not in
+  // the `rake tokens` matrix.
+  --media-mat: #0d0f12;
+  // The availability dot. Decorative — the same fact is stated in the adjacent
+  // text — so it is exempt from 1.4.11 and does not need a per-theme value.
+  --status-ok: #4e9b68;
 
   // ── Type families ─────────────────────────────────────────────────────────
   // Serif for prose, sans for UI. In a survey of 26 data/infra sites the serif
@@ -35,8 +48,8 @@
   // ── Fluid type ramp ───────────────────────────────────────────────────────
   // Utopia-style: min at 320px viewport, max at 1200px. Body is 17px on desktop.
   // 12→13 · 14→15 · 16→17 · 18→20 · 20→24 · 23→30 · 27→40 · 40→68
-  --step--2: clamp(0.75rem, 0.727rem + 0.12vw, 0.8125rem);
-  --step--1: clamp(0.875rem, 0.852rem + 0.114vw, 0.9375rem);
+  --step--2: clamp(0.8125rem, 0.79rem + 0.11vw, 0.875rem);
+  --step--1: clamp(0.9375rem, 0.915rem + 0.11vw, 1rem);
   // Body is 17→19px. Nothing in either survey sets prose below 17px:
   // justinjaffray and scattered-thoughts 20, maxhalford 19, chrisalbon ~18.8,
   // jepsen 18.7, aphyr 18, vondra and morling 17.
@@ -75,14 +88,14 @@
   // brandur 625–750, vondra and morling 760–800, justinjaffray 720,
   // jepsen ~745, brooker ~800. The previous 69rem page container was sized for
   // a magazine and was the mechanical reason these pages read as sparse.
-  --measure: 46rem; // 736px
-  --measure-lede: 34rem;
-  --measure-wide: 52rem;
+  --measure: 44rem;
+  --measure-lede: 38rem;
+  --measure-wide: 54rem;
 
   --w-prose: var(--measure);
-  --w-wide: 52rem;
-  --w-page: 58rem; // 928px — index and home grids
-  --w-shell: 72rem; // 1152px — post shell incl. the TOC rail
+  --w-wide: 54rem;
+  --w-page: 64rem;
+  --w-shell: 68rem;
 
   // ── Space ─────────────────────────────────────────────────────────────────
   --sp-1: 0.25rem;
@@ -97,16 +110,26 @@
   --sp-10: 8rem;
 
   --gutter: clamp(1.25rem, 5vw, 2.5rem);
-  --sp-section: clamp(3.5rem, 8vw, 7rem);
+  --sp-section: clamp(3.5rem, 7vw, 5.5rem);
+  --sp-section-mobile: clamp(2.75rem, 10vw, 3.75rem);
+  --hero-pad-mobile: clamp(2.25rem, 9vw, 3.5rem);
+  --mobile-card-inset: 1rem;
 
   // Single source of truth for the sticky header. Nothing may hardcode this.
-  --header-h: 4.25rem;
+  --header-h: 4rem;
 
   // ── Radius ────────────────────────────────────────────────────────────────
   --r-sm: 3px; // inline code, small chips
   --r-md: 6px; // buttons, cards, code blocks, callouts
   --r-lg: 10px; // large panels, photographs
   --r-full: 999px; // tag pills ONLY
+
+  // ── Card rhythm ───────────────────────────────────────────────────────────
+  // Bordered content cards share one density. Editorial rows intentionally use
+  // their own lighter, rule-based treatment.
+  --card-pad: clamp(1.25rem, 1.05rem + 0.9vw, 1.75rem);
+  --card-gap: var(--sp-4);
+  --card-radius: var(--r-md);
 
   // ── Motion ────────────────────────────────────────────────────────────────
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
@@ -126,9 +149,8 @@
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// DARK (default)
+// DARK
 // ─────────────────────────────────────────────────────────────────────────────
-:root,
 :root[data-theme="dark"] {
   color-scheme: dark;
 
@@ -211,7 +233,22 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // LIGHT — warm paper, not white. Brass is darkened to #7C5A18 for text-weight
 // use; true brass survives as --accent-fill for decorative fills only.
+//
+// Also the bare `:root` fallback, which is what a visitor gets when the inline
+// bootstrap in _layouts/default.html has not run and `data-theme` is therefore
+// absent. Dark used to hold that slot, so a no-JS visitor whose OS asks for
+// light was served the dark palette regardless — the opposite of the light-first
+// default that same bootstrap argues for at length.
+//
+// Attaching it to the existing light block rather than adding a
+// `@media (prefers-color-scheme)` copy is deliberate: a duplicated palette is
+// exactly the drift hazard that produced three shipped AA failures here, where
+// a component kept a stale dark literal while rendering on paper. One source,
+// one place to change. The cost is that a no-JS visitor who prefers dark gets
+// light; with JS — every real browser — `prefers-color-scheme` is still
+// honoured automatically.
 // ─────────────────────────────────────────────────────────────────────────────
+:root,
 :root[data-theme="light"] {
   color-scheme: light;
 

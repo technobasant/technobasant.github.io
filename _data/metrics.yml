@@ -10,7 +10,7 @@ experience:
   method: "role history, 2017–2026"
   scope: "professional"
   source: "CV role history"
-  context: "Four engineering roles from backend development through senior data and AI platform ownership."
+  context: "Four engineering roles from backend development through database operations, data platforms, and production agentic systems."
 
 # --- professional platform evidence ---
 
@@ -186,3 +186,35 @@ clickhomes_migrations:
   scope: "independent"
   source: "ClickHomes migration directory"
   context: "Independent project; count taken from the versioned migration directory."
+
+# ── Patroni HA + pgBackRest lab (2026) ───────────────────────────────────────
+# Every figure below came off the runs documented in the rhel8-pg-ansible
+# series, not from a vendor page. Timings are wall-clock on amd64 guests under
+# QEMU TCG, which is slower than real hardware — they are honest ceilings, not
+# benchmarks to quote at anyone.
+lab_patroni_promotion:
+  value: "under 20 s"
+  label: "leader promotion after SIGKILL"
+  method: "SIGKILL of the Patroni leader, polled every 10 s until patronictl showed the survivor as Leader"
+  scope: "independent"
+  source: "2026 Patroni HA lab"
+  window: "2026"
+  context: "ttl 30 / loop_wait 10 on a single-node etcd; timeline advanced 1 to 2."
+
+lab_replica_rebuild:
+  value: "under 5 s"
+  label: "replica rebuilt from backup"
+  method: "patronictl reinit, timed from the pgBackRest restore command begin to Patroni reporting the replica created"
+  scope: "independent"
+  source: "2026 Patroni HA lab"
+  window: "2026"
+  context: "22.7 MB database; create_replica_methods put pgbackrest ahead of basebackup so the primary was never read."
+
+lab_pitr_recovery:
+  value: "5 of 5"
+  label: "rows recovered by point-in-time restore"
+  method: "dropped a table, restored to a timestamp taken before the DROP, counted rows against the pre-incident total"
+  scope: "independent"
+  source: "2026 Patroni HA lab"
+  window: "2026"
+  context: "pgBackRest --type=time restore into a paused Patroni cluster; recovery ended on timeline 4."

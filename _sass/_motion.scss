@@ -27,23 +27,6 @@
 // genre that read as most considered — Jepsen, Brooker, danluu — animate
 // nothing at all. `.reveal` stays in the markup as an inert hook.
 
-// Height animation without animating height. Wrap the collapsible content in a
-// single child; the parent animates its row from 0fr to 1fr.
-.collapse {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows var(--dur-3) var(--ease-standard);
-}
-
-.collapse > * {
-  overflow: hidden;
-  min-height: 0;
-}
-
-.collapse.is-open,
-[open] > .collapse {
-  grid-template-rows: 1fr;
-}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // REDUCED MOTION

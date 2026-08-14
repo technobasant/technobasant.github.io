@@ -1,30 +1,42 @@
 {%- comment -%}
   End-of-post author card. Exactly one call to action — a stack of them reads as
   desperation and each extra one lowers the click rate of the first.
+
+  A <div>, not an <aside>. This is a bio for the article it closes, not content
+  tangential to the page, and an unnamed <aside> nested inside <article> inside
+  <main> gives Chrome a `complementary` landmark with no accessible name buried
+  two landmarks deep — axe's landmark-complementary-is-top-level. Naming it
+  would make it a *more* prominent landmark, which is the wrong direction; it
+  should not be a landmark at all.
 {%- endcomment -%}
-<aside class="author-card reveal">
-  {%- include picture.html
-      base="/assets/images/hero-portrait-v2"
-      widths="420"
-      ext="jpg"
-      fallback_width="420"
-      sizes="104px"
-      width=420
-      height=525
-      alt="Basant Bhattarai"
-      loading="lazy" -%}
-  <div>
-    <p><strong>Basant Bhattarai</strong> is a Senior Data & AI Engineer with nine years across backend systems, production data platforms, database reliability, and governed agents. He writes about the failure modes that only appear under load. Working US and EU hours.</p>
-    <p>Currently: Senior Data Engineer at <a href="https://uxcam.com" rel="noopener">UXCam</a>.</p>
-    <p class="author-card__links">
-      <a href="{{ '/about/' | relative_url }}">About</a>
-      <span aria-hidden="true">·</span>
-      <a href="{{ site.author.github }}" rel="me noopener">GitHub</a>
-      <span aria-hidden="true">·</span>
-      <a href="{{ site.author.linkedin }}" rel="me noopener">LinkedIn</a>
-      <span aria-hidden="true">·</span>
-      <a href="mailto:{{ site.author.email }}">Email</a>
-    </p>
-    <p class="author-card__action"><span>Building something like this? I take a couple of consulting engagements at a time.</span> <a class="btn btn--ghost" href="{{ '/hire/' | relative_url }}">Work with me {% include icon.html name="arrow-right" size=14 %}</a></p>
+<div class="author-card reveal">
+  <div class="author-card__profile">
+    <div class="author-card__media">
+      {%- include picture.html
+          base="/assets/images/hero-portrait-v2"
+          widths="420"
+          ext="jpg"
+          fallback_width="420"
+          sizes="128px"
+          width=420
+          height=525
+          alt="Basant Bhattarai"
+          loading="lazy" -%}
+      <p class="author-card__links" aria-label="Author links">
+        <a href="{{ '/about/' | relative_url }}">About</a>
+        <span aria-hidden="true">·</span>
+        <a href="{{ site.author.github }}" rel="me noopener">GitHub</a>
+        <span aria-hidden="true">·</span>
+        <a href="{{ site.author.linkedin }}" rel="me noopener">LinkedIn</a>
+        <span aria-hidden="true">·</span>
+        <a href="mailto:{{ site.author.email }}">Email</a>
+      </p>
+    </div>
+    <div class="author-card__copy">
+      <p class="section-label author-card__eyebrow">About the author</p>
+      <p><strong>Basant Bhattarai</strong> is a Senior Data &amp; AI Engineer with nine years across data platforms, the databases underneath them, and agents running in production against both. He writes about the failure modes that only show up under load. Working US and EU hours.</p>
+      <p>Currently: Senior Data Engineer at <a href="https://uxcam.com" rel="noopener">UXCam</a>.</p>
+      <p class="author-card__action"><span>Building something similar? I take select consulting engagements.</span> <a class="btn btn--ghost" href="{{ '/hire/' | relative_url }}">Work with me {% include icon.html name="arrow-right" size=14 %}</a></p>
+    </div>
   </div>
-</aside>
+</div>

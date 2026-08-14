@@ -9,6 +9,15 @@ series: failover-lab
 series_order: 3
 featured: true
 toc: true
+cover:
+  base: "/assets/images/editorial-postgres-volume-v1"
+  widths: "840,1600"
+  raster_widths: "840,1600"
+  fallback_width: "1600"
+  width: 1600
+  height: 900
+  alt: "PostgreSQL elephant on nested Docker mounts; the old /data path sits unused beside PG 18"
+  caption: "PostgreSQL 18 wants the volume at /var/lib/postgresql, with PGDATA one level down. The pre-18 path is the unused mount."
 level: intermediate
 time_estimate: "~35 min hands-on"
 what_youll_build: "A PostgreSQL 18 primary and streaming hot standby on Docker with a replication slot, promoted to a new timeline with pg_promote()."
