@@ -43,20 +43,17 @@ Nine Docker Compose stacks: `mongo-ha`, `mongo-shard`, `scylla-ha`, `solr-ha`, `
 
 ## Results
 
-**8 of 8 scenarios in my own test plan passed.** I wrote the plan, so the pass rate measures execution, not difficulty — owning that is more useful than implying an external benchmark.
+**8 of 8 scenarios in my own test plan passed.** I wrote the plan, so the pass rate measures execution, not difficulty — owning that is more useful than implying an external benchmark. Which is also why the table below reports what each engine *measured* rather than a PASS column: a constant column carries about one bit, and the numbers are the part you can argue with.
 
-| Engine | HA / cluster | Sharding | Backup/Restore | Monitoring | Result |
-| --- | --- | --- | --- | --- | --- |
-| MongoDB 8.0 | 3-node replica set, auto-failover | hashed-key sharded cluster (2 shards) | mongodump/restore | serverStatus, repl lag, oplog | PASS |
-| ScyllaDB 2026.1 | 3-node, RF=3, QUORUM survives node loss | token ring (256 vnodes/node) | nodetool snapshot + refresh | nodetool info/tablestats, :9180 | PASS |
-| SolrCloud 9 | ZK + 2 nodes, 2×2 shards/replicas | numShards=2 | collection BACKUP/RESTORE | metrics API, solr-exporter | PASS |
-| MariaDB 11.8 + Galera 4 | 3-node multi-master, quorum, IST rejoin | n/a (full replicas) | mariabackup SST (state transfer) | wsrep_* status vars | PASS |
-| Redis 8 Cluster | 3 primaries + 3 replicas, auto-failover | 16384 hash slots, hash tags | AOF per node | CLUSTER INFO/SHARDS | PASS |
-| Redis 8 Sentinel | 1 primary + 2 replicas + 3 sentinels | n/a | AOF/RDB | SENTINEL master/replicas | PASS |
-| PostgreSQL 18 | primary + hot-standby, pg_promote failover | n/a | pg_basebackup + WAL/PITR | pg_stat_replication, lag | PASS |
-| Observability | exporters → Prometheus → Grafana | n/a | n/a | golden-signals dashboard | PASS |
+{% include ledger.html %}
 
-PostgreSQL 18 streaming replication measured **383 µs replay lag** and 104 µs write lag from `pg_stat_replication`, and `pg_promote()` took the standby out of recovery on timeline 1 → 2. Redis Sentinel promoted a replica **about 5 seconds** after I killed the primary; Redis Cluster self-healed with no data loss, config epoch 2 → 7.
+The last row is the limit of the rig, not a result. One Docker host cannot produce a split network, so every failover here is process death — and partition is the case that actually causes split-brain.
+
+## What went wrong
+
+The passes are the boring part. These three cost the most time, and each one is a version-specific trap that no documentation page warned me about.
+
+{% include findings.html %}
 
 ## Running it
 

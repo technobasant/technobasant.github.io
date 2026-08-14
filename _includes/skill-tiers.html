@@ -1,0 +1,55 @@
+{%- comment -%}
+  The stack, from _data/skills.yml.
+
+  This data has existed since the portfolio rebuild and until now fed exactly
+  one consumer: the `knowsAbout` array in head/jsonld.html. Machines could read
+  it; a hiring manager could not, and "what do you actually use" is the first
+  filter for a data/AI role.
+
+  Rendered as three tiers rather than one wall of logos, because the tiers are
+  the honest part. `_data/skills.yml` says it outright — Tier 3 exists "to show
+  where the depth stops" — and a list that admits its own boundary is worth more
+  than one that implies uniform mastery of forty things.
+
+  Tier 1 carries `since` and a scope line; that is the difference between "I
+  have used Kafka" and "Kafka, since 2020, event-driven and streaming systems".
+{%- endcomment -%}
+{%- assign _s = site.data.skills -%}
+<section class="skills" aria-labelledby="stack-title">
+  <h3 id="stack-title" class="sr-only">The stack</h3>
+  {%- if _s.note %}<p class="skills__note">{{ _s.note }}</p>{% endif %}
+
+  <div class="skills__tier">
+    <p class="section-label skills__heading">{{ _s.tier1.heading }}</p>
+    {%- if _s.tier1.blurb %}<p class="skills__blurb">{{ _s.tier1.blurb }}</p>{% endif %}
+    <ul class="skills__primary">
+      {%- for item in _s.tier1.items %}
+      <li>
+        <p class="skills__name">
+          {{ item.name }}{% if item.since %} <span class="skills__since">since {{ item.since }}</span>{% endif %}
+        </p>
+        {%- if item.scale %}<p class="skills__scale">{{ item.scale }}{% if item.evidence %} — <a href="{{ item.evidence | relative_url }}">{{ item.evidence_label | default: "evidence" }}</a>{% endif %}</p>{% endif %}
+      </li>
+      {%- endfor %}
+    </ul>
+  </div>
+
+  <div class="skills__tier">
+    <p class="section-label skills__heading">{{ _s.tier2.heading }}</p>
+    {%- if _s.tier2.blurb %}<p class="skills__blurb">{{ _s.tier2.blurb }}</p>{% endif %}
+    <dl class="skills__groups">
+      {%- for g in _s.tier2.groups %}
+      <div>
+        <dt>{{ g.name }}</dt>
+        <dd>{{ g.items | join: " · " }}</dd>
+      </div>
+      {%- endfor %}
+    </dl>
+  </div>
+
+  <div class="skills__tier">
+    <p class="section-label skills__heading">{{ _s.tier3.heading }}</p>
+    {%- if _s.tier3.blurb %}<p class="skills__blurb">{{ _s.tier3.blurb }}</p>{% endif %}
+    <p class="skills__flat">{{ _s.tier3.items | join: " · " }}</p>
+  </div>
+</section>
