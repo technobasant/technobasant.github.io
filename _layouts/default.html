@@ -2,6 +2,16 @@
 <html lang="{{ site.lang | default: 'en' }}">
 <head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{%- comment -%} Light first, matching the bootstrap below: `color-scheme` is read
+before CSS lands and decides scrollbars and form controls, so listing dark first
+told the UA to paint dark chrome for a light-first site. {%- endcomment %}
+<meta name="color-scheme" content="light dark">
+{%- comment -%} One theme-color, no `media`: a media-scoped pair would win over
+whatever we set here in exactly the case the visitor overrode their OS. The
+bootstrap below sets it before first paint and the toggle owns it thereafter, so
+it must be declared ABOVE that script for querySelector to find it. {%- endcomment %}
+<meta name="theme-color" content="#fbfaf8">
 <script>
 /* Stored choice wins; otherwise follow the OS. An OS that states no preference
    gets light, not dark: "permanent dark mode as the default reflex" is the most
@@ -14,14 +24,14 @@
 try{var s=localStorage.getItem('theme');
 t=(s==='light'||s==='dark')?s:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
 }catch(e){}
-r.setAttribute('data-theme',t);r.style.colorScheme=t;})();
+r.setAttribute('data-theme',t);r.style.colorScheme=t;
+/* Paint the browser chrome from the theme we just resolved. It used to ship a
+   hardcoded dark value that site.js corrected after load, so a light-mode
+   visitor got a dark address bar until the deferred script ran. Same element,
+   set before first paint, so the toggle still owns it afterwards. */
+var m=document.querySelector('meta[name="theme-color"]');
+if(m)m.setAttribute('content',t==='dark'?'#0d0f12':'#fbfaf8');})();
 </script>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="dark light">
-{%- comment -%} One theme-color, no `media` — site.js repaints it from the resolved
---surface-0 token on load and on every toggle, so a second media-scoped meta would
-win over it in exactly the case the user overrode their OS. {%- endcomment %}
-<meta name="theme-color" content="#0D0F12">
 {% include head/meta.html %}
   <link rel="stylesheet" href="{{ '/assets/css/site.css' | relative_url }}">
   {% feed_meta %}

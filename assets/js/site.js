@@ -151,7 +151,7 @@
       });
     }
 
-    Array.prototype.forEach.call(blocks, function (block) {
+    Array.prototype.forEach.call(blocks, function (block, blockIndex) {
       var pre = block.querySelector("pre");
       if (!pre) return;
 
@@ -222,10 +222,16 @@
         if (overflows && !pre.hasAttribute("tabindex")) {
           pre.setAttribute("tabindex", "0");
           pre.setAttribute("role", "region");
+          // A named region is a landmark, and a tutorial with nine bash blocks
+          // was minting nine landmarks all called "bash code, scrollable" —
+          // axe's landmark-unique, and useless in a landmark list. Prefer the
+          // filename, which is already unique and meaningful; fall back to the
+          // language plus the block's position in the article.
           pre.setAttribute(
             "aria-label",
             (block.getAttribute("data-file") ||
-              (lang ? lang + " code" : "Code")) + ", scrollable"
+              (lang ? lang + " code" : "Code") + " block " + (blockIndex + 1)) +
+              ", scrollable"
           );
         } else if (!overflows && pre.hasAttribute("tabindex")) {
           pre.removeAttribute("tabindex");
