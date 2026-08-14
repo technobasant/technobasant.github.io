@@ -1,6 +1,6 @@
 ---
 title: "pgBackRest against a Patroni cluster: archive, rebuild, and restore"
-description: "Wire pgBackRest into a running Patroni cluster with Ansible, then prove it: stanza, full backup, replica rebuilt from the repo, and a point-in-time restore."
+description: "Wire pgBackRest into a running Patroni cluster over mutual TLS with Ansible, then prove it: full backup, replica rebuilt from the repo, and a point-in-time restore."
 date: 2026-08-14 16:30:00 +0545
 type: tutorial
 tags: [postgres, distributed-databases]
@@ -19,18 +19,18 @@ cover:
 featured: true
 level: intermediate
 time_estimate: "~90 min on an existing cluster; the restore drill itself is ~15 min"
-what_youll_build: "pgBackRest wired into a two-node Patroni cluster by Ansible: archiving through the DCS, a full backup, a replica rebuilt from the repo, and a point-in-time restore of a dropped table."
+what_youll_build: "pgBackRest wired into a two-node Patroni cluster by Ansible over mutual TLS: archiving through the DCS, a full backup, a replica rebuilt from the repo, and a point-in-time restore of a dropped table."
 prerequisites:
   - "The Patroni cluster from part 2 of this series, running PostgreSQL 18 with etcd"
   - "Ansible on the control node (ansible-core 2.15.x against RHEL-family guests)"
   - "Enough repo disk for one full backup plus WAL — 3 GB is plenty for a lab"
-tested_on: "Rocky Linux 8 · amd64 under QEMU on Apple Silicon · PostgreSQL 18.6 (PGDG) · Patroni 4.1.5 · pgBackRest 2.59.0 · etcd 3.7.0 · ansible-core 2.15.13 · 192.168.105.140–142"
+tested_on: "Rocky Linux 8 · amd64 under QEMU on Apple Silicon · PostgreSQL 18.6 (PGDG) · Patroni 4.1.5 · pgBackRest 2.59.0 over mutual TLS on 8432 · etcd 3.7.0 · ansible-core 2.15.13 · 192.168.105.140–142"
 key_takeaways:
-  - "archive_mode and archive_command belong in the DCS via patronictl edit-config; Patroni rewrites postgresql.conf and will discard hand edits."
-  - "create_replica_methods names a command on one host, so it lives in the local patroni.yml, not in shared cluster state."
+  - "Cluster-wide settings go in the DCS via edit-config; create_replica_methods names a local command so it stays in patroni.yml."
   - "archive_mode is postmaster-level: edit-config is not enough, Patroni raises a Pending restart flag and you must do a rolling restart."
   - "patronictl pause plus systemctl stop patroni does not stop PostgreSQL, and pgBackRest refuses to restore over a running server."
   - "After a point-in-time restore, take a fresh full backup before rebuilding replicas or they will ask for a timeline history that no longer exists."
+  - "TLS is time-sensitive and TCG guests drift: 76 minutes of skew surfaced as `sslv3 alert bad certificate`, not as anything about clocks."
 ---
 
 ## The thing that makes this different from single-node backup
@@ -63,16 +63,37 @@ pg{{ loop.index }}-port={{ pg_port }}
 ```
 {: data-file="roles — repo host /etc/pgbackrest.conf"}
 
-The database hosts get the mirror image: one `repo1-host` pointing back, and asynchronous archiving so `archive_command` never becomes the cluster's write ceiling.
+Transport is mutual TLS, the same as part 1, and it is the better answer for a cluster: no shell account on the peers, and authorisation is an explicit CN allow-list rather than "whatever the postgres unix user can reach over ssh". Each side names the other:
+
+```ini
+tls-server-address=*
+tls-server-port=8432
+tls-server-cert-file=/etc/pgbackrest/certs/etcd1.crt
+tls-server-key-file=/etc/pgbackrest/certs/etcd1.key
+tls-server-ca-file=/etc/pgbackrest/certs/ca.crt
+tls-server-auth=pgn1=pg18lab
+tls-server-auth=pgn2=pg18lab
+```
+{: data-file="repo host — the allow-list"}
+
+The database hosts get the mirror image, plus asynchronous archiving so `archive_command` never becomes the cluster's write ceiling. They run a TLS server too, because the repo reaches *back* to them when it takes a backup:
 
 ```ini
 [global]
 repo1-host=192.168.105.140
-repo1-host-user=postgres
+repo1-host-type=tls
+repo1-host-port=8432
+repo1-host-ca-file=/etc/pgbackrest/certs/ca.crt
+repo1-host-cert-file=/etc/pgbackrest/certs/pgn1.crt
+repo1-host-key-file=/etc/pgbackrest/certs/pgn1.key
 archive-async=y
 spool-path=/var/spool/pgbackrest
+
+tls-server-auth=etcd1=pg18lab
 ```
 {: data-file="database hosts /etc/pgbackrest.conf"}
+
+A certificate signed by the CA but missing from `tls-server-auth` authenticates fine and is then refused. That is the behaviour you want, and it is worth knowing before you meet the error.
 
 Name the stanza after the Patroni scope. pgBackRest thinks in stanzas and Patroni thinks in scopes; keeping them identical saves a future reader wondering whether they are the same thing.
 
@@ -82,6 +103,57 @@ Name the stanza after the Patroni scope. pgBackRest thinks in stanzas and Patron
 etcd1  : ok=9  changed=4  unreachable=0  failed=0
 pgn1   : ok=7  changed=3  unreachable=0  failed=0
 pgn2   : ok=7  changed=3  unreachable=0  failed=0
+```
+{: .verify }
+
+## Step 1b — Clocks, before certificates
+
+This cost the most time of anything in the build, and the error points nowhere near the cause:
+
+```text
+WARN: unable to check pg1: [ServiceError] TLS error [1:336151570] sslv3 alert bad certificate
+ERROR: [027]: no database found
+```
+
+The certificates were fine. The CA fingerprint matched on every host. What did not match was the time:
+
+```text
+control node (Mac):  2026-08-14 16:24:33 UTC
+  etcd1              2026-08-14 16:24:34 UTC
+  pgn1               2026-08-14 15:07:59 UTC
+  pgn2               2026-08-14 15:08:00 UTC
+CA notBefore:        Aug 14 16:16:14 2026 GMT
+```
+
+Both database nodes were **76 minutes behind**. The CA was issued on the Mac at 16:16, so from their point of view it was not yet valid, and `openssl verify` says so plainly once you ask it directly:
+
+```text
+error 9 at 1 depth lookup: certificate is not yet valid
+```
+
+TCG guests drift badly, and chronyd *slews* rather than steps, so it corrects a large offset far too slowly to help. Step the clock, and do it before anything issues a certificate:
+
+```yaml
+- name: Force an immediate step
+  ansible.builtin.command: chronyc -a makestep
+
+- name: Fail if still skewed from the control node
+  ansible.builtin.assert:
+    that: "(guest_epoch.stdout | int - control_epoch | int) | abs < 120"
+    fail_msg: "{{ inventory_hostname }} is too far from the control node; certificates will not validate."
+```
+{: data-file="playbooks/05_pgbackrest_tls.yml"}
+
+The assertion matters more than the `makestep`. A silent 76-minute skew turns into a TLS error an hour later; a failed assertion names the problem at the point it exists.
+
+**Verify.** With clocks stepped, the handshake works and `check` proves the whole path:
+
+```text
+INFO: check repo1 (standby)
+INFO: switch wal not performed because this is a standby
+INFO: check repo1 configuration (primary)
+INFO: WAL segment 00000004000000000000000F successfully archived ... on repo1
+INFO: check command end: completed successfully (2560ms)
 ```
 {: .verify }
 
@@ -313,6 +385,8 @@ patronictl -c /etc/patroni/patroni.yml reinit pg18lab pgn1 --force
 | Replica stuck `starting`, wants `0000000N.history` | Backup base predates the current timeline | Fresh full backup after the PITR, then reinit |
 | Replica rebuild is slow and loads the primary | `create_replica_methods` missing or wrong order | List `pgbackrest` before `basebackup` in the local yml |
 | `check` reports the wrong host as primary | Only one `pgN-host` declared | Declare every member; the primary moves |
+| `sslv3 alert bad certificate`, certs look correct | Guest clock behind the CA's notBefore | `chronyc -a makestep`, then assert the offset |
+| Peer authenticates then is refused | CN missing from `tls-server-auth` | Add `tls-server-auth=<CN>=<stanza>` on the receiving side |
 
 ## What this buys you
 
