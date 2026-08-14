@@ -49,7 +49,7 @@ work:
   label: "Selected work"
   # "…with measured outcomes" described the page rather than the work. The cards
   # below already carry the numbers; the headline should carry the claim.
-  headline: "Four systems, and the decisions that kept them running."
+  headline: "Five systems, and the decisions that kept them running."
   more: "View all work"
   more_url: /work/
 
