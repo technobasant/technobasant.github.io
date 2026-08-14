@@ -2,6 +2,11 @@
   Series navigation.
     {% include series-nav.html %}            → "Part N of M" + prev/next
     {% include series-nav.html full=true %}  → the full ordered list (bottom of post)
+
+  Both render on the same post, so they cannot share an aria-label: two <nav>
+  landmarks with the identical name is axe's landmark-unique, and a screen
+  reader listing the page's landmarks would show "Series: The failover lab"
+  twice with no way to tell which is the jump-list and which is the pager.
 {%- endcomment -%}
 {%- assign _parts = site.posts | where: "series", page.series | sort: "series_order" -%}
 {%- assign _total = _parts | size -%}
@@ -18,7 +23,12 @@
     {%- unless forloop.last -%}{%- assign _prev_ni = forloop.index -%}{%- assign _next = _parts[_prev_ni] -%}{%- endunless -%}
   {%- endif -%}
 {%- endfor -%}
-<nav class="series-nav{% if include.full %} series-nav--full{% if _total > 1 %} series-nav--multi{% endif %}{% endif %}" aria-label="Series: {{ _title | escape }}">
+{%- if include.full -%}
+  {%- assign _nav_label = _title | escape | prepend: "All parts of " -%}
+{%- else -%}
+  {%- assign _nav_label = _title | escape | prepend: "Previous and next in " -%}
+{%- endif -%}
+<nav class="series-nav{% if include.full %} series-nav--full{% if _total > 1 %} series-nav--multi{% endif %}{% endif %}" aria-label="{{ _nav_label }}">
   {%- if include.full %}
   <div class="series-nav__head">
     <div class="series-nav__meta">

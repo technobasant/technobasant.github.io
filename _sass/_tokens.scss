@@ -1,9 +1,10 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // TOKENS — the single source of truth.
 //
-// Two themes, switched by `data-theme` on <html>. Dark is the default and is
-// also attached to bare `:root` so the page is never unstyled if the no-flash
-// inline script fails to run.
+// Two themes, switched by `data-theme` on <html>. Light is attached to bare
+// `:root` as well, so the page is never unstyled if the no-flash inline script
+// fails to run — and so the fallback matches the light-first default that
+// script documents, rather than contradicting it.
 //
 // Contrast ratios in the comments are computed against the theme's --surface-0
 // and are not to be changed without recomputing.
@@ -14,6 +15,18 @@
   --brand-brass: #c4a574;
   --brand-brass-lift: #d9be8e;
   --brand-brass-masthead: #dfb66c;
+
+  // Mode-invariant on purpose, and named so `rake css:literals` can hold the
+  // line without pretending these are theme colours.
+  //
+  // --media-mat is the letterbox behind `object-fit: cover`. A photograph looks
+  // the same in both themes, and a paper-white plate behind a dark editorial
+  // cover flashes on every theme switch. It never carries text, so it is not in
+  // the `rake tokens` matrix.
+  --media-mat: #0d0f12;
+  // The availability dot. Decorative — the same fact is stated in the adjacent
+  // text — so it is exempt from 1.4.11 and does not need a per-theme value.
+  --status-ok: #4e9b68;
 
   // ── Type families ─────────────────────────────────────────────────────────
   // Serif for prose, sans for UI. In a survey of 26 data/infra sites the serif
@@ -136,9 +149,8 @@
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// DARK (default)
+// DARK
 // ─────────────────────────────────────────────────────────────────────────────
-:root,
 :root[data-theme="dark"] {
   color-scheme: dark;
 
@@ -221,7 +233,22 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // LIGHT — warm paper, not white. Brass is darkened to #7C5A18 for text-weight
 // use; true brass survives as --accent-fill for decorative fills only.
+//
+// Also the bare `:root` fallback, which is what a visitor gets when the inline
+// bootstrap in _layouts/default.html has not run and `data-theme` is therefore
+// absent. Dark used to hold that slot, so a no-JS visitor whose OS asks for
+// light was served the dark palette regardless — the opposite of the light-first
+// default that same bootstrap argues for at length.
+//
+// Attaching it to the existing light block rather than adding a
+// `@media (prefers-color-scheme)` copy is deliberate: a duplicated palette is
+// exactly the drift hazard that produced three shipped AA failures here, where
+// a component kept a stale dark literal while rendering on paper. One source,
+// one place to change. The cost is that a no-JS visitor who prefers dark gets
+// light; with JS — every real browser — `prefers-color-scheme` is still
+// honoured automatically.
 // ─────────────────────────────────────────────────────────────────────────────
+:root,
 :root[data-theme="light"] {
   color-scheme: light;
 
