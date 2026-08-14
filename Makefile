@@ -8,6 +8,8 @@
 #   make check        html-proofer, internal only
 #   make verify       output assertions against _site
 #   make lighthouse   production build, then a clean server for auditing
+#   make vr-accept    capture the visual-regression baseline
+#   make vr           compare the running site against that baseline
 #   make images       regenerate portrait derivatives, icons and social cards
 #   make resume-pdf   regenerate the privacy-safe downloadable résumé
 #   make new-post SLUG=my-slug TITLE="My title"
@@ -17,11 +19,15 @@
 SHELL   := /usr/bin/env bash
 BUNDLE  := bundle exec
 PORT    ?= 4000
+# Playwright is a global install, not a project dependency — there is no
+# package.json here on purpose. Homebrew's prefix first, then a plain `npm i -g`
+# home, so this resolves on either setup.
+NODE_PATH ?= /opt/homebrew/lib/node_modules:$(HOME)/node_modules
 # `date` on macOS has no --iso-8601; this format matches the contract exactly.
 NOW     := $(shell TZ=Asia/Kathmandu date '+%Y-%m-%d %H:%M:%S %z')
 TODAY   := $(shell TZ=Asia/Kathmandu date '+%Y-%m-%d')
 
-.PHONY: help serve serve-drafts build content privacy check check-external verify jsonld lighthouse images resume-pdf new-post new-tutorial new-work clean
+.PHONY: help serve serve-drafts build content privacy check check-external verify jsonld lighthouse vr vr-accept images resume-pdf new-post new-tutorial new-work clean
 
 help:
 	@grep -E '^#   ' $(MAKEFILE_LIST) | sed 's/^#   //'
@@ -68,6 +74,21 @@ lighthouse: build
 	@echo "    --chrome-flags='--headless=new' --view"
 	@echo
 	JEKYLL_ENV=production $(BUNDLE) jekyll serve --skip-initial-build --no-watch --port $(PORT)
+
+# Visual regression. Refactors that are supposed to be inert — deleting an
+# unreachable rule, folding an override into its base — are gated at zero
+# differing pixels. Needs a server already running on $(PORT).
+#
+#   make vr-accept   capture the baseline (do this before you start)
+#   make vr          compare the current build against it
+#
+# Local only, never CI: font resolution differs on ubuntu, so macOS baselines
+# would red-flag every run. `rake css:deadwood` is the CI-safe equivalent.
+vr:
+	NODE_PATH=$(NODE_PATH) node scripts/vr.mjs compare http://127.0.0.1:$(PORT)
+
+vr-accept:
+	NODE_PATH=$(NODE_PATH) node scripts/vr.mjs accept http://127.0.0.1:$(PORT)
 
 images:
 	./scripts/gen-images.sh
