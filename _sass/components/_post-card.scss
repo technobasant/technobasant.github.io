@@ -134,17 +134,6 @@
 .post-card:focus-within .post-card__open {
   color: var(--accent-hi);
   transform: translateX(2px);
-}@media (max-width: 48rem) {
-  .home-writing .writing-selection {
-    grid-template-columns: 1fr;
-  }
-
-  .home-writing .post-card,
-  .home-writing .post-card + .post-card {
-    min-height: auto;
-    padding-inline: 0;
-    border-inline-start: 0;
-  }
 }
 
 // Writing archive: editorial rows instead of a repeated tile wall. The title

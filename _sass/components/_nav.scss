@@ -76,27 +76,6 @@ $nav-bp: 54rem;
   background: var(--accent);
 }
 
-// ── Header CTA ───────────────────────────────────────────────────────────────
-// Quiet by default. The primary brass action lives in the hero, not up here —
-// two brass buttons in one viewport is one too many.
-.nav__cta {
-  display: inline-flex;
-  align-items: center;
-  min-height: 2.25rem;
-  padding-inline: var(--sp-4);
-  border: 1px solid var(--line-control);
-  border-radius: var(--r-md);
-  color: var(--ink-1);
-  font-weight: 600;
-  text-decoration: none;
-  transition: background-color var(--dur-1) var(--ease-standard),
-    border-color var(--dur-1) var(--ease-standard);
-}
-
-.nav__cta:hover {
-  background: var(--surface-2);
-  border-color: var(--ink-3);
-}
 
 // ── Hamburger / close ────────────────────────────────────────────────────────
 // The same class is used for the header trigger and the drawer's close button.
@@ -268,8 +247,4 @@ $nav-bp: 54rem;
   color: var(--ink-2);
 }
 
-.nav-dialog .nav__cta {
-  justify-content: center;
-  min-height: 48px;
-  margin-block-start: var(--sp-5);
-}
+

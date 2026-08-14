@@ -241,23 +241,33 @@ async function styles(page) {
         try { localStorage.setItem("theme", t); } catch {}
       }, theme);
 
+      // `jekyll serve` injects a livereload client into every page. A rebuild
+      // landing mid-run pushes a reload, which destroys the execution context
+      // under whatever evaluate is in flight — it cost two random shots per
+      // capture. Block the client; nothing here needs it.
+      await ctx.route(/livereload/i, (r) => r.abort());
+
       let page = await ctx.newPage();
 
       for (const [name, url] of ROUTES) {
         const k = key(name, w, h, theme);
         let png;
-        try {
-          png = await shoot(page, url);
-        } catch (e) {
-          failures.push(`${k}: load failed — ${e.message.split("\n")[0]}`);
-          // A goto that threw can still have a navigation in flight, and it
-          // will interrupt the *next* route's goto — one slow page cascades
-          // into every route after it. A fresh page is a cleaner reset than
-          // parking on about:blank, which just becomes the next interrupt.
-          await page.close().catch(() => {});
-          page = await ctx.newPage();
-          continue;
+        for (let attempt = 1; attempt <= 2 && !png; attempt++) {
+          try {
+            png = await shoot(page, url);
+          } catch (e) {
+            // A goto that threw can still have a navigation in flight, and it
+            // will interrupt the *next* route's goto — one slow page cascades
+            // into every route after it. A fresh page is a cleaner reset than
+            // parking on about:blank, which just becomes the next interrupt.
+            await page.close().catch(() => {});
+            page = await ctx.newPage();
+            if (attempt === 2) {
+              failures.push(`${k}: load failed twice — ${e.message.split("\n")[0]}`);
+            }
+          }
         }
+        if (!png) continue;
         shots++;
 
         const cls = await page.evaluate(() => new Promise((res) => {

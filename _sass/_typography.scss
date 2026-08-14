@@ -30,10 +30,6 @@ blockquote {
 // Display face. Applied deliberately, never inherited into body copy.
 // `:not(.section-label)` — the layouts label a section with <h2 class="section-label">,
 // which must stay a small upright caps label, not a display line.
-.display,
-.hero h1,
-.page-head h1,
-.post-head h1,
 .section-head h2:not(.section-label),
 .stats li > strong {
   // Numerals in Inter, not Fraunces: the Fraunces subset ships only `liga` and
@@ -70,14 +66,6 @@ blockquote {
   text-wrap: pretty;
 }
 
-// ── Role line (hero, resume) ─────────────────────────────────────────────────
-.role {
-  margin: 0;
-  font-size: var(--step-1);
-  font-weight: 600;
-  line-height: 1.4;
-  color: var(--ink-1);
-}
 
 // ── Section head: label + heading + a "more" link on the same baseline ───────
 .section-head {
@@ -133,27 +121,8 @@ blockquote {
   color: var(--ink-1);
 }
 
-// ── Metadata line ────────────────────────────────────────────────────────────
-.meta,
-.post-meta,
-.case-meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--sp-2) var(--sp-4);
-  margin: 0;
-  font-size: var(--step--1);
-  line-height: var(--lh-ui);
-  color: var(--ink-3);
-}
 
-.meta > * ,
-.post-meta > * {
-  margin: 0;
-}
-
-small,
-.small {
+small {
   font-size: var(--step--1);
 }
 

@@ -229,17 +229,6 @@
   .ledger__metric { display: inline; margin-inline-start: 0.6ch; }
 }
 
-.section-blurb {
-  max-width: 58ch;
-  margin-block: var(--sp-4) 0;
-  font-size: var(--step--1);
-  line-height: 1.55;
-  color: var(--ink-2);
-}
-
-.section-more-row {
-  margin-block: var(--sp-6) 0;
-}
 
 // ── Findings ─────────────────────────────────────────────────────────────────
 // Three failures, set as a numbered list. Deliberately narrow — this is reading
