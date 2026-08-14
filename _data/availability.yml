@@ -11,11 +11,11 @@ updated: 2026-08-11
 
 engagements:
   - title: "Architecture review"
-    blurb: "A read of your ingestion, storage and serving layers against the failure modes I have actually hit, with a written set of recommendations you can act on without me."
-  - title: "Platform build"
-    blurb: "Kafka/Spark/Iceberg/dbt/Airflow on Kubernetes, with freshness SLOs, data contracts and a cost model — built so your team owns it when I leave."
-  - title: "Agentic AI delivery"
-    blurb: "Agents that write into governed tables: tool registries, structured output contracts, evaluation, tracing and the persistence layer underneath."
+    blurb: "A read of the application, database, platform, and agent layers against failure modes I have actually hit, with written recommendations you can act on without me."
+  - title: "Platform and database work"
+    blurb: "Ingestion, processing, and serving on Kubernetes, plus HA, backup, upgrades, and the operating model so your team owns the stores when I leave."
+  - title: "Agentic systems"
+    blurb: "An agent that has to touch production data: which tools it may call, what validates the output, how you evaluate a change before rollout, and where the result is persisted. LangGraph, Google ADK, LangChain, MCP."
   - title: "Fractional data lead"
     blurb: "Design review, hiring input and mentoring for a team that needs senior judgement more than another pair of hands."
 

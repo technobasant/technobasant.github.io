@@ -2,13 +2,25 @@
 layout: home
 permalink: /
 title: Basant Bhattarai
-seo_title: "Basant Bhattarai — Senior Big Data & Agentic AI Engineer"
-description: "Senior Data & AI Engineer specializing in Spark pipelines, big-data platforms, lakehouse architecture, and production agentic AI systems."
+seo_title: "Basant Bhattarai — Senior Data & AI Engineer · Platforms, Databases & Agentic Systems"
+description: "Senior Data & AI Engineer. Nine years building data platforms, running the databases underneath them, and putting agents into production against both."
 hero:
   intro: "Hello, I’m Basant Bhattarai."
-  eyebrow: "Senior Data & AI Engineer · Big Data & Agentic Systems"
-  h1: "I architect big data platforms and production AI agents."
-  lede: "Spark/PySpark pipelines, Kafka ingestion, Iceberg lakehouses, and governed agent workflows—designed for scale, observability, resilience, and cost."
+  # Just the role. The full "· Platforms, Databases & Agentic Systems" string
+  # wrapped to two lines above the H1 and restated what the H1 and lede already
+  # say. It still carries in the <title>, JSON-LD and llms.txt, where it is read
+  # out of context and needs the qualifier.
+  eyebrow: "Senior Data & AI Engineer"
+  h1: "I design data platforms, and the agentic systems that run on them."
+  # The previous lede read "Kafka, Spark and Iceberg on one side; LangGraph,
+  # Google ADK and MCP on the other" — an inventory, and one that framed the two
+  # stacks as separate in the same breath as claiming they were integrated. The
+  # frameworks now appear where they are load-bearing (résumé, skills, the AI
+  # case study) rather than in every lede on the site.
+  # Length is a contract here, not a preference: scripts/e2e-hero.mjs asserts the
+  # CTAs stay inside the first viewport, and at 320px every ~5 words is another
+  # line. 25 words fits; 28 pushed the buttons 12px past the fold.
+  lede: "Nine years on systems that have to keep working: terabyte-scale ingestion, the databases underneath, and agents that write into governed stores, not a chat window."
   actions:
     - label: "Selected work"
       url: /work/
@@ -35,7 +47,9 @@ proof:
 
 work:
   label: "Selected work"
-  headline: "Big data architecture, agentic AI, and measured outcomes."
+  # "…with measured outcomes" described the page rather than the work. The cards
+  # below already carry the numbers; the headline should carry the claim.
+  headline: "Four systems, and the decisions that kept them running."
   more: "View all work"
   more_url: /work/
 

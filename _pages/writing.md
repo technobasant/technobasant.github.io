@@ -1,11 +1,11 @@
 ---
 title: Writing
-seo_title: "Big Data, Distributed Systems & Agentic AI Writing — Basant Bhattarai"
+seo_title: "Data Platforms, Databases & Agentic Systems Writing — Basant Bhattarai"
 eyebrow: Field notes
 headline: "Notes from systems that had to keep working."
 layout: writing-index
 permalink: /writing/
-description: "Field notes on big-data platforms, distributed databases, pipeline reliability, system internals, self-hosted infrastructure, and production agentic AI."
+description: "Field notes on data platforms, database lifecycle, distributed systems, production agentic AI, pipeline reliability, and self-hosted infrastructure."
 redirect_from:
   - /blog/
   - /notes/
