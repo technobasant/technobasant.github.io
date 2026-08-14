@@ -145,27 +145,6 @@
 .case-card:hover .case-card__open {
   color: var(--accent-hi);
   transform: translateX(2px);
-}@media (max-width: 48rem) {
-  .case-card--band {
-    grid-template-columns: 1fr;
-  }
-
-  .case-card--band > .post-card__meta,
-  .case-card--band > .case-card__role,
-  .case-card--band > .case-card__metrics,
-  .case-card--band > .post-card__title,
-  .case-card--band > .case-card__hook,
-  .case-card--band > .case-card__open {
-    grid-column: 1;
-  }
-
-  .case-card--band > .post-card__title {
-    grid-row: auto;
-  }
-
-  .case-card--compact {
-    min-height: 0;
-  }
 }
 
 // ── Tutorial header ──────────────────────────────────────────────────────────
@@ -1103,19 +1082,8 @@ ol.series-nav__list > li::before {
   }
 }
 
-// ── Legacy ───────────────────────────────────────────────────────────────────
-// Existing markdown in _pages/ uses these directly. They keep working.
-.case {
-  padding-block-start: var(--sp-5);
-  margin-block-start: var(--sp-6);
-  border-block-start: 1px solid var(--line);
-}
 
-.case:first-of-type {
-  margin-block-start: 0;
-  padding-block-start: 0;
-  border-block-start: 0;
-}@media (min-width: 48rem) {
+@media (min-width: 48rem) {
   .card-grid--work {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }

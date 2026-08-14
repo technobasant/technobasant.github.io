@@ -1,5 +1,8 @@
 _site
 _vr
+# scripts/generate-resume-pdf.py defaults here when given no path; the committed
+# résumé is written to assets/ by `make resume-pdf`.
+output
 .sass-cache
 .jekyll-metadata
 .jekyll-cache

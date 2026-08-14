@@ -142,8 +142,13 @@ hr {
 // panel needs a ring of page colour between the outline and the busy surface,
 // or the brass disappears into it.
 .focus-halo:focus-visible,
-:where(.code-tools, .highlighter-rouge, .hero-photo, .callout, .toc)
-  :where(a, button, [tabindex]):focus-visible {
+:where(.code-tools,
+.highlighter-rouge,
+.callout,
+.toc)
+  :where(a,
+button,
+[tabindex]):focus-visible {
   outline: 2px solid var(--focus);
   outline-offset: 2px;
   box-shadow: 0 0 0 3px var(--surface-0);

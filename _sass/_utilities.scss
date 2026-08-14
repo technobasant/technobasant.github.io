@@ -6,8 +6,7 @@
 // No !important here on purpose — the contract permits it only inside the
 // prefers-reduced-motion block. Nothing else in this codebase positions
 // .sr-only, so plain `absolute` wins on its own.
-.sr-only,
-.visually-hidden {
+.sr-only {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -62,15 +61,4 @@
   white-space: nowrap;
 }
 
-.no-wrap {
-  white-space: nowrap;
-}
 
-.text-muted {
-  color: var(--ink-2);
-}
-
-.text-meta {
-  color: var(--ink-3);
-  font-size: var(--step--1);
-}
