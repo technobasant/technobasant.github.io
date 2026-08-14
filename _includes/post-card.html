@@ -1,6 +1,15 @@
 {%- comment -%}
   Usage: {% include post-card.html post=post %}
   Optional: heading="h2" (default h3)
+            cover=true   opt IN to the cover image (default: no cover)
+
+  Covers are off by default on index surfaces. Every widely-admired engineering
+  site — jvns.ca, danluu.com, lethain.com, brandur.org, eugeneyan.com, and the
+  Vercel and Anthropic engineering blogs — lists posts as title + date + a line
+  of metadata, with no thumbnail. It raises how much you can see per screen,
+  which is the actual constraint on this kind of page, and it removes 244 KB
+  from /writing/. The cover still does its real job as the og:image and at the
+  head of the article itself.
 {%- endcomment -%}
 {%- assign _p = include.post -%}
 {%- assign _h = include.heading | default: "h3" -%}
@@ -16,7 +25,7 @@
 {%- endif -%}
 <article class="post-card" data-catalog-item data-id="{{ _p.url }}" data-kind="{{ _type }}" data-tags="{{ _p.tags | join: ' ' }}" data-series="{{ _p.series }}" data-search="{% include writing-search.html post=_p %}">
   {%- if include.index %}<span class="post-card__index" aria-hidden="true">0{{ include.index }}</span>{% endif %}
-  {%- if _p.cover %}
+  {%- if _p.cover and include.cover %}
   <div class="post-card__cover" aria-hidden="true">
     {%- include picture.html
         base=_p.cover.base
@@ -35,6 +44,16 @@
     <span class="badge badge--{{ _type }}">{{ _label }}</span>
     {%- if _series_meta %}
     <span class="post-card__series">{{ _series_meta.title }}</span>
+    {%- comment -%}
+      `register` has been in _data/series.yml since it was written, with a
+      comment explaining why it matters, and has rendered nowhere. It is the
+      single most useful thing on this card: "Measured on my own hardware" and
+      "Follow-along runbook" are different promises, and a reader deciding
+      whether to spend 45 minutes wants to know which one they are getting.
+    {%- endcomment -%}
+    {%- if _series_meta.register_label %}
+    <span class="post-card__register post-card__register--{{ _series_meta.register }}">{{ _series_meta.register_label }}</span>
+    {%- endif %}
     {%- endif %}
   </p>
   <{{ _h }} class="post-card__title"><a href="{{ _p.url | relative_url }}">{{ _p.title }}</a></{{ _h }}>

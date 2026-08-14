@@ -60,8 +60,14 @@ layout: default
       </div>
       <a class="section-more" href="{{ page.work.more_url | relative_url }}">{{ page.work.more }} {% include icon.html name="arrow-right" size=14 %}</a>
     </div>
+    {%- comment -%}
+      All four, not three. The limit of 3 dropped `multi-engine-ha-lab` — the
+      one case study carrying a reproducible measured rig — off the homepage
+      entirely, which is the opposite of the selection you would make on merit.
+      Four rows cost about 260px on a page that already scrolls.
+    {%- endcomment -%}
     <div class="portfolio-work__list">
-      {%- for item in _selected_work limit: 3 -%}
+      {%- for item in _selected_work -%}
       {% include case-card.html item=item variant="portfolio" heading="h3" index=forloop.index %}
       {%- endfor %}
     </div>
@@ -78,14 +84,30 @@ layout: default
       </div>
       <a class="section-more" href="{{ page.writing.more_url | relative_url }}">{{ page.writing.more }} {% include icon.html name="arrow-right" size=14 %}</a>
     </div>
-    <article class="portfolio-note__item">
-      <p class="post-card__meta">
-        <time datetime="{{ _latest_post.date | date_to_xmlschema }}">{{ _latest_post.date | date: "%b %-d, %Y" }}</time>
-        <span>{{ _latest_post.type | default: "essay" }}</span>
-      </p>
-      <h3><a href="{{ _latest_post.url | relative_url }}">{{ _latest_post.title }}</a></h3>
-      <p>{{ _latest_post.description }}</p>
-    </article>
+    {%- comment -%}
+      Three, not one. Nine posts existed and the homepage showed a single one,
+      so the writing — the thing that actually demonstrates how someone thinks —
+      read as an afterthought. Each row carries the register where the series
+      declares one, so "Measured on my own hardware" is legible before the
+      click.
+    {%- endcomment -%}
+    <ol class="portfolio-note__list">
+      {%- for _post in site.posts limit: 3 -%}
+      {%- assign _pm = nil -%}
+      {%- if _post.series -%}{%- assign _pm = site.data.series | where: "slug", _post.series | first -%}{%- endif -%}
+      <li class="portfolio-note__item">
+        <p class="post-card__meta">
+          <time datetime="{{ _post.date | date_to_xmlschema }}">{{ _post.date | date: "%b %-d, %Y" }}</time>
+          <span class="badge badge--{{ _post.type | default: 'essay' }}">{{ _post.type | default: "essay" | capitalize }}</span>
+          {%- if _pm.register_label %}
+          <span class="post-card__register post-card__register--{{ _pm.register }}">{{ _pm.register_label }}</span>
+          {%- endif %}
+        </p>
+        <h3><a href="{{ _post.url | relative_url }}">{{ _post.title }}</a></h3>
+        <p>{{ _post.description }}</p>
+      </li>
+      {%- endfor -%}
+    </ol>
   </div>
 </section>
 {%- endif %}
