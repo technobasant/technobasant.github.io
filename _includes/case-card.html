@@ -22,6 +22,16 @@
   <{{ _h }} class="post-card__title"><a href="{{ _c.url | relative_url }}">{{ _c.title }}</a></{{ _h }}>
   {%- if _c.role %}<p class="case-card__role">{{ _c.role }}</p>{% endif -%}
   <p class="case-card__hook">{{ _c.hook | default: _c.description }}</p>
+  {%- comment -%}
+    `stack` is declared on all four case studies and has never rendered. For a
+    data/AI role it is the first thing a reader scans for, and naming the actual
+    systems is the difference between "a platform story" and "Kafka, Spark,
+    Iceberg, Trino". Capped at six: past that it stops being a signal and starts
+    being the wall of logos that a concrete result statement beats.
+  {%- endcomment -%}
+  {%- if _c.stack and _c.stack.size > 0 %}
+  <p class="case-card__stack">{{ _c.stack | slice: 0, 6 | join: " · " }}</p>
+  {%- endif %}
   {%- if _c.tags and _c.tags.size > 0 %}
   <ul class="post-card__tags" aria-label="Topics">
     {%- for slug in _c.tags -%}
