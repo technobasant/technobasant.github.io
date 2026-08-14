@@ -1,10 +1,11 @@
 ---
 title: Writing
+seo_title: "Data Platforms, Databases & Agentic Systems Writing — Basant Bhattarai"
 eyebrow: Field notes
-headline: "Data platforms, governed AI, and the operational details between them."
+headline: "Notes from systems that had to keep working."
 layout: writing-index
 permalink: /writing/
-description: "Technical essays and reproducible tutorials about data, databases, and reliable AI: the evidence, the trade-off, the repair, and the parts usually skipped."
+description: "Field notes on data platforms, database lifecycle, distributed systems, production agentic AI, pipeline reliability, and self-hosted infrastructure."
 redirect_from:
   - /blog/
   - /notes/

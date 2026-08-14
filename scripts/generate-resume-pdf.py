@@ -211,7 +211,7 @@ def build_story(
     story: list = [
         Spacer(1, 2),
         Paragraph("BASANT BHATTARAI", s["name"]),
-        Paragraph("SENIOR DATA & AI ENGINEER  /  DATA PLATFORM & DATABASE SYSTEMS", s["role"]),
+        Paragraph("SENIOR DATA &amp; AI ENGINEER  /  PLATFORMS, DATABASES &amp; AGENTIC SYSTEMS", s["role"]),
         Paragraph(
             'Kathmandu, Nepal &nbsp;&nbsp;|&nbsp;&nbsp; '
             '<a href="mailto:technobasant9@gmail.com" color="#58616B">technobasant9@gmail.com</a> &nbsp;&nbsp;|&nbsp;&nbsp; '
@@ -223,15 +223,15 @@ def build_story(
 
     story += section("Profile", s)
     story.append(Paragraph(
-        f"Senior data and AI engineer with {metric(metrics, 'experience')} in software engineering, six of them owning production data platforms. Open-source first — Kafka, Spark, Iceberg, Trino, dbt and Airflow on Kubernetes — across ingestion, transformation and analytical serving, with the governance, observability and reliability that production data products demand. Also ships production AI systems and administers the databases underneath them. Track record: {metric(metrics, 'professional_cost_reduction')} lower infrastructure cost, {metric(metrics, 'professional_processing_improvement')} faster processing, {metric(metrics, 'professional_analytics_delivery')} faster analytics delivery.",
+        f"Senior data and AI engineer with {metric(metrics, 'experience')} in software engineering, six of them owning production data platforms. Open-source first — Kafka, Spark, Iceberg, Trino, dbt and Airflow on Kubernetes — across ingestion, transformation and analytical serving, plus the databases underneath: modeling, replication, backup and recovery, upgrades. Designs and runs the agent workflows on that same stack — LangGraph, Google ADK and MCP tool servers — so model output lands as typed, reviewable rows rather than a transcript. Track record: {metric(metrics, 'professional_cost_reduction')} lower infrastructure cost, {metric(metrics, 'professional_processing_improvement')} faster processing, {metric(metrics, 'professional_analytics_delivery')} faster analytics delivery.",
         s["body"],
     ))
 
     strengths = [
         ("Platform ownership", "Consumer-facing reliability, governance, recovery, and operational readiness."),
         ("Data engineering", "Batch and streaming pipelines, orchestration, modeling, and change-safe processing."),
-        ("Database systems", "Transactional and analytical modeling, replication, recovery, and performance work."),
-        ("Governed AI", "Structured output, provenance, evaluation, bounded tools, and human review paths."),
+        ("Database lifecycle", "Modeling, replication, failover, backup and PITR, upgrades, and query performance."),
+        ("Agentic systems", "LangGraph, Google ADK and MCP tool servers, evaluation, and typed persistence."),
         ("Technical leadership", "Design review, mentoring, runbooks, and making system ownership transferable."),
         ("Distributed work", "Long-term collaboration across European and US time zones from Kathmandu."),
     ]
@@ -261,9 +261,11 @@ def build_story(
         f"and {metric(metrics, 'professional_event_volume')} events daily: freshness and latency objectives per "
         f"dataset, {metric(metrics, 'professional_uptime')} uptime, incident-ready runbooks, reviewable data "
         "contracts, and a named owner for every published table.",
-        "Design the boundary where automated output becomes product state — typed schemas validated at the load "
-        "edge, provenance on every generated record, evaluation before rollout, and a fallback path that degrades "
-        "honestly rather than guessing.",
+        f"Design and operate the production agent workflows — LangGraph and Google ADK orchestration, MCP tool "
+        f"servers, retrieval and evaluation — against the existing platform, so model output lands as typed, "
+        f"provenanced rows rather than a transcript: analytics delivery "
+        f"{metric(metrics, 'professional_analytics_delivery')} faster with "
+        f"{metric(metrics, 'professional_manual_effort')} less analyst effort, review and fallback paths kept.",
         "Lead architecture and operational review across ingestion, transformation, storage, analytical serving, "
         "observability and recovery, without treating any single tool as the architecture.",
         "Run capacity and cost work as a design input rather than a monthly report, using storage layout, "
@@ -320,14 +322,14 @@ def build_story(
             "lakehouse modeling; Kubernetes, Docker and Terraform delivery; contracts, lineage, cost and recovery.",
         ),
         (
-            "Database reliability",
+            "Database lifecycle",
             "PostgreSQL, ClickHouse, Trino, Citus, TimescaleDB, Redis and MongoDB; transactional and analytical "
             "modeling, partitioning, replication, backup, restore, high availability and query performance.",
         ),
         (
-            "Governed AI delivery",
-            "Pydantic, LangGraph, LangChain, MCP, Milvus and MLflow; structured output, provenance, retrieval, "
-            "evaluation, bounded tools, human review and honest fallback paths.",
+            "Agentic systems",
+            "LangGraph, LangChain, Google ADK, MCP servers, Pydantic, Milvus and MLflow; bounded tools, retrieval, "
+            "evaluation before rollout, typed output, provenance, human review and honest fallback paths.",
         ),
         (
             "Technical leadership",

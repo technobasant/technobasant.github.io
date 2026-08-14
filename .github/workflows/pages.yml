@@ -120,6 +120,18 @@ jobs:
       - name: Check token contrast (both themes, every surface)
         run: bundle exec rake tokens
 
+      # `rake tokens` proves the palette is sound; it cannot prove the
+      # stylesheet uses it. Three AA failures shipped through that gap — a
+      # component block that kept a dark-only palette while rendering on paper
+      # gave the search field's focus ring 1.82:1 against a 3:1 floor. These
+      # two close it from the other side, and unlike a screenshot diff they do
+      # not depend on how this runner resolves fonts.
+      - name: Check the component layer is token-only
+        run: bundle exec rake css:literals
+
+      - name: Check the stylesheet is within budget
+        run: bundle exec rake css:budget
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -137,3 +149,49 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      # IndexNow is the one AI-discoverability lever with measured effect behind
+      # it. Bing reports ~22% of clicked URLs originate from IndexNow
+      # submissions, and Bing is what feeds Copilot and ChatGPT search — Seer
+      # found 87% of SearchGPT citations match Bing's top-10 organic, against
+      # 56% for Google. Google never adopted IndexNow, so this does nothing for
+      # Google Search; that is fine, the sitemap already covers that path.
+      #
+      # By contrast llms.txt, which this site already serves, has no measured
+      # effect: Google says Search ignores it, and Ahrefs found 97% of the
+      # 137,210 domains publishing one got zero crawler requests for the file.
+      # Keep it (it costs nothing, coding agents do read it), expect nothing.
+      #
+      # Needs INDEXNOW_KEY as a repo secret, and the same key served at
+      # /<key>.txt. Skipped silently when the secret is absent, so a fork or a
+      # first-time clone does not fail here.
+      - name: Ping IndexNow
+        env:
+          KEY: ${{ secrets.INDEXNOW_KEY }}
+        run: |
+          set -euo pipefail
+          # Guarded here rather than in a step-level `if:` — the secrets context
+          # is not dependably available in step conditionals, and a guard that
+          # silently never fires is worse than no guard.
+          if [ -z "${KEY:-}" ]; then
+            echo "INDEXNOW_KEY not set — skipping submission."
+            exit 0
+          fi
+          host="technobasant.github.io"
+          # Submit the full sitemap contents rather than guessing what changed;
+          # the endpoint accepts up to 10,000 URLs per request and this site has
+          # ~42.
+          urls=$(curl -sf "https://$host/sitemap.xml" \
+            | grep -o '<loc>[^<]*</loc>' | sed 's|</\?loc>||g' \
+            | jq -R . | jq -s .)
+          payload=$(jq -n --arg h "$host" --arg k "$KEY" --argjson u "$urls" \
+            '{host:$h, key:$k, keyLocation:("https://"+$h+"/"+$k+".txt"), urlList:$u}')
+          code=$(curl -s -o /tmp/indexnow.out -w '%{http_code}' \
+            -X POST 'https://api.indexnow.org/IndexNow' \
+            -H 'Content-Type: application/json; charset=utf-8' \
+            --data "$payload")
+          echo "IndexNow responded $code ($(echo "$urls" | jq length) URLs)"
+          # 200 accepted, 202 accepted-pending-key-validation. Anything else is
+          # worth seeing in the log but must not fail a deploy that already
+          # succeeded — the site is live either way.
+          [ "$code" = "200" ] || [ "$code" = "202" ] || cat /tmp/indexnow.out

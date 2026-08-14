@@ -1,6 +1,15 @@
 {%- comment -%}
   Usage: {% include post-card.html post=post %}
   Optional: heading="h2" (default h3)
+            cover=true   opt IN to the cover image (default: no cover)
+
+  Covers are off by default on index surfaces. Every widely-admired engineering
+  site — jvns.ca, danluu.com, lethain.com, brandur.org, eugeneyan.com, and the
+  Vercel and Anthropic engineering blogs — lists posts as title + date + a line
+  of metadata, with no thumbnail. It raises how much you can see per screen,
+  which is the actual constraint on this kind of page, and it removes 244 KB
+  from /writing/. The cover still does its real job as the og:image and at the
+  head of the article itself.
 {%- endcomment -%}
 {%- assign _p = include.post -%}
 {%- assign _h = include.heading | default: "h3" -%}
@@ -10,14 +19,53 @@
   {%- when "note" -%}{%- assign _label = "Note" -%}
   {%- else -%}{%- assign _label = "Essay" -%}
 {%- endcase -%}
-<article class="post-card">
+{%- assign _series_meta = nil -%}
+{%- if _p.series -%}
+{%- assign _series_meta = site.data.series | where: "slug", _p.series | first -%}
+{%- endif -%}
+<article class="post-card" data-catalog-item data-id="{{ _p.url }}" data-kind="{{ _type }}" data-tags="{{ _p.tags | join: ' ' }}" data-series="{{ _p.series }}" data-search="{% include writing-search.html post=_p %}">
   {%- if include.index %}<span class="post-card__index" aria-hidden="true">0{{ include.index }}</span>{% endif %}
+  {%- if _p.cover and include.cover %}
+  <div class="post-card__cover" aria-hidden="true">
+    {%- include picture.html
+        base=_p.cover.base
+        widths="840"
+        raster_widths="840"
+        fallback_width="840"
+        ext="jpg"
+        width=840
+        height=473
+        alt=_p.cover.alt
+        loading="lazy" -%}
+  </div>
+  {%- endif %}
   <p class="post-card__meta">
     <time datetime="{{ _p.date | date_to_xmlschema }}">{{ _p.date | date: "%b %-d, %Y" }}</time>
     <span class="badge badge--{{ _type }}">{{ _label }}</span>
+    {%- if _series_meta %}
+    <span class="post-card__series">{{ _series_meta.title }}</span>
+    {%- comment -%}
+      `register` has been in _data/series.yml since it was written, with a
+      comment explaining why it matters, and has rendered nowhere. It is the
+      single most useful thing on this card: "Measured on my own hardware" and
+      "Follow-along runbook" are different promises, and a reader deciding
+      whether to spend 45 minutes wants to know which one they are getting.
+    {%- endcomment -%}
+    {%- if _series_meta.register_label %}
+    <span class="post-card__register post-card__register--{{ _series_meta.register }}">{{ _series_meta.register_label }}</span>
+    {%- endif %}
+    {%- endif %}
   </p>
   <{{ _h }} class="post-card__title"><a href="{{ _p.url | relative_url }}">{{ _p.title }}</a></{{ _h }}>
   <p class="post-card__desc">{{ _p.description | default: _p.excerpt | strip_html | normalize_whitespace | strip | truncate: 180 }}</p>
+  {%- if _p.tags and _p.tags.size > 0 %}
+  <ul class="post-card__tags" aria-label="Topics">
+    {%- for slug in _p.tags -%}
+    {%- assign _t = site.data.tags | where: "slug", slug | first -%}
+    <li><span class="chip">{{ _t.name | default: slug }}</span></li>
+    {%- endfor %}
+  </ul>
+  {%- endif %}
   <p class="post-card__time">{% include reading-time.html post=_p %}</p>
   <span class="post-card__open" aria-hidden="true">Read the {{ _label | downcase }} {% include icon.html name="arrow-right" size=14 %}</span>
 </article>

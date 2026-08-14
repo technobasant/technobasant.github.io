@@ -1,14 +1,18 @@
 ---
 title: About
+seo_title: "About Basant Bhattarai — Data Platforms, Databases & Agentic Systems"
 eyebrow: Profile
-headline: "I build systems that stay trustworthy after the demo."
+headline: "I design data platforms, and the agentic systems that write into them."
 hero_code: "OPERATE / OWN"
 page_class: page-about
 permalink: /about/
-description: "Nine years across backend engineering, data platforms, database reliability, and governed AI systems — plus the principles I use to operate them."
+description: "About Basant Bhattarai: a Senior Data & AI Engineer working across data platforms, database lifecycle operations, system architecture, and agentic systems in production."
+lede: "Nine years that started with backend services and PostgreSQL schemas, and ended up owning the platforms, the databases underneath them, and the agents that write into both."
 ---
 
-I am a Senior Data & AI Engineer based in Kathmandu, Nepal. Over {{ site.data.metrics.experience.value }}, my work has moved from Python backend services and PostgreSQL schemas to the harder seams between data, databases, APIs, and AI-assisted products. I care about the part after a successful demo: what the system promises, how we know it is keeping that promise, and how another engineer repairs it safely.
+I am a Senior Data & AI Engineer based in Kathmandu, Nepal. The job arrived in that order. First Python services and PostgreSQL schemas; then the databases those services leaned on, which is where I learned that most outages are a storage decision made two years earlier; then the platform around them — Kafka ingestion, Spark processing, Airflow orchestration, lakehouse modeling, analytical serving.
+
+Agents came last and belong to the same stack. The interesting part was never the orchestration framework. It was the boundary: what a model is allowed to write, what validates it, what happens on the second attempt, and how you compare today's answer to last week's. I work close to system internals — throughput and failure limits, recovery paths, observability, and cost before scale turns an architectural shortcut into an operational one.
 
 
 ## Operating principles
@@ -22,9 +26,9 @@ I am a Senior Data & AI Engineer based in Kathmandu, Nepal. Over {{ site.data.me
 
 ## What I am doing now
 
-At UXCam I work on production data and AI systems, with the weight on reliability, governance, database serving and evaluation.
+At UXCam I work across the data platform and the stores underneath it: processing, serving, database reliability, governance, and architecture review. I also own the production agent workflows — LangGraph and Google ADK for orchestration, MCP for the tool surface — with the same requirement as any other producer: what they emit lands in the governed stores, typed and reviewable, or it does not land.
 
-Outside that I keep a multi-engine failover lab with restartable scenarios, published commands and measured outcomes, and I build an independent product where I own every layer from the schema to the deployment.
+Outside that I keep a multi-engine failover lab with restartable scenarios, published commands and measured outcomes, and I build an independent product where I own every layer from the schema and API to the deployment.
 
 *Updated {{ site.data.availability.updated | date: "%B %Y" }}.*
 

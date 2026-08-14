@@ -3,7 +3,7 @@
   only place the build date is stated, so it can never contradict the content.
 {%- endcomment -%}
 <footer class="site-footer">
-  <div class="wrap">
+  <div class="wrap wrap--shell">
     <div class="footer-grid">
       {%- for col in site.data.navigation.footer %}
       <div class="footer-col">
@@ -17,10 +17,13 @@
       {%- endfor %}
     </div>
     <p class="footer-base">
-      © {{ site.time | date: "%Y" }} Basant Bhattarai
-      <span aria-hidden="true">·</span> No trackers, no cookies
-      <span aria-hidden="true">·</span> Built with Jekyll
-      <span aria-hidden="true">·</span> Last updated {{ site.time | date: "%b %Y" }}
+      <span class="footer-base__item">© {{ site.time | date: "%Y" }} Basant Bhattarai</span>
+      <span aria-hidden="true">·</span>
+      <span class="footer-base__item">No trackers, no cookies</span>
+      <span aria-hidden="true">·</span>
+      <span class="footer-base__item">Built with Jekyll</span>
+      <span aria-hidden="true">·</span>
+      <span class="footer-base__item">Last updated {{ site.time | date: "%b %Y" }}</span>
     </p>
   </div>
 </footer>

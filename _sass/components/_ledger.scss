@@ -173,6 +173,20 @@
 }
 
 // ── Below 60rem the matrix becomes a definition list per engine ──────────────
+// Six columns of measured evidence do not fit the 54rem `wide` prose span: the
+// table wants ~66rem, so "What it taught me" — the only column carrying a
+// diagnosis rather than a number — sat ~190px past the edge on every desktop
+// viewport, reachable only by scrolling sideways. Take the full span once the
+// viewport can actually afford 66rem plus gutters, and let the scroll container
+// keep doing its job below that.
+@media (min-width: 72rem) {
+  .prose > .ledger {
+    grid-column: full;
+    max-width: 66rem;
+    margin-inline: auto;
+  }
+}
+
 // A horizontally scrolling eight-column table is unusable on a phone. Rather
 // than shrink it, the same markup restacks: each row becomes its own block with
 // the measured value promoted to the top right.
@@ -215,39 +229,6 @@
   .ledger__metric { display: inline; margin-inline-start: 0.6ch; }
 }
 
-// ── Homepage ledger section ──────────────────────────────────────────────────
-// The section that carries the matrix. Tighter above than a normal section
-// because the hero's closing line hands directly into it — the two are one
-// argument, and a full --sp-section gap between them read as a mistake.
-.home-ledger {
-  // Explicit both ways: .home-section sets padding-block on both edges, and only
-  // overriding the start left a gap that read as a mistake between the hero's
-  // closing line and the table it hands into.
-  padding-block: clamp(2rem, 3.5vw, 3rem) var(--sp-section);
-  background: var(--surface-0);
-}
-
-// The matrix is the widest thing on the site, so its heading gets more room
-// than the default 20ch or it breaks onto three lines.
-.home-ledger .section-head {
-  display: block;
-}
-
-.home-ledger .section-head h2 {
-  max-width: 34ch;
-}
-
-.section-blurb {
-  max-width: 58ch;
-  margin-block: var(--sp-4) 0;
-  font-size: var(--step--1);
-  line-height: 1.55;
-  color: var(--ink-2);
-}
-
-.section-more-row {
-  margin-block: var(--sp-6) 0;
-}
 
 // ── Findings ─────────────────────────────────────────────────────────────────
 // Three failures, set as a numbered list. Deliberately narrow — this is reading

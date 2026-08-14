@@ -21,7 +21,7 @@ No analytics. No tag manager. No trackers, no pixels, no A/B testing, no third-p
 
 ## AI crawlers
 
-`robots.txt` explicitly allows GPTBot, ClaudeBot, PerplexityBot, Google-Extended and CCBot. That is a decision rather than an oversight: if a language model is going to answer a question about my work, I would rather it read the current version than a stale scrape or somebody else's summary. There is also an [llms.txt](/llms.txt) with the approved public figures and the method behind each one, for the same reason.
+`robots.txt` explicitly allows GPTBot, ClaudeBot, PerplexityBot, Google-Extended and CCBot. That is a decision rather than an oversight: if a language model is going to answer a question about my work, I would rather it read the current version than a stale scrape or somebody else's summary. There is an [llms.txt](/llms.txt) with the approved public figures and the method behind each one, and an [ai.txt](/ai.txt) pointer for crawlers that look for that name.
 
 ## Source
 

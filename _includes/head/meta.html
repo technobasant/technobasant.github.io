@@ -72,8 +72,23 @@
   <meta name="description" content="{{ _desc | escape }}">
   <meta name="author" content="{{ site.author.name | escape }}">
   <link rel="canonical" href="{{ _canon }}">
+  <link rel="alternate" type="text/plain" title="LLM briefing" href="{{ '/llms.txt' | relative_url }}">
+  <link rel="alternate" type="text/plain" title="AI discovery" href="{{ '/ai.txt' | relative_url }}">
+{%- comment -%}
+  A topic page with no posts is a hand-written paragraph and an empty state.
+  Nine of the fourteen are in that condition, and shipping nine near-duplicate
+  thin pages to an index is a liability rather than coverage.
+
+  Computed rather than declared, so it maintains itself: the page becomes
+  indexable the moment a post claims the tag, with no front matter to remember
+  to unset. `follow` is kept so the outbound links still carry.
+{%- endcomment -%}
+{%- assign _thin_tag = false -%}
+{%- if _is_tag and _tag_count == 0 -%}{%- assign _thin_tag = true -%}{%- endif -%}
 {%- if page.noindex or page.url contains '404' %}
   <meta name="robots" content="noindex,nofollow">
+{%- elsif _thin_tag %}
+  <meta name="robots" content="noindex,follow">
 {%- else %}
   <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
 {%- endif %}

@@ -10,6 +10,15 @@ series: self-hosted-ops
 series_order: 1
 featured: true
 toc: true
+cover:
+  base: "/assets/images/editorial-rustdesk-relay-v1"
+  widths: "840,1600"
+  raster_widths: "840,1600"
+  fallback_width: "1600"
+  width: 1600
+  height: 900
+  alt: "Two desktops mirrored through a self-hosted RustDesk relay while a public session line fades"
+  caption: "Public RustDesk cuts sessions around 30 seconds. Your own hbbs/hbbr does not, if UDP 21116 actually reaches the host."
 level: intermediate
 time_estimate: "~30 min hands-on"
 what_youll_build: "Your own RustDesk server on a VPS, so two machines can connect without the public 30-second cutoff or a paid plan."
