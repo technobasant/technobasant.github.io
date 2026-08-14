@@ -1,17 +1,23 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // INTERIOR PAGES — the editorial system shared by profile pages, indexes,
-// articles and case studies. These mastheads use fixed dark colours so the
-// identity remains stable in both themes; the reading surface below follows the
-// visitor's theme preference.
+// articles and case studies.
+//
+// The `--ih-*` group used to be five fixed dark values, on the theory that a
+// permanently dark masthead kept the identity stable across themes. The
+// masthead has since been reskinned to follow the reading surface, and these
+// literals survived only as a trap: `rake tokens` audits the token matrix, so
+// a hardcoded hex is invisible to it no matter what it lands on. Two shipped
+// AA failures came from exactly that (see .writing-find below). Everything
+// here now resolves through tokens, and `rake css:literals` keeps it that way.
 // ─────────────────────────────────────────────────────────────────────────────
 
 .interior-hero {
-  --ih-bg: #090b0f;
-  --ih-panel: #11151b;
-  --ih-ink: #f3eee5;
-  --ih-muted: #a9b2bd;
-  --ih-line: rgba(243, 238, 229, 0.14);
-  --ih-accent: var(--brand-brass-masthead);
+  --ih-bg: var(--surface-0);
+  --ih-panel: var(--surface-1);
+  --ih-ink: var(--ink-1);
+  --ih-muted: var(--ink-2);
+  --ih-line: var(--line-strong);
+  --ih-accent: var(--accent);
   position: relative;
   isolation: isolate;
   overflow: clip;
@@ -78,7 +84,7 @@
   line-height: 1.45;
   letter-spacing: var(--ls-label);
   text-transform: uppercase;
-  color: #737e89;
+  color: var(--ink-3);
 }
 
 .article-breadcrumb a {
@@ -99,36 +105,10 @@
   display: none;
 }
 
-.article-cover {
-  margin-block-start: clamp(1.25rem, 3vw, 2rem);
-}
-
-.article-cover picture {
-  display: block;
-  overflow: hidden;
-  background: #0d0f12;
-  border: 1px solid var(--line-strong);
-}
-
-.article-cover img {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-}
-
-.article-cover figcaption {
-  max-width: 72ch;
-  margin-block-start: var(--sp-3);
-  font-family: var(--font-mono);
-  font-size: var(--step--2);
-  line-height: 1.5;
-  color: var(--ink-3);
-}
-
 .interior-hero__sequence {
   font-family: var(--font-mono);
   font-size: var(--step--2);
-  color: #737e89;
+  color: var(--ink-3);
 }
 
 .interior-hero__content {
@@ -231,14 +211,14 @@
 }
 
 .interior-hero .chip {
-  background: rgba(243, 238, 229, 0.04);
+  background: color-mix(in oklab, var(--ink-1) 4%, transparent);
   border-color: var(--ih-line);
   color: var(--ih-muted);
 }
 
 .interior-hero .chip:hover {
-  background: rgba(243, 238, 229, 0.09);
-  border-color: rgba(243, 238, 229, 0.32);
+  background: color-mix(in oklab, var(--ink-1) 9%, transparent);
+  border-color: var(--line-control);
   color: var(--ih-ink);
 }
 
@@ -260,7 +240,7 @@
   font-weight: 650;
   letter-spacing: var(--ls-label);
   text-transform: uppercase;
-  color: #737e89;
+  color: var(--ink-3);
 }
 
 .article-facts dd {
@@ -360,36 +340,6 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.editorial-post-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1px;
-  overflow: hidden;
-  background: var(--line-strong);
-  border: 1px solid var(--line-strong);
-}
-
-.editorial-post-grid .post-card {
-  min-height: 21rem;
-  overflow: hidden;
-  background: var(--surface-1);
-  border: 0;
-  border-radius: 0;
-}
-
-.post-card__index {
-  position: absolute;
-  inset-inline-end: var(--sp-4);
-  inset-block-start: calc(var(--sp-3) * -1);
-  z-index: 0;
-  font-family: var(--font-display);
-  font-size: clamp(4.5rem, 9vw, 7.5rem);
-  font-weight: 600;
-  line-height: 1;
-  letter-spacing: var(--ls-display);
-  color: color-mix(in oklab, var(--ink-1) 9%, transparent);
-  pointer-events: none;
-}
-
 .post-card > :not(.post-card__index) {
   position: relative;
   z-index: 1;
@@ -399,6 +349,38 @@
 
 .post-card__series {
   color: var(--ink-3);
+}
+
+// The register is an epistemic label, not a topic, so it is set apart from the
+// tag chips: mono, uppercase, with a leading rule. "Measured on my own
+// hardware" and "Follow-along runbook" are different promises about what the
+// reader is about to get, and the difference is worth typesetting.
+.post-card__register {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5ch;
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.post-card__register::before {
+  content: "";
+  width: 1.25rem;
+  height: 1px;
+  background: var(--line-control);
+}
+
+// Measurement carries the accent because it is the rarer and stronger claim:
+// numbers from a rig I ran, not a procedure I followed.
+.post-card__register--measurement {
+  color: var(--accent);
+}
+
+.post-card__register--measurement::before {
+  background: currentColor;
 }
 
 .post-card__tags {
@@ -412,26 +394,26 @@
 
 .post-card__tags .chip {
   pointer-events: none;
-}
-
-.home-writing .post-card__tags {
-  display: none;
-}
-
-// Command bar: continues the dark masthead so title + search share one frame,
+}// Command bar: continues the dark masthead so title + search share one frame,
 // then sticks under the site header. Tokens match .interior-hero so light
 // theme does not invert the bar into a second identity.
 .interior-hero:has(+ .writing-find) {
   border-block-end: 0;
 }
 
+// The reskin retro-fitted .interior-hero onto tokens but never reached here, so
+// this block kept the dark palette while rendering on paper. Two AA failures
+// shipped from it: the ⌘K hint (--ih-muted #a9b2bd on --surface-2) measured
+// 1.85:1, and the search field's focus ring (--ih-accent #dfb66c on
+// --surface-0) measured 1.82:1 against a 3:1 floor for SC 1.4.11 — on the only
+// search field the site has.
 .writing-find {
-  --ih-bg: #090b0f;
-  --ih-panel: #11151b;
-  --ih-ink: #f3eee5;
-  --ih-muted: #a9b2bd;
-  --ih-line: rgba(243, 238, 229, 0.14);
-  --ih-accent: var(--brand-brass-masthead);
+  --ih-bg: var(--surface-0);
+  --ih-panel: var(--surface-1);
+  --ih-ink: var(--ink-1);
+  --ih-muted: var(--ink-2);
+  --ih-line: var(--line-strong);
+  --ih-accent: var(--accent);
   position: sticky;
   inset-block-start: var(--header-h);
   z-index: 30;
@@ -575,7 +557,7 @@
 
 .writing-find__wipe:hover {
   color: var(--ih-ink);
-  background: rgba(243, 238, 229, 0.08);
+  background: color-mix(in oklab, var(--ink-1) 8%, transparent);
 }
 
 .writing-find__wipe:focus-visible {
@@ -656,13 +638,7 @@
   background: color-mix(in oklab, var(--accent-fill) 35%, transparent);
   color: inherit;
   padding: 0 0.1em;
-}
-
-.page--writing.is-filtering .writing-lead {
-  display: none;
-}
-
-@media (max-width: 40rem) {
+}@media (max-width: 40rem) {
   .writing-suggest__hit {
     grid-template-columns: 1fr;
   }
@@ -709,7 +685,7 @@
   gap: var(--sp-2);
   min-height: 2.75rem;
   padding-inline: var(--sp-4);
-  background: rgba(243, 238, 229, 0.04);
+  background: color-mix(in oklab, var(--ink-1) 4%, transparent);
   border: 1px solid var(--ih-line);
   border-radius: var(--r-full);
   font-size: var(--step--1);
@@ -723,7 +699,7 @@
 }
 
 .writing-find__type:hover span {
-  background: rgba(243, 238, 229, 0.08);
+  background: color-mix(in oklab, var(--ink-1) 8%, transparent);
   color: var(--ih-ink);
 }
 
@@ -752,14 +728,6 @@
   align-items: start;
 }
 
-.writing-rail {
-  position: sticky;
-  inset-block-start: calc(var(--header-h) + 6.5rem);
-  display: grid;
-  gap: var(--sp-6);
-  padding-block: var(--sp-2) var(--sp-7);
-}
-
 .writing-rail__heading {
   margin: 0 0 var(--sp-3);
   font-size: var(--step--2);
@@ -773,35 +741,6 @@
   margin: 0;
   padding: 0;
   list-style: none;
-}
-
-.writing-rail__link {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--sp-3);
-  min-height: 2.75rem;
-  padding-block: var(--sp-2);
-  padding-inline-end: var(--sp-2);
-  color: var(--ink-2);
-  text-decoration: none;
-  border-block-end: 1px solid var(--line);
-}
-
-.writing-rail__link:hover {
-  color: var(--ink-1);
-}
-
-.writing-rail__link:focus-visible {
-  outline: 2px solid var(--focus);
-  outline-offset: 2px;
-}
-
-.writing-rail__link[aria-current="true"] {
-  color: var(--ink-1);
-  font-weight: 650;
-  box-shadow: inset 2px 0 0 var(--accent-fill);
-  padding-inline-start: var(--sp-3);
 }
 
 .writing-rail__name {
@@ -851,58 +790,7 @@
 
 .writing-empty[hidden] {
   display: none;
-}
-
-.writing-feed .case-card--catalog {
-  display: grid;
-  grid-template-columns: minmax(8rem, 0.22fr) minmax(0, 1fr) auto;
-  grid-template-rows: auto auto auto;
-  gap: var(--sp-3) clamp(1.25rem, 3vw, 3rem);
-  align-items: start;
-  padding: clamp(1.5rem, 3.5vw, 2.5rem) var(--sp-3);
-  background: transparent;
-  border: 0;
-  border-radius: 0;
-}
-
-.writing-feed .case-card--catalog:hover {
-  background: var(--surface-2);
-  transform: none;
-}
-
-.writing-feed .case-card--catalog .post-card__meta {
-  grid-column: 1;
-  grid-row: 1;
-}
-
-.writing-feed .case-card--catalog .post-card__title {
-  grid-column: 2;
-  grid-row: 1;
-  max-width: 30ch;
-  font-family: var(--font-display);
-  font-variation-settings: "SOFT" 0, "WONK" 0;
-  font-size: var(--step-2);
-  letter-spacing: var(--ls-display);
-  line-height: 1.12;
-}
-
-.writing-feed .case-card--catalog .case-card__role,
-.writing-feed .case-card--catalog .case-card__hook,
-.writing-feed .case-card--catalog .post-card__tags {
-  grid-column: 2;
-}
-
-.writing-feed .case-card--catalog .case-card__metrics {
-  display: none;
-}
-
-.writing-feed .case-card--catalog .case-card__open {
-  grid-column: 3;
-  grid-row: 1 / span 3;
-  align-self: center;
-}
-
-@media (max-width: 64rem) {
+}@media (max-width: 64rem) {
   .writing-shell {
     grid-template-columns: 1fr;
     min-width: 0;
@@ -992,92 +880,6 @@
   color: var(--ink-3);
 }
 
-.writing-lead {
-  margin-block-end: clamp(1.75rem, 4vw, 2.75rem);
-}
-
-.writing-lead[hidden] {
-  display: none;
-}
-
-.writing-feature {
-  overflow: hidden;
-  background: var(--surface-1);
-  border: 1px solid var(--line-strong);
-}
-
-.writing-feature__link {
-  display: grid;
-  grid-template-columns: minmax(0, 1.12fr) minmax(18rem, 1fr);
-  color: inherit;
-  text-decoration: none;
-  touch-action: manipulation;
-}
-
-.writing-feature__link:focus-visible {
-  outline: 3px solid var(--focus);
-  outline-offset: -5px;
-}
-
-.writing-feature__media {
-  min-width: 0;
-  min-height: 16rem;
-  overflow: hidden;
-  background: #0d0f12;
-}
-
-.writing-feature__media picture,
-.writing-feature__media img {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.writing-feature__media img {
-  object-fit: cover;
-  aspect-ratio: 16 / 10;
-  transition: transform 700ms var(--ease-standard),
-    filter 700ms var(--ease-standard);
-}
-
-.writing-feature__copy {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: var(--sp-4);
-  min-width: 0;
-  padding: clamp(1.35rem, 3vw, 2.5rem) clamp(1.35rem, 3vw, 2.25rem);
-  background: var(--surface-1);
-}
-
-.writing-feature__kicker {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--sp-3);
-  margin: 0;
-  font-size: var(--step--2);
-  font-weight: 650;
-  letter-spacing: var(--ls-label);
-  text-transform: uppercase;
-  color: var(--ink-3);
-}
-
-.writing-feature__kicker > span:first-child {
-  color: var(--accent-hi);
-}
-
-.writing-feature__copy h2 {
-  max-width: 22ch;
-  margin: 0;
-  font-family: var(--font-display);
-  font-variation-settings: "SOFT" 0, "WONK" 0;
-  font-size: clamp(1.6rem, 2.2vw, 2.15rem);
-  letter-spacing: var(--ls-heading);
-  line-height: 1.18;
-  text-wrap: balance;
-}
-
 .writing-feature__dek {
   max-width: 42ch;
   margin: 0;
@@ -1104,10 +906,6 @@
     transform: scale(1.025);
     filter: saturate(1.04) contrast(1.02);
   }
-}
-
-.writing-feature__link:hover .writing-feature__open {
-  transform: translateX(3px);
 }
 
 .writing-subscribe {
@@ -1276,31 +1074,6 @@
   font-size: var(--step-0);
   line-height: 1.55;
   color: var(--ink-2);
-}
-
-.career-timeline {
-  position: relative;
-  margin-inline-start: 0;
-  padding-inline-start: var(--sp-6);
-  border-inline-start: 1px solid var(--line-strong);
-  list-style: none;
-}
-
-.career-timeline > li {
-  position: relative;
-  padding: 0 0 var(--sp-5) var(--sp-4);
-}
-
-.career-timeline > li::before {
-  content: "";
-  position: absolute;
-  inset-inline-start: calc((var(--sp-6) + var(--sp-4)) * -1 - 4px);
-  inset-block-start: 0.55em;
-  width: 7px;
-  height: 7px;
-  background: var(--surface-0);
-  border: 2px solid var(--accent);
-  border-radius: var(--r-full);
 }
 
 .decline-list,

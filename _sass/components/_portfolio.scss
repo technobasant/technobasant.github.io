@@ -114,6 +114,37 @@
   padding-block-start: clamp(2.5rem, 5vw, 4rem);
 }
 
+// ── One content edge ─────────────────────────────────────────────────────────
+// `article.page` used to span the full viewport and let the prose grid centre a
+// 44rem measure inside it. At 1440 that put the headline's content edge at
+// x=216 and the first paragraph it introduces at x=368 — a 152px step with
+// nothing explaining it, on /resume/, /hire/, /about/ and /404, and one of five
+// different left edges on a case study.
+//
+// The post layout never had this: `.post-shell` constrains the article to the
+// shell first, so the grid has no slack left to centre with and the measure
+// lands flush at 216. Same discipline here.
+//
+// The measure itself does not change — it is still 44rem (~66ch, inside the
+// 45–90 Butterick range). What changes is that the slack now sits entirely on
+// the right, so `wide` and `full` break out rightward from a fixed left edge
+// instead of expanding symmetrically from the centre.
+.page--body,
+.page--case {
+  width: 100%;
+  max-width: var(--w-shell);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.page--body > .prose,
+.page--case > .prose {
+  grid-template-columns:
+    [full-start wide-start content-start] min(var(--w-prose), 100%) [content-end]
+    minmax(0, calc(var(--w-wide) - var(--w-prose))) [wide-end]
+    minmax(0, 1fr) [full-end];
+}
+
 // ── Long-form article first load ─────────────────────────────────────────────
 .template-post .interior-hero--post {
   display: grid;
@@ -147,7 +178,7 @@
 .article-hero__media picture {
   display: block;
   overflow: hidden;
-  background: #0d0f12;
+  background: var(--media-mat);
   border: 1px solid var(--line-strong);
   box-shadow: var(--shadow-2);
 }
@@ -305,8 +336,8 @@
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 50%;
-  background: #4e9b68;
-  box-shadow: 0 0 0 3px color-mix(in oklab, #4e9b68 16%, transparent);
+  background: var(--status-ok);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--status-ok) 16%, transparent);
 }
 
 @keyframes portrait-scan {
@@ -414,7 +445,7 @@
   .template-post .article-hero__media picture {
     height: auto;
     overflow: hidden;
-    background: #0d0f12;
+    background: var(--media-mat);
     border: 1px solid var(--line-strong);
     box-shadow: var(--shadow-2);
   }
@@ -569,11 +600,25 @@
 
 .case-card--portfolio .case-card__hook {
   grid-column: 3;
-  grid-row: 2 / span 2;
+  grid-row: 2;
   margin: 0;
   font-size: var(--step-0);
   line-height: 1.6;
   color: var(--ink-2);
+}
+
+// The stack sits under the hook in the same column, in mono so it reads as an
+// inventory rather than prose. It fills the row that the hook's `span 2` used
+// to occupy with nothing.
+.case-card--portfolio .case-card__stack {
+  grid-column: 3;
+  grid-row: 3;
+  align-self: start;
+  margin: var(--sp-3) 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  line-height: 1.6;
+  color: var(--ink-3);
 }
 
 .case-card--portfolio .post-card__tags,
@@ -592,6 +637,15 @@
   border-block-start: 1px solid var(--line);
 }
 
+// Three rows now, so the border collapses to one rule per row plus a closing
+// rule — `border-block` on each item would double every internal hairline.
+.portfolio-note__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-end: 1px solid var(--line-strong);
+}
+
 .portfolio-note__item {
   position: relative;
   display: grid;
@@ -599,7 +653,7 @@
   gap: var(--sp-4) var(--sp-7);
   margin-inline: calc(0rem - var(--sp-3));
   padding: var(--sp-6) var(--sp-3);
-  border-block: 1px solid var(--line-strong);
+  border-block-start: 1px solid var(--line-strong);
   transition: background-color var(--dur-2) var(--ease-standard);
 }
 
@@ -978,9 +1032,13 @@
   margin: 0;
 }
 
+// Three columns, not four. The leading 10rem track held the cover thumbnail;
+// with covers off the index (see _includes/post-card.html) it was left holding
+// nothing but 160px of blank paper on every row. Everything shifts one column
+// left rather than the grid growing a hole.
 .writing-feed .post-card {
   display: grid;
-  grid-template-columns: 10rem minmax(15rem, 0.85fr) minmax(18rem, 1.15fr) auto;
+  grid-template-columns: minmax(15rem, 0.85fr) minmax(18rem, 1.15fr) auto;
   gap: var(--sp-3) var(--sp-6);
   min-height: 0;
   margin-inline: calc(0rem - var(--sp-3));
@@ -999,31 +1057,21 @@
   box-shadow: none;
 }
 
-.writing-feed .post-card__cover {
-  grid-column: 1;
-  grid-row: 1 / span 4;
-  align-self: start;
-}
-
-.writing-feed .post-card__cover img {
-  aspect-ratio: 16 / 9;
-}
-
 .writing-feed .post-card__meta {
-  grid-column: 2;
+  grid-column: 1;
   grid-row: 1;
   margin: 0;
 }
 
 .writing-feed .post-card__title {
-  grid-column: 2;
+  grid-column: 1;
   grid-row: 2;
   margin: 0;
   font-size: var(--step-1);
 }
 
 .writing-feed .post-card__desc {
-  grid-column: 3;
+  grid-column: 2;
   grid-row: 1 / span 3;
   margin: 0;
   font-size: var(--step--1);
@@ -1037,7 +1085,7 @@
 }
 
 .writing-feed .post-card__open {
-  grid-column: 4;
+  grid-column: 3;
   grid-row: 2;
   align-self: start;
   white-space: nowrap;
@@ -1239,8 +1287,19 @@
     inset: var(--sp-2) calc(var(--sp-2) * -1) calc(var(--sp-2) * -1) var(--sp-2);
   }
 
+  // "Taking one or two consulting engagements" is the highest-intent line on
+  // the page and it used to be `display: none` here, so the whole hiring signal
+  // was desktop-only. It was hidden because the desktop treatment hangs it off
+  // the portrait's edge, which cannot work against a 10rem centred portrait.
+  // Restack instead of hide: normal flow, centred under the portrait, wrapping.
   .portfolio-hero__visual figcaption {
-    display: none;
+    position: static;
+    inset: auto;
+    margin-block-start: var(--sp-3);
+    justify-content: center;
+    white-space: normal;
+    text-align: center;
+    box-shadow: none;
   }
 
   .portfolio-hero .eyebrow {
