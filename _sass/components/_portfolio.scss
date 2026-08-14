@@ -612,7 +612,7 @@
 // to occupy with nothing.
 .case-card--portfolio .case-card__stack {
   grid-column: 3;
-  grid-row: 3;
+  grid-row: 4;
   align-self: start;
   margin: var(--sp-3) 0 0;
   font-family: var(--font-mono);
@@ -621,9 +621,43 @@
   color: var(--ink-3);
 }
 
-.case-card--portfolio .post-card__tags,
-.case-card--portfolio .case-card__metrics {
+.case-card--portfolio .post-card__tags {
   display: none;
+}
+
+// The metrics used to be hidden here alongside the tag chips, which meant the
+// homepage and the work index — the two pages a hiring manager reads first —
+// showed a technology list and withheld the numbers. That is the wrong way
+// round: a concrete result beats a stack list, and these numbers are the whole
+// argument of the page.
+.case-card--portfolio .case-card__metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-5);
+  grid-column: 3;
+  grid-row: 3;
+  align-self: start;
+  margin: var(--sp-4) 0 0;
+}
+
+.case-card--portfolio .case-card__metric {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5ch;
+  margin: 0;
+  font-size: var(--step--1);
+  line-height: 1.35;
+  color: var(--ink-3);
+}
+
+.case-card--portfolio .case-card__metric strong {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums lining-nums;
+  letter-spacing: var(--ls-heading);
+  color: var(--ink-1);
+  white-space: nowrap;
 }
 
 .case-card--portfolio .case-card__open {
