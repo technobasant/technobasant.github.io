@@ -28,7 +28,7 @@ A model can return fluent prose, but a product workflow needs durable records: t
 
 ## My role
 
-I designed the data and state boundary around the AI workflow: structured outputs, provenance, evaluation, retrieval metadata, publication rules, and the path from automated candidate to human-reviewed result. I worked across platform and product concerns rather than treating the model invocation as the feature.
+I designed the agentic system and the data boundary around it: LangGraph and LangChain orchestration, Google ADK, MCP tool servers, structured outputs, provenance, evaluation, retrieval metadata, publication rules, and the path from automated candidate to human-reviewed result. Most of the work was in that last clause — the orchestration framework was the smallest decision in the project.
 
 ## Constraints
 
