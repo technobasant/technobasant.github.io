@@ -51,57 +51,6 @@ section + section,
   padding-block-start: clamp(2.5rem, 5vw, 4rem);
 }
 
-.page-head {
-  max-width: 44rem;
-  margin-bottom: var(--sp-7);
-  padding-bottom: var(--sp-5);
-  border-bottom: 1px solid var(--line);
-}
-
-.page-head h1 {
-  margin: 0;
-  font-size: var(--step-4);
-}
-
-.page-head .lede {
-  margin-top: var(--sp-4);
-}
-
-// ── Post ─────────────────────────────────────────────────────────────────────
-// .post-head is a direct child of .prose, so it already sits in the `content`
-// track and needs no width of its own — that is what optically aligns the H1
-// with the body copy underneath it.
-.post-head {
-  margin-bottom: var(--sp-7);
-  padding-bottom: var(--sp-5);
-  border-bottom: 1px solid var(--line);
-}
-
-.post-head h1 {
-  margin: 0 0 var(--sp-4);
-  font-size: var(--step-4);
-}
-
-.post-head .lede {
-  margin-bottom: var(--sp-5);
-}
-
-.post-meta {
-  font-variant-numeric: tabular-nums;
-}
-
-.post-meta > * + *::before {
-  content: "";
-  display: inline-block;
-  width: 3px;
-  height: 3px;
-  margin-inline-end: var(--sp-3);
-  margin-bottom: 0.18em;
-  border-radius: var(--r-full);
-  background: currentcolor;
-  opacity: 0.5;
-}
-
 .post-tags {
   display: flex;
   flex-wrap: wrap;

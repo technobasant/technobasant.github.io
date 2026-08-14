@@ -1,6 +1,6 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // CARDS — case cards, author card, related, share, series nav, tutorial header,
-// case-study blocks, and the legacy .case / .case-meta pair.
+// and the case-study blocks.
 // ─────────────────────────────────────────────────────────────────────────────
 
 .card-grid {
@@ -130,20 +130,6 @@
   color: var(--ink-3);
 }
 
-// Chips, so no separators — the pills already delimit themselves.
-.case-card__stack {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-2);
-  margin: auto 0 0;
-  padding: var(--sp-4) 0 0;
-  list-style: none;
-}
-
-.case-card__stack li {
-  margin: 0;
-}
-
 .case-card__open {
   display: inline-flex;
   align-items: center;
@@ -159,87 +145,7 @@
 .case-card:hover .case-card__open {
   color: var(--accent-hi);
   transform: translateX(2px);
-}
-
-// ── Outcome-led case bands ───────────────────────────────────────────────────
-.case-bands {
-  border-block-start: 1px solid var(--line-strong);
-}
-
-.case-card--band {
-  display: grid;
-  grid-template-columns: minmax(10rem, 0.27fr) minmax(0, 0.73fr);
-  gap: var(--sp-3) clamp(1.5rem, 5vw, 5rem);
-  min-height: 0;
-  padding: clamp(1.75rem, 4vw, 3rem) 0;
-  background: transparent;
-  border: 0;
-  border-block-end: 1px solid var(--line-strong);
-  border-radius: 0;
-}
-
-.case-card--band:hover {
-  background: transparent;
-  transform: none;
-}
-
-.case-card--band > .post-card__meta,
-.case-card--band > .case-card__role,
-.case-card--band > .case-card__metrics {
-  grid-column: 1;
-}
-
-.case-card--band > .post-card__title,
-.case-card--band > .case-card__hook,
-.case-card--band > .case-card__open {
-  grid-column: 2;
-}
-
-.case-card--band > .post-card__title {
-  grid-row: 1;
-  max-width: 24ch;
-  font-family: var(--font-display);
-  font-size: var(--step-3);
-  letter-spacing: var(--ls-display);
-  line-height: 1.08;
-}
-
-.case-card--band > .case-card__hook {
-  max-width: 55ch;
-  font-size: var(--step-0);
-}
-
-.case-card--band > .case-card__metrics {
-  margin-block-start: var(--sp-5);
-  padding-block-start: var(--sp-4);
-  border-block-start: 1px solid var(--line);
-}
-
-.case-card--band > .case-card__metrics .case-card__metric strong {
-  font-size: var(--step-2);
-}
-
-.case-card--band > .case-card__open {
-  align-self: end;
-  margin-block-start: var(--sp-5);
-}
-
-.case-card--compact {
-  min-height: 21rem;
-  background: var(--surface-1);
-  border: 0;
-  border-radius: 0;
-}
-
-.case-card--compact .post-card__title {
-  max-width: 22ch;
-  font-family: var(--font-display);
-  font-size: var(--step-2);
-  letter-spacing: var(--ls-display);
-  line-height: 1.12;
-}
-
-@media (max-width: 48rem) {
+}@media (max-width: 48rem) {
   .case-card--band {
     grid-template-columns: 1fr;
   }
@@ -1116,41 +1022,6 @@ ol.series-nav__list > li::before {
   width: 30%;
 }
 
-.case-results {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
-  gap: var(--sp-5);
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
-
-.case-results li {
-  padding-block-start: var(--sp-4);
-  border-block-start: 1px solid var(--line-strong);
-}
-
-.case-results strong {
-  display: block;
-  // Numerals in Inter, not Fraunces: the Fraunces subset ships only `liga` and
-  // `rvrn`, so `tabular-nums` on it is a silent no-op and stacked figures came
-  // out ragged. The wght-only subset also makes SOFT/WONK dead declarations.
-  font-family: var(--font-body);
-  font-size: var(--step-2);
-  letter-spacing: var(--ls-display);
-  line-height: 1.1;
-  color: var(--ink-1);
-  font-variant-numeric: tabular-nums;
-}
-
-.case-results span {
-  display: block;
-  margin-block-start: var(--sp-2);
-  font-size: var(--step--1);
-  line-height: 1.4;
-  color: var(--ink-2);
-}
-
 // ── Operating ledger / system path ───────────────────────────────────────────
 .system-flow {
   margin: var(--sp-7) 0 0;
@@ -1210,30 +1081,7 @@ ol.series-nav__list > li::before {
   font-size: var(--step--1);
   line-height: 1.5;
   color: var(--ink-2);
-}
-
-.system-flow__evidence {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-3) var(--sp-6);
-  margin-block-start: var(--sp-5);
-}
-
-.system-flow__evidence p {
-  margin: 0;
-  font-size: var(--step--2);
-  line-height: 1.45;
-  color: var(--ink-3);
-}
-
-.system-flow__evidence strong {
-  margin-inline-end: 0.35em;
-  font-size: var(--step--1);
-  color: var(--ink-1);
-  font-variant-numeric: tabular-nums;
-}
-
-@media (max-width: 48rem) {
+}@media (max-width: 48rem) {
   .system-flow__track {
     grid-template-columns: 1fr;
     border-block-end: 0;
@@ -1267,50 +1115,12 @@ ol.series-nav__list > li::before {
   margin-block-start: 0;
   padding-block-start: 0;
   border-block-start: 0;
-}
-
-.case-meta span {
-  padding: 0.2em 0.7em;
-  border: 1px solid var(--line);
-  border-radius: var(--r-full);
-  font-size: var(--step--2);
-  color: var(--ink-2);
-}
-
-// ── Work index grid ──────────────────────────────────────────────────────────
-// Two up, uniform. The previous page used three different grid classes plus a
-// "feature" card variant, so four cards rendered at three different widths and
-// two different title sizes with no rule a reader could infer.
-.card-grid--work {
-  grid-template-columns: 1fr;
-  gap: 0;
-  border-block-start: 1px solid var(--line-strong);
-}
-
-@media (min-width: 48rem) {
+}@media (min-width: 48rem) {
   .card-grid--work {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-}
-
-.card-grid--work > .case-card {
-  display: flex;
-  flex-direction: column;
-  padding: var(--sp-6) var(--sp-5);
-  border-block-end: 1px solid var(--line);
-  border-inline-start: 0;
-}
-
-@media (min-width: 48rem) {
+}@media (min-width: 48rem) {
   .card-grid--work > .case-card:nth-child(odd) {
     border-inline-end: 1px solid var(--line);
   }
-}
-
-// Push the call to action to the bottom edge so rows align regardless of how
-// much copy each card carries.
-.card-grid--work > .case-card > .case-card__open,
-.card-grid--work > .case-card > .post-card__open {
-  margin-block-start: auto;
-  padding-block-start: var(--sp-5);
 }

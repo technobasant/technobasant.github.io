@@ -117,7 +117,7 @@
 .card-grid > .post-card > .post-card__cover {
   margin: calc(0rem - var(--card-pad)) calc(0rem - var(--card-pad)) var(--sp-2);
   overflow: hidden;
-  background: #0d0f12;
+  background: var(--media-mat);
   border-block-end: 1px solid var(--line-strong);
   border-radius: var(--card-radius) var(--card-radius) 0 0;
 }
@@ -134,50 +134,7 @@
 .post-card:focus-within .post-card__open {
   color: var(--accent-hi);
   transform: translateX(2px);
-}
-
-// Homepage writing is an editorial ledger rather than a second card grid.
-.home-writing .writing-selection {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0;
-  padding: 0;
-  // The base rule paints --line-strong as a background and lets it show
-  // through a 1px gap/padding as hairlines. Here the rules are real borders
-  // instead, so that background has no gap left to show through — but it was
-  // still compositing rgba(236,232,225,.17) under the cards and dropping
-  // --ink-3 from 6.03:1 to 3.68:1. Switching the trick off means switching
-  // off both halves of it.
-  background: none;
-  border-block-start: 1px solid var(--line-strong);
-}
-
-.home-writing .post-card {
-  min-height: 18rem;
-  padding: var(--sp-6) var(--sp-5) var(--sp-6) 0;
-  background: var(--surface-1);
-  border: 0;
-  border-block-end: 1px solid var(--line-strong);
-  border-radius: 0;
-}
-
-.home-writing .post-card + .post-card {
-  padding-inline-start: var(--sp-5);
-  border-inline-start: 1px solid var(--line-strong);
-}
-
-.home-writing .post-card__cover {
-  display: none;
-}
-
-.home-writing .post-card__title {
-  font-family: var(--font-display);
-  font-variation-settings: "SOFT" 0, "WONK" 0;
-  font-size: var(--step-2);
-  letter-spacing: var(--ls-display);
-  line-height: 1.12;
-}
-
-@media (max-width: 48rem) {
+}@media (max-width: 48rem) {
   .home-writing .writing-selection {
     grid-template-columns: 1fr;
   }
@@ -229,7 +186,7 @@
   grid-column: 1;
   grid-row: 1 / span 3;
   overflow: hidden;
-  background: #0d0f12;
+  background: var(--media-mat);
   border: 1px solid var(--line-strong);
 }
 
@@ -283,17 +240,7 @@
   align-self: center;
   margin: 0;
   white-space: nowrap;
-}
-
-.editorial-series-grid > li {
-  min-width: 0;
-}
-
-.editorial-series-grid .post-card {
-  height: 100%;
-}
-
-@media (max-width: 48rem) {
+}@media (max-width: 48rem) {
   .writing-feed .post-card {
     grid-template-columns: minmax(0, 1fr) auto;
     gap: var(--sp-3) var(--sp-4);
@@ -330,40 +277,4 @@
     grid-column: 1;
     grid-row: auto;
   }
-}
-
-// ── Compact list variant ─────────────────────────────────────────────────────
-// Used where a whole year of posts is listed: a row, a rule, a date.
-.post-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  border-block-start: 1px solid var(--line);
-}
-
-.post-list > li {
-  border-block-end: 1px solid var(--line);
-}
-
-.post-list a {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: baseline;
-  gap: var(--sp-2) var(--sp-5);
-  min-height: 44px;
-  padding-block: var(--sp-4);
-  color: var(--ink-1);
-  text-decoration: none;
-  transition: color var(--dur-1) var(--ease-standard);
-}
-
-.post-list a:hover {
-  color: var(--accent-hi);
-}
-
-.post-list time {
-  font-size: var(--step--2);
-  color: var(--ink-3);
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
 }
