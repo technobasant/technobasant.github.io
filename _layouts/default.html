@@ -11,18 +11,22 @@ told the UA to paint dark chrome for a light-first site. {%- endcomment %}
 whatever we set here in exactly the case the visitor overrode their OS. The
 bootstrap below sets it before first paint and the toggle owns it thereafter, so
 it must be declared ABOVE that script for querySelector to find it. {%- endcomment %}
-<meta name="theme-color" content="#fbfaf8">
+<meta name="theme-color" content="#0d0f12">
 <script>
-/* Stored choice wins; otherwise follow the OS. An OS that states no preference
-   gets light, not dark: "permanent dark mode as the default reflex" is the most
-   frequently cited AI-template tell of 2026, and every infrastructure writer in
-   the two site surveys behind this design — Brooker, Kingsbury, Nelhage,
-   Willison, Luu, MacWright, Vanlightly — is light-first. Dark remains a
-   first-class theme, one click away, and is still honoured automatically for
-   anyone whose system asks for it. */
-(function(){var r=document.documentElement,t='light';r.classList.add('js');
+/* Stored choice wins, then the OS, then dark.
+
+   The query asks for `light`, not `dark`, and that is the whole mechanism: a
+   system that explicitly prefers light gets light, and everything else — a
+   system asking for dark, a system stating no preference, and a browser
+   without matchMedia — falls through to dark. Testing `dark` instead cannot
+   tell "prefers light" apart from "no preference", since neither matches.
+
+   Light remains a first-class theme rather than a compatibility mode: it is one
+   click away, the click persists, and an OS that asks for it is never
+   overridden. */
+(function(){var r=document.documentElement,t='dark';r.classList.add('js');
 try{var s=localStorage.getItem('theme');
-t=(s==='light'||s==='dark')?s:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+t=(s==='light'||s==='dark')?s:(matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');
 }catch(e){}
 r.setAttribute('data-theme',t);r.style.colorScheme=t;
 /* Paint the browser chrome from the theme we just resolved. It used to ship a
