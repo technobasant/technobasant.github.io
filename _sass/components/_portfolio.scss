@@ -530,6 +530,110 @@
   line-height: 1.08;
 }
 
+// ── What I'm hired for ───────────────────────────────────────────────────────
+// Deliberately on --surface-0 while the work list below is --surface-1: the two
+// share an index rail and a column grid so they read as one continuous
+// argument, and the surface change is the only thing separating them. A second
+// bordered list on the same background would have read as a duplicate of the
+// work list rather than the question it answers.
+.portfolio-practice__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-block-start: 1px solid var(--line-strong);
+}
+
+.portfolio-practice__item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 3rem minmax(12rem, 0.75fr) minmax(18rem, 1.25fr);
+  gap: var(--sp-3) var(--sp-6);
+  align-items: start;
+  margin-inline: calc(0rem - var(--sp-3));
+  padding: clamp(1.5rem, 2.5vw, 2rem) var(--sp-3);
+  border-block-end: 1px solid var(--line-strong);
+  transition: background-color var(--dur-2) var(--ease-standard);
+}
+
+.portfolio-practice__item:hover {
+  background: color-mix(in oklab, var(--accent) 4%, transparent);
+}
+
+.portfolio-practice__item:has(a:focus-visible) {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+}
+
+.portfolio-practice__item:has(a:focus-visible) a:focus-visible {
+  outline: none;
+}
+
+.portfolio-practice__index {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--ink-3);
+}
+
+.portfolio-practice__title {
+  grid-column: 2;
+  grid-row: 1;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 1.6vw, 1.5rem);
+  font-weight: 560;
+  letter-spacing: var(--ls-heading);
+  line-height: 1.15;
+}
+
+.portfolio-practice__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+// The whole row is the target, so the affordance can stay quiet: no button, no
+// second call to action competing with the section's own exit link.
+.portfolio-practice__title a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+// Spanning both rows, so the row-1 track is sized by the title rather than by
+// the longer blurb beside it. Without the span the evidence line was pushed to
+// the bottom of a four-line paragraph and read as unrelated to the heading it
+// belongs to.
+.portfolio-practice__blurb {
+  grid-column: 3;
+  grid-row: 1 / span 2;
+  margin: 0;
+  font-size: var(--step-0);
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+.portfolio-practice__evidence {
+  grid-column: 2;
+  grid-row: 2;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  line-height: 1.6;
+  color: var(--ink-3);
+  text-wrap: pretty;
+}
+
+// A field label on its own line, like the `dt` in article-facts. Inline, the
+// wrapped second line of the case title returned to the left margin and read as
+// a continuation of the label rather than of the title.
+.portfolio-practice__evidence span {
+  display: block;
+  color: var(--accent);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+}
+
 .portfolio-work {
   background: var(--surface-1);
 }
@@ -566,7 +670,7 @@
 
 .case-card--portfolio .case-card__index {
   grid-column: 1;
-  grid-row: 1 / span 4;
+  grid-row: 1 / span 3;
   font-family: var(--font-mono);
   font-size: var(--step--2);
   color: var(--ink-3);
@@ -612,7 +716,7 @@
 // to occupy with nothing.
 .case-card--portfolio .case-card__stack {
   grid-column: 3;
-  grid-row: 4;
+  grid-row: 3;
   align-self: start;
   margin: var(--sp-3) 0 0;
   font-family: var(--font-mono);
@@ -630,24 +734,45 @@
 // showed a technology list and withheld the numbers. That is the wrong way
 // round: a concrete result beats a stack list, and these numbers are the whole
 // argument of the page.
+//
+// They now sit in column 2 under the title rather than column 3 under the hook.
+// Adding a `method` line to each figure needed vertical room, and column 2 held
+// nothing below the title while column 3 carried hook, metrics and stack — so
+// the second column absorbs the new text instead of the card growing. Stacked,
+// not a wrapping row: a method belongs to exactly one figure, and side by side
+// it is ambiguous which.
 .case-card--portfolio .case-card__metrics {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-2) var(--sp-5);
-  grid-column: 3;
+  display: grid;
+  gap: var(--sp-3);
+  grid-column: 2;
   grid-row: 3;
   align-self: start;
   margin: var(--sp-4) 0 0;
 }
 
+// Three tones, one per rank: the figure in --ink-1, what it counts in --ink-2,
+// how it was measured in --ink-3. At a single colour the label and the method
+// ran together into one grey paragraph and the figure lost its caption.
 .case-card--portfolio .case-card__metric {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: 0.5ch;
+  gap: 0 0.5ch;
   margin: 0;
   font-size: var(--step--1);
   line-height: 1.35;
+  color: var(--ink-2);
+}
+
+// `flex-basis: 100%` forces the method onto its own line under the figure it
+// describes, without a wrapper element around the value and label.
+.case-card--portfolio .case-card__method {
+  flex-basis: 100%;
+  margin-block-start: 0.35rem;
+  font-size: var(--step--2);
+  line-height: 1.5;
   color: var(--ink-3);
+  text-wrap: pretty;
 }
 
 .case-card--portfolio .case-card__metric strong {
@@ -1356,17 +1481,43 @@
     grid-column: 1;
   }
 
+  // `metrics` and `stack` belong in this reset too. They carried `grid-column: 3`
+  // into a two-column grid, which does not fail loudly — it silently creates an
+  // implicit third track and hangs both off the end of the card.
   .case-card--portfolio .badge,
   .case-card--portfolio .post-card__title,
   .case-card--portfolio .case-card__hook,
+  .case-card--portfolio .case-card__metrics,
+  .case-card--portfolio .case-card__stack,
   .case-card--portfolio .case-card__open,
   .case-card--portfolio .post-card__meta > span:last-child {
     grid-column: 2;
     grid-row: auto;
   }
 
+  .case-card--portfolio .case-card__metrics,
+  .case-card--portfolio .case-card__stack {
+    margin-block-start: 0;
+  }
+
   .case-card--portfolio .post-card__meta > span:last-child {
     white-space: normal;
+  }
+
+  .portfolio-practice__item {
+    grid-template-columns: 2.25rem minmax(0, 1fr);
+    gap: var(--sp-3) var(--sp-4);
+  }
+
+  .portfolio-practice__index {
+    grid-row: 1 / span 3;
+  }
+
+  .portfolio-practice__title,
+  .portfolio-practice__blurb,
+  .portfolio-practice__evidence {
+    grid-column: 2;
+    grid-row: auto;
   }
 
   .portfolio-note__item {
