@@ -73,13 +73,17 @@ layout: default
           {%- for key in page.metrics -%}
           {%- assign m = site.data.metrics[key] -%}
           {%- if m %}
+          {%- comment -%}
+            Open, not a disclosure. The method used to sit behind a "How this was
+            measured" toggle; now that the card a reader arrives from states it
+            outright, hiding it on the page that owns the number is the wrong way
+            round. It is the smallest text in the block, which is where the
+            weight belongs — present, quiet, and costing no click.
+          {%- endcomment -%}
           <li>
             <strong>{{ m.value }}</strong>
             <span>{{ m.label }}</span>
-            <details class="stats__detail">
-              <summary>How this was measured</summary>
-              <span class="stats__method">{{ m.method }}{% if m.window %} · {{ m.window }}{% endif %}</span>
-            </details>
+            <span class="stats__method">{{ m.method }}{% if m.window %} · {{ m.window }}{% endif %}</span>
           </li>
           {%- endif -%}
           {%- endfor %}

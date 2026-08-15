@@ -1,7 +1,10 @@
 ---
 title: "Turning model output into product state you can audit"
+seo_title: "Governed AI Delivery — LangGraph, Google ADK, MCP Case Study"
 hook: "A governed analytics workflow with typed state, provenance, evaluation, review, and an honest fallback path."
-description: "How I designed AI-assisted analytics around typed records, source evidence, evaluation, human review, and measurable workflow outcomes."
+description: "Governed AI delivery case study: a production agentic analytics workflow on LangGraph, Google ADK, and MCP, with typed state, provenance, evaluation, and an honest fallback path."
+date: 2024-02-01
+last_modified_at: 2026-08-15
 kind: practice
 order: 2
 featured: true
@@ -22,7 +25,7 @@ image_alt: "AI agents in production — Basant Bhattarai"
 
 ## Context
 
-The product goal was not a chat demo. It was a faster analytics workflow that people could use without losing the evidence and reviewability they expected from the underlying data platform.
+This is a governed AI delivery case study. The product goal was not a chat demo. It was a faster analytics workflow that people could use without losing the evidence and reviewability they expected from the underlying data platform.
 
 A model can return fluent prose, but a product workflow needs durable records: typed, queryable, attributable, and correctable. The central design question became **what is allowed to become state**, under which policy, and what happens when the system cannot justify an answer.
 
