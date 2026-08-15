@@ -1,0 +1,40 @@
+# The three problems people actually write to me about.
+#
+# Why this file exists: the site was legible to an engineer reading it and
+# opaque to the person who signs off the engagement. `availability.yml` names
+# four *shapes* an engagement takes, but that only renders on /hire/, which is
+# not in the header nav — so nothing above the fold said what I get hired for.
+#
+# The rule here is the same one metrics.yml enforces: every capability names
+# the artefact that backs it. `evidence` must point at a case study on this
+# site, not at a claim. If a row cannot cite one, it does not belong on the
+# homepage.
+#
+# Order is deliberate: platforms, then agents, then databases. The two newest
+# case studies and the last three posts are all PostgreSQL, which reads as
+# "DBA" if nothing frames it — this band is what says the database work is one
+# of three pillars rather than the whole practice.
+
+- title: "Data platforms that outgrew their first architecture"
+  blurb: >-
+    Ingestion, processing and serving that worked at one scale and stopped
+    working at the next — plus the cost model underneath, which is usually the
+    real reason the conversation started.
+  evidence: /work/data-platform-practice/
+  evidence_label: "Rebuilding a production data platform"
+
+- title: "Agents that have to touch production data"
+  blurb: >-
+    Not a chat demo. Typed output, provenance, evaluation and a review path, so
+    a model result is only allowed to become state when it can be justified —
+    and there is a defined answer for when it cannot.
+  evidence: /work/governed-ai-delivery/
+  evidence_label: "Turning model output into auditable product state"
+
+- title: "Databases that have to survive failure"
+  blurb: >-
+    High availability, backup, restore and upgrades, handed over with a runbook
+    your team owns after I leave — and numbers taken from a rig you can rebuild
+    rather than from a vendor page.
+  evidence: /work/patroni-ha-backup-lab/
+  evidence_label: "Orchestrated failover and a restore I performed"

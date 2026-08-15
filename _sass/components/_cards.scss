@@ -910,35 +910,6 @@ ol.series-nav__list > li::before {
   font-size: var(--step-2);
 }
 
-.stats__detail {
-  margin-block-start: var(--sp-2);
-}
-
-.stats__detail summary {
-  display: inline-flex;
-  align-items: center;
-  min-height: 2.75rem;
-  font-size: var(--step--2);
-  font-weight: 600;
-  color: var(--ink-3);
-  cursor: pointer;
-}
-
-.stats__detail summary::after {
-  content: "+";
-  margin-inline-start: var(--sp-2);
-  font-family: var(--font-mono);
-}
-
-.stats__detail[open] summary::after {
-  content: "−";
-}
-
-.stats__detail[open] .stats__method {
-  display: block;
-  padding-block-end: var(--sp-2);
-}
-
 .case-map {
   padding-block: var(--sp-4);
   border-block: 1px solid var(--line);
