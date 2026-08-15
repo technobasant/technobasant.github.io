@@ -1,10 +1,10 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // TOKENS — the single source of truth.
 //
-// Two themes, switched by `data-theme` on <html>. Light is attached to bare
+// Two themes, switched by `data-theme` on <html>. Dark is attached to bare
 // `:root` as well, so the page is never unstyled if the no-flash inline script
-// fails to run — and so the fallback matches the light-first default that
-// script documents, rather than contradicting it.
+// fails to run — and so the fallback matches the dark default that script
+// resolves to, rather than contradicting it.
 //
 // Contrast ratios in the comments are computed against the theme's --surface-0
 // and are not to be changed without recomputing.
@@ -149,8 +149,24 @@
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// DARK
+// DARK — and the bare `:root` fallback, which is what a visitor gets when the
+// inline bootstrap in _layouts/default.html has not run and `data-theme` is
+// therefore absent. It holds that slot because dark is the site default, so the
+// scripted and unscripted paths agree.
+//
+// Attaching it to the existing dark block rather than adding a
+// `@media (prefers-color-scheme)` copy is deliberate: a duplicated palette is
+// exactly the drift hazard that produced three shipped AA failures here, where
+// a component kept a stale dark literal while rendering on paper. One source,
+// one place to change. The cost is that a no-JS visitor who prefers light gets
+// dark; with JS — every real browser — `prefers-color-scheme: light` is still
+// honoured automatically.
+//
+// Specificity, not order, is what keeps this from swallowing the light theme:
+// `:root` is (0,1,0) and `:root[data-theme="light"]` is (0,2,0), so the
+// attribute selector wins wherever it applies even though it appears later.
 // ─────────────────────────────────────────────────────────────────────────────
+:root,
 :root[data-theme="dark"] {
   color-scheme: dark;
 
@@ -234,21 +250,10 @@
 // LIGHT — warm paper, not white. Brass is darkened to #7C5A18 for text-weight
 // use; true brass survives as --accent-fill for decorative fills only.
 //
-// Also the bare `:root` fallback, which is what a visitor gets when the inline
-// bootstrap in _layouts/default.html has not run and `data-theme` is therefore
-// absent. Dark used to hold that slot, so a no-JS visitor whose OS asks for
-// light was served the dark palette regardless — the opposite of the light-first
-// default that same bootstrap argues for at length.
-//
-// Attaching it to the existing light block rather than adding a
-// `@media (prefers-color-scheme)` copy is deliberate: a duplicated palette is
-// exactly the drift hazard that produced three shipped AA failures here, where
-// a component kept a stale dark literal while rendering on paper. One source,
-// one place to change. The cost is that a no-JS visitor who prefers dark gets
-// light; with JS — every real browser — `prefers-color-scheme` is still
-// honoured automatically.
+// Reached when the visitor has toggled to light, or when their OS states
+// `prefers-color-scheme: light` and the bootstrap honours it. Not the bare
+// `:root` fallback — that is the dark block above.
 // ─────────────────────────────────────────────────────────────────────────────
-:root,
 :root[data-theme="light"] {
   color-scheme: light;
 
