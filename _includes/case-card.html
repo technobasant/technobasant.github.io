@@ -23,6 +23,34 @@
   {%- if _c.role %}<p class="case-card__role">{{ _c.role }}</p>{% endif -%}
   <p class="case-card__hook">{{ _c.hook | default: _c.description }}</p>
   {%- comment -%}
+    Each figure carries how it was measured, not just what it says. "50% faster
+    core processing" invites exactly one question — faster than what, measured
+    how — and the answer already exists in metrics.yml, where every entry is
+    required to declare a `method`. It was rendering only on the case page, and
+    only behind a disclosure click, so the surface a reader meets first made the
+    strongest claims with the least support. `window` is appended where the
+    figure is a period claim rather than a before/after.
+
+    Ahead of `stack` in the source, not behind it: the two are placed by column
+    on desktop so order is invisible there, but the mobile card stacks in DOM
+    order and a measured result should reach the reader before a technology
+    list. Reordering here rather than with `order:` keeps the visual sequence
+    and the reading sequence identical (WCAG 1.3.2).
+  {%- endcomment -%}
+  {%- if _c.metrics and _c.metrics.size > 0 -%}
+  <div class="case-card__metrics">
+    {%- for key in _c.metrics limit: 2 -%}
+    {%- assign m = site.data.metrics[key] -%}
+    {%- if m %}
+    <p class="case-card__metric">
+      <strong>{{ m.value }}</strong> <span>{{ m.label }}</span>
+      {%- if m.method %}<span class="case-card__method">{{ m.method }}{% if m.window %} · {{ m.window }}{% endif %}</span>{% endif -%}
+    </p>
+    {%- endif -%}
+    {%- endfor %}
+  </div>
+  {%- endif %}
+  {%- comment -%}
     `stack` is declared on all four case studies and has never rendered. For a
     data/AI role it is the first thing a reader scans for, and naming the actual
     systems is the difference between "a platform story" and "Kafka, Spark,
@@ -39,16 +67,6 @@
     <li><span class="chip">{{ _t.name | default: slug }}</span></li>
     {%- endfor %}
   </ul>
-  {%- endif %}
-  {%- if _c.metrics and _c.metrics.size > 0 -%}
-  <div class="case-card__metrics">
-    {%- for key in _c.metrics limit: 2 -%}
-    {%- assign m = site.data.metrics[key] -%}
-    {%- if m %}
-    <p class="case-card__metric"><strong>{{ m.value }}</strong> <span>{{ m.label }}</span></p>
-    {%- endif -%}
-    {%- endfor %}
-  </div>
   {%- endif %}
   <span class="case-card__open" aria-hidden="true">View case study {% include icon.html name="arrow-right" size=14 %}</span>
 </article>

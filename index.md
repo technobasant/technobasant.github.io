@@ -45,6 +45,16 @@ proof:
     - professional_platform_scale
     - professional_event_volume
 
+# The band that answers "what do I hire you for". Rows come from
+# _data/practice.yml; this is only the heading and the exit link. `more` points
+# at /hire/, which until now had no route in from the homepage at all — it is
+# absent from the header nav by design, so the footer was the only way in.
+practice:
+  label: "What I'm hired for"
+  headline: "Three problems worth calling me about."
+  more: "How an engagement works"
+  more_url: /hire/
+
 work:
   label: "Selected work"
   # "…with measured outcomes" described the page rather than the work. The cards

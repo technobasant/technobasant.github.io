@@ -51,6 +51,37 @@ layout: default
   </div>
 </section>
 
+{%- if site.data.practice and site.data.practice.size > 0 -%}
+<section class="portfolio-section portfolio-practice" aria-labelledby="practice-title">
+  <div class="wrap wrap--shell">
+    <div class="portfolio-section__head">
+      <div>
+        <p class="section-label">{{ page.practice.label }}</p>
+        <h2 id="practice-title">{{ page.practice.headline }}</h2>
+      </div>
+      <a class="section-more" href="{{ page.practice.more_url | relative_url }}">{{ page.practice.more }} {% include icon.html name="arrow-right" size=14 %}</a>
+    </div>
+    {%- comment -%}
+      Three rows, on the same index rail and column grid as the case list below,
+      so the two sections read as one argument rather than two components: the
+      problem, then the work that proves I have solved it. Each row links to its
+      own evidence — a capability claim with nothing behind it would be the one
+      unearned thing on the page.
+    {%- endcomment -%}
+    <ol class="portfolio-practice__list">
+      {%- for _p in site.data.practice -%}
+      <li class="portfolio-practice__item">
+        <span class="portfolio-practice__index" aria-hidden="true">{{ forloop.index | prepend: "0" }}</span>
+        <h3 class="portfolio-practice__title"><a href="{{ _p.evidence | relative_url }}">{{ _p.title }}</a></h3>
+        <p class="portfolio-practice__blurb">{{ _p.blurb }}</p>
+        <p class="portfolio-practice__evidence"><span>Evidence</span> {{ _p.evidence_label }}</p>
+      </li>
+      {%- endfor -%}
+    </ol>
+  </div>
+</section>
+{%- endif -%}
+
 <section class="portfolio-section portfolio-work" aria-labelledby="selected-work-title">
   <div class="wrap wrap--shell">
     <div class="portfolio-section__head">
