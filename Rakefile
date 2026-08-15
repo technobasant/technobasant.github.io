@@ -612,9 +612,16 @@ task :tokens do
 
   body   = File.read(TOKENS_FILE)
   lines  = body.lines
-  dark_i  = lines.index { |l| l.include?('[data-theme="dark"]') }
-  light_i = lines.index { |l| l.include?('[data-theme="light"]') }
+  # Anchored to the start of the line, so prose *about* a selector cannot be
+  # mistaken for the selector. Writing `:root[data-theme="light"]` inside the
+  # dark block's comment put light_i above dark_i, inverted the dark range, and
+  # silently halved the audit from 70 pairs to 35 — a gate that quietly checks
+  # less is worse than one that fails.
+  selector = ->(theme) { /^\s*:root\[data-theme="#{theme}"\]/ }
+  dark_i  = lines.index { |l| l =~ selector.call("dark") }
+  light_i = lines.index { |l| l =~ selector.call("light") }
   abort "tokens: could not locate the dark and light blocks" unless dark_i && light_i
+  abort "tokens: dark block must precede light" unless dark_i < light_i
 
   base   = parse_theme_tokens(body, 0, dark_i)
   themes = {
