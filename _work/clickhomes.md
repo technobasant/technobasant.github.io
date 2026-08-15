@@ -2,6 +2,8 @@
 title: "ClickHomes: an independent real-estate product"
 hook: "A real-estate product I own end to end: PostgreSQL for truth, ClickHouse for speed, RESO as the only way in"
 description: "An independent real-estate product that shows how I approach data contracts, schema evolution, operational safety, and accountable AI."
+date: 2024-01-01
+last_modified_at: 2026-08-15
 kind: production
 order: 3
 featured: true

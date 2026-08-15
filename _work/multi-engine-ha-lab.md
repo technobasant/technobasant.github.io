@@ -2,6 +2,8 @@
 title: "Multi-engine HA lab: eight failover scenarios"
 hook: "Six database engines, eight failover scenarios, one laptop — with the numbers"
 description: "A home lab, not a production system: six database engines, eight failover scenarios I wrote and ran on one laptop, and the numbers each one produced."
+date: 2026-08-04
+last_modified_at: 2026-08-15
 kind: lab
 order: 4
 featured: true
