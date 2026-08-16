@@ -32,7 +32,7 @@ tier2:
   blurb: "Used to deliver real systems, with less breadth or duration than Tier 1."
   groups:
     - name: "Agentic systems"
-      items: [CrewAI, FastMCP, Milvus, MLflow, Pydantic]
+      items: [CrewAI, FastMCP, Milvus, MLflow, Pydantic, "Claude Code", Cursor, Codex]
     - name: "Data platform"
       items: ["Databricks + Unity Catalog", "Amazon Kinesis", "Spark Structured Streaming", "Debezium / CDC", "Delta Lake"]
     - name: "Databases"

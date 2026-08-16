@@ -1,5 +1,6 @@
 ---
 title: Colophon
+last_modified_at: 2026-08-13
 eyebrow: Meta
 headline: "Small, inspectable, and owned end to end."
 hero_code: "BUILD / NOTES"
@@ -21,7 +22,7 @@ No analytics. No tag manager. No trackers, no pixels, no A/B testing, no third-p
 
 ## AI crawlers
 
-`robots.txt` explicitly allows GPTBot, ClaudeBot, PerplexityBot, Google-Extended and CCBot. That is a decision rather than an oversight: if a language model is going to answer a question about my work, I would rather it read the current version than a stale scrape or somebody else's summary. There is an [llms.txt](/llms.txt) with the approved public figures and the method behind each one, and an [ai.txt](/ai.txt) pointer for crawlers that look for that name.
+`robots.txt` explicitly allows the major search and AI crawlers (Googlebot, Bingbot, GPTBot, ClaudeBot, PerplexityBot, Google-Extended, and others). That is a decision rather than an oversight: if a language model is going to answer a question about my work, I would rather it read the current version than a stale scrape or somebody else's summary. There is an [llms.txt](/llms.txt) with recommended citations, approved public figures, and the method behind each one, an [ai.txt](/ai.txt) discovery pointer, and both files are listed in [sitemap.xml](/sitemap.xml).
 
 ## Source
 

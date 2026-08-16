@@ -1,6 +1,7 @@
 ---
 layout: tag
 title: Iceberg & the lakehouse
+last_modified_at: 2026-08-16
 eyebrow: Topic
 permalink: /writing/tags/iceberg-lakehouse/
 tag: iceberg-lakehouse

@@ -1,5 +1,6 @@
 ---
 title: About
+last_modified_at: 2026-08-14
 seo_title: "About Basant Bhattarai — Data Platforms, Databases & Agentic Systems"
 eyebrow: Profile
 headline: "I design data platforms, and the agentic systems that write into them."

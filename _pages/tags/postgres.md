@@ -1,6 +1,7 @@
 ---
 layout: tag
 title: PostgreSQL
+last_modified_at: 2026-08-14
 eyebrow: Topic
 permalink: /writing/tags/postgres/
 tag: postgres

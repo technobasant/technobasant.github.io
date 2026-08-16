@@ -21,6 +21,9 @@ stack: [Python, Pydantic, LangGraph, LangChain, CrewAI, "Google-ADK", MCP, Milvu
 tags: [ai-agents, data-quality, rag]
 image: /assets/og/og-agents.png
 image_alt: "AI agents in production — Basant Bhattarai"
+sitemap:
+  changefreq: monthly
+  priority: 0.8
 ---
 
 ## Context

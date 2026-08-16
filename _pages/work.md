@@ -1,5 +1,6 @@
 ---
 title: Selected work
+last_modified_at: 2026-08-14
 seo_title: "Data Platform, Database & Agentic AI Case Studies — Basant Bhattarai"
 eyebrow: Case studies
 headline: "Data platforms, databases, and agentic systems built for production."

@@ -146,6 +146,14 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      # IndexNow and SubmitFeed read CNAME, the public key file, and git history
+      # from this checkout. deploy-pages itself uses the build artifact, not
+      # these files — checkout is only for the notify steps that follow.
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
@@ -162,33 +170,83 @@ jobs:
       # 137,210 domains publishing one got zero crawler requests for the file.
       # Keep it (it costs nothing, coding agents do read it), expect nothing.
       #
-      # Needs INDEXNOW_KEY as a repo secret, and the same key served at
-      # /<key>.txt. Skipped silently when the secret is absent, so a fork or a
-      # first-time clone does not fail here.
+      # The key is discovered from the repository, not from a secret.
+      #
+      # An IndexNow key is not secret — the protocol requires serving it at
+      # https://host/<key>.txt so the endpoint can verify ownership. Putting it
+      # in a repo secret therefore bought nothing and cost everything: the
+      # secret was never set, so this step exited 0 on every deploy for months
+      # and submitted nothing. A guard that silently never fires is worse than
+      # no guard, which is the whole argument of the essay this repo now hosts.
+      #
+      # Now the key file IS the configuration. Drop <key>.txt at the root and it
+      # works on a fresh clone with no repo settings at all.
       - name: Ping IndexNow
-        env:
-          KEY: ${{ secrets.INDEXNOW_KEY }}
         run: |
           set -euo pipefail
-          # Guarded here rather than in a step-level `if:` — the secrets context
-          # is not dependably available in step conditionals, and a guard that
-          # silently never fires is worse than no guard.
-          if [ -z "${KEY:-}" ]; then
-            echo "INDEXNOW_KEY not set — skipping submission."
+          # Strict: the stem must be 8-128 hex characters, which is the range the
+          # protocol allows. A loose `[0-9a-f]*.txt` glob also matches `ai.txt` —
+          # "a" is a hex digit — and it sorts first, so the step would have
+          # submitted key=ai with a keyLocation pointing at the AI policy file.
+          # IndexNow answers 403 to that, and this step deliberately does not
+          # fail the deploy on a bad response, so it would have gone quietly back
+          # to doing nothing at all.
+          keyfile=""
+          for f in *.txt; do
+            stem="${f%.txt}"
+            case "$stem" in *[!0-9a-f]*) continue ;; esac
+            [ "${#stem}" -ge 8 ] && [ "${#stem}" -le 128 ] || continue
+            keyfile="$f"; break
+          done
+          if [ -z "$keyfile" ]; then
+            echo "no IndexNow key file at the repo root — skipping submission."
             exit 0
           fi
-          # Read the host from CNAME rather than hardcoding it. IndexNow verifies
-          # that the key file is reachable at the host being submitted, so a
-          # stale hostname here fails the whole submission after the custom
-          # domain lands — and fails it quietly, since this step exits 0 by
-          # design when unconfigured.
+          KEY="${keyfile%.txt}"
+          # The endpoint fetches the file and compares its contents to the key.
+          # A mismatch is a 403 that would otherwise surface days later in Bing
+          # Webmaster Tools, so assert it here where the log is being read.
+          if [ "$(cat "$keyfile")" != "$KEY" ]; then
+            echo "::error::$keyfile does not contain $KEY — IndexNow would 403."
+            exit 1
+          fi
           host="$(cat CNAME 2>/dev/null || echo technobasant.github.io)"
-          # Submit the full sitemap contents rather than guessing what changed;
-          # the endpoint accepts up to 10,000 URLs per request and this site has
-          # ~42.
-          urls=$(curl -sf "https://$host/sitemap.xml" \
-            | grep -o '<loc>[^<]*</loc>' | sed 's|</\?loc>||g' \
-            | jq -R . | jq -s .)
+          # Bing's guidelines are explicit: "Avoid batch submissions when
+          # possible. Streaming submissions provide faster updates, reduce
+          # server load, and improve indexing accuracy." Resubmitting all 45
+          # URLs on every deploy is the batch case they are describing — most of
+          # those URLs did not change, and telling a crawler otherwise is the
+          # crawl waste section 21 warns about.
+          #
+          # So submit only what moved. The sitemap already carries <lastmod>
+          # derived from each page's `last_modified_at`, and the previous
+          # deploy's commit timestamp is the boundary. If either is unavailable
+          # — a first run, a force push — fall back to the full set, because
+          # submitting too much once is better than submitting nothing.
+          since="$(git log -1 --format=%cI "${{ github.event.before }}" 2>/dev/null || true)"
+          all=$(curl -sf "https://$host/sitemap.xml" \
+            | tr -d '\n' | grep -o '<url>.*\?</url>' | sed 's|</url>|</url>\n|g')
+          if [ -n "$since" ]; then
+            urls=$(printf '%s\n' "$all" \
+              | awk -v since="$since" '
+                  match($0, /<loc>[^<]*<\/loc>/) {
+                    loc = substr($0, RSTART+5, RLENGTH-11)
+                    mod = ""
+                    if (match($0, /<lastmod>[^<]*<\/lastmod>/))
+                      mod = substr($0, RSTART+9, RLENGTH-19)
+                    if (mod == "" || mod >= since) print loc
+                  }' \
+              | jq -R . | jq -s .)
+            echo "delta since $since"
+          else
+            urls=$(printf '%s\n' "$all" | grep -o '<loc>[^<]*</loc>' \
+              | sed 's|</\?loc>||g' | jq -R . | jq -s .)
+            echo "no previous commit available — submitting the full set"
+          fi
+          if [ "$(echo "$urls" | jq length)" -eq 0 ]; then
+            echo "nothing changed since the last deploy — nothing to submit."
+            exit 0
+          fi
           payload=$(jq -n --arg h "$host" --arg k "$KEY" --argjson u "$urls" \
             '{host:$h, key:$k, keyLocation:("https://"+$h+"/"+$k+".txt"), urlList:$u}')
           code=$(curl -s -o /tmp/indexnow.out -w '%{http_code}' \
@@ -200,3 +258,27 @@ jobs:
           # worth seeing in the log but must not fail a deploy that already
           # succeeded — the site is live either way.
           [ "$code" = "200" ] || [ "$code" = "202" ] || cat /tmp/indexnow.out
+
+      # Sitemap submission is the freshness signal (guidelines §3). IndexNow
+      # above is the URL-level ping (§4). The API key is a secret; the IndexNow
+      # key file is not. Skip quietly if the secret is unset so a missing repo
+      # setting cannot fail a deploy that already published.
+      - name: Submit sitemap to Bing Webmaster
+        env:
+          BING_WEBMASTER_API_KEY: ${{ secrets.BING_WEBMASTER_API_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${BING_WEBMASTER_API_KEY:-}" ]; then
+            echo "BING_WEBMASTER_API_KEY secret is not set — skipping SubmitFeed."
+            exit 0
+          fi
+          host="$(cat CNAME 2>/dev/null || echo technobasant.github.io)"
+          site="https://$host"
+          code=$(curl -sS -o /tmp/bing-feed.out -w '%{http_code}' \
+            -X POST "https://ssl.bing.com/webmaster/api.svc/json/SubmitFeed?apikey=${BING_WEBMASTER_API_KEY}" \
+            -H 'Content-Type: application/json; charset=utf-8' \
+            --data "{\"siteUrl\":\"${site}\",\"feedUrl\":\"${site}/sitemap.xml\"}")
+          echo "SubmitFeed responded $code"
+          [ "$code" = "200" ] || cat /tmp/bing-feed.out
+          # Do not fail the deploy on a Webmaster API miss. The site is live.
+          exit 0

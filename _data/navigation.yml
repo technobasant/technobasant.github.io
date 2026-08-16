@@ -31,4 +31,5 @@ footer:
       - { title: "RSS feed",     url: /writing/feed.xml }
       - { title: "JSON feed",    url: /writing/feed.json }
       - { title: llms.txt,       url: /llms.txt }
+      - { title: ai.txt,         url: /ai.txt }
       - { title: Colophon,       url: /colophon/ }
