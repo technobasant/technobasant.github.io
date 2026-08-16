@@ -2,6 +2,7 @@
 title: "Patroni HA on PostgreSQL 18 with etcd, proven by killing the primary"
 description: "Build a two-node Patroni cluster on Rocky 8 under QEMU, then SIGKILL the leader and measure the promotion, the timeline bump, and the pg_rewind rejoin."
 date: 2026-08-14 09:00:00 +0545
+last_modified_at: 2026-08-14
 type: tutorial
 tags: [postgres, distributed-databases]
 series: rhel8-pg-ansible
