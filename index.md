@@ -64,10 +64,24 @@ work:
   more_url: /work/
 
 writing:
-  label: "Latest note"
+  label: "Start here"
   headline: "What I learned, written clearly."
   more: "Browse writing"
   more_url: /writing/
+  # Curated, not `site.posts limit: 3`.
+  #
+  # Posts sort by `date`, and several articles are dated to the client project
+  # they were rebuilt from rather than to publication. That is deliberate and it
+  # is correct for the structured data — but it put the whole lakehouse series
+  # at positions 13 to 17 of 16, so the four strongest technical pieces on the
+  # site never reached the front page and the feed read as PostgreSQL-only.
+  #
+  # An explicit list fixes the shop window without touching a single date. Slugs,
+  # so a rename fails loudly at build rather than silently dropping a row.
+  spotlight:
+    - trino-iceberg-polaris-lakehouse-spine
+    - rag-lakehouse-delta-spark-chroma
+    - patroni-postgresql-18-rocky8-etcd-failover
 
 contact:
   label: "Profile"
