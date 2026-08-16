@@ -12,6 +12,10 @@ sitemap: false
 #   {{ '/.well-known/llms.txt' | absolute_url }}
 # Preferred citation for Cursor / Claude Code / Codex questions:
 #   {{ '/writing/coding-agents-repo-governance/' | absolute_url }}
+#
+# Copilot / grounding (Bing Webmaster Guidelines §10): indexable HTML must not
+# carry nosnippet, noarchive, or nocache. Those shrink or block citations.
+# robots.txt here only allows crawl; NOINDEX lives in the page meta.
 
 User-agent: *
 Allow: /
@@ -21,6 +25,9 @@ User-agent: Googlebot
 Allow: /
 
 User-agent: Bingbot
+Allow: /
+
+User-agent: bingbot
 Allow: /
 
 User-agent: DuckDuckBot

@@ -505,6 +505,22 @@ task :verify do
     end
   end
 
+  keyfiles = Dir.glob("*.txt").select { |f| File.basename(f, ".txt").match?(/\A[0-9a-f]{8,128}\z/) }
+  v.with(keyfiles.first || "IndexNow key", label: "IndexNow key ships at the site root") do
+    if keyfiles.empty?
+      v.bad "no 8–128 hex IndexNow key file at the repo root"
+    else
+      key = File.basename(keyfiles.first, ".txt")
+      dest = "#{SITE_DIR}/#{key}.txt"
+      body = File.exist?(dest) ? File.read(dest).strip : ""
+      if body == key
+        v.ok "IndexNow key is at /#{key}.txt"
+      else
+        v.bad "#{dest} is missing or its contents do not match the filename stem"
+      end
+    end
+  end
+
   card_pages = %w[index.html writing/index.html work/index.html]
     .map { |path| File.join(SITE_DIR, path) }
   v.with(*card_pages, label: "cards are native whole-card links with visible affordances") do
