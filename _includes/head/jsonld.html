@@ -86,15 +86,33 @@
 {"@type":"Person","@id":{{ _person_id | jsonify }},"name":{{ site.author.name | jsonify }},"url":{{ _home_url | jsonify }},"image":{{ site.author.avatar | absolute_url | jsonify }},"jobTitle":{{ site.author.role | jsonify }},"description":{{ site.author.bio | strip_newlines | strip | jsonify }},"email":{{ site.author.email | prepend: "mailto:" | jsonify }},"sameAs":[{{ site.author.github | jsonify }},{{ site.author.linkedin | jsonify }}],"alumniOf":{"@type":"CollegeOrUniversity","name":"JNTUA College of Engineering"},"worksFor":{"@type":"Organization","name":"UXCam","url":"https://uxcam.com"},"knowsLanguage":[{"@type":"Language","name":"English","alternateName":"en"},{"@type":"Language","name":"Nepali","alternateName":"ne"}],"knowsAbout":{{ _knows | jsonify }}}
 {%- if _node_type != "" -%}
 ,
-{"@type":{{ _node_type | jsonify }},"@id":{{ _canon | append: "#article" | jsonify }},"url":{{ _canon | jsonify }},"headline":{{ page.title | jsonify }},"name":{{ page.title | jsonify }},"description":{{ _desc | jsonify }}
+{"@type":{{ _node_type | jsonify }},"@id":{{ _canon | append: "#article" | jsonify }},"url":{{ _canon | jsonify }},"headline":{{ page.title | jsonify }},"name":{{ page.seo_title | default: page.title | jsonify }},"description":{{ _desc | jsonify }}
+{%- if page.seo_title -%},"alternativeHeadline":{{ page.seo_title | jsonify }}{%- endif -%}
 {%- if _published -%},"datePublished":{{ _published | date_to_xmlschema | jsonify }},"dateModified":{{ _modified | date_to_xmlschema | jsonify }}{%- endif -%}
 ,"author":{"@id":{{ _person_id | jsonify }}},"publisher":{"@id":{{ _person_id | jsonify }}},"image":[{{ _img | jsonify }}],"inLanguage":"en","isAccessibleForFree":true,"wordCount":{{ page.content | number_of_words }},"mainEntityOfPage":{"@type":"WebPage","@id":{{ _canon | jsonify }}},"isPartOf":{"@id":{{ _website_id | jsonify }}}
 {%- if _kw.size > 0 -%},"keywords":{{ _kw | jsonify }}{%- endif -%}
+{%- if page.about -%}
+,"about":[{%- for _about in page.about -%}{"@type":"Thing","name":{{ _about | jsonify }}}{%- unless forloop.last -%},{%- endunless -%}{%- endfor -%}]
+{%- endif -%}
+{%- if page.mentions -%}
+,"mentions":[{%- for _m in page.mentions -%}{"@type":"SoftwareApplication","name":{{ _m | jsonify }}}{%- unless forloop.last -%},{%- endunless -%}{%- endfor -%}]
+{%- endif -%}
+{%- if page.faq and page.faq.size > 0 -%}
+,"hasPart":{"@id":{{ _canon | append: "#faq" | jsonify }}}
+{%- endif -%}
 {%- if page.type == "tutorial" -%}
 {%- if page.level -%},"proficiencyLevel":{{ page.level | jsonify }}{%- endif -%}
 {%- if page.prerequisites -%},"dependencies":{{ page.prerequisites | join: ", " | jsonify }}{%- endif -%}
 {%- endif -%}
 }
+{%- if page.faq and page.faq.size > 0 -%}
+,
+{"@type":"FAQPage","@id":{{ _canon | append: "#faq" | jsonify }},"url":{{ _canon | jsonify }},"inLanguage":"en","isPartOf":{"@id":{{ _website_id | jsonify }}},"mainEntity":[
+{%- for _item in page.faq -%}
+{"@type":"Question","name":{{ _item.q | jsonify }},"acceptedAnswer":{"@type":"Answer","text":{{ _item.a | jsonify }}}}{%- unless forloop.last -%},{%- endunless -%}
+{%- endfor -%}
+]}
+{%- endif -%}
 {%- elsif _is_profile -%}
 ,
 {%- comment -%}

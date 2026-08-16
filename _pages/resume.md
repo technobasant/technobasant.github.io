@@ -1,5 +1,6 @@
 ---
 title: Résumé
+last_modified_at: 2026-08-14
 seo_title: "Basant Bhattarai Résumé — Senior Data & AI Engineer · Platforms, Databases & Agentic Systems"
 eyebrow: Career
 headline: "Nine years across data platforms, databases, and production agentic systems."

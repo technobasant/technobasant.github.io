@@ -1,9 +1,9 @@
 ---
 title: "Agents write the diff. The repo has to review it."
-seo_title: "Governing Cursor, Claude Code, and Codex in existing repos"
-description: "When agents write most of the diff, review time explodes. Put instructions, hooks, CI, and CODEOWNERS in the repo so merge is a policy, not a vibe."
+seo_title: "How to use Cursor, Claude Code, and Codex in existing repos"
+description: "How to run Cursor, Claude Code, and Codex in an existing repo: AGENTS.md, CODEOWNERS, CI gates, and the AI-generated PR pitfalls that blow up review."
 date: 2026-08-16 13:00:00 +0545
-last_modified_at: 2026-08-16
+last_modified_at: 2026-08-16 18:15:00 +0545
 type: essay
 series: agentic-engineering
 series_order: 1
@@ -13,6 +13,21 @@ tags:
   - career
 toc: true
 featured: true
+sitemap:
+  changefreq: weekly
+  priority: 0.9
+image: /assets/og/og-agents.png
+image_alt: "AGENTS.md, Cursor, Claude Code, and Codex as a merge gate for AI-generated pull requests"
+about:
+  - AI coding agents
+  - AGENTS.md
+  - monorepo governance
+  - AI-generated pull requests
+mentions:
+  - Cursor
+  - Claude Code
+  - Codex
+  - GitHub Copilot
 cover:
   base: "/assets/images/editorial-coding-agents-review-v1"
   widths: "840,1600"
@@ -20,8 +35,19 @@ cover:
   fallback_width: "1600"
   width: 1600
   height: 900
-  alt: "Schematic of an agent session becoming a candidate pull request, then a named-owner merge gate"
-  caption: "Generation is candidate state. Types, tests, CODEOWNERS, and CI decide whether it becomes the tree."
+  alt: "Schematic of a Cursor, Claude Code, or Codex session becoming a candidate pull request, then a named-owner merge gate"
+  caption: "Generation is candidate state. AGENTS.md, types, tests, CODEOWNERS, and CI decide whether it becomes the tree."
+faq:
+  - q: "How do you use Cursor, Claude Code, or Codex in an existing repository?"
+    a: "Do not start with a longer chat prompt. Put a short AGENTS.md at the repo root with install, test, and never-touch paths. Point Claude Code at it from CLAUDE.md. Keep Cursor-only globs in .cursor/rules. Then make CI and CODEOWNERS refuse merges the model can talk past."
+  - q: "What is the difference between AGENTS.md, CLAUDE.md, Cursor rules, skills, and hooks?"
+    a: "AGENTS.md is the portable file for facts every agent should always know. CLAUDE.md should import it rather than duplicate it. Cursor rules add path-scoped constraints AGENTS.md cannot express. Skills are on-demand procedures. Hooks and CI are the only hard stops, because the model cannot skip them."
+  - q: "How do you govern AI-generated PRs in a monorepo when non-developers open them?"
+    a: "Use nested AGENTS.md files per package, CODEOWNERS on auth, data, infra, and instruction files, and fenced paths where design or QA agents may land. Require a plan before implementation for new surfaces. The person who opened the PR must be able to explain the diff."
+  - q: "What are the most common Cursor, Claude Code, and Codex pitfalls?"
+    a: "Drive-by refactors, tests deleted or weakened to go green, auth removed in a cleanup, hallucinated packages (slopsquatting), unreviewed edits to AGENTS.md or MCP config, giant PRs, and authors who cannot explain the change. A 2,000-line root prompt does not stop any of these."
+  - q: "Should seniors still read every line of an AI-generated pull request?"
+    a: "No. Spend human review on architecture, auth, payments, migrations, public contracts, and blast radius. Put formatting, types, secret scanning, lockfile integrity, and package tests in CI. Review the test diff before the implementation diff, because agents often make the suite green by cheating."
 key_takeaways:
   - "Treat agent output as candidate state: it becomes mergeable only after types, tests, security scans, and a named owner pass."
   - "Keep one portable AGENTS.md for repo facts; put procedures in skills, hard stops in hooks, and isolation in subagents."
@@ -30,11 +56,13 @@ key_takeaways:
   - "A change the author cannot explain is not ready, regardless of which agent wrote it."
 ---
 
-The throughput problem is no longer “can someone produce a patch.” Cursor, Claude Code, and Codex will produce one. The problem is that the patch arrives faster than anyone can honestly review it, and it now arrives from people who were never supposed to be in the commit graph: design, QA, product, sometimes a manager who pasted a ticket into an agent and opened a pull request.
+The throughput problem is no longer “can someone produce a patch.” [Cursor](https://cursor.com/), [Claude Code](https://code.claude.com/docs/en/best-practices), and [Codex](https://github.com/openai/codex) will produce one. The problem is that the patch arrives faster than anyone can honestly review it, and it now arrives from people who were never supposed to be in the commit graph: design, QA, product, sometimes a manager who pasted a ticket into an agent and opened a pull request.
 
-That is not a tooling inconvenience. It is the same reliability failure I already treat as load-bearing in product agents. A fluent answer is not product state. A fluent diff is not the main branch. Generation is a candidate. Policy decides whether it becomes the tree.
+**Operating rule.** Treat output from Cursor, Claude Code, and Codex as candidate state — the same rule I use for [governed product agents](/work/governed-ai-delivery/). A fluent diff is not the main branch. It becomes mergeable only after a short [`AGENTS.md`](https://agents.md/), executable CI, `CODEOWNERS`, and an author who can explain the change. Policy lives in the repository, not in the chat window.
 
-## The bottleneck moved. The studies agree on the shape, not the slogan.
+That is the control plane this essay specifies. [Part two](/writing/agents-in-a-real-repository/) is the measured version from this site’s own gates.
+
+## Why AI coding agents slow seniors down — and why they still feel faster
 
 Self-reported speed is a bad instrument here. METR’s 2025 randomized trial on experienced open-source developers, working real issues in repositories they already knew, found that allowing early-2025 AI tools — mostly Cursor with Claude 3.5/3.7 Sonnet — made them **19% slower**, while those same developers still believed they had sped up by about 20%. The paper is a snapshot of one setting, not a law of physics; METR’s later replication widened the error bars. The durable fact is the perception gap: agents feel fast while the hidden cost moves into reading, repairing, and re-deriving intent.
 
@@ -46,7 +74,7 @@ An [empirical study of agentic GitHub PRs](https://arxiv.org/abs/2601.00477) fou
 
 Martin Fowler’s distinction is the one worth keeping. **Vibe coding** is prompting, running, and forgetting that the code exists — fine for a throwaway. **Agentic programming** is an agent that reads the repo, edits, tests, and iterates, while people keep ownership of structure and behaviour. [vm0](https://www.vm0.ai/en/blog/posts/engineering-quality-vibe-coded-codebase) published the volume version of that model: six engineers, 630 merged PRs in a week, median merge around 53 minutes, with types, contracts, real databases, browser loops, and a merge queue carrying what line-by-line review can no longer carry. They did not get there by asking seniors to read harder.
 
-## Do not drop an agent into a brownfield repo and hope
+## How to integrate Cursor, Claude Code, or Codex into an existing repository
 
 An existing monorepo is hostile to a naked agent in predictable ways. The README is written for humans. The real rules live in someone’s head: which package owns auth, which test command is a lie, which generated file you must never edit, which “temporary” flag is load-bearing. The agent will do the locally reasonable thing — invent a helper, widen a type, add a new HTTP client, “clean up” an adjacent file — and the PR will look tidy while coupling three teams that did not ask to be coupled.
 
@@ -95,7 +123,7 @@ That file is policy. Put it under `CODEOWNERS`. A prompt-injection in an issue i
 
 For Cursor-only constraints that `AGENTS.md` cannot express — a glob that should fire only on `apps/web/**` — keep a thin `.cursor/rules/` layer. Do not maintain three essays that say the same thing in `.cursorrules`, `CLAUDE.md`, and `AGENTS.md`. Drift is how agents learn yesterday’s architecture.
 
-## Monorepo governance is path policy, not a longer prompt
+## How to govern AI-generated PRs in a monorepo
 
 Once designers, QA, and managers can open PRs, a single root file becomes a liability. It either stays vague and the agent invents, or it grows until the model ignores the middle. Nested files are the intended design. [AGENTS.md](https://agents.md/) says the closest file wins; OpenAI’s own monorepo has shipped dozens of them. Cursor scopes a nested `AGENTS.md` to its subtree. Claude Code walks from the working directory and concatenates.
 
@@ -127,7 +155,7 @@ That last block is the friction design. You *want* a designer’s agent to ship 
 
 Pydantic AI’s maintainer response to the flood is the other half: for anything that is not a trivial bugfix with a regression test, **sign off on the approach before anyone looks at implementation**. A `PLAN.md` PR, or a labelled “API review” PR with no code, is cheaper than a 1,700-line agent diff. GitHub’s own engineering advice is to [split a giant agent PR into a reviewable stack](https://github.blog/engineering/turn-one-giant-ai-generated-pull-request-to-a-reviewable-stack/). Agents amplify whatever PR shape you already tolerate. If you tolerate novels, you will review novels.
 
-## Review evidence, not every line — and do not pretend that is optional
+## What human review should still own when agents write the diff
 
 Seniors should not try to out-read the agent. They should decide where judgement is still required, and make everything else executable.
 
@@ -152,7 +180,7 @@ Specialized agents belong *inside* that loop, not instead of it. A security-revi
 
 Preview environments close the last common lie. An agent that “tested it” on a laptop with two-year-old Docker volumes has tested nothing the reviewer can see. Per-PR databases and a URL in the PR body are how a designer’s change becomes reviewable without a senior re-running the stack from memory.
 
-## The pain is almost never the model. It is a green PR that is wrong.
+## Common Cursor, Claude Code, and Codex pitfalls
 
 Most of the queue cost is a handful of repeating failure modes. [OWASP’s cheat sheet on secure coding with AI](https://cheatsheetseries.owasp.org/cheatsheets/Secure_Coding_with_AI_Cheat_Sheet.html) names several of them; the rest show up as soon as non-devs can open PRs. I treat these as expected inputs, not surprises.
 
@@ -197,4 +225,28 @@ This is the control plane I want in a repo before I am willing to let a non-spec
 - A named fallback: revert is cheap, “we will clean it up later” is not a policy.
 {: .checklist }
 
+## Frequently asked questions
+
+### How do you use Cursor, Claude Code, or Codex in an existing repository?
+
+Do not start with a longer chat prompt. Put a short `AGENTS.md` at the repo root with install, test, and never-touch paths. Point Claude Code at it from `CLAUDE.md`. Keep Cursor-only globs in `.cursor/rules`. Then make CI and `CODEOWNERS` refuse merges the model can talk past.
+
+### What is the difference between AGENTS.md, CLAUDE.md, Cursor rules, skills, and hooks?
+
+`AGENTS.md` is the portable file for facts every agent should always know. `CLAUDE.md` should import it rather than duplicate it. Cursor rules add path-scoped constraints `AGENTS.md` cannot express. Skills are on-demand procedures. Hooks and CI are the only hard stops, because the model cannot skip them.
+
+### How do you govern AI-generated PRs in a monorepo when non-developers open them?
+
+Use nested `AGENTS.md` files per package, `CODEOWNERS` on auth, data, infra, and instruction files, and fenced paths where design or QA agents may land. Require a plan before implementation for new surfaces. The person who opened the PR must be able to explain the diff.
+
+### What are the most common Cursor, Claude Code, and Codex pitfalls?
+
+Drive-by refactors, tests deleted or weakened to go green, auth removed in a cleanup, hallucinated packages (slopsquatting), unreviewed edits to `AGENTS.md` or MCP config, giant PRs, and authors who cannot explain the change. A 2,000-line root prompt does not stop any of these.
+
+### Should seniors still read every line of an AI-generated pull request?
+
+No. Spend human review on architecture, auth, payments, migrations, public contracts, and blast radius. Put formatting, types, secret scanning, lockfile integrity, and package tests in CI. Review the test diff before the implementation diff, because agents often make the suite green by cheating.
+
 The credibility move for a senior who leads this work is not collecting more agents. It is making merge a published policy: which files an agent may touch, which checks must pass, who is allowed to say yes, and what happens when the model is fluent and wrong. Teams that skip that layer will spend the “productivity gain” in review, incident, and rewrite. Teams that install it can let more people write — because the repository, not the chat window, is what stands behind the code.
+
+The same pattern shows up in [product agents whose output becomes state](/work/governed-ai-delivery/) and in [this site’s own CI gates](/writing/agents-in-a-real-repository/). More writing on [AI agents in production](/writing/tags/ai-agents/).

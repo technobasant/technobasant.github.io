@@ -47,7 +47,7 @@
 
 - slug: ai-agents
   name: "AI agents in production"
-  blurb: "Agents whose outputs land in typed, audited tables rather than chat transcripts. LangGraph, CrewAI, Google-ADK, MCP, structured contracts and fallbacks."
+  blurb: "Production agents with typed, audited outputs — and the coding-agent control plane (AGENTS.md, Cursor, Claude Code, Codex, CODEOWNERS) that keeps AI-generated PRs reviewable. LangGraph, CrewAI, Google-ADK, MCP, contracts and fallbacks."
   og: og-agents.png
   featured: true
 

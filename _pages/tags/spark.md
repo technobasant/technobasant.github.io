@@ -1,6 +1,7 @@
 ---
 layout: tag
 title: Apache Spark
+last_modified_at: 2026-08-11
 eyebrow: Topic
 permalink: /writing/tags/spark/
 tag: spark

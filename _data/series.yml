@@ -9,6 +9,7 @@
 #
 #   measurement — a rig, a stated apparatus, and numbers a reader can reproduce
 #   runbook     — a follow-along setup, correct but not a measurement exercise
+#   analysis    — an operating model with cited evidence, not a hardware lab
 
 - slug: failover-lab
   title: "The failover lab"
@@ -40,7 +41,7 @@
 
 - slug: agentic-engineering
   title: "Agents in a real repository"
-  register: measurement
-  register_label: "Measured on my own hardware"
-  blurb: "Coding agents moved the bottleneck from writing to believing. This series is the operating answer: what to put in the repo, what to gate in CI, and what each gate cost to learn — with the failures that produced them."
+  register: analysis
+  register_label: "Operating model"
+  blurb: "How to run Cursor, Claude Code, and Codex in an existing repo: AGENTS.md, CODEOWNERS, CI gates, and the AI-generated PR failures that produced them."
   status: in-progress

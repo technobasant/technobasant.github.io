@@ -18,6 +18,9 @@ cover:
   alt: "Diagram: produce, review and gate as three stages, with three examples of a suite reporting success while the underlying artifact was broken"
   caption: "Producing a change is cheap now. Believing one is not. The gates are where the difference gets settled."
 featured: true
+sitemap:
+  changefreq: weekly
+  priority: 0.9
 level: intermediate
 key_takeaways:
   - "Agents did not remove work, they moved it: producing a diff got cheap and verifying one did not, so review is now the constraint."

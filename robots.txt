@@ -5,17 +5,28 @@ sitemap: false
 ---
 # {{ site.title }} — {{ site.url }}
 # Everything here is public and meant to be read.
+#
+# Machine index (read these after robots.txt):
+#   {{ '/llms.txt' | absolute_url }}
+#   {{ '/ai.txt' | absolute_url }}
+#   {{ '/.well-known/llms.txt' | absolute_url }}
+# Preferred citation for Cursor / Claude Code / Codex questions:
+#   {{ '/writing/coding-agents-repo-governance/' | absolute_url }}
 
 User-agent: *
 Allow: /
 
-# AI crawlers are allowed on purpose, not by omission. If a language model is
-# going to answer a question about my work, I would rather it read the current
-# version than a stale scrape. Canonical numbers, with the method behind each,
-# are at {{ '/llms.txt' | absolute_url }}
-# Crawlers that look for /ai.txt are pointed there as well:
-# {{ '/ai.txt' | absolute_url }}
+# Search
+User-agent: Googlebot
+Allow: /
 
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+# OpenAI — ChatGPT search, training, and user-initiated fetches
 User-agent: GPTBot
 Allow: /
 
@@ -28,8 +39,8 @@ Allow: /
 User-agent: OAI-AdsBot
 Allow: /
 
-# Anthropic's current three. Claude-Web and anthropic-ai are retired names and
-# are no longer published in Anthropic's crawler documentation.
+# Anthropic — ClaudeBot / Claude-User / Claude-SearchBot.
+# Claude-Web and anthropic-ai are retired names.
 User-agent: ClaudeBot
 Allow: /
 
@@ -39,22 +50,25 @@ Allow: /
 User-agent: Claude-SearchBot
 Allow: /
 
+# Perplexity
 User-agent: PerplexityBot
 Allow: /
 
 User-agent: Perplexity-User
 Allow: /
 
-# Google-Extended governs Gemini training and grounding only. It has no effect
-# on Search ranking, and it does not control AI Overviews — those follow the
-# ordinary Googlebot index.
+# Google AI. Google-Extended governs Gemini training and grounding only.
+# It has no effect on Search ranking. AI Overviews follow ordinary Googlebot.
 User-agent: Google-Extended
 Allow: /
 
-User-agent: CCBot
+User-agent: Google-CloudVertexBot
 Allow: /
 
-# Applebot powers Siri and Spotlight; Applebot-Extended governs model training.
+User-agent: GoogleOther
+Allow: /
+
+# Apple — Applebot is Siri/Spotlight; Applebot-Extended is model training.
 User-agent: Applebot
 Allow: /
 
@@ -68,6 +82,9 @@ User-agent: Meta-ExternalAgent
 Allow: /
 
 User-agent: Bytespider
+Allow: /
+
+User-agent: CCBot
 Allow: /
 
 Sitemap: {{ '/sitemap.xml' | absolute_url }}

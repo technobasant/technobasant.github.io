@@ -1,6 +1,7 @@
 ---
 layout: tag
 title: Kafka & streaming
+last_modified_at: 2026-08-11
 eyebrow: Topic
 permalink: /writing/tags/kafka-streaming/
 tag: kafka-streaming
