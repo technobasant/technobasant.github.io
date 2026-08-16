@@ -1,6 +1,7 @@
 ---
 layout: tag
 title: Self-hosted ops
+last_modified_at: 2026-08-13
 eyebrow: Topic
 permalink: /writing/tags/self-hosted/
 tag: self-hosted

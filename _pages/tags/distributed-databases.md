@@ -1,6 +1,7 @@
 ---
 layout: tag
 title: Distributed databases
+last_modified_at: 2026-08-16
 eyebrow: Topic
 permalink: /writing/tags/distributed-databases/
 tag: distributed-databases
