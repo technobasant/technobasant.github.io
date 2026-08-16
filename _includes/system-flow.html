@@ -1,55 +1,54 @@
 {%- comment -%}
-  Accessible system path used on Home and case studies.
+  Architecture diagram, rendered as markup rather than an image.
   Usage: {% include system-flow.html variant="platform" %}
+
+  Definitions live in _data/architectures.yml, which explains at length why this
+  is HTML and CSS and not a draw.io export. Short version: two themes, 390px
+  viewports, screen readers and language models all read markup and none of them
+  read a PNG.
+
+  Falls back to the `platform` variant, and degrades to nothing rather than a
+  broken figure if the variant is unknown.
 {%- endcomment -%}
 {%- assign _variant = include.variant | default: "platform" -%}
-{%- case _variant -%}
-  {%- when "ai" -%}
-    {%- assign _label = "Governed AI delivery path" -%}
-    {%- assign _steps = "Context|Bind claims to source records;Generate|Create a candidate, never final state;Validate|Enforce typed schemas and policy;Review|Publish, correct, or fall back" | split: ";" -%}
-  {%- when "clickhomes" -%}
-    {%- assign _label = "ClickHomes listing data path" -%}
-    {%- assign _steps = "Connect|Retain source and rights metadata;Transform|Normalize through RESO contracts;Load|Write versioned gold models;Serve|Keep operational and analytical paths separate" | split: ";" -%}
-  {%- when "lab" -%}
-    {%- assign _label = "Failover experiment path" -%}
-    {%- assign _steps = "Provision|Start one reproducible cluster;Seed|Write known state and capture baseline;Fault|Kill the selected primary or node;Verify|Measure promotion, recovery, and data survival" | split: ";" -%}
-  {%- else -%}
-    {%- assign _label = "Production data platform operating path" -%}
-    {%- assign _steps = "Ingest|Accept change without accepting ambiguity;Govern|Validate contracts, lineage, and ownership;Serve|Match models to real read paths;Recover|Replay safely and prove the objective" | split: ";" -%}
-{%- endcase -%}
+{%- assign _arch = site.data.architectures[_variant] -%}
+{%- unless _arch -%}{%- assign _arch = site.data.architectures.platform -%}{%- endunless -%}
 <figure class="system-flow system-flow--{{ _variant }}">
-  <figcaption>{{ _label }}</figcaption>
-  <ol class="system-flow__track">
-    {%- for raw_step in _steps -%}
-      {%- assign step = raw_step | split: "|" -%}
-      <li class="system-flow__step">
-        <span class="system-flow__index" aria-hidden="true">{{ forloop.index | prepend: "0" }}</span>
-        <strong>{{ step[0] }}</strong>
-        <span>{{ step[1] }}</span>
-      </li>
+  <figcaption>{{ _arch.label }}</figcaption>
+  {%- comment -%}
+    An ordered list because the order is the argument — this is a path, not a
+    set of components. The arrow between steps is a CSS pseudo-element and is
+    aria-hidden by construction, so the reading order carries the sequence.
+  {%- endcomment -%}
+  <ol class="system-flow__track" style="--flow-cols: {{ _arch.stages.size }}">
+    {%- for _s in _arch.stages -%}
+    <li class="system-flow__step">
+      <span class="system-flow__index" aria-hidden="true">{{ forloop.index | prepend: "0" }}</span>
+      <strong>{{ _s.name }}</strong>
+      {%- if _s.tech and _s.tech.size > 0 %}
+      <span class="system-flow__tech">{{ _s.tech | join: " · " }}</span>
+      {%- endif %}
+      {%- if _s.note %}
+      <span class="system-flow__note">{{ _s.note }}</span>
+      {%- endif %}
+    </li>
     {%- endfor -%}
   </ol>
   {%- unless include.hide_evidence -%}
-  {%- if _variant == "platform" -%}
-  <div class="system-flow__evidence" aria-label="Platform evidence">
-    <p><strong>{{ site.data.metrics.professional_platform_scale.value }}</strong> {{ site.data.metrics.professional_platform_scale.label }}</p>
-    <p><strong>{{ site.data.metrics.professional_event_volume.value }}</strong> {{ site.data.metrics.professional_event_volume.label }}</p>
-    <p><strong>{{ site.data.metrics.professional_uptime.value }}</strong> {{ site.data.metrics.professional_uptime.label }}</p>
-  </div>
-  {%- elsif _variant == "ai" -%}
-  <div class="system-flow__evidence" aria-label="AI delivery evidence">
-    <p><strong>{{ site.data.metrics.professional_analytics_delivery.value }}</strong> {{ site.data.metrics.professional_analytics_delivery.label }}</p>
-    <p><strong>{{ site.data.metrics.professional_manual_effort.value }}</strong> {{ site.data.metrics.professional_manual_effort.label }}</p>
-  </div>
-  {%- elsif _variant == "clickhomes" -%}
-  <div class="system-flow__evidence" aria-label="Independent product evidence">
-    <p><strong>{{ site.data.metrics.clickhomes_migrations.value }}</strong> {{ site.data.metrics.clickhomes_migrations.label }}</p>
-  </div>
-  {%- elsif _variant == "lab" -%}
-  <div class="system-flow__evidence" aria-label="Lab evidence">
-    <p><strong>{{ site.data.metrics.lab_scenarios.value }}</strong> {{ site.data.metrics.lab_scenarios.label }}</p>
-    <p><strong>{{ site.data.metrics.lab_pg_replay_lag.value }}</strong> {{ site.data.metrics.lab_pg_replay_lag.label }}</p>
-    <p><strong>{{ site.data.metrics.lab_redis_promotion.value }}</strong> {{ site.data.metrics.lab_redis_promotion.label }}</p>
+  {%- assign _keys = "" -%}
+  {%- case _variant -%}
+  {%- when "platform" -%}{%- assign _keys = "professional_platform_scale,professional_event_volume,professional_uptime" | split: "," -%}
+  {%- when "ai" -%}{%- assign _keys = "professional_analytics_delivery,professional_manual_effort" | split: "," -%}
+  {%- when "clickhomes" -%}{%- assign _keys = "clickhomes_migrations" | split: "," -%}
+  {%- when "lab" -%}{%- assign _keys = "lab_scenarios,lab_pg_replay_lag,lab_redis_promotion" | split: "," -%}
+  {%- when "lakehouse" -%}{%- assign _keys = "lakehouse_partition_prune,lakehouse_compaction,lakehouse_rollback" | split: "," -%}
+  {%- endcase -%}
+  {%- if _keys.size > 0 %}
+  <div class="system-flow__evidence" aria-label="Measured evidence for this path">
+    {%- for _k in _keys -%}
+    {%- assign _m = site.data.metrics[_k] -%}
+    {%- if _m %}<p><strong>{{ _m.value }}</strong> {{ _m.label }}</p>{% endif -%}
+    {%- endfor %}
   </div>
   {%- endif -%}
   {%- endunless -%}

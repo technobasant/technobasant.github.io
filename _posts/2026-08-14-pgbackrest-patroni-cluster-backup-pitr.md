@@ -2,6 +2,7 @@
 title: "pgBackRest against a Patroni cluster: archive, rebuild, and restore"
 description: "Wire pgBackRest into a running Patroni cluster over mutual TLS with Ansible, then prove it: full backup, replica rebuilt from the repo, and a point-in-time restore."
 date: 2026-08-14 16:30:00 +0545
+last_modified_at: 2026-08-14
 type: tutorial
 tags: [postgres, distributed-databases]
 series: rhel8-pg-ansible

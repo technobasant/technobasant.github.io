@@ -218,3 +218,34 @@ lab_pitr_recovery:
   source: "2026 Patroni HA lab"
   window: "2026"
   context: "pgBackRest --type=time restore into a paused Patroni cluster; recovery ended on timeline 4."
+
+# ── Trino / Iceberg / Polaris lakehouse (2024 build, 2026 rebuild) ───────────
+# Server-side query timings read from Trino's own system.runtime.queries, not
+# wall clock: the CLI's JVM startup added ~515 ms to every measurement, which
+# was 6x the figure being measured.
+lakehouse_partition_prune:
+  value: "88 ms"
+  label: "one-month predicate over 1.5M Iceberg rows"
+  method: "median of 7 server-side runs from system.runtime.queries, after 2 warm-ups, on a month-partitioned Iceberg table"
+  scope: "independent"
+  source: "2026 Trino/Iceberg lakehouse lab"
+  window: "2026"
+  context: "The same predicate against Trino's in-memory tpch generator took 615 ms; the gap is partition pruning, not storage speed."
+
+lakehouse_compaction:
+  value: "20 → 1"
+  label: "files merged per partition by optimize"
+  method: "twenty 5,000-row inserts into one partition, then ALTER TABLE EXECUTE optimize, counted from the $files metadata table"
+  scope: "independent"
+  source: "2026 Trino/Iceberg lakehouse lab"
+  window: "2026"
+  context: "Total bytes fell 1,006 KB to 430 KB and the median query on that partition went 184 ms to 69 ms."
+
+lakehouse_rollback:
+  value: "909,968"
+  label: "rows recovered by snapshot rollback"
+  method: "unqualified DELETE, then ALTER TABLE EXECUTE rollback_to_snapshot, counted against the pre-incident total"
+  scope: "independent"
+  source: "2026 Trino/Iceberg lakehouse lab"
+  window: "2026"
+  context: "Completed in 589 ms because a rollback rewrites the current-snapshot pointer rather than moving data."

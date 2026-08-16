@@ -2,6 +2,7 @@
 title: "amd64 Vagrant labs on Apple Silicon without broken host networking"
 description: "Apple Silicon labs that boot still fail host and mesh ping when you use aarch64 boxes or park the VMs on your Wi‑Fi subnet."
 date: 2026-08-13 10:00:00 +0545
+last_modified_at: 2026-08-13
 type: tutorial
 tags: [self-hosted, postgres]
 toc: true
