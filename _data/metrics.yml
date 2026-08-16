@@ -249,3 +249,22 @@ lakehouse_rollback:
   source: "2026 Trino/Iceberg lakehouse lab"
   window: "2026"
   context: "Completed in 589 ms because a rollback rewrites the current-snapshot pointer rather than moving data."
+
+# ── RAG lakehouse (2025 build, 2026 rebuild) ─────────────────────────────────
+rag_embed_throughput:
+  value: "64.8/s"
+  label: "chunks embedded on CPU"
+  method: "170 gold chunks through all-MiniLM-L6-v2, 384 dimensions, batch size 32, no GPU"
+  scope: "independent"
+  source: "2026 RAG lakehouse rebuild"
+  window: "2026"
+  context: "Read from Delta in 0.21 s and upserted into Chroma in 0.25 s; embedding is the only stage that scales with corpus size."
+
+rag_refusal:
+  value: "0 tokens"
+  label: "spent refusing an out-of-corpus question"
+  method: "asked a question with no answer in the corpus; nearest passage sat at cosine distance 0.923 against a 0.75 threshold, so the model was never called"
+  scope: "independent"
+  source: "2026 RAG lakehouse rebuild"
+  window: "2026"
+  context: "The response carried a retrieve timing and no generate timing at all. Grounding enforced at the retriever, not in the prompt."
