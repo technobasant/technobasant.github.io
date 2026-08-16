@@ -10,6 +10,7 @@
 #   rake jsonld          every ld+json block in _site must parse
 
 require "html-proofer"
+require "tmpdir"
 require "json"
 require "nokogiri"
 require "yaml"
@@ -704,7 +705,60 @@ end
 # css:deadwood is deliberately NOT in the default list yet — it currently
 # reports ~230 unreachable selectors, which is a real backlog to work through,
 # not a regression to block on. Add it here once it is green.
-task default: %i[content privacy check verify jsonld tokens css:literals css:budget]
+# ─────────────────────────────────────────────────────────────────────────────
+# RESUME PDF
+#
+# Two assertions, and the second exists because the first cannot catch what
+# broke here. Moving the page chrome to `onPageEnd` to fix the parse order made
+# the background paint over every word: a page of perfectly extractable,
+# perfectly invisible text. `rake privacy` read it happily. So did pypdf.
+#
+# The only thing that sees it is a rasteriser.
+# ─────────────────────────────────────────────────────────────────────────────
+RESUME_PDF = "assets/basant-bhattarai-resume.pdf".freeze
+
+desc "The resume PDF must parse name-first and actually have ink on the page"
+task :resume do
+  abort "resume: #{RESUME_PDF} not found — run `make resume-pdf`" unless File.exist?(RESUME_PDF)
+  failures = []
+
+  # 1. Parse order. reportlab writes onPage output first, so chrome drawn there
+  #    becomes line one of the document — and a parser that treats line one as
+  #    the candidate name files the applicant under their own hostname.
+  text = `uv run --quiet --with pypdf python -c 'import sys;from pypdf import PdfReader;print(PdfReader(sys.argv[1]).pages[0].extract_text())' #{RESUME_PDF} 2>/dev/null`
+  first = text.lines.map(&:strip).reject(&:empty?).first.to_s
+  if first.casecmp("BASANT BHATTARAI").zero?
+    puts "  ok    first parsed line is the name"
+  else
+    failures << "first parsed line is #{first.inspect}, not the name"
+  end
+
+  # 2. Ink. A rasterised page with almost no dark pixels is blank, whatever the
+  #    text layer says.
+  if system("which pdftoppm > /dev/null 2>&1")
+    Dir.mktmpdir do |dir|
+      system("pdftoppm -gray -r 40 #{RESUME_PDF} #{dir}/p > /dev/null 2>&1")
+      Dir["#{dir}/p*.pgm"].sort.each_with_index do |f, i|
+        raw = File.binread(f)
+        px = raw.split("\n", 4)[3].to_s.bytes
+        ratio = px.empty? ? 0.0 : px.count { |b| b < 230 }.fdiv(px.size) * 100
+        if ratio >= 3.0
+          puts format("  ok    page %d has %.1f%% ink", i + 1, ratio)
+        else
+          failures << format("page %d is effectively blank (%.1f%% ink)", i + 1, ratio)
+        end
+      end
+    end
+  else
+    puts "  skip  pdftoppm not installed — ink check skipped"
+  end
+
+  failures.each { |f| puts "  FAIL  #{f}" }
+  abort "resume: #{failures.size} failure(s)" unless failures.empty?
+  puts "resume: ok"
+end
+
+task default: %i[content privacy check verify jsonld tokens css:literals css:budget resume]
 
 # ─────────────────────────────────────────────────────────────────────────────
 # CSS HYGIENE
