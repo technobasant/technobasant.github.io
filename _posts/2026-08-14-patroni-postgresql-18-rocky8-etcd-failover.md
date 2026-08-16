@@ -38,7 +38,7 @@ key_takeaways:
 
 Most Patroni walkthroughs stop at `patronictl list` showing a Leader and a Replica. That is the setup, not the result. The question worth answering is what happens when the primary dies badly — not a graceful `systemctl stop`, but a `SIGKILL` that leaves the cluster to work it out — and then whether the dead node can come back without a rebuild.
 
-This post builds that on three amd64 guests and measures it. The numbers below came off the run, not off a docs page: promotion inside 20 seconds, the timeline advancing 1 → 2, and the old primary rejoining as a streaming replica 15 seconds after it was restarted, via `pg_rewind` from the last common checkpoint.
+This post builds that on three amd64 guests and measures it. The numbers below came off the run, not off a docs page: promotion observed in a 10–20 second window — `patronictl` was polled every 10 s, so that interval is the instrument's resolution and not the precision of the result — the timeline advancing 1 → 2, and the old primary rejoining as a streaming replica 15 seconds after it was restarted, via `pg_rewind` from the last common checkpoint.
 
 It is also honest about the shape of the lab. etcd runs on one node, which is a single point of failure — so rather than wave that away, the last section stops etcd and measures what a DCS outage actually costs. The answer is worth knowing before you design one: the healthy leader demotes itself and the cluster goes read-only.
 
