@@ -1,7 +1,7 @@
 ---
 title: "Two engines, one Iceberg catalog: StarRocks beside Trino, neither holding a key"
 description: "Attach StarRocks to the same Polaris REST catalog Trino writes through, measure both on identical data, and check for standing S3 keys."
-date: 2024-02-08 09:00:00 +0545
+date: 2026-08-16 09:00:00 +0545
 last_modified_at: 2026-08-16
 type: tutorial
 tags: [iceberg-lakehouse, clickhouse]
@@ -41,7 +41,7 @@ The argument is that the catalog is the system of record, so a second engine sho
 
 That last clause is the part worth checking. [Part one]({{ '/writing/' | relative_url }}) went to some trouble to make Trino hold no standing S3 key. If adding StarRocks means pasting the MinIO keys into a second config file, the boundary is gone and the whole exercise was decoration.
 
-So: attach StarRocks 4.1.4 to the same catalog, read the same tables, and see.
+So: attach StarRocks 4.1.4 to the same catalog, read the same tables, and see. The original 2024 build ran StarRocks 3.2 beside Trino 437 against Hive Metastore — same question, and the answer has changed.
 
 ## Step 1 — StarRocks on the same network
 
