@@ -18,12 +18,24 @@ require "open3"
 
 SITE_DIR = "./_site".freeze
 
+SITE_URL = begin
+  config = YAML.safe_load_file("_config.yml", permitted_classes: [Date, Time]) || {}
+  url = config["url"].to_s.strip.sub(%r{/\z}, "")
+  abort "Rakefile: _config.yml is missing `url`" if url.empty?
+  url
+end.freeze
+
+# html-proofer treats absolute site URLs as external unless they are swapped
+# back to local paths. Keep the retired GitHub Pages host so leftover links
+# still get checked internally after the custom domain lands.
+SITE_URL_SWAP = %r{^(?:#{Regexp.escape(SITE_URL)}|https://technobasant\.github\.io)}
+
 BASE = {
   allow_hash_href: true,
   enforce_https: false,
   check_internal_hash: true,
   checks: %w[Links Images Scripts OpenGraph],
-  swap_urls: { %r{^https://technobasant\.github\.io} => "" },
+  swap_urls: { SITE_URL_SWAP => "" },
   ignore_urls: [%r{^mailto:}]
 }.freeze
 
@@ -446,10 +458,11 @@ task :verify do
 
   v.with(sitemap, label: "sitemap lists /writing/ URLs") do
     body = File.read(sitemap)
-    if body.include?("<loc>https://technobasant.github.io/writing/")
+    writing_loc = "<loc>#{SITE_URL}/writing/"
+    if body.include?(writing_loc)
       v.ok "sitemap lists /writing/ URLs"
     else
-      v.bad "sitemap has no <loc>https://technobasant.github.io/writing/ entry"
+      v.bad "sitemap has no #{writing_loc} entry"
     end
 
     if body.include?("404.html")

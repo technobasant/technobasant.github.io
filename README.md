@@ -1,7 +1,7 @@
 # Basant Bhattarai — Personal site
 
 Staff-level portfolio for a Senior Data & AI Engineer / platform architect.  
-Live: [technobasant.github.io](https://technobasant.github.io)
+Live: [basantbhattarai.com.np](https://basantbhattarai.com.np)
 
 ## Principles
 
