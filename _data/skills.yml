@@ -13,14 +13,14 @@ tier1:
   items:
     - { name: "Python", since: 2017, scale: "Backend services, data platforms, automation, and AI tooling" }
     - { name: "SQL", since: 2017, scale: "Transactional, analytical, and reliability work", evidence: /writing/postgresql-18-docker-volume-path-change/, evidence_label: "PostgreSQL tutorial" }
-    - { name: "Apache Spark / PySpark", since: 2020, scale: "Batch and streaming data processing" }
+    - { name: "Apache Spark / PySpark", since: 2020, scale: "Batch and streaming data processing", evidence: /writing/dbt-trino-iceberg-medallion-airflow/, evidence_label: "medallion pipeline" }
     - { name: "Apache Kafka", since: 2020, scale: "Event-driven and streaming systems" }
     - { name: "Apache Airflow", since: 2020, scale: "Workflow orchestration, replay, and recovery design" }
-    - { name: "Apache Iceberg", since: 2022, scale: "Table evolution, maintenance, and data modeling" }
+    - { name: "Apache Iceberg", since: 2022, scale: "Table evolution, maintenance, and data modeling", evidence: /writing/iceberg-compaction-snapshots-rollback/, evidence_label: "compaction and rollback, measured" }
     - { name: "dbt", since: 2021, scale: "Transformation contracts, testing, and documentation" }
     - { name: "PostgreSQL", since: 2017, scale: "Application schemas, replication, HA, backup, and upgrades", evidence: /work/multi-engine-ha-lab/, evidence_label: "failover lab" }
     - { name: "ClickHouse", since: 2021, scale: "Analytical modeling and operational practice" }
-    - { name: "Trino", since: 2021, scale: "Federated SQL and query modeling" }
+    - { name: "Trino", since: 2021, scale: "Federated SQL and query modeling", evidence: /writing/trino-iceberg-polaris-lakehouse-spine/, evidence_label: "Trino on Iceberg via Polaris" }
     - { name: "Kubernetes", since: 2022, scale: "Container orchestration and data workloads" }
     - { name: "LangGraph / LangChain", since: 2024, scale: "Production agent orchestration and tool use", evidence: /work/governed-ai-delivery/, evidence_label: "agent case study" }
     - { name: "Google ADK", since: 2024, scale: "Agent applications on an OSS framework, integrated into product workflows", evidence: /work/governed-ai-delivery/, evidence_label: "agent case study" }

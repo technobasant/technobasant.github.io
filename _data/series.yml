@@ -30,3 +30,10 @@
   register_label: "Follow-along runbook"
   blurb: "Dedicated pgBackRest TLS, then Postgres clients, on generic/rhel8 under QEMU—Ansible-only config on the amd64 fabric from the networking post."
   status: in-progress
+
+- slug: lakehouse-trino-iceberg
+  title: "The lakehouse spine"
+  register: measurement
+  register_label: "Measured on my own hardware"
+  blurb: "Trino, Iceberg and Apache Polaris on one laptop, rebuilt from a 2024 client stack whose every component has since been replaced. Credential vending proven scoped, compaction measured, and a rollback actually performed."
+  status: in-progress
