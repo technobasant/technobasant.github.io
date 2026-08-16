@@ -1,0 +1,111 @@
+# Architecture diagrams, as data.
+#
+# Why this is HTML and CSS rather than draw.io, Mermaid or an SVG export.
+# Four things a diagram on this site has to do, and only real markup does all
+# four:
+#
+#   follow the theme   two first-class themes ship here. A raster or a
+#                      draw.io PNG is one palette, and looks wrong in the other.
+#   reflow             SVG text does not wrap. At 390px an exported diagram is
+#                      either a horizontal scroll or unreadable.
+#   be readable        a screen reader announces these steps; a search engine
+#                      and a language model index the technology names. Neither
+#                      reads a PNG, and alt text cannot carry a topology.
+#   stay honest        it is right here in the repo next to the prose, so it
+#                      gets updated in the same commit as the thing it describes.
+#
+# Mermaid does the first three and costs ~1 MB of JavaScript against a
+# stylesheet budget currently at 86% of 25 KB. draw.io does none of them, and
+# buys prettier vendor icons.
+#
+# `stage.note` is the load-bearing field. Naming Kafka is a technology list;
+# naming what happens when Kafka is unavailable is an architecture diagram.
+
+platform:
+  label: "Production data platform — the path a record takes"
+  stages:
+    - name: "Sources"
+      tech: ["mobile SDK", "service events", "CDC"]
+      note: "Schema owned upstream, so ingestion cannot assume it is stable."
+    - name: "Ingest"
+      tech: ["Kafka", "Airflow"]
+      note: "Buffered, so a slow downstream is backpressure rather than data loss."
+    - name: "Process"
+      tech: ["Spark", "PySpark", "dbt"]
+      note: "Idempotent by partition — a replay overwrites rather than appends."
+    - name: "Store"
+      tech: ["Iceberg", "S3"]
+      note: "Snapshots make a bad load reversible without restoring a backup."
+    - name: "Serve"
+      tech: ["Trino", "ClickHouse"]
+      note: "Read paths modelled separately from write paths, on purpose."
+
+ai:
+  label: "Governed AI delivery — what is allowed to become state"
+  stages:
+    - name: "Retrieve"
+      tech: ["Milvus", "MCP tools"]
+      note: "Every claim carries the source record it came from, or it is dropped."
+    - name: "Generate"
+      tech: ["LangGraph", "Google ADK"]
+      note: "Produces a candidate, never final state."
+    - name: "Validate"
+      tech: ["Pydantic", "policy checks"]
+      note: "Typed schema and policy. Failing here is a normal outcome, not an error."
+    - name: "Review"
+      tech: ["MLflow", "human queue"]
+      note: "Publish, correct, or fall back — the fallback path is defined up front."
+    - name: "Persist"
+      tech: ["PostgreSQL"]
+      note: "Durable, attributable, correctable. This is the only write."
+
+clickhomes:
+  label: "ClickHomes — listings from feed to page"
+  stages:
+    - name: "Feed"
+      tech: ["RESO Web API"]
+      note: "The only way in. Source and rights metadata retained per record."
+    - name: "Normalise"
+      tech: ["Python", "contracts"]
+      note: "Contract violations quarantine the batch instead of the field."
+    - name: "Truth"
+      tech: ["PostgreSQL"]
+      note: "System of record. 90+ versioned migrations, no schema drift by hand."
+    - name: "Speed"
+      tech: ["ClickHouse"]
+      note: "Derived, disposable, rebuildable from Postgres at any time."
+    - name: "Serve"
+      tech: ["FastAPI", "Next.js"]
+      note: "Operational and analytical reads never share a connection pool."
+
+lab:
+  label: "Failover experiment — how each claim was measured"
+  stages:
+    - name: "Provision"
+      tech: ["Docker", "Vagrant", "QEMU"]
+      note: "One reproducible cluster, pinned versions, stated resource ceiling."
+    - name: "Seed"
+      tech: ["known dataset"]
+      note: "Write verifiable state and capture the baseline before touching anything."
+    - name: "Fault"
+      tech: ["SIGKILL", "partition"]
+      note: "Kill the primary badly. A graceful stop tests a different code path."
+    - name: "Measure"
+      tech: ["wall clock", "engine metrics"]
+      note: "Promotion time, data survival, and what the survivors disagreed about."
+
+lakehouse:
+  label: "Lakehouse spine — who holds the credential"
+  stages:
+    - name: "Engines"
+      tech: ["Trino", "StarRocks"]
+      note: "Hold no S3 key. They authenticate to the catalog, not to storage."
+    - name: "Catalog"
+      tech: ["Apache Polaris"]
+      note: "Authorisation boundary: principal to role to catalog, then STS."
+    - name: "Vend"
+      tech: ["STS AssumeRole"]
+      note: "Short-lived credential scoped to one table prefix, then discarded."
+    - name: "Storage"
+      tech: ["Iceberg", "MinIO"]
+      note: "Sibling table returns AccessDenied — verified, not assumed."
