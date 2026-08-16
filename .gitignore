@@ -9,3 +9,6 @@ output
 .bundle
 vendor/bundle
 .DS_Store
+.env
+.env.*
+!.env.example
