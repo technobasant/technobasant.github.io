@@ -1,7 +1,7 @@
 ---
 title: "Iceberg maintenance: 20 files into 1, and a rollback I actually performed"
 description: "Measure what compaction buys on a small-files partition, then delete 909,968 rows and get them back — and find where the safety net stops."
-date: 2024-02-04 09:00:00 +0545
+date: 2026-08-16 10:00:00 +0545
 last_modified_at: 2026-08-16
 type: tutorial
 tags: [iceberg-lakehouse, observability-slo]
@@ -39,7 +39,7 @@ Parts one and two built a lakehouse and filled it. Both stopped at the point whe
 
 The question that decides whether the thing is still usable in a year is different: Iceberg appends a data file per write and a snapshot per commit. A table fed by an hourly pipeline accumulates both. Nobody notices for a month. Then queries get slow, and the cause is not the query.
 
-This post creates that problem deliberately, measures it, repairs it, and then does the other thing worth knowing: deletes most of a table and gets it back.
+This post creates that problem deliberately, measures it, repairs it, and then does the other thing worth knowing: deletes most of a table and gets it back. The rig is the January 2024 client stack rebuilt on current versions; the maintenance questions are the ones that stack never got old enough to face.
 
 ## Step 1 — Manufacture the small-files problem
 

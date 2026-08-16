@@ -1,7 +1,7 @@
 ---
 title: "Bronze, silver, gold on Iceberg: the dbt config that is silently ignored"
 description: "Build a medallion pipeline with dbt-trino on Iceberg, orchestrate it with Airflow 3, and find the partition spec dbt accepts and discards without a warning."
-date: 2024-01-31 09:00:00 +0545
+date: 2026-08-16 11:00:00 +0545
 last_modified_at: 2026-08-16
 type: tutorial
 tags: [iceberg-lakehouse, data-quality]
@@ -40,7 +40,7 @@ Every lakehouse article asserts that Iceberg gives you row-level MERGE, so incre
 
 It is also the kind of claim that is easy to state and rarely shown. dbt will happily print `MERGE (25_000 rows)` whether it rewrote one file or all eighty. The evidence is not in dbt's output — it is in Iceberg's `$snapshots` metadata table, which records exactly how many data files each commit added and deleted.
 
-This post builds bronze → silver → gold on the [spine from part one]({{ '/writing/' | relative_url }}), hands it to Airflow, and then goes and reads that table.
+The stack is a rebuild of a January 2024 client project on current versions — Trino 437 became 483, Hive Metastore became Apache Polaris. This post builds bronze → silver → gold on the [spine from part one]({{ '/writing/' | relative_url }}), hands it to Airflow, and then goes and reads that table.
 
 Four things went wrong on the way. Three of them failed silently.
 

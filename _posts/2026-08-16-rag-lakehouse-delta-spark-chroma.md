@@ -1,7 +1,7 @@
 ---
 title: "A RAG pipeline on a Delta lakehouse, and the bug that survived being fixed"
 description: "Scrape to bronze, silver, gold on Spark 4 and Delta, embed into Chroma, and serve answers that cite their sources or decline to answer."
-date: 2025-07-14 09:00:00 +0545
+date: 2026-08-16 08:00:00 +0545
 last_modified_at: 2026-08-16
 type: tutorial
 tags: [rag, iceberg-lakehouse]
