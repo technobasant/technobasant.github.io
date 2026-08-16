@@ -37,3 +37,10 @@
   register_label: "Measured on my own hardware"
   blurb: "Trino, Iceberg and Apache Polaris on one laptop, rebuilt from a 2024 client stack whose every component has since been replaced. Credential vending proven scoped, compaction measured, and a rollback actually performed."
   status: in-progress
+
+- slug: agentic-engineering
+  title: "Agents in a real repository"
+  register: measurement
+  register_label: "Measured on my own hardware"
+  blurb: "Coding agents moved the bottleneck from writing to believing. This series is the operating answer: what to put in the repo, what to gate in CI, and what each gate cost to learn — with the failures that produced them."
+  status: in-progress
