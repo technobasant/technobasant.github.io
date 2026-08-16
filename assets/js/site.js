@@ -122,6 +122,14 @@
     var blocks = document.querySelectorAll(".highlighter-rouge");
     if (!blocks.length) return;
 
+    // How many times each filename appears on this page. Computed up front so a
+    // block can tell whether its own name is ambiguous without rescanning.
+    var fileCounts = {};
+    Array.prototype.forEach.call(blocks, function (b) {
+      var f = b.getAttribute("data-file");
+      if (f) fileCounts[f] = (fileCounts[f] || 0) + 1;
+    });
+
     var live = document.createElement("div");
     live.className = "sr-live";
     live.setAttribute("role", "status");
@@ -225,14 +233,22 @@
           // A named region is a landmark, and a tutorial with nine bash blocks
           // was minting nine landmarks all called "bash code, scrollable" —
           // axe's landmark-unique, and useless in a landmark list. Prefer the
-          // filename, which is already unique and meaningful; fall back to the
-          // language plus the block's position in the article.
-          pre.setAttribute(
-            "aria-label",
-            (block.getAttribute("data-file") ||
-              (lang ? lang + " code" : "Code") + " block " + (blockIndex + 1)) +
-              ", scrollable"
-          );
+          // filename, which is meaningful.
+          //
+          // It is NOT always unique, which is what this comment used to claim.
+          // A tutorial that builds one file across several steps shows
+          // `docker-compose.yaml` three times, and the labels collided again —
+          // the same violation, from the fix for it. Where a filename repeats on
+          // the page, disambiguate with the block's position; where it appears
+          // once, leave it clean.
+          var file = block.getAttribute("data-file");
+          var label;
+          if (file) {
+            label = fileCounts[file] > 1 ? file + " (" + (blockIndex + 1) + ")" : file;
+          } else {
+            label = (lang ? lang + " code" : "Code") + " block " + (blockIndex + 1);
+          }
+          pre.setAttribute("aria-label", label + ", scrollable");
         } else if (!overflows && pre.hasAttribute("tabindex")) {
           pre.removeAttribute("tabindex");
           pre.removeAttribute("role");
