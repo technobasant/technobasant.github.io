@@ -27,10 +27,34 @@ BASE = {
   ignore_urls: [%r{^mailto:}]
 }.freeze
 
-def site_built!
-  return true if Dir.exist?(SITE_DIR)
+# Sources that, if newer than the build, mean the audit is looking at a page
+# that no longer exists in the form it is about to bless.
+STALENESS_GLOBS = %w[
+  _posts/**/*.md _work/**/*.md _pages/**/*.md _layouts/**/*.html
+  _includes/**/*.html _data/**/*.yml _sass/**/*.scss assets/**/*.{scss,js}
+  index.md _config.yml
+].freeze
 
-  abort "_site/ not found — run `make build` (or `bundle exec jekyll build`) first."
+def site_built!
+  abort "_site/ not found — run `make build` (or `bundle exec jekyll build`) first." unless Dir.exist?(SITE_DIR)
+
+  # Nothing here builds the site; every task audits whatever `_site` happens to
+  # contain. That is fine until a build *fails* — then the previous `_site`
+  # survives, the whole suite passes against it, and the run reports green for a
+  # site that cannot be generated. That happened: a `{% macro %}` inside a code
+  # fence made Jekyll abort with a Liquid syntax error, and `rake default` went
+  # on to pass 12/12 against the last good output.
+  built = File.mtime(File.join(SITE_DIR, "index.html")) if File.exist?(File.join(SITE_DIR, "index.html"))
+  return true unless built
+
+  newer = STALENESS_GLOBS.flat_map { |g| Dir.glob(g) }.select { |f| File.mtime(f) > built }
+  return true if newer.empty?
+
+  abort <<~MSG
+    _site/ is older than #{newer.size} source file(s) — the audit would pass on stale output.
+      #{newer.sort_by { |f| -File.mtime(f).to_i }.first(5).join("\n  ")}
+    Rebuild first:  JEKYLL_ENV=production bundle exec jekyll build
+  MSG
 end
 
 desc "Check the built site: internal links, images, scripts, OpenGraph"

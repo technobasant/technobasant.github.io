@@ -123,7 +123,18 @@ layout: default
       click.
     {%- endcomment -%}
     <ol class="portfolio-note__list">
-      {%- for _post in site.posts limit: 3 -%}
+      {%- comment -%}
+        Resolve the curated slugs, falling back to the three most recent if
+        `spotlight` is unset. `where_exp` on the slug rather than the URL so the
+        list stays readable and a typo yields nothing rather than the wrong post.
+      {%- endcomment -%}
+      {%- assign _spotlight = "" | split: "" -%}
+      {%- for _slug in page.writing.spotlight -%}
+        {%- assign _hit = site.posts | where: "slug", _slug | first -%}
+        {%- if _hit -%}{%- assign _spotlight = _spotlight | push: _hit -%}{%- endif -%}
+      {%- endfor -%}
+      {%- if _spotlight.size == 0 -%}{%- assign _spotlight = site.posts | slice: 0, 3 -%}{%- endif -%}
+      {%- for _post in _spotlight -%}
       {%- assign _pm = nil -%}
       {%- if _post.series -%}{%- assign _pm = site.data.series | where: "slug", _post.series | first -%}{%- endif -%}
       <li class="portfolio-note__item">
