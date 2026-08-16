@@ -9,7 +9,7 @@ import subprocess
 from pathlib import Path
 
 from reportlab.lib import colors
-from reportlab.lib.enums import TA_RIGHT
+from reportlab.lib.enums import TA_LEFT, TA_RIGHT
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import inch
@@ -110,9 +110,12 @@ def page_chrome(canvas, doc) -> None:
 def styles() -> dict[str, ParagraphStyle]:
     base = getSampleStyleSheet()
     return {
+        # Left, not centred. `base["Title"]` is centre-aligned, so the name sat
+        # on a different axis from every other element and the page had no spine.
         "name": ParagraphStyle(
             "Name",
             parent=base["Title"],
+            alignment=TA_LEFT,
             fontName="Times-Bold",
             fontSize=25,
             leading=27,
@@ -192,9 +195,9 @@ def styles() -> dict[str, ParagraphStyle]:
             fontSize=8.25,
             leading=11.8,
             textColor=INK,
-            leftIndent=9,
-            firstLineIndent=-7,
-            spaceAfter=2.5,
+            leftIndent=11,
+            firstLineIndent=-11,
+            spaceAfter=3.5,
         ),
         "card_title": ParagraphStyle(
             "CardTitle",
@@ -232,13 +235,19 @@ def job_header(role: str, employer: str, period: str, s: dict[str, ParagraphStyl
     table = Table(
         [[Paragraph(f"{role}  |  {employer}", s["job"]), Paragraph(period, s["date"])]],
         colWidths=[4.7 * inch, 1.55 * inch],
+        # reportlab's Table defaults to hAlign="CENTER", so every job header was
+        # centred in the frame and read as an indent the bullets below did not
+        # share. The capability grid set this and the job header did not.
+        hAlign="LEFT",
     )
     table.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 0), ("RIGHTPADDING", (0, 0), (-1, -1), 0), ("TOPPADDING", (0, 0), (-1, -1), 0), ("BOTTOMPADDING", (0, 0), (-1, -1), 2)]))
     return table
 
 
 def bullets(items: list[str], s: dict[str, ParagraphStyle]) -> list[Paragraph]:
-    return [Paragraph(f"- {item}", s["bullet"]) for item in items]
+    # A real bullet glyph with a proper hanging indent. The hyphen read as a
+    # dash in the sentence rather than a marker, and a 2pt hang is not a hang.
+    return [Paragraph(f"\u2022&nbsp;&nbsp;{item}", s["bullet"]) for item in items]
 
 
 def build_story(
@@ -254,8 +263,12 @@ def build_story(
             # four that leads to case studies and measured write-ups; LinkedIn
             # and GitHub are corroboration. A recruiter scanning the header
             # should hit the evidence, not the profile.
+            # Two deliberate lines rather than one that wraps. At 8.2pt the five
+            # items overflowed and orphaned github.com onto a row of its own,
+            # which reads as a mistake. Split where it means something: where I
+            # am and where the work is, then how to reach me.
             'Kathmandu, Nepal &nbsp;&nbsp;|&nbsp;&nbsp; '
-            f'<a href="{SITE_URL}/" color="#9A692C"><b>{SITE_HOST}</b></a> &nbsp;&nbsp;|&nbsp;&nbsp; '
+            f'<a href="{SITE_URL}/" color="#9A692C"><b>{SITE_HOST}</b></a><br/>'
             '<a href="mailto:technobasant9@gmail.com" color="#58616B">technobasant9@gmail.com</a> &nbsp;&nbsp;|&nbsp;&nbsp; '
             '<a href="https://www.linkedin.com/in/technobasant" color="#58616B">linkedin.com/in/technobasant</a> &nbsp;&nbsp;|&nbsp;&nbsp; '
             '<a href="https://github.com/technobasant" color="#58616B">github.com/technobasant</a>',
@@ -269,32 +282,17 @@ def build_story(
         s["body"],
     ))
 
-    strengths = [
-        ("Platform ownership", "Consumer-facing reliability, governance, recovery, and operational readiness."),
-        ("Data engineering", "Batch and streaming pipelines, orchestration, modeling, and change-safe processing."),
-        ("Database lifecycle", "Modeling, replication, failover, backup and PITR, upgrades, and query performance."),
-        ("Agentic systems", "LangGraph, Google ADK and MCP tool servers, evaluation, and typed persistence."),
-        ("Technical leadership", "Design review, mentoring, runbooks, and making system ownership transferable."),
-        ("Distributed work", "Long-term collaboration across European and US time zones from Kathmandu."),
-    ]
-    cells = []
-    for index in range(0, len(strengths), 2):
-        row = []
-        for title, body in strengths[index:index + 2]:
-            row.append([Paragraph(title, s["card_title"]), Paragraph(body, s["card_body"])])
-        cells.append(row)
-    grid = Table(cells, colWidths=[3.11 * inch, 3.11 * inch], hAlign="LEFT")
-    grid.setStyle(TableStyle([
-        ("BACKGROUND", (0, 0), (-1, -1), PANEL),
-        ("BOX", (0, 0), (-1, -1), 0.5, LINE),
-        ("INNERGRID", (0, 0), (-1, -1), 0.5, LINE),
-        ("VALIGN", (0, 0), (-1, -1), "TOP"),
-        ("LEFTPADDING", (0, 0), (-1, -1), 9),
-        ("RIGHTPADDING", (0, 0), (-1, -1), 9),
-        ("TOPPADDING", (0, 0), (-1, -1), 7),
-        ("BOTTOMPADDING", (0, 0), (-1, -1), 7),
-    ]))
-    story += section("Core strengths", s) + [grid]
+    # The "Core strengths" grid used to sit here, above Experience. It named six
+    # categories in prose — Platform ownership, Data engineering, Database
+    # lifecycle, Agentic systems, Technical leadership, Distributed work — and
+    # the Capability map on page two then named four of the same six again with
+    # technologies under them. The same taxonomy, twice, and the first copy cost
+    # roughly a third of page one.
+    #
+    # Page one now runs header, profile, experience. That is the order a
+    # recruiter reads in, and the most recent role starts near the top of the
+    # page instead of halfway down it. The categories survive once, on page two,
+    # where the prose line and the technology line finally sit together.
 
     story += section("Experience", s)
     story.append(job_header("Senior Data Engineer", "UXCam", "Feb 2024 - present", s))
@@ -336,23 +334,31 @@ def build_story(
         "Worked across European and US time zones to turn product questions into maintainable datasets.",
     ], s)
     story.append(Spacer(1, 4))
-    story.append(job_header("Project Leader", "SVCET, India", "2019 - 2020", s))
-    story += bullets([
+    # KeepTogether on the short roles. The two-bullet SV Technology block was
+    # split by the page break and left one line stranded at the top of page two,
+    # which reads as a rendering accident rather than a layout. The long UXCam
+    # blocks are deliberately not wrapped: forcing a five-bullet role to stay
+    # whole would push the whole section to the next page to avoid a widow.
+    tail: list = []
+    tail.append(job_header("Project Leader", "SVCET, India", "2019 - 2020", s))
+    tail += bullets([
         f"Led {metric(metrics, 'professional_project_team')} developers building an intelligent dialogue system "
         "on an NLP and deep-learning stack, reaching the client's acceptance threshold for intent recognition and "
         f"delivering {metric(metrics, 'professional_project_delivery')} ahead of schedule.",
         "Coordinated requirements, planning and review across academic and industry stakeholders, and introduced "
         "the code-review and version-control discipline the department kept afterwards.",
     ], s)
+    story.append(KeepTogether(tail))
     story.append(Spacer(1, 3))
-    story.append(job_header("Software Developer", "SV Technology, India", "2017 - 2019", s))
-    story += bullets([
+    tail2: list = [job_header("Software Developer", "SV Technology, India", "2017 - 2019", s)]
+    tail2 += bullets([
         f"Built Python and FastAPI backend services carrying "
         f"{metric(metrics, 'professional_backend_users')} users at "
         f"{metric(metrics, 'professional_test_coverage')} test coverage.",
         "Designed and maintained PostgreSQL schemas, stored procedures and reporting paths, and set up CI with "
         "Jenkins alongside the early pipeline work that moved me into data engineering.",
     ], s)
+    story.append(KeepTogether(tail2))
 
     # No forced page break here any more. It existed to give the Independent work
     # panel a clean page; with that section gone it stranded 124 words on page 2.
@@ -389,6 +395,20 @@ def build_story(
             "Cloud",
             "  |  ".join(f"<b>{c['name']}:</b> {', '.join(c['items'][:8])}" for c in clouds),
         )]
+
+    # One line of what the category means, then the systems it runs on. Splitting
+    # those across two sections meant a reader had to hold the first to make
+    # sense of the second.
+    blurbs = {
+        "Platform ownership": "Consumer-facing reliability, governance, recovery and operational readiness.",
+        "Database lifecycle": "Modeling, replication, failover, backup and PITR, upgrades and query performance.",
+        "Agentic systems": "Model output that lands as typed, reviewable rows rather than a transcript.",
+        "Technical leadership": "Design review, mentoring, runbooks, and making system ownership transferable.",
+    }
+    categories = [
+        (label, f'<font color="#5D646D">{blurbs[label]}</font><br/>{body}' if label in blurbs else body)
+        for label, body in categories
+    ]
 
     for label, body in categories:
         story.append(KeepTogether([
