@@ -9,34 +9,59 @@ sitemap: false
 {%- for collection in collections -%}
 {%- assign docs = collection.docs | where_exp: "doc", "doc.sitemap != false" -%}
 {%- for doc in docs %}
+{%- assign pri = doc.sitemap.priority -%}
+{%- assign freq = doc.sitemap.changefreq -%}
+{%- unless pri -%}
+{%- if collection.label == "posts" -%}{%- assign pri = "0.8" -%}
+{%- elsif collection.label == "work" -%}{%- assign pri = "0.7" -%}
+{%- endif -%}
+{%- endunless -%}
+{%- unless freq -%}
+{%- if collection.label == "posts" -%}{%- assign freq = "weekly" -%}
+{%- endif -%}
+{%- endunless %}
   <url>
     <loc>{{ doc.url | replace: "/index.html", "/" | absolute_url | xml_escape }}</loc>
     {%- if doc.last_modified_at or doc.date %}
     <lastmod>{{ doc.last_modified_at | default: doc.date | date_to_xmlschema }}</lastmod>
     {%- endif -%}
-    {%- if doc.sitemap.changefreq %}
-    <changefreq>{{ doc.sitemap.changefreq }}</changefreq>
+    {%- if freq %}
+    <changefreq>{{ freq }}</changefreq>
     {%- endif -%}
-    {%- if doc.sitemap.priority %}
-    <priority>{{ doc.sitemap.priority }}</priority>
+    {%- if pri %}
+    <priority>{{ pri }}</priority>
     {%- endif %}
   </url>
 {%- endfor -%}
 {%- endfor -%}
-{%- assign pages = site.html_pages | where_exp: "doc", "doc.sitemap != false" | where_exp: "doc", "doc.url != '/404.html'" | where_exp: "doc", "doc.url != '/404'" -%}
-{%- for p in pages %}
+{%- assign pages = site.html_pages | where_exp: "doc", "doc.sitemap != false" | where_exp: "doc", "doc.noindex != true" | where_exp: "doc", "doc.url != '/404.html'" | where_exp: "doc", "doc.url != '/404'" -%}
+{%- for p in pages -%}
+{%- assign _skip = false -%}
+{%- if p.layout == "tag" -%}
+  {%- assign _tag_n = site.tags[p.tag] | size -%}
+  {%- if _tag_n == 0 -%}{%- assign _skip = true -%}{%- endif -%}
+{%- endif -%}
+{%- unless _skip -%}
+{%- assign pri = p.sitemap.priority -%}
+{%- assign freq = p.sitemap.changefreq -%}
+{%- unless pri -%}
+{%- if p.url == "/writing/" -%}{%- assign pri = "0.9" -%}
+{%- elsif p.layout == "tag" or p.url == "/writing/tags/" -%}{%- assign pri = "0.4" -%}
+{%- endif -%}
+{%- endunless %}
   <url>
     <loc>{{ p.url | replace: "/index.html", "/" | absolute_url | xml_escape }}</loc>
     {%- if p.last_modified_at %}
     <lastmod>{{ p.last_modified_at | date_to_xmlschema }}</lastmod>
     {%- endif -%}
-    {%- if p.sitemap.changefreq %}
-    <changefreq>{{ p.sitemap.changefreq }}</changefreq>
+    {%- if freq %}
+    <changefreq>{{ freq }}</changefreq>
     {%- endif -%}
-    {%- if p.sitemap.priority %}
-    <priority>{{ p.sitemap.priority }}</priority>
+    {%- if pri %}
+    <priority>{{ pri }}</priority>
     {%- endif %}
   </url>
+{%- endunless -%}
 {%- endfor -%}
 {%- comment -%} jekyll-sitemap only emits HTML. Machine-index files belong here too. {%- endcomment -%}
 {%- assign machine = site.pages | where_exp: "p", "p.sitemap != false" | where_exp: "p", "p.url contains '.txt'" -%}

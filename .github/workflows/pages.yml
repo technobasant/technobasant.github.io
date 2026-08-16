@@ -146,6 +146,14 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      # IndexNow and SubmitFeed read CNAME, the public key file, and git history
+      # from this checkout. deploy-pages itself uses the build artifact, not
+      # these files — checkout is only for the notify steps that follow.
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
@@ -250,3 +258,27 @@ jobs:
           # worth seeing in the log but must not fail a deploy that already
           # succeeded — the site is live either way.
           [ "$code" = "200" ] || [ "$code" = "202" ] || cat /tmp/indexnow.out
+
+      # Sitemap submission is the freshness signal (guidelines §3). IndexNow
+      # above is the URL-level ping (§4). The API key is a secret; the IndexNow
+      # key file is not. Skip quietly if the secret is unset so a missing repo
+      # setting cannot fail a deploy that already published.
+      - name: Submit sitemap to Bing Webmaster
+        env:
+          BING_WEBMASTER_API_KEY: ${{ secrets.BING_WEBMASTER_API_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${BING_WEBMASTER_API_KEY:-}" ]; then
+            echo "BING_WEBMASTER_API_KEY secret is not set — skipping SubmitFeed."
+            exit 0
+          fi
+          host="$(cat CNAME 2>/dev/null || echo technobasant.github.io)"
+          site="https://$host"
+          code=$(curl -sS -o /tmp/bing-feed.out -w '%{http_code}' \
+            -X POST "https://ssl.bing.com/webmaster/api.svc/json/SubmitFeed?apikey=${BING_WEBMASTER_API_KEY}" \
+            -H 'Content-Type: application/json; charset=utf-8' \
+            --data "{\"siteUrl\":\"${site}\",\"feedUrl\":\"${site}/sitemap.xml\"}")
+          echo "SubmitFeed responded $code"
+          [ "$code" = "200" ] || cat /tmp/bing-feed.out
+          # Do not fail the deploy on a Webmaster API miss. The site is live.
+          exit 0
