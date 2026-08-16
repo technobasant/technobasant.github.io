@@ -162,26 +162,26 @@ jobs:
       # 137,210 domains publishing one got zero crawler requests for the file.
       # Keep it (it costs nothing, coding agents do read it), expect nothing.
       #
-      # Needs INDEXNOW_KEY as a repo secret, and the same key served at
-      # /<key>.txt. Skipped silently when the secret is absent, so a fork or a
-      # first-time clone does not fail here.
+      # The key is discovered from the repository, not from a secret.
+      #
+      # An IndexNow key is not secret — the protocol requires serving it at
+      # https://host/<key>.txt so the endpoint can verify ownership. Putting it
+      # in a repo secret therefore bought nothing and cost everything: the
+      # secret was never set, so this step exited 0 on every deploy for months
+      # and submitted nothing. A guard that silently never fires is worse than
+      # no guard, which is the whole argument of the essay this repo now hosts.
+      #
+      # Now the key file IS the configuration. Drop <key>.txt at the root and it
+      # works on a fresh clone with no repo settings at all.
       - name: Ping IndexNow
-        env:
-          KEY: ${{ secrets.INDEXNOW_KEY }}
         run: |
           set -euo pipefail
-          # Guarded here rather than in a step-level `if:` — the secrets context
-          # is not dependably available in step conditionals, and a guard that
-          # silently never fires is worse than no guard.
-          if [ -z "${KEY:-}" ]; then
-            echo "INDEXNOW_KEY not set — skipping submission."
+          keyfile="$(ls -1 [0-9a-f]*.txt 2>/dev/null | head -1 || true)"
+          if [ -z "$keyfile" ]; then
+            echo "no IndexNow key file at the repo root — skipping submission."
             exit 0
           fi
-          # Read the host from CNAME rather than hardcoding it. IndexNow verifies
-          # that the key file is reachable at the host being submitted, so a
-          # stale hostname here fails the whole submission after the custom
-          # domain lands — and fails it quietly, since this step exits 0 by
-          # design when unconfigured.
+          KEY="${keyfile%.txt}"
           host="$(cat CNAME 2>/dev/null || echo technobasant.github.io)"
           # Submit the full sitemap contents rather than guessing what changed;
           # the endpoint accepts up to 10,000 URLs per request and this site has
