@@ -992,9 +992,14 @@ ol.series-nav__list > li::before {
   color: var(--accent);
 }
 
+// The column count comes from the data, via `--flow-cols` set inline on the
+// element. `auto-fit` with a min width looks like the right answer and is not:
+// a five-stage path wrapped to a second row, and the chevron between steps then
+// pointed at the first item of the new row from the left margin. A path must be
+// one row or a stack — never a grid that reflows mid-sequence.
 .system-flow__track {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(var(--flow-cols, 4), minmax(0, 1fr));
   margin: 0;
   padding: 0;
   border-block: 1px solid var(--line-strong);
@@ -1008,7 +1013,7 @@ ol.series-nav__list > li::before {
   gap: var(--sp-2);
   min-width: 0;
   margin: 0;
-  padding: var(--sp-5);
+  padding: var(--sp-4) var(--sp-4);
 }
 
 .system-flow__step + .system-flow__step {
@@ -1027,20 +1032,67 @@ ol.series-nav__list > li::before {
   color: var(--ink-1);
 }
 
-.system-flow__step > span:last-child {
+// The technology line, in mono so it reads as an inventory rather than prose —
+// the same treatment the case cards give `stack`.
+.system-flow__tech {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  line-height: 1.5;
+  color: var(--accent);
+  text-wrap: pretty;
+}
+
+// The note is what makes this an architecture diagram rather than a technology
+// list: it states the boundary, not the component.
+.system-flow__note {
   font-size: var(--step--1);
   line-height: 1.5;
   color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+// The arrow between stages. A pseudo-element so it never reaches the
+// accessibility tree — the ordered list already carries the sequence, and a
+// screen reader announcing "right arrow" four times is noise.
+@media (min-width: 48.001rem) {
+  .system-flow__step + .system-flow__step::before {
+    content: "";
+    position: absolute;
+    inset-block-start: calc(var(--sp-5) + 0.55em);
+    inset-inline-start: -0.45rem;
+    width: 0.9rem;
+    height: 0.9rem;
+    background: var(--surface-1);
+    border-block-start: 1px solid var(--line-strong);
+    border-inline-end: 1px solid var(--line-strong);
+    rotate: 45deg;
+  }
 }@media (max-width: 48rem) {
   .system-flow__track {
     grid-template-columns: 1fr;
     border-block-end: 0;
   }
 
+  // Explicit placement, not auto-flow. The step gained two children when it
+  // stopped being three abstract words, and auto-placement dropped the note
+  // into the 2rem index column — 32px wide, so every note rendered one word
+  // per line. It did not overflow the page, so `hScroll = 0` said nothing was
+  // wrong.
   .system-flow__step {
     grid-template-columns: 2rem minmax(0, 1fr);
     gap: var(--sp-1) var(--sp-3);
     padding-inline: 0;
+  }
+
+  .system-flow__index {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .system-flow__step > strong,
+  .system-flow__tech,
+  .system-flow__note {
+    grid-column: 2;
   }
 
   .system-flow__step + .system-flow__step {
