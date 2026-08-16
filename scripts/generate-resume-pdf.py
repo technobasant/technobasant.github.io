@@ -449,7 +449,14 @@ def generate(output: Path) -> None:
         subject="Senior Data & AI Engineer",
     )
     frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height, id="resume")
-    doc.addPageTemplates([PageTemplate(id="resume", frames=[frame], onPage=page_chrome)])
+    # `onPageEnd`, not `onPage`. reportlab runs onPage *before* the frame draws,
+    # so the running footer landed first in the content stream — and pypdf, which
+    # extracts in stream order and is what a great many ATS and document
+    # pipelines use, returned the site domain as line 1 and the name as line 3.
+    # Any parser taking the first line as the candidate name files you under your
+    # own hostname. pdftotext reads visually and never showed it, which is why
+    # this needs two parsers to catch.
+    doc.addPageTemplates([PageTemplate(id="resume", frames=[frame], onPageEnd=page_chrome)])
     doc.build(build_story(styles(), metrics))
 
 
