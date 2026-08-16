@@ -176,12 +176,32 @@ jobs:
       - name: Ping IndexNow
         run: |
           set -euo pipefail
-          keyfile="$(ls -1 [0-9a-f]*.txt 2>/dev/null | head -1 || true)"
+          # Strict: the stem must be 8-128 hex characters, which is the range the
+          # protocol allows. A loose `[0-9a-f]*.txt` glob also matches `ai.txt` —
+          # "a" is a hex digit — and it sorts first, so the step would have
+          # submitted key=ai with a keyLocation pointing at the AI policy file.
+          # IndexNow answers 403 to that, and this step deliberately does not
+          # fail the deploy on a bad response, so it would have gone quietly back
+          # to doing nothing at all.
+          keyfile=""
+          for f in *.txt; do
+            stem="${f%.txt}"
+            case "$stem" in *[!0-9a-f]*) continue ;; esac
+            [ "${#stem}" -ge 8 ] && [ "${#stem}" -le 128 ] || continue
+            keyfile="$f"; break
+          done
           if [ -z "$keyfile" ]; then
             echo "no IndexNow key file at the repo root — skipping submission."
             exit 0
           fi
           KEY="${keyfile%.txt}"
+          # The endpoint fetches the file and compares its contents to the key.
+          # A mismatch is a 403 that would otherwise surface days later in Bing
+          # Webmaster Tools, so assert it here where the log is being read.
+          if [ "$(cat "$keyfile")" != "$KEY" ]; then
+            echo "::error::$keyfile does not contain $KEY — IndexNow would 403."
+            exit 1
+          fi
           host="$(cat CNAME 2>/dev/null || echo technobasant.github.io)"
           # Submit the full sitemap contents rather than guessing what changed;
           # the endpoint accepts up to 10,000 URLs per request and this site has
