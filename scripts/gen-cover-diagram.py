@@ -297,12 +297,76 @@ def rag_lakehouse() -> str:
     return "".join(body)
 
 
+def coding_agents_review() -> str:
+    """Agent output is a candidate; the repo's gates decide merge."""
+    body = [
+        f'<rect width="{W}" height="{H}" fill="{PAPER}"/>',
+        f'<text x="150" y="190" font-family="{MONO}" font-size="30" letter-spacing="6" '
+        f'fill="{ACCENT}">AGENT GOVERNANCE</text>',
+        f'<text x="150" y="300" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">Agents write the diff.</text>',
+        f'<text x="150" y="382" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">The repo decides merge.</text>',
+        node_box(150, 520, 520, 210, "agent session", "Cursor · Claude Code · Codex", "untrusted draft"),
+        node_box(820, 520, 520, 210, "candidate PR", "types · tests · scans", "evidence attached"),
+        node_box(1490, 520, 560, 210, "named owner", "CODEOWNERS + CI", "merge or refuse", accent=True),
+        arrow(680, 625, 810, 625, ""),
+        arrow(1350, 625, 1480, 625, ""),
+        f'<line x1="150" y1="830" x2="{W - 150}" y2="830" stroke="{LINE}" stroke-width="2"/>',
+        f'<text x="150" y="905" font-family="{MONO}" font-size="29" fill="{MUTED}">AGENTS.md</text>',
+        f'<text x="620" y="905" font-family="{MONO}" font-size="29" fill="{MUTED}">skills</text>',
+        f'<text x="980" y="905" font-family="{MONO}" font-size="29" fill="{MUTED}">hooks</text>',
+        f'<text x="1320" y="905" font-family="{MONO}" font-size="29" fill="{ACCENT}">CI is policy</text>',
+        f'<text x="150" y="975" font-family="{MONO}" font-size="29" fill="{MUTED}">nested per package</text>',
+        f'<text x="820" y="975" font-family="{MONO}" font-size="29" fill="{MUTED}">plan before code</text>',
+        f'<text x="1450" y="975" font-family="{MONO}" font-size="29" fill="{ACCENT}">author must explain</text>',
+        f'<line x1="150" y1="1120" x2="{W - 150}" y2="1120" stroke="{LINE}" stroke-width="2"/>',
+        f'<text x="150" y="1195" font-family="{MONO}" font-size="30" fill="{MUTED}">'
+        f'generation is candidate state \u2014 same rule as product agents</text>',
+        f'<text x="{W - 150}" y="1195" font-family="{MONO}" font-size="30" fill="{ACCENT}" '
+        f'text-anchor="end">review the evidence</text>',
+    ]
+    return "".join(body)
+
+
+def agent_guardrails() -> str:
+    """Where the bottleneck moved."""
+    body = [
+        f'<rect width="{W}" height="{H}" fill="{PAPER}"/>',
+        f'<text x="150" y="190" font-family="{MONO}" font-size="30" letter-spacing="6" '
+        f'fill="{ACCENT}">AGENTS IN A REAL REPOSITORY</text>',
+        f'<text x="150" y="300" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">Writing code got cheap.</text>',
+        f'<text x="150" y="382" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">Believing it did not.</text>',
+        node_box(150, 520, 560, 190, "produce", "anyone, any hour", "cheap"),
+        node_box(700, 520, 560, 190, "review", "one human, finite", "the bottleneck", accent=True),
+        node_box(1250, 520, 560, 190, "gate", "deterministic", "names the defect"),
+        arrow(640, 615, 690, 615, ""),
+        arrow(1190, 615, 1240, 615, ""),
+        f'<line x1="150" y1="850" x2="{W - 150}" y2="850" stroke="{LINE}" stroke-width="2"/>',
+        f'<text x="150" y="925" font-family="{MONO}" font-size="28" fill="{MUTED}">build failed</text>',
+        f'<text x="900" y="925" font-family="{MONO}" font-size="28" fill="{ACCENT}">suite reported 12/12</text>',
+        f'<text x="150" y="978" font-family="{MONO}" font-size="28" fill="{MUTED}">token audit halved</text>',
+        f'<text x="900" y="978" font-family="{MONO}" font-size="28" fill="{ACCENT}">printed ok</text>',
+        f'<text x="150" y="1031" font-family="{MONO}" font-size="28" fill="{MUTED}">resume unreadable</text>',
+        f'<text x="900" y="1031" font-family="{MONO}" font-size="28" fill="{ACCENT}">text layer perfect</text>',
+        f'<line x1="150" y1="1120" x2="{W - 150}" y2="1120" stroke="{LINE}" stroke-width="2"/>',
+        f'<text x="150" y="1195" font-family="{MONO}" font-size="30" fill="{MUTED}">'
+        f'ten gates \u00b7 each one exists because something got through</text>',
+        f'<text x="{W - 150}" y="1195" font-family="{MONO}" font-size="30" fill="{ACCENT}" '
+        f'text-anchor="end">green is a claim</text>',
+    ]
+    return "".join(body)
+
+
 DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patroni,
             "lakehouse-spine": lakehouse_spine,
             "lakehouse-medallion": lakehouse_medallion,
             "lakehouse-maintenance": lakehouse_maintenance,
             "lakehouse-engines": lakehouse_engines,
-            "rag-lakehouse": rag_lakehouse}
+            "rag-lakehouse": rag_lakehouse,
+            "agent-guardrails": agent_guardrails}
 
 def svg_for(name: str) -> str:
     return (
