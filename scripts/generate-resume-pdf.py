@@ -36,6 +36,29 @@ ROOT = Path(__file__).resolve().parents[1]
 METRICS_PATH = ROOT / "_data" / "metrics.yml"
 
 
+SITE_URL = ""
+SITE_HOST = ""
+
+
+def site_host() -> tuple[str, str]:
+    """Return (url, bare_host) from _config.yml.
+
+    Read rather than hardcoded, for the same reason the IndexNow step reads
+    CNAME: this document outlives the hostname. The old value sat in one string
+    at the bottom of this file and survived a domain move, so the PDF a
+    recruiter downloads would have pointed at a host that only 301s.
+    """
+    config = METRICS_PATH.parent.parent / "_config.yml"
+    command = [
+        "ruby", "-ryaml", "-rjson", "-e",
+        "puts JSON.generate(YAML.safe_load_file(ARGV.fetch(0), aliases: true))",
+        str(config),
+    ]
+    result = subprocess.run(command, check=True, capture_output=True, text=True)
+    url = json.loads(result.stdout).get("url", "").rstrip("/")
+    return url, url.replace("https://", "").replace("http://", "")
+
+
 def load_metrics() -> dict[str, dict[str, str]]:
     """Load the shared Jekyll metrics source through Ruby's YAML parser."""
     command = [
@@ -213,7 +236,12 @@ def build_story(
         Paragraph("BASANT BHATTARAI", s["name"]),
         Paragraph("SENIOR DATA &amp; AI ENGINEER  /  PLATFORMS, DATABASES &amp; AGENTIC SYSTEMS", s["role"]),
         Paragraph(
+            # The site goes first among the links. It is the only one of the
+            # four that leads to case studies and measured write-ups; LinkedIn
+            # and GitHub are corroboration. A recruiter scanning the header
+            # should hit the evidence, not the profile.
             'Kathmandu, Nepal &nbsp;&nbsp;|&nbsp;&nbsp; '
+            f'<a href="{SITE_URL}/" color="#9A692C"><b>{SITE_HOST}</b></a> &nbsp;&nbsp;|&nbsp;&nbsp; '
             '<a href="mailto:technobasant9@gmail.com" color="#58616B">technobasant9@gmail.com</a> &nbsp;&nbsp;|&nbsp;&nbsp; '
             '<a href="https://www.linkedin.com/in/technobasant" color="#58616B">linkedin.com/in/technobasant</a> &nbsp;&nbsp;|&nbsp;&nbsp; '
             '<a href="https://github.com/technobasant" color="#58616B">github.com/technobasant</a>',
@@ -353,7 +381,7 @@ def build_story(
     # recruiter reading a CV is not the audience for a disclosure policy.
     story.append(Spacer(1, 14))
     story.append(Paragraph(
-        '<a href="https://technobasant.github.io/" color="#9A692C"><b>Selected work, writing and case studies: technobasant.github.io</b></a>',
+        f'<a href="{SITE_URL}/work/" color="#9A692C"><b>Selected work, writing and case studies: {SITE_HOST}/work/</b></a>',
         s["body"],
     ))
     return story
@@ -361,6 +389,8 @@ def build_story(
 
 def generate(output: Path) -> None:
     output.parent.mkdir(parents=True, exist_ok=True)
+    global SITE_URL, SITE_HOST
+    SITE_URL, SITE_HOST = site_host()
     metrics = load_metrics()
     doc = BaseDocTemplate(
         str(output),
