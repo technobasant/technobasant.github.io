@@ -59,6 +59,20 @@ def site_host() -> tuple[str, str]:
     return url, url.replace("https://", "").replace("http://", "")
 
 
+def load_clouds() -> list[dict]:
+    """Cloud platforms and services, from the same file the site renders."""
+    skills = METRICS_PATH.parent / "skills.yml"
+    if not skills.exists():
+        return []
+    command = [
+        "ruby", "-ryaml", "-rjson", "-e",
+        "puts JSON.generate(YAML.safe_load_file(ARGV.fetch(0)))",
+        str(skills),
+    ]
+    result = subprocess.run(command, check=True, capture_output=True, text=True)
+    return json.loads(result.stdout).get("clouds", [])
+
+
 def load_metrics() -> dict[str, dict[str, str]]:
     """Load the shared Jekyll metrics source through Ruby's YAML parser."""
     command = [
@@ -88,7 +102,7 @@ def page_chrome(canvas, doc) -> None:
     canvas.line(0.68 * inch, height - 0.47 * inch, width - 0.68 * inch, height - 0.47 * inch)
     canvas.setFont("Helvetica", 7.5)
     canvas.setFillColor(MUTED)
-    canvas.drawString(0.68 * inch, 0.38 * inch, "TECHNOBASANT.GITHUB.IO")
+    canvas.drawString(0.68 * inch, 0.38 * inch, SITE_HOST.upper())
     canvas.drawRightString(width - 0.68 * inch, 0.38 * inch, f"BASANT BHATTARAI  /  {doc.page}")
     canvas.restoreState()
 
@@ -365,6 +379,17 @@ def build_story(
             "objectives, observability with Prometheus and Grafana, and distributed delivery across time zones.",
         ),
     ]
+    # Cloud belongs in the document. It was absent entirely — no AWS, GCP or
+    # Azure anywhere — which is a real gap rather than a stylistic one: cloud is
+    # a standard recruiter and ATS filter, and skills.yml has carried the list
+    # the whole time. Read from there so it cannot drift from the site.
+    clouds = load_clouds()
+    if clouds:
+        categories = list(categories) + [(
+            "Cloud",
+            "  |  ".join(f"<b>{c['name']}:</b> {', '.join(c['items'][:8])}" for c in clouds),
+        )]
+
     for label, body in categories:
         story.append(KeepTogether([
             Paragraph(label, s["card_title"]),
