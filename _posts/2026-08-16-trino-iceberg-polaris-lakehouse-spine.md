@@ -1,7 +1,7 @@
 ---
 title: "A lakehouse spine: Trino, Iceberg and Polaris, with credentials that expire"
 description: "Build Trino 483 on Iceberg with Apache Polaris as the REST catalog, then prove the vended S3 credentials cannot read the table next door."
-date: 2024-01-27 09:00:00 +0545
+date: 2026-08-16 12:00:00 +0545
 last_modified_at: 2026-08-16
 type: tutorial
 tags: [iceberg-lakehouse, distributed-databases]
