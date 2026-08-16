@@ -15,10 +15,20 @@
 // Usage: node scripts/check-og.mjs   (exits 1 on any error)
 
 import { readFileSync, readdirSync, statSync, openSync, readSync, closeSync } from 'node:fs';
-import { join, relative, sep } from 'node:path';
+import { dirname, join, relative, sep } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const ROOT = '_site';
-const SITE = (process.env.SITE_URL || 'https://technobasant.github.io').replace(/\/$/, '');
+const REPO = fileURLToPath(new URL('..', import.meta.url));
+const ROOT = join(REPO, '_site');
+
+function configuredSiteUrl() {
+  if (process.env.SITE_URL) return process.env.SITE_URL.replace(/\/$/, '');
+  const cfg = readFileSync(join(REPO, '_config.yml'), 'utf8');
+  const match = cfg.match(/^url:\s*["']([^"']+)["']/m);
+  return (match?.[1] || 'https://technobasant.github.io').replace(/\/$/, '');
+}
+
+const SITE = configuredSiteUrl();
 const MAX_BYTES = 5 * 1024 * 1024; // strictest of the documented caps
 
 const walk = (d) =>
