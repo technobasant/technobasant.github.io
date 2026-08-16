@@ -92,7 +92,20 @@ def metric(metrics: dict[str, dict[str, str]], key: str) -> str:
     return str(metrics[key]["value"])
 
 
-def page_chrome(canvas, doc) -> None:
+# Two callbacks, and the order of each is the whole point.
+#
+# The background draws BEFORE the frame, because it fills the page. Run it after
+# and it paints over every word — a page of perfectly extractable, perfectly
+# invisible text. That is exactly what happened when this was one function moved
+# to onPageEnd to fix the parse order, and neither `rake privacy` nor pypdf
+# noticed, because the text layer was intact the whole time.
+#
+# The footer draws AFTER, because reportlab writes onPage output first into the
+# content stream and pypdf extracts in stream order — so a footer drawn first
+# made the site domain line one of the document and the name line three. A
+# parser that treats line one as the candidate name files you under your own
+# hostname. `rake resume` now asserts both properties.
+def page_background(canvas, doc) -> None:
     canvas.saveState()
     width, height = letter
     canvas.setFillColor(PAPER)
@@ -100,6 +113,12 @@ def page_chrome(canvas, doc) -> None:
     canvas.setStrokeColor(ACCENT)
     canvas.setLineWidth(1.2)
     canvas.line(0.68 * inch, height - 0.47 * inch, width - 0.68 * inch, height - 0.47 * inch)
+    canvas.restoreState()
+
+
+def page_footer(canvas, doc) -> None:
+    canvas.saveState()
+    width, _ = letter
     canvas.setFont("Helvetica", 7.5)
     canvas.setFillColor(MUTED)
     canvas.drawString(0.68 * inch, 0.38 * inch, SITE_HOST.upper())
@@ -456,7 +475,9 @@ def generate(output: Path) -> None:
     # Any parser taking the first line as the candidate name files you under your
     # own hostname. pdftotext reads visually and never showed it, which is why
     # this needs two parsers to catch.
-    doc.addPageTemplates([PageTemplate(id="resume", frames=[frame], onPageEnd=page_chrome)])
+    doc.addPageTemplates([PageTemplate(
+        id="resume", frames=[frame], onPage=page_background, onPageEnd=page_footer
+    )])
     doc.build(build_story(styles(), metrics))
 
 
