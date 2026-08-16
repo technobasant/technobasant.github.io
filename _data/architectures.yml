@@ -109,3 +109,22 @@ lakehouse:
     - name: "Storage"
       tech: ["Iceberg", "MinIO"]
       note: "Sibling table returns AccessDenied — verified, not assumed."
+
+rag:
+  label: "Lakehouse to answer — where the grounding is enforced"
+  stages:
+    - name: "Land"
+      tech: ["robots.txt", "JSONL"]
+      note: "Append-only. Everything downstream is derived, so a re-scrape is rare and a re-run is cheap."
+    - name: "Refine"
+      tech: ["Spark 4", "Delta Lake"]
+      note: "Bronze rewrites from raw; silver merges. Only one of those can forget a bad key."
+    - name: "Embed"
+      tech: ["MiniLM-L6-v2", "Chroma"]
+      note: "Chunk id is a hash of the source, so a re-run updates a vector instead of duplicating it."
+    - name: "Retrieve"
+      tech: ["cosine distance"]
+      note: "The grounding boundary. Nothing within threshold means no answer, decided before any inference."
+    - name: "Answer"
+      tech: ["llama3.2", "FastAPI"]
+      note: "Cites the passages it used, or declines. A refusal costs no tokens."
