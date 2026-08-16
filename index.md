@@ -2,8 +2,12 @@
 layout: home
 permalink: /
 title: Basant Bhattarai
+last_modified_at: 2026-08-16
 seo_title: "Basant Bhattarai — Senior Data & AI Engineer · Platforms, Databases & Agentic Systems"
 description: "Senior Data & AI Engineer. Nine years building data platforms, running the databases underneath them, and putting agents into production against both."
+sitemap:
+  changefreq: weekly
+  priority: 1.0
 hero:
   intro: "Hello, I’m Basant Bhattarai."
   # Just the role. The full "· Platforms, Databases & Agentic Systems" string

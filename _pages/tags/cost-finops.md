@@ -1,6 +1,7 @@
 ---
 layout: tag
 title: Cost & FinOps
+last_modified_at: 2026-08-11
 eyebrow: Topic
 permalink: /writing/tags/cost-finops/
 tag: cost-finops

@@ -1,5 +1,6 @@
 ---
 title: Writing
+last_modified_at: 2026-08-14
 seo_title: "Data Platforms, Databases & Agentic Systems Writing — Basant Bhattarai"
 eyebrow: Field notes
 headline: "Notes from systems that had to keep working."

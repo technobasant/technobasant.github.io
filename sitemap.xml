@@ -1,0 +1,51 @@
+---
+permalink: /sitemap.xml
+layout: null
+sitemap: false
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{%- assign collections = site.collections | where_exp: "collection", "collection.output != false" -%}
+{%- for collection in collections -%}
+{%- assign docs = collection.docs | where_exp: "doc", "doc.sitemap != false" -%}
+{%- for doc in docs %}
+  <url>
+    <loc>{{ doc.url | replace: "/index.html", "/" | absolute_url | xml_escape }}</loc>
+    {%- if doc.last_modified_at or doc.date %}
+    <lastmod>{{ doc.last_modified_at | default: doc.date | date_to_xmlschema }}</lastmod>
+    {%- endif -%}
+    {%- if doc.sitemap.changefreq %}
+    <changefreq>{{ doc.sitemap.changefreq }}</changefreq>
+    {%- endif -%}
+    {%- if doc.sitemap.priority %}
+    <priority>{{ doc.sitemap.priority }}</priority>
+    {%- endif %}
+  </url>
+{%- endfor -%}
+{%- endfor -%}
+{%- assign pages = site.html_pages | where_exp: "doc", "doc.sitemap != false" | where_exp: "doc", "doc.url != '/404.html'" | where_exp: "doc", "doc.url != '/404'" -%}
+{%- for p in pages %}
+  <url>
+    <loc>{{ p.url | replace: "/index.html", "/" | absolute_url | xml_escape }}</loc>
+    {%- if p.last_modified_at %}
+    <lastmod>{{ p.last_modified_at | date_to_xmlschema }}</lastmod>
+    {%- endif -%}
+    {%- if p.sitemap.changefreq %}
+    <changefreq>{{ p.sitemap.changefreq }}</changefreq>
+    {%- endif -%}
+    {%- if p.sitemap.priority %}
+    <priority>{{ p.sitemap.priority }}</priority>
+    {%- endif %}
+  </url>
+{%- endfor -%}
+{%- comment -%} jekyll-sitemap only emits HTML. Machine-index files belong here too. {%- endcomment -%}
+{%- assign machine = site.pages | where_exp: "p", "p.sitemap != false" | where_exp: "p", "p.url contains '.txt'" -%}
+{%- for p in machine %}
+  <url>
+    <loc>{{ p.url | absolute_url | xml_escape }}</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+{%- endfor %}
+</urlset>

@@ -203,12 +203,42 @@ jobs:
             exit 1
           fi
           host="$(cat CNAME 2>/dev/null || echo technobasant.github.io)"
-          # Submit the full sitemap contents rather than guessing what changed;
-          # the endpoint accepts up to 10,000 URLs per request and this site has
-          # ~42.
-          urls=$(curl -sf "https://$host/sitemap.xml" \
-            | grep -o '<loc>[^<]*</loc>' | sed 's|</\?loc>||g' \
-            | jq -R . | jq -s .)
+          # Bing's guidelines are explicit: "Avoid batch submissions when
+          # possible. Streaming submissions provide faster updates, reduce
+          # server load, and improve indexing accuracy." Resubmitting all 45
+          # URLs on every deploy is the batch case they are describing — most of
+          # those URLs did not change, and telling a crawler otherwise is the
+          # crawl waste section 21 warns about.
+          #
+          # So submit only what moved. The sitemap already carries <lastmod>
+          # derived from each page's `last_modified_at`, and the previous
+          # deploy's commit timestamp is the boundary. If either is unavailable
+          # — a first run, a force push — fall back to the full set, because
+          # submitting too much once is better than submitting nothing.
+          since="$(git log -1 --format=%cI "${{ github.event.before }}" 2>/dev/null || true)"
+          all=$(curl -sf "https://$host/sitemap.xml" \
+            | tr -d '\n' | grep -o '<url>.*\?</url>' | sed 's|</url>|</url>\n|g')
+          if [ -n "$since" ]; then
+            urls=$(printf '%s\n' "$all" \
+              | awk -v since="$since" '
+                  match($0, /<loc>[^<]*<\/loc>/) {
+                    loc = substr($0, RSTART+5, RLENGTH-11)
+                    mod = ""
+                    if (match($0, /<lastmod>[^<]*<\/lastmod>/))
+                      mod = substr($0, RSTART+9, RLENGTH-19)
+                    if (mod == "" || mod >= since) print loc
+                  }' \
+              | jq -R . | jq -s .)
+            echo "delta since $since"
+          else
+            urls=$(printf '%s\n' "$all" | grep -o '<loc>[^<]*</loc>' \
+              | sed 's|</\?loc>||g' | jq -R . | jq -s .)
+            echo "no previous commit available — submitting the full set"
+          fi
+          if [ "$(echo "$urls" | jq length)" -eq 0 ]; then
+            echo "nothing changed since the last deploy — nothing to submit."
+            exit 0
+          fi
           payload=$(jq -n --arg h "$host" --arg k "$KEY" --argjson u "$urls" \
             '{host:$h, key:$k, keyLocation:("https://"+$h+"/"+$k+".txt"), urlList:$u}')
           code=$(curl -s -o /tmp/indexnow.out -w '%{http_code}' \

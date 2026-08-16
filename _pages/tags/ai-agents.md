@@ -1,6 +1,7 @@
 ---
 layout: tag
 title: AI agents in production
+last_modified_at: 2026-08-16
 eyebrow: Topic
 permalink: /writing/tags/ai-agents/
 tag: ai-agents
