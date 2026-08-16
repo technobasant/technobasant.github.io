@@ -264,12 +264,45 @@ def lakehouse_engines() -> str:
     return "".join(body)
 
 
+def rag_lakehouse() -> str:
+    """The refusal is the feature."""
+    body = [
+        f'<rect width="{W}" height="{H}" fill="{PAPER}"/>',
+        f'<text x="150" y="190" font-family="{MONO}" font-size="30" letter-spacing="6" '
+        f'fill="{ACCENT}">SCRAPE TO RAG, ON DELTA</text>',
+        f'<text x="150" y="300" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">It answered three questions.</text>',
+        f'<text x="150" y="382" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">Declining one was the point.</text>',
+        node_box(150, 520, 480, 190, "bronze", "187 sections", "raw, nothing dropped"),
+        node_box(700, 520, 480, 190, "silver", "170 rows", "17 duplicates gone"),
+        node_box(1250, 520, 480, 190, "gold", "170 chunks", "deterministic id", accent=True),
+        arrow(640, 615, 690, 615, ""),
+        arrow(1190, 615, 1240, 615, ""),
+        f'<text x="1800" y="600" font-family="{MONO}" font-size="27" fill="{MUTED}">384-dim</text>',
+        f'<text x="1800" y="642" font-family="{MONO}" font-size="27" fill="{ACCENT}">64.8/s</text>',
+        f'<line x1="150" y1="830" x2="{W - 150}" y2="830" stroke="{LINE}" stroke-width="2"/>',
+        f'<text x="150" y="905" font-family="{MONO}" font-size="29" fill="{MUTED}">list vs tuple</text>',
+        f'<text x="900" y="905" font-family="{MONO}" font-size="29" fill="{MUTED}">d=0.234</text>',
+        f'<text x="1450" y="905" font-family="{MONO}" font-size="29" fill="{ACCENT}">answered, cited</text>',
+        f'<text x="150" y="975" font-family="{MONO}" font-size="29" fill="{MUTED}">capital of Nepal</text>',
+        f'<text x="900" y="975" font-family="{MONO}" font-size="29" fill="{MUTED}">d=0.923</text>',
+        f'<text x="1450" y="975" font-family="{MONO}" font-size="29" fill="{ACCENT}">refused, 0 tokens</text>',
+        f'<line x1="150" y1="1120" x2="{W - 150}" y2="1120" stroke="{LINE}" stroke-width="2"/>',
+        f'<text x="150" y="1195" font-family="{MONO}" font-size="30" fill="{MUTED}">'
+        f'Spark 4.0.4 \u00b7 Delta 4.0.0 \u00b7 MinIO \u00b7 Chroma \u00b7 llama3.2:1b</text>',
+        f'<text x="{W - 150}" y="1195" font-family="{MONO}" font-size="30" fill="{ACCENT}" '
+        f'text-anchor="end">no JAR downloaded</text>',
+    ]
+    return "".join(body)
+
+
 DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patroni,
             "lakehouse-spine": lakehouse_spine,
             "lakehouse-medallion": lakehouse_medallion,
             "lakehouse-maintenance": lakehouse_maintenance,
-            "lakehouse-engines": lakehouse_engines}
-
+            "lakehouse-engines": lakehouse_engines,
+            "rag-lakehouse": rag_lakehouse}
 
 def svg_for(name: str) -> str:
     return (
