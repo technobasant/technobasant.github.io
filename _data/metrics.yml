@@ -163,8 +163,8 @@ lab_scenarios:
 
 lab_pg_replay_lag:
   value: "383 µs"
-  label: "PostgreSQL 18 streaming replay lag"
-  method: "pg_stat_replication, primary + hot standby on one host"
+  label: "replay lag measured on one host"
+  method: "a single pg_stat_replication reading with primary and hot standby on the same machine — loopback, no network, so it is a floor for the configuration rather than a latency anyone should expect across hosts"
   scope: "independent"
   source: "2026 multi-engine HA lab"
   context: "write_lag measured at 104 µs on the same run."
@@ -192,10 +192,15 @@ clickhomes_migrations:
 # series, not from a vendor page. Timings are wall-clock on amd64 guests under
 # QEMU TCG, which is slower than real hardware — they are honest ceilings, not
 # benchmarks to quote at anyone.
+# The value states the sampling window, not a precision the test cannot support.
+# "under 20 s" from a 10-second poll implies a resolution the instrument does not
+# have: the true promotion could be anywhere from just over 10 s to just under
+# 20 s, and a reader is entitled to know which. Naming the interval in the figure
+# makes the boundary visible without a click.
 lab_patroni_promotion:
-  value: "under 20 s"
-  label: "leader promotion after SIGKILL"
-  method: "SIGKILL of the Patroni leader, polled every 10 s until patronictl showed the survivor as Leader"
+  value: "10–20 s"
+  label: "observed promotion window after SIGKILL"
+  method: "SIGKILL of the Patroni leader, then patronictl polled every 10 s until the survivor showed as Leader — so 10 s is the measurement resolution, not the precision of the result"
   scope: "independent"
   source: "2026 Patroni HA lab"
   window: "2026"
