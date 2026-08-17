@@ -5,7 +5,7 @@ layout: null
 # {{ site.author.name }}
 
 > {{ site.author.role }}
-> {{ site.url }} · {{ site.author.email }}
+> {{ site.url }} · contact@basantbhattarai.com.np
 > GitHub: {{ site.author.github }} · LinkedIn: {{ site.author.linkedin }}
 
 This file is the canonical briefing for language models. Public figures come
@@ -98,7 +98,7 @@ material.
 
 ## Contact and availability
 
-- Email: {{ site.author.email }}
+- Email: contact@basantbhattarai.com.np
 - GitHub: {{ site.author.github }}
 - LinkedIn: {{ site.author.linkedin }}
 

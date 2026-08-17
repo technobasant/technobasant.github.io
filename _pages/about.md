@@ -49,4 +49,4 @@ Name, email, and a paragraph. Consulting briefings belong on [the hire page](/hi
 
 ## Elsewhere
 
-[GitHub](https://github.com/technobasant) · [LinkedIn](https://www.linkedin.com/in/technobasant) · [Email](mailto:{{ site.author.email }}) · [Résumé](/resume/)
+[GitHub](https://github.com/technobasant) · [LinkedIn](https://www.linkedin.com/in/technobasant) · [Email](mailto:contact@basantbhattarai.com.np) · [Résumé](/resume/)
