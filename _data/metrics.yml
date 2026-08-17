@@ -44,8 +44,8 @@ professional_uptime:
 professional_cost_reduction:
   value: "40%"
   label: "lower infrastructure cost"
-  method: "before/after infrastructure run-rate across the Kubernetes migration"
-  window: "2020–2024 Data Engineer role"
+  method: "role-level before/after infrastructure run-rate on the Kubernetes migration — not a lab sample"
+  window: "Data Engineer role, 2020–2024"
   scope: "professional"
   source: "CV Data Engineer role"
   context: "Kubernetes migration and capacity work across the data infrastructure."
@@ -53,8 +53,8 @@ professional_cost_reduction:
 professional_processing_improvement:
   value: "50%"
   label: "faster core processing"
-  method: "before/after wall-clock runtime of the rebuilt core pipeline"
-  window: "2020–2024 Data Engineer role"
+  method: "role-level before/after wall-clock on the rebuilt Spark/Airflow path — not a lab sample"
+  window: "Data Engineer role, 2020–2024"
   scope: "professional"
   source: "CV Data Engineer role"
   context: "Spark/PySpark ETL rebuild with Airflow orchestration for multi-terabyte daily processing."
@@ -62,8 +62,8 @@ professional_processing_improvement:
 professional_analytics_delivery:
   value: "60%"
   label: "faster analytics delivery"
-  method: "before/after delivery time for recurring analytics requests"
-  window: "2024–2026 Senior Data Engineer role"
+  method: "role-level before/after delivery time for recurring analytics requests — not a lab sample"
+  window: "Senior Data Engineer role, 2024–present"
   scope: "professional"
   source: "CV Senior Data Engineer role"
   context: "Governed AI-assisted analytics workflows."
@@ -71,8 +71,8 @@ professional_analytics_delivery:
 professional_manual_effort:
   value: "75%"
   label: "less analyst manual effort"
-  method: "before/after manual effort per recurring analyst request"
-  window: "2024–2026 Senior Data Engineer role"
+  method: "role-level before/after manual effort per recurring analyst request — not a lab sample"
+  window: "Senior Data Engineer role, 2024–present"
   scope: "professional"
   source: "CV Senior Data Engineer role"
   context: "AI-assisted analytics workflows with typed output, provenance, evaluation, and review paths."
@@ -80,8 +80,8 @@ professional_manual_effort:
 professional_team_delivery:
   value: "30%"
   label: "faster team delivery"
-  method: "before/after team delivery time following mentoring and review changes"
-  window: "2024–2026 Senior Data Engineer role"
+  method: "role-level before/after team delivery time after mentoring and review changes — not a lab sample"
+  window: "Senior Data Engineer role, 2024–present"
   scope: "professional"
   source: "CV Senior Data Engineer role"
   context: "Mentoring five engineers through pairing, code review, and written design feedback."
@@ -113,7 +113,8 @@ professional_query_volume:
 professional_query_latency:
   value: "50%"
   label: "lower p95 query latency"
-  method: "before/after p95 latency on the analytical serving path"
+  method: "role-level before/after p95 latency on the analytical serving path — not a lab sample"
+  window: "Data Engineer role, 2020–2024"
   scope: "professional"
   source: "CV Data Engineer role"
   context: "Partitioning, clustering, and data-model redesign."
@@ -229,7 +230,7 @@ lakehouse_partition_prune:
   method: "median of 7 server-side runs from system.runtime.queries, after 2 warm-ups, on a month-partitioned Iceberg table"
   scope: "independent"
   source: "2026 Trino/Iceberg lakehouse lab"
-  window: "2026"
+  window: "measured 2026 · 2024 stack rebuilt"
   context: "The same predicate against Trino's in-memory tpch generator took 615 ms; the gap is partition pruning, not storage speed."
 
 lakehouse_compaction:
@@ -238,7 +239,7 @@ lakehouse_compaction:
   method: "twenty 5,000-row inserts into one partition, then ALTER TABLE EXECUTE optimize, counted from the $files metadata table"
   scope: "independent"
   source: "2026 Trino/Iceberg lakehouse lab"
-  window: "2026"
+  window: "measured 2026 · 2024 stack rebuilt"
   context: "Total bytes fell 1,006 KB to 430 KB and the median query on that partition went 184 ms to 69 ms."
 
 lakehouse_rollback:
@@ -247,7 +248,7 @@ lakehouse_rollback:
   method: "unqualified DELETE, then ALTER TABLE EXECUTE rollback_to_snapshot, counted against the pre-incident total"
   scope: "independent"
   source: "2026 Trino/Iceberg lakehouse lab"
-  window: "2026"
+  window: "measured 2026 · 2024 stack rebuilt"
   context: "Completed in 589 ms because a rollback rewrites the current-snapshot pointer rather than moving data."
 
 # ── RAG lakehouse (2025 build, 2026 rebuild) ─────────────────────────────────
@@ -257,7 +258,7 @@ rag_embed_throughput:
   method: "170 gold chunks through all-MiniLM-L6-v2, 384 dimensions, batch size 32, no GPU"
   scope: "independent"
   source: "2026 RAG lakehouse rebuild"
-  window: "2026"
+  window: "measured 2026 · 2025 stack rebuilt"
   context: "Read from Delta in 0.21 s and upserted into Chroma in 0.25 s; embedding is the only stage that scales with corpus size."
 
 rag_refusal:
@@ -266,5 +267,5 @@ rag_refusal:
   method: "asked a question with no answer in the corpus; nearest passage sat at cosine distance 0.923 against a 0.75 threshold, so the model was never called"
   scope: "independent"
   source: "2026 RAG lakehouse rebuild"
-  window: "2026"
+  window: "measured 2026 · 2025 stack rebuilt"
   context: "The response carried a retrieve timing and no generate timing at all. Grounding enforced at the retriever, not in the prompt."

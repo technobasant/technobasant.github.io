@@ -1,0 +1,83 @@
+{%- comment -%}
+  Reusable Web3Forms. GitHub Pages never sees the POST.
+
+    {% include hire-form.html %}                              briefing (default)
+    {% include hire-form.html variant="contact" id="about-contact" %}
+
+  `id` prefixes field ids so two copies can sit on one page. On success the
+  fields are replaced in place by the confirmation — no alert, no navigation.
+{%- endcomment -%}
+{%- assign _f = site.data.forms.web3forms -%}
+{%- assign _id = include.id | default: "hire-form" -%}
+{%- assign _variant = include.variant | default: "briefing" -%}
+{%- assign _contact = false -%}
+{%- if _variant == "contact" -%}{%- assign _contact = true -%}{%- endif -%}
+{%- assign _subject = _f.subject -%}
+{%- if _contact -%}{%- assign _subject = _f.contact_subject -%}{%- endif -%}
+{%- if _f.access_key -%}
+<form id="{{ _id }}" class="hire-form hire-form--{{ _variant }}{% unless include.wide == false or include.wide == 'false' %} is-wide{% endunless %}" action="{{ _f.endpoint }}" method="POST" data-ok="{{ site.data.availability.response }}">
+  <input type="hidden" name="access_key" value="{{ _f.access_key }}">
+  <input type="hidden" name="subject" value="{{ _subject }}">
+  <input type="hidden" name="from_name" value="{{ _f.from_name }}">
+  <input type="hidden" name="form_type" value="{{ _variant }}">
+  <input type="hidden" name="redirect" value="{{ page.url | append: '#sent' | absolute_url }}">
+
+  <div class="hire-form__done" data-hire-done hidden>
+    <span class="hire-form__done-mark" aria-hidden="true">{% include icon.html name="check" size=18 %}</span>
+    <div>
+      <p class="hire-form__done-kicker">{% if _contact %}Message sent{% else %}Briefing sent{% endif %}</p>
+      <p>{{ site.data.availability.response }}</p>
+    </div>
+  </div>
+
+  <div class="hire-form__fields" data-hire-fields>
+    <p class="sr-only" aria-hidden="true">
+      <label>Leave this empty <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off"></label>
+    </p>
+
+    <div class="hire-form__who">
+      <p>
+        <label for="{{ _id }}-name">Name</label>
+        <input id="{{ _id }}-name" name="name" type="text" autocomplete="name" required maxlength="120">
+      </p>
+      <p>
+        <label for="{{ _id }}-email">Email</label>
+        <input id="{{ _id }}-email" name="email" type="email" autocomplete="email" required maxlength="200">
+      </p>
+    </div>
+
+    {%- if _contact -%}
+    <p class="hire-form__message">
+      <label for="{{ _id }}-message">Message</label>
+      <textarea id="{{ _id }}-message" name="message" required maxlength="4000" rows="6" placeholder="What you want to talk about. A paragraph is enough."></textarea>
+    </p>
+    {%- else -%}
+    <ol class="hire-form__briefing">
+      <li>
+        <label for="{{ _id }}-breaks">What breaks today, and how do you find out?</label>
+        <textarea id="{{ _id }}-breaks" name="message" required maxlength="4000" rows="4" placeholder="A customer email, an alert that fires, or a number somebody eventually notices is wrong."></textarea>
+      </li>
+      <li>
+        <label for="{{ _id }}-stack">What is already running, and what cannot be replaced?</label>
+        <textarea id="{{ _id }}-stack" name="What is already running" maxlength="4000" rows="3" placeholder="Engines, orchestrator, cloud, warehouse — plus the constraints on each."></textarea>
+      </li>
+      <li>
+        <label for="{{ _id }}-decision">What decision are you trying to make, and by when?</label>
+        <textarea id="{{ _id }}-decision" name="Decision and deadline" maxlength="4000" rows="3" placeholder="“Should we move off the warehouse” and “our pipeline is down” are different engagements."></textarea>
+      </li>
+    </ol>
+    {%- endif -%}
+
+    <div class="hire-form__actions">
+      {%- if _contact -%}
+      <button class="btn btn--primary" type="submit">Send message</button>
+      <a class="btn btn--ghost" href="mailto:{{ site.author.email }}">Email instead</a>
+      {%- else -%}
+      <button class="btn btn--primary" type="submit">Send the briefing</button>
+      <a class="btn btn--ghost" href="mailto:{{ site.author.email }}?subject=Consulting%20enquiry">Email instead</a>
+      {%- endif -%}
+    </div>
+    <p class="hire-form__status" data-hire-status role="status" aria-live="polite"></p>
+  </div>
+</form>
+{%- endif -%}

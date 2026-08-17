@@ -1,6 +1,5 @@
 # The wordmark is the home link — spending a slot on "Home" is waste.
-# Consulting stays discoverable in the footer and About page rather than
-# turning the site-wide header into an advertisement.
+# Hire is the fifth item: commercially important, and the header has room.
 
 main:
   - title: Work
@@ -11,6 +10,8 @@ main:
     url: /resume/
   - title: About
     url: /about/
+  - title: Hire
+    url: /hire/
 
 footer:
   - heading: Navigate

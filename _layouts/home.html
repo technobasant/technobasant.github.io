@@ -155,14 +155,15 @@ layout: default
 {%- endif %}
 
 <section class="portfolio-contact" aria-labelledby="portfolio-contact-title">
-  <div class="wrap wrap--shell portfolio-contact__inner">
+  <div class="wrap wrap--shell portfolio-contact__inner portfolio-contact__inner--form">
     <div>
       <p class="section-label">{{ page.contact.label }}</p>
       <h2 id="portfolio-contact-title">{{ page.contact.headline }}</h2>
+      <p class="portfolio-contact__links">
+        <a href="{{ '/about/' | relative_url }}">About how I work</a>
+        <a href="{{ '/hire/' | relative_url }}">Consulting</a>
+      </p>
     </div>
-    <div class="portfolio-contact__links">
-      <a href="{{ '/about/' | relative_url }}">About how I work</a>
-      <a href="mailto:{{ site.author.email }}">Email Basant</a>
-    </div>
+    {% include hire-form.html variant="contact" id="home-contact" wide=false %}
   </div>
 </section>

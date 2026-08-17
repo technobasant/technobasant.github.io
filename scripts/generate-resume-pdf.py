@@ -278,15 +278,8 @@ def build_story(
         Paragraph("BASANT BHATTARAI", s["name"]),
         Paragraph("SENIOR DATA &amp; AI ENGINEER  /  PLATFORMS, DATABASES &amp; AGENTIC SYSTEMS", s["role"]),
         Paragraph(
-            # The site goes first among the links. It is the only one of the
-            # four that leads to case studies and measured write-ups; LinkedIn
-            # and GitHub are corroboration. A recruiter scanning the header
-            # should hit the evidence, not the profile.
-            # Two deliberate lines rather than one that wraps. At 8.2pt the five
-            # items overflowed and orphaned github.com onto a row of its own,
-            # which reads as a mistake. Split where it means something: where I
-            # am and where the work is, then how to reach me.
-            'Kathmandu, Nepal &nbsp;&nbsp;|&nbsp;&nbsp; '
+            # Site first among the links. Location is not in the header: the
+            # public pages lead with the work, not the city.
             f'<a href="{SITE_URL}/" color="#9A692C"><b>{SITE_HOST}</b></a><br/>'
             '<a href="mailto:technobasant9@gmail.com" color="#58616B">technobasant9@gmail.com</a> &nbsp;&nbsp;|&nbsp;&nbsp; '
             '<a href="https://www.linkedin.com/in/technobasant" color="#58616B">linkedin.com/in/technobasant</a> &nbsp;&nbsp;|&nbsp;&nbsp; '

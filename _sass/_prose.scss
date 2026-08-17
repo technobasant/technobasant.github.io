@@ -107,10 +107,13 @@
 // …except a panel. The tight 0.7rem exists so a heading and its opening
 // paragraph read as one unit; applied to a full-bleed tinted block it puts the
 // panel edge on the heading's descenders.
-.prose > h2 + :is(.principle-list, .callout, .case-glance, .tutorial-header, .ledger, table) {
+.prose > h2 + :is(.principle-list, .callout, .case-glance, .tutorial-header, .ledger, table, .hire-form) {
   --flow: 1.75rem;
 }
 .prose > .highlighter-rouge {
+  --flow: 1.75rem;
+}
+.prose > .hire-form {
   --flow: 1.75rem;
 }
 .prose > table,
