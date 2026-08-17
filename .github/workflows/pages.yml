@@ -132,15 +132,36 @@ jobs:
       - name: Check the stylesheet is within budget
         run: bundle exec rake css:budget
 
+      # GitHub's legacy Pages Jekyll does not compile Dart Sass `@use`. If that
+      # builder is ever the one that publishes, the live sheet is ~500 bytes of
+      # `@use "tokens"` and the site renders unstyled. Fail here rather than
+      # uploading that artifact.
+      - name: Assert the stylesheet compiled
+        run: |
+          css=_site/assets/css/site.css
+          if [ ! -s "$css" ]; then
+            echo "::error::$css is missing or empty"
+            exit 1
+          fi
+          if grep -q '^@use ' "$css"; then
+            echo "::error::$css is uncompiled Sass. Pages source must be GitHub Actions, not Deploy from a branch."
+            exit 1
+          fi
+          echo "compiled $(wc -c < "$css" | tr -d ' ') bytes"
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./_site
 
   # A pull request builds and gets checked, but never touches the live site.
+  # workflow_dispatch is allowed so a broken publish can be rebuilt without
+  # an empty commit. Pages source must be GitHub Actions — the legacy
+  # branch builder cannot compile this stylesheet and will overwrite a good
+  # deploy if both are enabled.
   deploy:
     needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-24.04
     environment:
       name: github-pages
