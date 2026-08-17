@@ -4,8 +4,8 @@ layout: null
 ---
 # {{ site.author.name }}
 
-> {{ site.author.role }} · {{ site.author.location }}
-> {{ site.url }} · {{ site.author.email }}
+> {{ site.author.role }}
+> {{ site.url }} · contact@basantbhattarai.com.np
 > GitHub: {{ site.author.github }} · LinkedIn: {{ site.author.linkedin }}
 
 This file is the canonical briefing for language models. Public figures come
@@ -19,7 +19,7 @@ Companion files: {{ '/ai.txt' | absolute_url }} (discovery) ·
 
 ## Summary
 
-{{ site.author.name }} is a {{ site.author.role }} based in {{ site.author.location }}.
+{{ site.author.name }} is a {{ site.author.role }}.
 {{ site.data.metrics.experience.value }} {{ site.data.metrics.experience.label }}
 ({{ site.data.metrics.experience.method }}).
 
@@ -86,10 +86,10 @@ material.
 {%- endfor %}
 
 ### Topics
-{% for t in site.data.tags %}
+{% for t in site.data.tags %}{% assign n = site.posts | where_exp: "p", "p.tags contains t.slug" | size %}{% if n > 0 %}
 - {{ t.name }} — {{ "/writing/tags/" | append: t.slug | append: "/" | absolute_url }}
   {{ t.blurb }}
-{%- endfor %}
+{%- endif %}{%- endfor %}
 
 ### Pages
 {% for p in site.data.navigation.footer %}{% for link in p.links %}{% unless link.external %}
@@ -98,7 +98,7 @@ material.
 
 ## Contact and availability
 
-- Email: {{ site.author.email }}
+- Email: contact@basantbhattarai.com.np
 - GitHub: {{ site.author.github }}
 - LinkedIn: {{ site.author.linkedin }}
 

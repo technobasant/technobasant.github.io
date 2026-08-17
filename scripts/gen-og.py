@@ -28,9 +28,9 @@ INK_2 = "#A6AEB8"
 ACCENT = "#C4A574"
 LINE = "#232830"
 
-SITE = "technobasant.github.io"
+SITE = "basantbhattarai.com.np"
 NAME = "Basant Bhattarai"
-ROLE = "Senior Data & AI Engineer · Platform & Database Reliability"
+ROLE = "Senior Data & AI Engineer · Platforms, Databases & Agentic Systems"
 
 # The brass B, as a path so no font is involved in the mark itself.
 B_PATH = (
@@ -44,6 +44,7 @@ B_PATH = (
 # clears the 1040px content column at 76px Georgia.
 CARDS: dict[str, list[str]] = {
     "og-default.png": ["Data & AI platform", "engineering"],
+    "og-default-v3.png": ["Data & AI platform", "engineering"],
     "og-spark.png": ["Apache Spark"],
     "og-streaming.png": ["Kafka & streaming"],
     "og-lakehouse.png": ["Iceberg &", "the lakehouse"],
@@ -54,7 +55,7 @@ CARDS: dict[str, list[str]] = {
 }
 
 MIN_BYTES = 6_000     # anything smaller means the text did not render
-MAX_BYTES = 60_000    # budget from the brief
+MAX_BYTES = 70_000    # LinkedIn/Facebook cap is 5MB; keep cards well under 100KB
 
 
 def svg_for(lines: list[str]) -> str:

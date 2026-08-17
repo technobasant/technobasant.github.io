@@ -11,7 +11,7 @@ layout: null
 Site: {{ site.url }}
 Name: {{ site.author.name }}
 Role: {{ site.author.role }}
-Contact: {{ site.author.email }}
+Contact: contact@basantbhattarai.com.np
 
 Llms-Txt: {{ '/llms.txt' | absolute_url }}
 Llms-Txt-Well-Known: {{ '/.well-known/llms.txt' | absolute_url }}

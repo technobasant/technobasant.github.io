@@ -1089,4 +1089,88 @@
     applyToForm(stateFromURL());
     paint({ suggest: false });
   })();
+
+  /* ── Hire form · Web3Forms ─────────────────────────────────────────────
+   * Same include can appear on more than one page. On success the fields
+   * collapse in place; nothing alerts and nothing navigates.
+   */
+  (function hireForm() {
+    var forms = document.querySelectorAll(".hire-form");
+    if (!forms.length) return;
+
+    var okFallback = "Sent. I will reply within two business days.";
+
+    function bind(form) {
+      var status = form.querySelector("[data-hire-status]");
+      var fields = form.querySelector("[data-hire-fields]");
+      var done = form.querySelector("[data-hire-done]");
+      var submit = form.querySelector('button[type="submit"]');
+      var okCopy = form.getAttribute("data-ok") || okFallback;
+
+      function setStatus(state, text) {
+        if (!status) return;
+        status.dataset.state = state || "";
+        status.textContent = text || "";
+      }
+
+      function showSent() {
+        form.classList.add("is-sent");
+        if (fields) fields.hidden = true;
+        if (done) {
+          done.hidden = false;
+          done.setAttribute("role", "status");
+        }
+        setStatus("", "");
+      }
+
+      if (location.hash === "#sent") showSent();
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (form.botcheck && form.botcheck.checked) {
+          showSent();
+          return;
+        }
+
+        var data = new FormData(form);
+        data.delete("redirect");
+
+        var originalText = submit ? submit.textContent : "";
+        if (submit) {
+          submit.textContent = "Sending…";
+          submit.disabled = true;
+        }
+        setStatus("", "Sending…");
+
+        fetch(form.action, {
+          method: "POST",
+          body: data
+        })
+          .then(function (res) {
+            return res.json().then(function (json) {
+              return { ok: res.ok && json && json.success, json: json };
+            });
+          })
+          .then(function (result) {
+            if (!result.ok) {
+              throw new Error((result.json && result.json.message) || "not sent");
+            }
+            form.reset();
+            showSent();
+          })
+          .catch(function () {
+            setStatus(
+              "err",
+              "The form did not send. Use Email instead — I will still reply."
+            );
+            if (submit) {
+              submit.textContent = originalText;
+              submit.disabled = false;
+            }
+          });
+      });
+    }
+
+    for (var i = 0; i < forms.length; i++) bind(forms[i]);
+  })();
 })();

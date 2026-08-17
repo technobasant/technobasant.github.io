@@ -24,7 +24,7 @@ layout: default
       </nav>
       <dl class="article-facts">
         {%- if page.org %}<div><dt>Organization</dt><dd>{{ page.org }}</dd></div>{% endif %}
-        {%- if page.period %}<div><dt>Period</dt><dd>{{ page.period }}</dd></div>{% endif %}
+        {%- if page.period %}<div><dt>Case span</dt><dd>{{ page.period }}</dd></div>{% endif %}
         {%- if page.role %}<div><dt>Role</dt><dd>{{ page.role }}</dd></div>{% endif %}
       </dl>
     </div>
@@ -134,7 +134,7 @@ layout: default
       </div>
       <p class="strip-links">
         <a class="btn btn--primary" href="{{ '/resume/' | relative_url }}">View résumé {% include icon.html name="arrow-right" size=14 %}</a>
-        <a class="btn btn--ghost" href="mailto:{{ site.author.email }}">Email Basant</a>
+        <a class="btn btn--ghost" href="{{ '/hire/#hire-form' | relative_url }}">Send a briefing</a>
         <a class="btn btn--ghost" href="{{ '/work/' | relative_url }}">All case studies</a>
       </p>
     </div>

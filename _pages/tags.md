@@ -1,6 +1,7 @@
 ---
 title: Topics
 last_modified_at: 2026-08-11
+seo_title: "Writing topics — Basant Bhattarai"
 eyebrow: Writing
 headline: "Browse by system, failure mode, or layer."
 hero_code: "TOPIC / INDEX"
