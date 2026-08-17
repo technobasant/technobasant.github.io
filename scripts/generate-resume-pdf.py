@@ -281,7 +281,7 @@ def build_story(
             # Site first among the links. Location is not in the header: the
             # public pages lead with the work, not the city.
             f'<a href="{SITE_URL}/" color="#9A692C"><b>{SITE_HOST}</b></a><br/>'
-            '<a href="mailto:technobasant9@gmail.com" color="#58616B">technobasant9@gmail.com</a> &nbsp;&nbsp;|&nbsp;&nbsp; '
+            '<a href="mailto:contact@basantbhattarai.com.np" color="#58616B">contact@basantbhattarai.com.np</a> &nbsp;&nbsp;|&nbsp;&nbsp; '
             '<a href="https://www.linkedin.com/in/technobasant" color="#58616B">linkedin.com/in/technobasant</a> &nbsp;&nbsp;|&nbsp;&nbsp; '
             '<a href="https://github.com/technobasant" color="#58616B">github.com/technobasant</a>',
             s["contact"],

@@ -88,4 +88,4 @@ English: C1 · Nepali: native
 
 ## Contact
 
-[{{ site.author.email }}](mailto:{{ site.author.email }}) · [LinkedIn](https://www.linkedin.com/in/technobasant) · [GitHub](https://github.com/technobasant)
+[contact@basantbhattarai.com.np](mailto:contact@basantbhattarai.com.np) · [LinkedIn](https://www.linkedin.com/in/technobasant) · [GitHub](https://github.com/technobasant)

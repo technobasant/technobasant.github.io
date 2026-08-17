@@ -12,7 +12,7 @@ description: "Senior consulting on data platforms, database lifecycle work, and 
 
 I take one or two engagements at a time, alongside a full-time role. That constraint is the point: it keeps the work to problems where senior judgement is the bottleneck, not headcount.
 
-<p class="page-actions"><a class="btn btn--primary" href="#hire-form">Send a briefing</a> <a class="btn btn--ghost" href="mailto:{{ site.author.email }}?subject=Consulting%20enquiry">Email instead</a> <span>{{ site.data.availability.headline }} · {{ site.data.availability.response }}</span></p>
+<p class="page-actions"><a class="btn btn--primary" href="#hire-form">Send a briefing</a> <a class="btn btn--ghost" href="mailto:contact@basantbhattarai.com.np?subject=Consulting%20enquiry">Email instead</a> <span>{{ site.data.availability.headline }} · {{ site.data.availability.response }}</span></p>
 
 ## Four shapes an engagement takes
 

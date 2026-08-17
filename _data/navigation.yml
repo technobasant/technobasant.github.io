@@ -25,7 +25,7 @@ footer:
     links:
       - { title: GitHub,   url: "https://github.com/technobasant",          external: true }
       - { title: LinkedIn, url: "https://www.linkedin.com/in/technobasant", external: true }
-      - { title: Email,    url: "mailto:technobasant9@gmail.com",           external: true }
+      - { title: Email,    url: "mailto:contact@basantbhattarai.com.np",    external: true }
   - heading: Meta
     links:
       - { title: "Résumé (PDF)", url: /assets/basant-bhattarai-resume.pdf }
