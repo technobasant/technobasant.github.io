@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # _config.yml sets `future: false` with `timezone: Asia/Kathmandu` (+0545).
       # A post dated after today is silently dropped from the build with no
@@ -54,11 +54,10 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version-file: .ruby-version
           bundler-cache: true
 
       - name: Configure Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
       - name: Build site
         env:
@@ -150,7 +149,7 @@ jobs:
           echo "compiled $(wc -c < "$css" | tr -d ' ') bytes"
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: ./_site
 
@@ -171,13 +170,13 @@ jobs:
       # from this checkout. deploy-pages itself uses the build artifact, not
       # these files — checkout is only for the notify steps that follow.
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 
       # IndexNow is the one AI-discoverability lever with measured effect behind
       # it. Bing reports ~22% of clicked URLs originate from IndexNow
