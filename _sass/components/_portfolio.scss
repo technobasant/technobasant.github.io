@@ -875,6 +875,16 @@
   align-items: end;
 }
 
+.portfolio-contact__inner--form {
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: var(--sp-6);
+}
+
+.portfolio-contact__inner--form .hire-form {
+  max-width: 52rem;
+}
+
 .portfolio-contact__links {
   display: flex;
   flex-wrap: wrap;

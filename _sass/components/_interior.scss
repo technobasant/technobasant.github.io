@@ -1002,6 +1002,181 @@
   color: var(--accent);
 }
 
+.hire-form {
+  font-family: var(--font-body);
+  padding: var(--card-pad);
+  background: var(--surface-1);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--card-radius);
+  box-shadow: var(--shadow-1);
+}
+
+.hire-form__who {
+  display: grid;
+  gap: var(--sp-4);
+}
+
+@media (min-width: 40rem) {
+  .hire-form__who {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.hire-form__message {
+  margin-block-start: var(--sp-5);
+}
+
+.hire-form label {
+  display: block;
+  margin-block-end: var(--sp-2);
+  font-size: var(--step--1);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--ink-1);
+}
+
+.hire-form input,
+.hire-form textarea {
+  width: 100%;
+  padding: 0.7rem 0.85rem;
+  background: var(--surface-0);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-sm);
+  color: var(--ink-1);
+}
+
+.hire-form textarea {
+  min-height: 6.5rem;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.hire-form input::placeholder,
+.hire-form textarea::placeholder {
+  color: var(--ink-3);
+}
+
+.hire-form__briefing {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: hire-brief;
+}
+
+.hire-form__briefing > li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--sp-3);
+  margin-block-start: var(--sp-5);
+  align-items: start;
+}
+
+.hire-form__briefing > li::before {
+  content: counter(hire-brief, decimal-leading-zero);
+  counter-increment: hire-brief;
+  grid-row: 1 / span 2;
+  padding-block-start: 0.2em;
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--accent);
+}
+
+.hire-form__briefing label,
+.hire-form__briefing textarea {
+  grid-column: 2;
+}
+
+.hire-form__briefing label {
+  grid-row: 1;
+}
+
+.hire-form__briefing textarea {
+  grid-row: 2;
+}
+
+.hire-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-block-start: var(--sp-5);
+}
+
+.hire-form__status {
+  min-height: 1.5em;
+  margin-block-start: var(--sp-3);
+  font-size: var(--step--1);
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.hire-form__status[data-state="ok"] {
+  color: var(--ink-1);
+}
+
+.hire-form__status[data-state="err"] {
+  color: var(--ink-1);
+}
+
+.hire-form.is-sent {
+  --cx: var(--status-ok);
+  padding: var(--sp-5) var(--card-pad);
+  background: color-mix(in oklab, var(--cx) 14%, var(--surface-1));
+  border: 1px solid color-mix(in oklab, var(--cx) 42%, var(--line-strong));
+  border-inline-start: 3px solid var(--cx);
+  box-shadow: none;
+}
+
+.hire-form__done[hidden],
+.hire-form.is-sent .hire-form__fields {
+  display: none;
+}
+
+.hire-form.is-sent .hire-form__done {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--sp-4);
+  align-items: start;
+}
+
+.hire-form__done-mark {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  color: var(--ink-1);
+  background: var(--status-ok);
+  border-radius: 50%;
+}
+
+.hire-form__done-kicker {
+  margin: 0 0 var(--sp-2);
+  font-family: var(--font-body);
+  font-size: var(--step-1);
+  font-weight: 600;
+  letter-spacing: var(--ls-heading);
+  text-transform: none;
+  color: var(--ink-1);
+}
+
+.hire-form__done p {
+  margin: 0;
+  font-size: var(--step--1);
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+@media (max-width: 39.999rem) {
+  .hire-form__actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .hire-form__actions .btn {
+    width: 100%;
+  }
+}
+
 .topic-index {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

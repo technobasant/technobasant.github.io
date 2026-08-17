@@ -1,7 +1,7 @@
 ---
 title: Résumé
-last_modified_at: 2026-08-14
-seo_title: "Basant Bhattarai Résumé — Senior Data & AI Engineer · Platforms, Databases & Agentic Systems"
+last_modified_at: 2026-08-17
+seo_title: "Basant Bhattarai — Senior Data & AI Engineer résumé"
 eyebrow: Career
 headline: "Nine years across data platforms, databases, and production agentic systems."
 hero_code: "CAREER / LOG"
@@ -13,7 +13,7 @@ redirect_from:
   - /skills/
 ---
 
-<p class="page-actions"><a class="btn btn--primary" href="{{ '/assets/basant-bhattarai-resume.pdf' | relative_url }}">Download the PDF</a> <a class="btn btn--ghost" href="{{ '/work/' | relative_url }}">Read the case studies</a> <a class="btn btn--link" href="mailto:{{ site.author.email }}">Email Basant</a></p>
+<p class="page-actions"><a class="btn btn--primary" href="{{ '/assets/basant-bhattarai-resume.pdf' | relative_url }}">Download the PDF</a> <a class="btn btn--ghost" href="{{ '/work/' | relative_url }}">Read the case studies</a> <a class="btn btn--link" href="{{ '/hire/#hire-form' | relative_url }}">Send a briefing</a></p>
 
 <div class="resume-proof" aria-label="Selected professional outcomes">
   {% assign proof_keys = "professional_platform_scale,professional_event_volume,professional_uptime,professional_cost_reduction" | split: "," %}
@@ -39,7 +39,7 @@ redirect_from:
 
 **February 2024 – present** · Working with a global team
 
-- Own reliability and governance for a {{ site.data.metrics.professional_platform_scale.value }} platform processing {{ site.data.metrics.professional_event_volume.value }} events daily, with {{ site.data.metrics.professional_uptime.value }} uptime, explicit service objectives, incident-ready runbooks, and reviewable data contracts.
+- Own reliability and governance for a {{ site.data.metrics.professional_platform_scale.value }} platform processing {{ site.data.metrics.professional_event_volume.value }} events daily, with {{ site.data.metrics.professional_uptime.value }} uptime, explicit service objectives, incident-ready runbooks, reviewable data contracts, and a named owner for every published table.
 - Operate the database layer the platform depends on: clustering and replication, backup and recovery, access control, query and index tuning, and upgrade windows across SQL and NoSQL engines.
 - Design and operate the production agent workflows — LangGraph and Google ADK orchestration, MCP tool servers, retrieval and evaluation — wired into the existing platform so model output lands as typed, provenanced rows rather than a transcript. Analytics delivery {{ site.data.metrics.professional_analytics_delivery.value }} faster with {{ site.data.metrics.professional_manual_effort.value }} less analyst effort, with review and fallback paths kept in place.
 - Lead architecture and schema reviews before new stores, pipelines, and agent workflows reach production; mentor {{ site.data.metrics.professional_mentoring.value }} engineers through pairing, code review, and written design feedback; team delivery time improved {{ site.data.metrics.professional_team_delivery.value }}.
@@ -88,4 +88,4 @@ English: C1 · Nepali: native
 
 ## Contact
 
-[{{ site.author.email }}](mailto:{{ site.author.email }}) · [LinkedIn](https://www.linkedin.com/in/technobasant) · [GitHub](https://github.com/technobasant)
+[contact@basantbhattarai.com.np](mailto:contact@basantbhattarai.com.np) · [LinkedIn](https://www.linkedin.com/in/technobasant) · [GitHub](https://github.com/technobasant)
