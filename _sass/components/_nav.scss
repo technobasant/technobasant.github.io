@@ -50,7 +50,7 @@ $nav-bp: 54rem;
   display: inline-flex;
   align-items: center;
   min-height: var(--header-h);
-  padding-inline: 0.7rem;
+  padding-inline: 0.55rem;
   color: var(--ink-2);
   text-decoration: none;
   transition: color var(--dur-1) var(--ease-standard);
@@ -69,7 +69,7 @@ $nav-bp: 54rem;
 .nav__link[aria-current="page"]::after {
   content: "";
   position: absolute;
-  inset-inline: 0.7rem;
+  inset-inline: 0.55rem;
   inset-block-end: 0;
   height: 2px;
   border-radius: 0;

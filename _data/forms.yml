@@ -1,0 +1,9 @@
+# Public form endpoints. Web3Forms access keys are aliases for the inbox, not
+# secret API tokens — they have to ship in the HTML on a static host. Rotate
+# the key in the Web3Forms dashboard if this file is ever abused.
+web3forms:
+  endpoint: https://api.web3forms.com/submit
+  access_key: 6e90c667-668d-45ae-a0fb-53570a8c154e
+  from_name: basantbhattarai.com.np
+  subject: Consulting enquiry from basantbhattarai.com.np
+  contact_subject: Message from basantbhattarai.com.np

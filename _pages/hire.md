@@ -1,6 +1,6 @@
 ---
 title: Work with me
-last_modified_at: 2026-08-14
+last_modified_at: 2026-08-17
 seo_title: "Data Platform, Database & Agentic AI Consulting — Basant Bhattarai"
 eyebrow: Consulting
 headline: "Bring me the platform, the database, or the agentic system that has to work in production."
@@ -12,7 +12,7 @@ description: "Senior consulting on data platforms, database lifecycle work, and 
 
 I take one or two engagements at a time, alongside a full-time role. That constraint is the point: it keeps the work to problems where senior judgement is the bottleneck, not headcount.
 
-<p class="page-actions"><a class="btn btn--primary" href="mailto:{{ site.author.email }}?subject=Consulting%20enquiry">Email Basant</a> <span>{{ site.data.availability.headline }} · {{ site.data.availability.response }}</span></p>
+<p class="page-actions"><a class="btn btn--primary" href="#hire-form">Send a briefing</a> <a class="btn btn--ghost" href="mailto:{{ site.author.email }}?subject=Consulting%20enquiry">Email instead</a> <span>{{ site.data.availability.headline }} · {{ site.data.availability.response }}</span></p>
 
 ## Four shapes an engagement takes
 
@@ -36,14 +36,9 @@ I work a shifted day by design. {{ site.data.availability.detail }} Real overlap
 
 ## How to start
 
-One paragraph is enough. If you can, include these three things so my first reply can be useful:
+The form emails me. GitHub Pages never sees what you type. Name, email, and what is breaking are required; the other two questions make the first reply useful. Repositories and diagrams are welcome, never required.
 
-1. **What breaks today, and how do you find out?** A customer email, an alert that fires, or a number somebody eventually notices is wrong — the three imply very different fixes.
-2. **What is already running, and what cannot be replaced?** Engines, orchestrator, cloud, warehouse — plus the contractual or organizational constraints on each.
-3. **What decision are you trying to make, and by when?** "Should we move off the warehouse" and "our pipeline is down" both need help, but not the same engagement.
-{: .briefing-list }
-
-Repositories, diagrams and dashboards are welcome but never required in a first email. A paragraph of honest description beats a polished deck.
+{% include hire-form.html %}
 
 ## What I don't do
 

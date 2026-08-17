@@ -1,6 +1,7 @@
 ---
 title: Colophon
 last_modified_at: 2026-08-13
+seo_title: "How this site is built — Basant Bhattarai"
 eyebrow: Meta
 headline: "Small, inspectable, and owned end to end."
 hero_code: "BUILD / NOTES"

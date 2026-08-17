@@ -2,8 +2,8 @@
 layout: home
 permalink: /
 title: Basant Bhattarai
-last_modified_at: 2026-08-16
-seo_title: "Basant Bhattarai — Senior Data & AI Engineer · Platforms, Databases & Agentic Systems"
+last_modified_at: 2026-08-17
+seo_title: "Basant Bhattarai — Senior Data & AI Engineer"
 description: "Senior Data & AI Engineer. Nine years building data platforms, running the databases underneath them, and putting agents into production against both."
 sitemap:
   changefreq: weekly
@@ -51,8 +51,7 @@ proof:
 
 # The band that answers "what do I hire you for". Rows come from
 # _data/practice.yml; this is only the heading and the exit link. `more` points
-# at /hire/, which until now had no route in from the homepage at all — it is
-# absent from the header nav by design, so the footer was the only way in.
+# at /hire/. Hire is also in the header nav.
 practice:
   label: "What I'm hired for"
   headline: "Three problems worth calling me about."
@@ -63,7 +62,7 @@ work:
   label: "Selected work"
   # "…with measured outcomes" described the page rather than the work. The cards
   # below already carry the numbers; the headline should carry the claim.
-  headline: "Five systems, and the decisions that kept them running."
+  headline: "Six systems, and the decisions that kept them running."
   more: "View all work"
   more_url: /work/
 
@@ -83,11 +82,11 @@ writing:
   # An explicit list fixes the shop window without touching a single date. Slugs,
   # so a rename fails loudly at build rather than silently dropping a row.
   spotlight:
+    - coding-agents-repo-governance
+    - agents-in-a-real-repository
     - trino-iceberg-polaris-lakehouse-spine
-    - rag-lakehouse-delta-spark-chroma
-    - patroni-postgresql-18-rocky8-etcd-failover
 
 contact:
-  label: "Profile"
-  headline: "Based in Kathmandu. Working across European afternoons and US mornings."
+  label: "Contact"
+  headline: "Working across European afternoons and US mornings."
 ---
