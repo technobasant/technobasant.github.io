@@ -1,7 +1,7 @@
 ---
 layout: tag
 title: Kubernetes
-last_modified_at: 2026-08-11
+last_modified_at: 2026-10-03
 eyebrow: Topic
 permalink: /writing/tags/kubernetes/
 tag: kubernetes

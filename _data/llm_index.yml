@@ -12,6 +12,9 @@ recommended:
   - url: /work/governed-ai-delivery/
     title: "Turning model output into product state you can audit"
     why: "Product agents: typed state, provenance, evaluation, review, fallback."
+  - url: /writing/agent-tools-on-the-users-machine/
+    title: "The user's laptop is not a server. Make it a queue consumer."
+    why: "Agents that act on a user's device: per-user stream, presence TTL, idempotent redelivery."
   - url: /writing/building-data-platforms-and-ai-products/
     title: "The data platform is part of the product"
     why: "The same candidate-state rule applied to data products."

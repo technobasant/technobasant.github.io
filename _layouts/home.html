@@ -2,10 +2,23 @@
 layout: default
 ---
 {%- assign _hero = page.hero -%}
-{%- assign _practice = site.work | where: "kind", "practice" | sort: "order" -%}
-{%- assign _products = site.work | where: "kind", "production" | sort: "order" -%}
-{%- assign _labs = site.work | where: "kind", "lab" | sort: "order" -%}
-{%- assign _selected_work = _practice | concat: _products | concat: _labs -%}
+{%- comment -%}
+  Selected work is curated by slug in index.md (`work.selected`), the same way
+  the writing spotlight is. With practice, consulting, open-source, product and
+  lab entries the full list is /work/'s job; the homepage shows one system per
+  register. Falls back to every case in kind order if the list is unset.
+{%- endcomment -%}
+{%- assign _selected_work = "" | split: "" -%}
+{%- for _slug in page.work.selected -%}
+  {%- assign _hit = site.work | where: "slug", _slug | first -%}
+  {%- if _hit -%}{%- assign _selected_work = _selected_work | push: _hit -%}{%- endif -%}
+{%- endfor -%}
+{%- if _selected_work.size == 0 -%}
+  {%- assign _practice = site.work | where: "kind", "practice" | sort: "order" -%}
+  {%- assign _products = site.work | where: "kind", "production" | sort: "order" -%}
+  {%- assign _labs = site.work | where: "kind", "lab" | sort: "order" -%}
+  {%- assign _selected_work = _practice | concat: _products | concat: _labs -%}
+{%- endif -%}
 {%- assign _latest_post = site.posts | first -%}
 
 <section class="portfolio-hero">

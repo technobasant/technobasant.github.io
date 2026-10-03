@@ -188,6 +188,35 @@ clickhomes_migrations:
   source: "ClickHomes migration directory"
   context: "Independent project; count taken from the versioned migration directory."
 
+# ── spark-sql-kinesis (open source) ─────────────────────────────────────────
+kinesis_idle_floor:
+  value: "≥ 6 s"
+  label: "per idle shard, every batch, on the alternative connector"
+  method: "connector source plus staging Spark UI stage timings; floor = empty-poll count × poll timeout, and 2 × 3 s is the lowest the connector accepts"
+  window: "Aug 2026, staging"
+  scope: "open-source"
+  source: "spark-sql-kinesis design notes; staging measurements"
+  context: "Why the Spark 4 port keeps the synchronous read model, which stops a shard as soon as it is caught up."
+
+# ── Clinic records OCR (independent product, 2026) ──────────────────────────
+clinic_ocr_lab_value_accuracy:
+  value: "95.8%"
+  label: "of matched lab-result values read correctly"
+  method: "field-level scorer on 97 labelled pages of real clinic captures; development set, not clinical validation"
+  window: "Aug–Sep 2026"
+  scope: "independent"
+  source: "OCR_ACCURACY_PLAN.md §1 (results: P 0.870, R 0.590, value accuracy 0.958)"
+  context: "Printed lab reports; handwritten sections are far lower and capped by recognition."
+
+clinic_ocr_engines_evaluated:
+  value: "8"
+  label: "OCR engines scored through one fixed scorer"
+  method: "same extraction pipeline and field-level scorer; 11 + 26 labelled pages for classic engines, one 17-page packet for vision-language models"
+  window: "Aug 2026"
+  scope: "independent"
+  source: "tools/doctr-poc, rapidocr-tuning, ocr-2g-poc, surya-poc, paddleocr-vl-poc READMEs"
+  context: "RapidOCR ships; Tesseract is the fallback; the PaddleOCR-VL sidecar ships switched off."
+
 # ── Patroni HA + pgBackRest lab (2026) ───────────────────────────────────────
 # Every figure below came off the runs documented in the rhel8-pg-ansible
 # series, not from a vendor page. Timings are wall-clock on amd64 guests under
