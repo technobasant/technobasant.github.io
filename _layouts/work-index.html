@@ -11,13 +11,16 @@ layout: default
   restating in 60px type what the badge says in 11px, and costing about 600px of
   vertical space to do it.
 
-  Order is practice, then independent product, then lab: broadest body of work
-  first, and a reader arriving from the résumé is looking for that one.
+  Order is practice, consulting, open source, independent product, then lab:
+  broadest body of work first, and a reader arriving from the résumé is looking
+  for that one.
 {%- endcomment -%}
-{%- assign _practice   = site.work | where: "kind", "practice"   | sort: "order" -%}
-{%- assign _production = site.work | where: "kind", "production" | sort: "order" -%}
-{%- assign _labs       = site.work | where: "kind", "lab"        | sort: "order" -%}
-{%- assign _all = _practice | concat: _production | concat: _labs -%}
+{%- assign _practice   = site.work | where: "kind", "practice"    | sort: "order" -%}
+{%- assign _consulting = site.work | where: "kind", "consulting"  | sort: "order" -%}
+{%- assign _oss        = site.work | where: "kind", "open-source" | sort: "order" -%}
+{%- assign _production = site.work | where: "kind", "production"  | sort: "order" -%}
+{%- assign _labs       = site.work | where: "kind", "lab"         | sort: "order" -%}
+{%- assign _all = _practice | concat: _consulting | concat: _oss | concat: _production | concat: _labs -%}
 
 {% include interior-hero.html variant="index" code="SYSTEM / RECORD" stacked=true %}
 <div class="page page--index">

@@ -86,3 +86,9 @@
   blurb: "Free, fully OSS setups you can run yourself: a WireGuard VPN, a RustDesk remote desktop, and a Stalwart mailbox for your own domain."
   og: og-default-v3.png
   featured: true
+
+- slug: applied-ml
+  name: "Applied ML & evaluation"
+  blurb: "Models judged by a scorer you wrote before you saw the output: OCR extraction, short-text classification, embeddings and clustering, and the measurements that withdrew a plan rather than confirming it."
+  og: og-agents.png
+  featured: false

@@ -1,7 +1,7 @@
 ---
 layout: tag
 title: Observability & SLOs
-last_modified_at: 2026-08-16
+last_modified_at: 2026-10-03
 eyebrow: Topic
 permalink: /writing/tags/observability-slo/
 tag: observability-slo

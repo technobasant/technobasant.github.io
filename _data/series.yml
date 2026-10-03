@@ -43,5 +43,12 @@
   title: "Agents in a real repository"
   register: analysis
   register_label: "Operating model"
-  blurb: "How to run Cursor, Claude Code, and Codex in an existing repo: AGENTS.md, CODEOWNERS, CI gates, and the AI-generated PR failures that produced them."
+  blurb: "How to run Cursor, Claude Code, and Codex in an existing repo: AGENTS.md, CODEOWNERS, CI gates, the AI-generated PR failures that produced them, and the owned, dated knowledge agents read."
+  status: in-progress
+
+- slug: production-notes
+  title: "Notes from production"
+  register: analysis
+  register_label: "Observed in production"
+  blurb: "Failures and decisions from running a streaming analytics platform: a Spark 4 upgrade that wrote nothing, and a Hive Metastore 4 upgrade that validation called a success. Ratios and mechanisms, never internal scale."
   status: in-progress

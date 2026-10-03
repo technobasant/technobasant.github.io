@@ -9,6 +9,8 @@ layout: default
 {%- assign _kind = page.kind | default: "production" -%}
 {%- case _kind -%}
   {%- when "lab" -%}{%- assign _kind_label = "Measured lab" -%}
+  {%- when "consulting" -%}{%- assign _kind_label = "Consulting engagement" -%}
+  {%- when "open-source" -%}{%- assign _kind_label = "Open source" -%}
   {%- when "practice" -%}{%- assign _kind_label = "Professional practice" -%}
   {%- else -%}{%- assign _kind_label = "Independent product" -%}
 {%- endcase -%}
