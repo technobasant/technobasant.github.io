@@ -30,7 +30,10 @@ LINE = "#232830"
 
 SITE = "basantbhattarai.com.np"
 NAME = "Basant Bhattarai"
-ROLE = "Senior Data & AI Engineer · Platforms, Databases & Agentic Systems"
+# Shorter than site.author.role on purpose: it shares a 1040px baseline with
+# NAME, and the full "· Data Platforms, AI Systems & Architecture" string ran
+# into the name at 26px. Same three pillars, fewer characters.
+ROLE = "Senior Data & AI Engineer · Data, AI & Architecture"
 
 # The brass B, as a path so no font is involved in the mark itself.
 B_PATH = (
@@ -43,8 +46,8 @@ B_PATH = (
 # filename -> title lines (1 or 2). Keep each line under ~24 characters so it
 # clears the 1040px content column at 76px Georgia.
 CARDS: dict[str, list[str]] = {
-    "og-default.png": ["Data & AI platform", "engineering"],
-    "og-default-v3.png": ["Data & AI platform", "engineering"],
+    "og-default.png": ["Data platforms, AI", "& system architecture"],
+    "og-default-v3.png": ["Data platforms, AI", "& system architecture"],
     "og-spark.png": ["Apache Spark"],
     "og-streaming.png": ["Kafka & streaming"],
     "og-lakehouse.png": ["Iceberg &", "the lakehouse"],

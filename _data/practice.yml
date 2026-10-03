@@ -10,31 +10,33 @@
 # site, not at a claim. If a row cannot cite one, it does not belong on the
 # homepage.
 #
-# Order is deliberate: platforms, then agents, then databases. The two newest
-# case studies and the last three posts are all PostgreSQL, which reads as
-# "DBA" if nothing frames it — this band is what says the database work is one
-# of three pillars rather than the whole practice.
+# Order is deliberate: data, then AI, then architecture — the three pillars
+# the practice is hired for. Databases used to be a pillar of their own; they
+# now sit inside the data row, because a reader deciding whether to call me
+# needs "the platform and the stores under it" as one problem, and the
+# architecture row is what the database lab was standing in for anyway.
 
-- title: "Data platforms that outgrew their first architecture"
+- title: "Data platforms, and the databases under them"
   blurb: >-
     Ingestion, processing and serving that worked at one scale and stopped
-    working at the next — plus the cost model underneath, which is usually the
-    real reason the conversation started.
+    working at the next — and the stores underneath, with failover, backup
+    and upgrades your team can run after I leave.
   evidence: /work/data-platform-practice/
   evidence_label: "Rebuilding a production data platform"
 
-- title: "Agents that have to touch production data"
+- title: "AI systems that have to touch production data"
   blurb: >-
-    Not a chat demo. Typed output, provenance, evaluation and a review path, so
-    a model result is only allowed to become state when it can be justified —
-    and there is a defined answer for when it cannot.
+    Agents with typed output, provenance and a review path, and the
+    evaluation under them: extraction and classification measured against a
+    scorer written before the model ran, with a defined answer for when it
+    cannot decide.
   evidence: /work/governed-ai-delivery/
   evidence_label: "Turning model output into auditable product state"
 
-- title: "Databases that have to survive failure"
+- title: "System architecture with the recovery path designed first"
   blurb: >-
-    High availability, backup, restore and upgrades, handed over with a runbook
-    your team owns after I leave — and numbers taken from a rig you can rebuild
-    rather than from a vendor page.
-  evidence: /work/patroni-ha-backup-lab/
-  evidence_label: "Orchestrated failover and a restore I performed"
+    Where state lives, what is idempotent, what a second delivery does, and
+    how the system degrades when a dependency is slow — decided before the
+    incident and written down as decisions you can revisit.
+  evidence: /work/consulting-short-text-and-alerting/
+  evidence_label: "Classification and alerting, redesigned around state"
