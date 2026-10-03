@@ -8,7 +8,8 @@ Live: [basantbhattarai.com.np](https://basantbhattarai.com.np)
 - Authority over decoration — outcomes and ownership, not tool laundry lists
 - ClickHomes appears only under **Work** (`/projects/`)
 - Consulting availability is on **About** only — not the landing page
-- CV source of truth: `realestate/cv/` (kept out of this repo)
+- CV source of truth: `cv/` (local copy of `realestate/cv/`; not committed, because this repo is public and the seeds carry employer detail)
+- Job apply agent (standalone): `/Users/basant/personal_projects/job-apply-agent`
 
 ## Local
 
@@ -35,9 +36,16 @@ Or: `./scripts/serve.sh`
 | `_pages/` | About, Experience, Skills, Work |
 | `_posts/` | Published essays and reproducible tutorials |
 | `_drafts/` | Unfinished outlines; excluded from the default preview |
+| `scripts/gen-cover-diagram.py` | Schematic cover masters; `python3 scripts/gen-cover-diagram.py <name>` |
 
 `make serve` previews the same finished writing readers will see. Use
 `make serve-drafts` only while editing unfinished outlines.
+
+Pieces drawn from employer production work go in the `production-notes`
+series and are published only once cleared. They describe mechanisms, staging
+measurements and ratios — never customer data, internal scale or identifiers
+(`rake privacy` and the boundary stated in `llms.txt`). Uncleared pieces wait
+in `_drafts/`.
 
 Run `make content` before publishing, then push `master` to publish on GitHub
 Pages.

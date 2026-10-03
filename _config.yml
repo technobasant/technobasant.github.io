@@ -1,12 +1,12 @@
 # ── Identity ──────────────────────────────────────────────────────────────
 title: "Basant Bhattarai"
-subtitle: "Senior Data & AI Engineer · Platforms, Databases & Agentic Systems"
-tagline: "I design data platforms, operate the databases they depend on, and build agentic systems that integrate with that stack."
+subtitle: "Senior Data & AI Engineer · Data Platforms, AI Systems & Architecture"
+tagline: "I design data platforms and the databases under them, AI systems that write into them, and the architecture that keeps both recoverable."
 email: contact@basantbhattarai.com.np
 description: >-
-  Basant Bhattarai — Senior Data & AI Engineer. Nine years building data
-  platforms, running the databases underneath them, and putting agents into
-  production against both. Working US and EU hours.
+  Basant Bhattarai — Senior Data & AI Engineer. Nine years across data
+  platforms and their databases, AI systems in production, and the system
+  architecture that connects them. Working US and EU hours.
 url: "https://basantbhattarai.com.np"
 baseurl: ""
 repository: "technobasant/technobasant.github.io"
@@ -18,7 +18,7 @@ og_image: "/assets/og/og-default-v3.png"
 
 author:
   name: "Basant Bhattarai"
-  role: "Senior Data & AI Engineer · Platforms, Databases & Agentic Systems"
+  role: "Senior Data & AI Engineer · Data Platforms, AI Systems & Architecture"
   location: "Kathmandu, Nepal"
   avatar: "/assets/images/hero-portrait-v2-840.jpg"
   email: "contact@basantbhattarai.com.np"
@@ -71,6 +71,9 @@ exclude:
   # by nothing. Safe to delete from the repo; excluded so it never ships.
   - assets/images/basant_profile.png
   - _drafts/zzz-scaffold-test.md
+  # CV sources. Never part of the site: the CV seeds carry internal names that
+  # `rake privacy` rejects.
+  - cv
 
 # ── Content ───────────────────────────────────────────────────────────────
 collections:

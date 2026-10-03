@@ -1,6 +1,6 @@
 ---
 title: Work with me
-last_modified_at: 2026-08-17
+last_modified_at: 2026-10-03
 seo_title: "Data Platform, Database & Agentic AI Consulting — Basant Bhattarai"
 eyebrow: Consulting
 headline: "Bring me the platform, the database, or the agentic system that has to work in production."

@@ -12,3 +12,7 @@ vendor/bundle
 .env
 .env.*
 !.env.example
+
+# CV sources and application packets never leave this machine: the repo is
+# public and the seeds carry employer detail `rake privacy` rejects.
+/cv/
