@@ -378,8 +378,10 @@ def build_story(
     categories = [
         (
             "Platform ownership",
-            "Python and SQL; Kafka ingestion; Spark/PySpark processing; Airflow orchestration; Iceberg, dbt and "
-            "lakehouse modeling; Kubernetes, Docker and Terraform delivery; contracts, lineage, cost and recovery.",
+            "Python, SQL and Scala; Kafka and Kinesis ingestion (maintainer of an open-source Spark 4 Kinesis "
+            "connector); Spark/PySpark processing, including the Spark 4 migration; Airflow orchestration; Iceberg, "
+            "Hive Metastore, dbt and lakehouse modeling; Kubernetes, Docker and Terraform delivery; contracts, "
+            "lineage, cost and recovery.",
         ),
         (
             "Database lifecycle",
@@ -389,7 +391,8 @@ def build_story(
         (
             "Agentic systems",
             "LangGraph, LangChain, Google ADK, MCP servers, Pydantic, Milvus and MLflow; bounded tools, retrieval, "
-            "evaluation before rollout, typed output, provenance, human review and honest fallback paths.",
+            "evaluation before rollout, typed output, provenance, human review and honest fallback paths; applied-ML "
+            "evaluation of OCR and short-text classification against a fixed scorer.",
         ),
         (
             "Technical leadership",

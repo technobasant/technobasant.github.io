@@ -113,6 +113,17 @@ button.chip:hover {
   color: var(--accent);
 }
 
+// Client work and public code: same accent family as practice, so the work grid
+// reads as one body of work; `consulting` sits on the neutral ink so a reader
+// can tell employer, client and open-source rows apart without a legend.
+.badge--consulting {
+  color: var(--ink-1);
+}
+
+.badge--open-source {
+  color: var(--accent);
+}
+
 @media (max-width: 30rem) {
   .badge {
     min-width: 0;

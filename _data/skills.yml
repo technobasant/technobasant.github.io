@@ -13,7 +13,8 @@ tier1:
   items:
     - { name: "Python", since: 2017, scale: "Backend services, data platforms, automation, and AI tooling" }
     - { name: "SQL", since: 2017, scale: "Transactional, analytical, and reliability work", evidence: /writing/postgresql-18-docker-volume-path-change/, evidence_label: "PostgreSQL tutorial" }
-    - { name: "Apache Spark / PySpark", since: 2020, scale: "Batch and streaming data processing", evidence: /writing/dbt-trino-iceberg-medallion-airflow/, evidence_label: "medallion pipeline" }
+    - { name: "Apache Spark / PySpark", since: 2020, scale: "Batch and streaming data processing, including the Spark 4 migration", evidence: /writing/spark-4-s3a-committer-wrote-nothing/, evidence_label: "Spark 4 upgrade, S3A committers" }
+    - { name: "Amazon Kinesis + Structured Streaming", since: 2023, scale: "Streaming ingestion; maintainer of an open-source Spark 4 connector", evidence: /work/spark-sql-kinesis/, evidence_label: "connector case study" }
     - { name: "Apache Kafka", since: 2020, scale: "Event-driven and streaming systems" }
     - { name: "Apache Airflow", since: 2020, scale: "Workflow orchestration, replay, and recovery design" }
     - { name: "Apache Iceberg", since: 2022, scale: "Table evolution, maintenance, and data modeling", evidence: /writing/iceberg-compaction-snapshots-rollback/, evidence_label: "compaction and rollback, measured" }
@@ -34,7 +35,9 @@ tier2:
     - name: "Agentic systems"
       items: [CrewAI, FastMCP, Milvus, MLflow, Pydantic, "Claude Code", Cursor, Codex]
     - name: "Data platform"
-      items: ["Databricks + Unity Catalog", "Amazon Kinesis", "Spark Structured Streaming", "Debezium / CDC", "Delta Lake"]
+      items: ["Databricks + Unity Catalog", "Hive Metastore (3.1 → 4.x)", "Scala (Spark)", "Debezium / CDC", "Delta Lake"]
+    - name: "Applied ML & evaluation"
+      items: ["OCR (RapidOCR / PaddleOCR, ONNX Runtime)", "Sentence embeddings", "UMAP / HDBSCAN", "Quantification"]
     - name: "Databases"
       items: [Redis, MongoDB, Citus, TimescaleDB, "MySQL / MariaDB", "Patroni / pgBackRest"]
     - name: "Product & infra"
@@ -69,7 +72,6 @@ tier3:
     - DuckDB
     - Hadoop
     - Apache Hive
-    - Scala
     - Java
     - Azure Synapse
     - Azure Data Factory
@@ -90,7 +92,7 @@ tier3:
 
 clouds:
   - name: AWS
-    items: [S3, EKS, Lambda, Glue, Athena, Redshift, Kinesis, EMR, RDS, "Step Functions", Bedrock, SageMaker]
+    items: [S3, "EKS (IRSA)", Lambda, Glue, Athena, Redshift, Kinesis, EMR, RDS, "Step Functions", Bedrock, SageMaker]
   - name: GCP
     items: [BigQuery, Dataflow, Dataproc, Datastream, "Pub/Sub", "Cloud Composer", GKE, "Vertex AI"]
   - name: Azure

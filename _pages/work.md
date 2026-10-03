@@ -1,12 +1,12 @@
 ---
 title: Selected work
-last_modified_at: 2026-08-14
-seo_title: "Data Platform, Database & Agentic AI Case Studies — Basant Bhattarai"
+last_modified_at: 2026-10-03
+seo_title: "Data Platform, AI Systems & Architecture Case Studies — Basant Bhattarai"
 eyebrow: Case studies
-headline: "Data platforms, databases, and agentic systems built for production."
+headline: "Data platforms, AI systems, and the architecture that keeps them running."
 layout: work-index
 permalink: /work/
-description: "Case studies across data platforms, database lifecycle operations, system architecture, and agentic systems running in production."
+description: "Case studies across data platforms, AI systems and system architecture: employer practice, consulting, open source, independent products and measured labs."
 # `detail` used to be a row of tool names per capability — four boxes of logos,
 # which is the pattern a concrete result statement beats every time. Each line
 # now says what the capability actually covers. The tools are on the résumé and

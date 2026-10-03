@@ -1,9 +1,9 @@
 ---
 title: About
-last_modified_at: 2026-08-17
-seo_title: "About Basant Bhattarai — Data Platforms, Databases & Agentic Systems"
+last_modified_at: 2026-10-03
+seo_title: "About Basant Bhattarai — Data Platforms, AI Systems & Architecture"
 eyebrow: Profile
-headline: "I design data platforms, and the agentic systems that write into them."
+headline: "I design data platforms, the AI systems that write into them, and the architecture that keeps both recoverable."
 hero_code: "OPERATE / OWN"
 page_class: page-about
 permalink: /about/
@@ -14,6 +14,8 @@ lede: "Nine years that started with backend services and PostgreSQL schemas, and
 I am a Senior Data & AI Engineer. The job arrived in that order. First Python services and PostgreSQL schemas; then the databases those services leaned on, which is where I learned that most outages are a storage decision made two years earlier; then the platform around them — Kafka ingestion, Spark processing, Airflow orchestration, lakehouse modeling, analytical serving.
 
 Agents came last and belong to the same stack. The interesting part was never the orchestration framework. It was the boundary: what a model is allowed to write, what validates it, what happens on the second attempt, and how you compare today's answer to last week's. I work close to system internals — throughput and failure limits, recovery paths, observability, and cost before scale turns an architectural shortcut into an operational one.
+
+Architecture is what ties the two together, and it is most of what I am asked to review: where state lives, which operations are idempotent, what a second delivery does, and how a system degrades when a dependency is slow. I write those down as decisions next to the alternative I rejected, so the next person can disagree with a reason rather than a hunch. The same habit shows up outside the day job — in [a connector I maintain in the open](/work/spark-sql-kinesis/), in consulting work, and in [products I build end to end](/work/).
 
 
 ## Operating principles
@@ -29,7 +31,7 @@ Agents came last and belong to the same stack. The interesting part was never th
 
 At UXCam I work across the data platform and the stores underneath it: processing, serving, database reliability, governance, and architecture review. I also own the production agent workflows — LangGraph and Google ADK for orchestration, MCP for the tool surface — with the same requirement as any other producer: what they emit lands in the governed stores, typed and reviewable, or it does not land.
 
-Outside that I keep a multi-engine failover lab with restartable scenarios, published commands and measured outcomes, and I build an independent product where I own every layer from the schema and API to the deployment.
+Outside that I keep a multi-engine failover lab with restartable scenarios, published commands and measured outcomes. I build independent products where I own every layer from the schema and API to the deployment: an agent that does its work on the user's own machine, and a records system for small outpatient clinics whose OCR accuracy I measure before I promise it.
 
 *Updated {{ site.data.availability.updated | date: "%B %Y" }}.*
 
