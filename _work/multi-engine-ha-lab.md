@@ -1,9 +1,9 @@
 ---
 title: "Multi-engine HA lab: eight failover scenarios"
-hook: "Six database engines, eight failover scenarios, one laptop — with the numbers"
-description: "A home lab, not a production system: six database engines, eight failover scenarios I wrote and ran on one laptop, and the numbers each one produced."
+hook: "Six database engines, eight failover scenarios on real multi-node clusters — with the numbers"
+description: "A home lab, not a production system: six database engines, eight failover scenarios I wrote and ran, one container per node, and the numbers each one produced."
 date: 2026-08-04
-last_modified_at: 2026-08-15
+last_modified_at: 2026-10-13
 kind: lab
 order: 4
 featured: true
@@ -15,6 +15,7 @@ scale: "Docker on 8 CPU / 12.5 GB; nine compose stacks, brought up one at a time
 problem: "Documentation describes expected failover; I wanted current, measured evidence of what six engines actually preserved, promoted, and exposed after a primary or node disappeared."
 decision: "Run one reproducible cluster at a time, seed known state, inject a specific fault, and record promotion, recovery, and data-survival evidence."
 flow: lab
+repo: "https://github.com/technobasant/db-failover-lab"
 stack: [MongoDB, ScyllaDB, SolrCloud, MariaDB, Galera, Redis, PostgreSQL, Docker, Prometheus, Grafana]
 metrics: [lab_scenarios, lab_pg_replay_lag, lab_redis_promotion]
 tags: [distributed-databases, postgres, observability-slo]

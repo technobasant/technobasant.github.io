@@ -1,8 +1,8 @@
 ---
-title: "A failover lab you can run on one laptop"
+title: "A failover lab: six database engines, eight scenarios, every one run"
 description: "Six database engines, eight failover scenarios, one 8-CPU Docker rig. The results matrix, the headline measurements, and how to run the first scenario."
 date: 2026-08-04 09:00:00 +0545
-last_modified_at: 2026-08-11 10:20:00 +0545
+last_modified_at: 2026-10-13
 type: tutorial
 tags: [distributed-databases, postgres]
 series: failover-lab
@@ -16,7 +16,7 @@ cover:
   fallback_width: "1600"
   width: 1600
   height: 900
-  alt: "Six database engines on one laptop: a failed primary smoking, a neighbor wearing the crown"
+  alt: "Six database engines in one lab: a failed primary smoking, a neighbor wearing the crown"
   caption: "Eight scenarios on one 8-CPU rig. A failover test is incomplete until quorum, acknowledged writes, and recovery are measured."
 level: intermediate
 time_estimate: "~45 min hands-on"
@@ -41,7 +41,7 @@ So I wrote a test plan with eight scenarios and ran all of them on one machine, 
 
 {{ site.data.metrics.lab_scenarios.value }} scenarios passed — **in my own test plan**. That qualifier is the honest one. There is no external conformance suite behind this. I decided what "passed" meant for each engine, wrote it down, and then went and checked it. What follows is the rig, the plan, the numbers it produced, and one scenario run end to end so you can reproduce the method on the other seven.
 
-The compose files are reproduced inline in this post and in the rest of the series. There is no public repository to clone.
+The compose files are reproduced inline in this post and in the rest of the series, and every stack is in [db-failover-lab](https://github.com/technobasant/db-failover-lab) to clone, one cluster at a time.
 
 ## Why these six engines
 

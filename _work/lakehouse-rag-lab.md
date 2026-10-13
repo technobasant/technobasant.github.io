@@ -3,7 +3,7 @@ title: "A lakehouse, and the RAG pipeline that runs on it"
 hook: "The two halves of the thesis as one system: Trino and Iceberg underneath, retrieval and answers on top, both measured"
 description: "A measured lab where a Trino/Iceberg lakehouse and a Delta-backed RAG pipeline share the same storage — credential vending proven scoped, a rollback performed, and grounding enforced at the retriever rather than the prompt."
 date: 2024-01-27
-last_modified_at: 2026-08-16
+last_modified_at: 2026-10-13
 kind: lab
 order: 6
 featured: true
@@ -11,10 +11,11 @@ role: "Personal lab"
 org: "Personal"
 period: "2024 – 2026"
 team: "One person"
-scale: "One laptop: MinIO, Apache Polaris 1.7.0, Trino 483 (coordinator + worker), StarRocks 4.1.4, Spark 4.0.4 with Delta 4.0.0, Chroma, Ollama, Airflow 3.3.1 — every image native arm64"
+scale: "One host, every service its own container: MinIO, Apache Polaris 1.7.0, Trino 483 (coordinator + worker), StarRocks 4.1.4, Spark 4.0.4 with Delta 4.0.0, Chroma, Ollama, Airflow 3.3.1 — every image native arm64"
 problem: "This site claims I design data platforms and the agentic systems that run on them. The platform work and the AI work were evidenced separately, which proves each half and not the sentence. I wanted one rig where the same storage carries both, and where the claims about it are numbers rather than adjectives."
 decision: "Rebuild two real client stacks on current versions rather than write about the originals, measure everything server-side, and publish the failures — including the ones where the tool reported success."
 flow: rag
+repo: "https://github.com/technobasant/lakehouse-lab"
 stack: [Trino, "Apache Iceberg", "Apache Polaris", StarRocks, "Apache Spark", "Delta Lake", dbt, Airflow, Chroma, Ollama, MinIO]
 metrics: [lakehouse_partition_prune, lakehouse_rollback, rag_refusal]
 tags: [iceberg-lakehouse, rag, distributed-databases]
@@ -49,7 +50,7 @@ StarRocks was then attached to the same catalog with one DDL statement, no table
 
 ## What it does not prove
 
-It is a laptop. The query timings are honest ceilings for 8 CPUs and 11.67 GB, not production numbers, and the language model is a 1B running on CPU — chosen so that the pipeline around it is the subject rather than the model.
+Every service shares one host. The query timings are honest ceilings for 8 CPUs and 11.67 GB, not production numbers, and the language model is a 1B running on CPU — chosen so that the pipeline around it is the subject rather than the model.
 
 The engine comparison is narrower than it looks: StarRocks returned in 34 ms against Trino's 99 ms on one partition-pruned aggregate, which is close to the shape StarRocks is built for and says nothing about federation or large joins. The useful conclusion is not which is faster. It is that **the question can now be measured on the same tables without migrating anything**, which before a REST catalog meant a copy.
 

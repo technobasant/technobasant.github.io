@@ -2,7 +2,7 @@
 title: "A lakehouse spine: Trino, Iceberg and Polaris, with credentials that expire"
 description: "Build Trino 483 on Iceberg with Apache Polaris as the REST catalog, then prove the vended S3 credentials cannot read the table next door."
 date: 2026-08-16 12:00:00 +0545
-last_modified_at: 2026-08-16
+last_modified_at: 2026-10-13
 type: tutorial
 tags: [iceberg-lakehouse, distributed-databases]
 series: lakehouse-trino-iceberg
@@ -20,7 +20,7 @@ cover:
 featured: true
 level: intermediate
 time_estimate: "~45 min to a working stack; the credential-vending section is the part that takes the time"
-what_youll_build: "MinIO, Apache Polaris 1.7.0 and a two-node Trino 483 cluster on one laptop, writing partitioned Iceberg tables where Trino holds no S3 credential at all."
+what_youll_build: "MinIO, Apache Polaris 1.7.0 and a two-node Trino 483 cluster, writing partitioned Iceberg tables where Trino holds no S3 credential at all."
 prerequisites:
   - "Docker with about 6 GB available to containers, and roughly 3 GB of disk for images"
   - "Comfort reading a docker-compose file and a Trino catalog properties file"

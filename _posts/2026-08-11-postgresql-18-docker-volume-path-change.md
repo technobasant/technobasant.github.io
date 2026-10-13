@@ -2,7 +2,7 @@
 title: "PostgreSQL 18 won't take a volume at /var/lib/postgresql/data"
 description: "The mount point moved in the PG 18 image, so every compose file copied from a 12–17 guide breaks. The corrected file, then replication, promotion and PITR."
 date: 2026-08-11 09:00:00 +0545
-last_modified_at: 2026-08-11 10:20:00 +0545
+last_modified_at: 2026-10-13
 type: tutorial
 tags: [postgres]
 series: failover-lab
@@ -419,4 +419,4 @@ Note that a promoted replica plus a full base backup is three copies of the same
 | Both nodes accept writes after a failover | The old primary was restarted on timeline 1 while the new one is on timeline 2 | Never do this. Rewind the old node with `pg_rewind` or rebuild it from `pg_basebackup` before it rejoins |
 | Recovery stops earlier than the target time | `archive_command` overwrote or skipped a segment | Keep the `test ! -f` guard so archiving fails loudly instead of clobbering |
 
-Earlier in this series: [A failover lab you can run on one laptop](/writing/failover-lab-six-engines-eight-scenarios/) for the rig and the full results matrix, and [nodetool refresh only reads upload/](/writing/scylladb-nodetool-refresh-upload-truncate-marker/) for the ScyllaDB restore that returns zero rows three different ways.
+Earlier in this series: [A failover lab: six database engines, eight scenarios, every one run](/writing/failover-lab-six-engines-eight-scenarios/) for the rig and the full results matrix, and [nodetool refresh only reads upload/](/writing/scylladb-nodetool-refresh-upload-truncate-marker/) for the ScyllaDB restore that returns zero rows three different ways.
