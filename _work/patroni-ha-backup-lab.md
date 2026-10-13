@@ -1,9 +1,9 @@
 ---
 title: "Orchestrated failover and a restore I actually performed"
 hook: "A production-shaped Postgres cluster on one laptop: killed the primary, rebuilt the replica, recovered a dropped table"
-description: "A Rocky 8 VM cluster running Patroni, etcd and pgBackRest over mutual TLS, built entirely by Ansible, where every failure and recovery claim was measured rather than assumed."
+description: "A Rocky 8 VM cluster running Patroni, etcd and pgBackRest over mutual TLS, with the backup path wired by Ansible, where every failure and recovery claim was measured rather than assumed."
 date: 2026-08-14
-last_modified_at: 2026-08-15
+last_modified_at: 2026-10-13
 kind: lab
 order: 5
 featured: true
@@ -13,8 +13,9 @@ period: "2026"
 team: "One person"
 scale: "Three amd64 Rocky 8 guests under QEMU on Apple Silicon; PostgreSQL 18.6, Patroni 4.1.5, etcd 3.7.0, pgBackRest 2.59 on a shared socket_vmnet fabric"
 problem: "A cluster that has never failed is a cluster whose recovery path is a hypothesis. I wanted a rig where the primary dies badly, the replica is thrown away, and a table is dropped on purpose — with the timings recorded rather than described."
-decision: "Build it on VMs rather than containers so the failure modes are the ones production has, drive every byte of configuration from Ansible so the lab is rebuildable, and refuse to publish a number that did not come off a run."
+decision: "Build it on VMs rather than containers so the failure modes are the ones production has, drive the backup path from Ansible and publish the etcd and Patroni bootstrap as exact commands so the lab is rebuildable, and refuse to publish a number that did not come off a run."
 flow: lab
+repo: "https://github.com/technobasant/postgres-ha-lab"
 stack: [PostgreSQL, Patroni, etcd, pgBackRest, Ansible, Rocky Linux, QEMU, Vagrant, TLS]
 metrics: [lab_patroni_promotion, lab_replica_rebuild, lab_pitr_recovery]
 tags: [postgres, distributed-databases, self-hosted]
@@ -36,7 +37,7 @@ The honest limit is etcd. It runs on one node, so this rig proves *PostgreSQL* f
 
 ## Architecture
 
-Three nodes: one carrying etcd and the pgBackRest repository, two running PostgreSQL 18.6 under Patroni. Vagrant boots the boxes and wires the lab NIC; everything above that — packages, configuration, certificates, systemd units, firewall rules — belongs to Ansible. A lab fixed by hand is a lab that cannot be rebuilt, and rebuildability is the only thing that makes a measurement repeatable.
+Three nodes: one carrying etcd and the pgBackRest repository, two running PostgreSQL 18.6 under Patroni. Vagrant boots the boxes and wires the lab NIC; the pgBackRest repository, certificates and archive wiring belong to Ansible, and the etcd and Patroni bootstrap is a short, published sequence of commands with the exact config files — not yet a playbook. Rebuildability is the only thing that makes a measurement repeatable; the bootstrap is the part still waiting to become a command.
 
 The repository declares *every* cluster member rather than a primary, because the primary moves. Transport between the repo and the database hosts is mutual TLS with an explicit certificate CN allow-list, not SSH: no shell account on the peers, and authorisation that can be read out of a config file.
 
@@ -46,7 +47,7 @@ The repository declares *every* cluster member rather than a primary, because th
 |---|---|---|---|
 | VMs under emulation | Containers on the host | Systemd, firewalld, chrony and package managers are where the real failures live | Slow: hours for a first bring-up |
 | Rocky 8 | Unregistered RHEL 8 | An unregistered RHEL box has no AppStream, so no python3.12, so no current Patroni at all | One paragraph of explanation in every post |
-| Ansible for all configuration | Shell over SSH | The lab has been rebuilt several times; each rebuild is a command, not an afternoon | Slower to write the first time |
+| Ansible for the backup path; published commands for the bootstrap | Shell over SSH throughout | The pgBackRest wiring rebuilds with one command, and the bootstrap is documented exactly | The bootstrap is still manual — the next part to become a playbook |
 | Mutual TLS between repo and nodes | SSH keys | No shell accounts, and authorisation is an explicit allow-list | Certificate lifecycle, and a clock-skew failure that cost real time |
 | Single etcd node | Three-node quorum | Fits the RAM budget, and the resulting limitation is measurable rather than hypothetical | The rig cannot claim cluster availability |
 

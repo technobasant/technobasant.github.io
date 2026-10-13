@@ -237,9 +237,9 @@ lab_patroni_promotion:
   context: "ttl 30 / loop_wait 10 on a single-node etcd; timeline advanced 1 to 2."
 
 lab_replica_rebuild:
-  value: "under 5 s"
+  value: "~5 s"
   label: "replica rebuilt from backup"
-  method: "patronictl reinit, timed from the pgBackRest restore command begin to Patroni reporting the replica created"
+  method: "patronictl reinit; the pgBackRest restore itself logged 5,020 ms, then Patroni reported the replica created"
   scope: "independent"
   source: "2026 Patroni HA lab"
   window: "2026"

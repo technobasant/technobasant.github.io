@@ -3,7 +3,7 @@ title: "Label the string, not the row: a short-text triage lab"
 seo_title: "Short-text classification: dedupe, cluster, then assign with a margin"
 description: "A synthetic 20,000-row multilingual lab: normalize to distinct keys, cluster them for one LLM call each, and why a cosine threshold needs a margin."
 date: 2026-10-03 09:20:00 +0545
-last_modified_at: 2026-10-03
+last_modified_at: 2026-10-13
 type: essay
 tags: [applied-ml, data-quality]
 toc: true
@@ -69,7 +69,7 @@ Everything is synthetic and seeded. I wrote 240 base phrasings by hand: eight in
 
 The damage mix on day 1 was 9,633 exact copies, 3,039 case changes, 2,426 single-character typos, 2,384 trailing punctuation, 1,640 stray or non-breaking spaces, and 878 accented strings in decomposed Unicode (NFD), as some keyboards and copy-paste paths emit. Day 2 is the test: known wordings with new damage, wordings the system has never embedded, and a category that has no cluster at all.
 
-The model is `intfloat/multilingual-e5-small` (384 dimensions) on CPU with four threads, on an Apple M5. The machine was shared with other work during the runs, with a load average between 34 and 56. Wall-clock times are inflated, so I report **process CPU time** as the comparable figure, each the median of three runs. Every number here is in the lab's `MEASUREMENTS.md`, with the JSON it came from.
+The model is `intfloat/multilingual-e5-small` (384 dimensions) on CPU with four threads, on an Apple M5. The machine was shared with other work during the runs, with a load average between 34 and 56. Wall-clock times are inflated, so I report **process CPU time** as the comparable figure, each the median of three runs. Every number here is in the lab's [`MEASUREMENTS.md`](https://github.com/technobasant/short-text-triage/blob/main/MEASUREMENTS.md), with the JSON it came from, and the whole lab is public as [short-text-triage](https://github.com/technobasant/short-text-triage).
 
 ## Rows are the wrong unit of work
 

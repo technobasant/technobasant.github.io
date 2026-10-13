@@ -2,7 +2,7 @@
 title: "Patroni HA on PostgreSQL 18 with etcd, proven by killing the primary"
 description: "Build a two-node Patroni cluster on Rocky 8 under QEMU, then SIGKILL the leader and measure the promotion, the timeline bump, and the pg_rewind rejoin."
 date: 2026-08-14 09:00:00 +0545
-last_modified_at: 2026-08-14
+last_modified_at: 2026-10-13
 type: tutorial
 tags: [postgres, distributed-databases]
 series: rhel8-pg-ansible
@@ -411,7 +411,7 @@ So: two Postgres nodes is a legitimate cluster. One etcd node is not a legitimat
 ## Clean up, and what this changes
 
 ```bash
-cd ~/labs/rocky8-patroni && vagrant destroy -f
+cd postgres-ha-lab/patroni && vagrant destroy -f   # https://github.com/technobasant/postgres-ha-lab
 ```
 
 The operating consequence is the part to carry forward. This cluster survives a dead primary in about twenty seconds without anyone being paged, and it repairs the dead node automatically instead of demanding a rebuild — but only because two settings were right before the incident: `use_pg_rewind` and data checksums. Neither can be added usefully while you are recovering.
