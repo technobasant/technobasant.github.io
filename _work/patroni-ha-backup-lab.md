@@ -1,6 +1,6 @@
 ---
 title: "Orchestrated failover and a restore I actually performed"
-hook: "A production-shaped Postgres cluster on one laptop: killed the primary, rebuilt the replica, recovered a dropped table"
+hook: "A production-shaped Postgres cluster on amd64 VMs: killed the primary, rebuilt the replica, recovered a dropped table"
 description: "A Rocky 8 VM cluster running Patroni, etcd and pgBackRest over mutual TLS, with the backup path wired by Ansible, where every failure and recovery claim was measured rather than assumed."
 date: 2026-08-14
 last_modified_at: 2026-10-13
@@ -31,7 +31,7 @@ Containers were the wrong shape for it. A Docker network cannot produce the fail
 
 ## Constraints
 
-One laptop, so the whole cluster fits in about 4 GB of RAM. amd64 guests under emulation on an Apple Silicon host, which is slow on purpose: a lab that lies about the instruction set makes every later packaging story suspect.
+One host, so the whole cluster fits in about 4 GB of RAM. amd64 guests under emulation on an Apple Silicon host, which is slow on purpose: a lab that lies about the instruction set makes every later packaging story suspect.
 
 The honest limit is etcd. It runs on one node, so this rig proves *PostgreSQL* failover, not *cluster* availability — and rather than caveat that, I measured what a DCS outage costs and published the answer.
 

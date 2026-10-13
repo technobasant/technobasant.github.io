@@ -168,7 +168,7 @@ grep 'orders_enriched' /data/deploy/starrocks/fe/log/fe.audit.log \
 | StarRocks 4.1.4 | **34 ms** |
 
 <div class="callout callout--gotcha" markdown="1">
-**This is a narrow test and the number should be read narrowly.** One aggregate, one partition, 100,000 rows, on a laptop. That is close to the shape StarRocks' vectorised MPP engine is built for, and it says nothing about the cases Trino is usually chosen for: federating across catalogs, joining a lakehouse table to a Postgres table, or long multi-table joins where the cost model matters more than the scan.
+**This is a narrow test and the number should be read narrowly.** One aggregate, one partition, 100,000 rows, on a single host. That is close to the shape StarRocks' vectorised MPP engine is built for, and it says nothing about the cases Trino is usually chosen for: federating across catalogs, joining a lakehouse table to a Postgres table, or long multi-table joins where the cost model matters more than the scan.
 
 The useful conclusion is not "StarRocks is 2.9× faster". It is that **you can now measure that question on your own data without migrating anything**, because both engines read the same tables. Before a REST catalog, answering it meant a copy.
 </div>

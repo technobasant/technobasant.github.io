@@ -1,5 +1,5 @@
 ---
-title: "A failover lab you can run on one laptop"
+title: "A failover lab: six database engines, eight scenarios, every one run"
 description: "Six database engines, eight failover scenarios, one 8-CPU Docker rig. The results matrix, the headline measurements, and how to run the first scenario."
 date: 2026-08-04 09:00:00 +0545
 last_modified_at: 2026-10-13
@@ -16,7 +16,7 @@ cover:
   fallback_width: "1600"
   width: 1600
   height: 900
-  alt: "Six database engines on one laptop: a failed primary smoking, a neighbor wearing the crown"
+  alt: "Six database engines in one lab: a failed primary smoking, a neighbor wearing the crown"
   caption: "Eight scenarios on one 8-CPU rig. A failover test is incomplete until quorum, acknowledged writes, and recovery are measured."
 level: intermediate
 time_estimate: "~45 min hands-on"

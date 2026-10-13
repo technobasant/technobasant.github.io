@@ -3,7 +3,7 @@ title: "nodetool refresh only reads upload/ — and TRUNCATE hides your SSTables
 seo_title: "ScyllaDB nodetool refresh only reads upload/"
 description: "Three ScyllaDB behaviors that make a perfectly valid snapshot restore return zero rows, with the repro, the fix, and the AIO limit that stops node three."
 date: 2026-08-07 09:00:00 +0545
-last_modified_at: 2026-08-11 10:20:00 +0545
+last_modified_at: 2026-10-13
 type: tutorial
 tags: [distributed-databases]
 series: failover-lab
@@ -80,7 +80,7 @@ fs.aio-max-nr = 1048576
 
 ## Step 2 — Bring the ring up one node at a time
 
-Three nodes, each pinned to a single shard and 1200 MB, which is what makes three of them fit on one laptop. `scylla1` is the seed; the other two join it.
+Three nodes, each pinned to a single shard and 1200 MB, which is what makes three of them fit on one Docker host. `scylla1` is the seed; the other two join it.
 
 ```yaml
 name: scylla-ha
@@ -423,4 +423,4 @@ Three nodes' worth of SSTables and snapshots come to real disk. `down` without `
 | A joiner never appears in `nodetool status` | All three nodes were started at once, before the seed was `UN` | Start `scylla1`, wait for `UN`, then start `scylla2` and `scylla3` one at a time |
 | `SELECT` fails with an unavailable exception at QUORUM | Two of three nodes are down, so QUORUM of RF=3 cannot be met | Bring a node back; do not lower the consistency level to hide it |
 
-The next post in this series is [PostgreSQL 18 won't take a volume at /var/lib/postgresql/data](/writing/postgresql-18-docker-volume-path-change/). The rig itself, and the full eight-scenario results matrix, is in [A failover lab you can run on one laptop](/writing/failover-lab-six-engines-eight-scenarios/).
+The next post in this series is [PostgreSQL 18 won't take a volume at /var/lib/postgresql/data](/writing/postgresql-18-docker-volume-path-change/). The rig itself, and the full eight-scenario results matrix, is in [A failover lab: six database engines, eight scenarios, every one run](/writing/failover-lab-six-engines-eight-scenarios/).
