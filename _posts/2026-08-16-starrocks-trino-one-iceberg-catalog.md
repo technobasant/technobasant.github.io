@@ -2,7 +2,7 @@
 title: "Two engines, one Iceberg catalog: StarRocks beside Trino, neither holding a key"
 description: "Attach StarRocks to the same Polaris REST catalog Trino writes through, measure both on identical data, and check for standing S3 keys."
 date: 2026-08-16 09:00:00 +0545
-last_modified_at: 2026-08-16
+last_modified_at: 2026-10-13
 type: tutorial
 tags: [iceberg-lakehouse, clickhouse]
 series: lakehouse-trino-iceberg
@@ -214,4 +214,4 @@ The rule: **a catalog earns its place when the second engine costs one DDL state
 
 That is a testable bar, and it is worth applying before committing to a catalog rather than after. Attach a second engine to a throwaway namespace, define it with no storage keys, and read a table the first engine wrote. If that works, the catalog is doing the job the architecture diagram claims. If it needs a copy, a manual table registration, or its own set of long-lived keys, you have a metadata service — which may still be worth running, but not for the reasons usually given.
 
-The rest of this series is on GitHub as a single `docker compose` file: [MinIO, Polaris, Trino, dbt, Airflow and StarRocks]({{ '/work/' | relative_url }}), with every figure in these four posts reproducible from it.
+The rest of this series is on GitHub as a single `docker compose` file: [MinIO, Polaris, Trino, dbt, Airflow and StarRocks](https://github.com/technobasant/lakehouse-lab), with every figure in these four posts reproducible from it.
