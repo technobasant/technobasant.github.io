@@ -21,6 +21,15 @@ recommended:
   - url: /writing/tags/ai-agents/
     title: "AI agents in production"
     why: "Topic hub for coding-agent governance and product agents."
+  - url: /writing/eval-score-drop-twelve-answers/
+    title: "The eval score fell 4.8 points. Twelve answers decided whether it meant anything."
+    why: "Gating LLM changes on paired evidence: McNemar on discordant cases, intervals, power."
+  - url: /writing/agent-measured-by-what-it-publishes/
+    title: "The agent got 48 of 54 right. Three of the wrong ones published themselves."
+    why: "A governed agent measured end to end: what reached users unreviewed, and how often it was wrong."
+  - url: /work/distributed-db-lab/
+    title: "Sharding Postgres with Citus, measured against TimescaleDB and ClickHouse"
+    why: "Citus rebalancing, co-location and tenant isolation; the cleanup-record bug behind citus#7333."
 
 claims:
   - "Treat Cursor, Claude Code, and Codex output as candidate state. It becomes the main branch only after AGENTS.md-shaped instructions, executable CI, CODEOWNERS, and an author who can explain the diff."
