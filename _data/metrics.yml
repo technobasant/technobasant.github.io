@@ -460,3 +460,40 @@ rtml_serve_p99:
   source: "realtime-ml (2026)"
   window: "measured 2026-10"
   context: "The client saw p99 of 34–257 ms over the same requests; that tail sits between the two timers and is not yet explained."
+
+# ── streaming-platform: Kafka, Flink, ClickHouse, Iceberg (2026) ────────────
+stream_failure_exactness:
+  value: "9 of 9"
+  label: "failure runs with every event layer exact"
+  method: "three controller-broker kills, three TaskManager kills and three 150 s stalls under load; Kafka, ClickHouse, Iceberg and the dead-letter topic reconciled against the generator's ledger by sequence number"
+  scope: "independent"
+  source: "streaming-platform (2026)"
+  window: "Oct 2026"
+  context: "Restarts rewrote 658–7,522 records that aborted transactions had written; no read_committed reader saw them."
+
+stream_window_undercount:
+  value: "59.8%"
+  label: "of on-time events left in the window counts after one broker kill"
+  method: "118,229 of 197,749 on-time events counted in their 10 s windows in the worst of three broker-kill runs; the rest went to the late side output because catch-up reordered partitions past the 5 s watermark bound"
+  scope: "independent"
+  source: "streaming-platform (2026)"
+  window: "Oct 2026"
+  context: "The raw table and the lake were exact in the same run. Two TaskManager restores also lost 241 and 95 late events from both windows and side output."
+
+stream_freshness_p99:
+  value: "6.1 s"
+  label: "p99 from event time to queryable in ClickHouse at 1,000 events/s"
+  method: "ClickHouse ingest time minus event time for every on-time event, median of three 90 s runs; the floor is the 5 s checkpoint interval at which Flink's transactions commit"
+  scope: "independent"
+  source: "streaming-platform (2026)"
+  window: "Oct 2026"
+  context: "6.6 s at 3,000/s and 9.1 s at 6,000/s. After about four hours of experiments two 1,000/s runs had p99 of 23–25 s; not yet root-caused."
+
+stream_stall_page:
+  value: "59–62 s"
+  label: "from a frozen pipeline to a firing burn-rate alert"
+  method: "both TaskManagers paused for 150 s at 500 events/s; freshness probes every 5 s; multi-window burn-rate rules compressed 12× from the 1 h/5 m pair; alert state polled every second"
+  scope: "independent"
+  source: "streaming-platform (2026)"
+  window: "Oct 2026"
+  context: "Cleared about 45 s after the TaskManagers resumed. With the uncompressed windows the same arithmetic gives about nine minutes."

@@ -1056,6 +1056,59 @@ def realtime_ml() -> str:
     return "".join(body)
 
 
+def streaming_platform() -> str:
+    """Every event layer exact through nine failures; the window counts were not."""
+    # counted_in_windows / on_time_expected per run, from the repo's results/*.json.
+    groups = [
+        ("broker kill", [(197745, 197749), (159729, 197752), (118229, 197749)]),
+        ("TaskManager kill", [(177987, 177997), (177990, 177993), (163326, 177997)]),
+        ("150 s stall", [(142984, 163178), (123801, 163177), (133821, 163178)]),
+    ]
+    x0, x1, bar_h = 640, 2000, 40
+    body = [
+        f'<rect width="{W}" height="{H}" fill="{PAPER}"/>',
+        f'<text x="150" y="190" font-family="{MONO}" font-size="30" letter-spacing="6" '
+        f'fill="{ACCENT}">STREAMING-PLATFORM · NINE FAILURE RUNS</text>',
+        f'<text x="150" y="300" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">Every event landed exactly once.</text>',
+        f'<text x="150" y="382" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">The window counts did not.</text>',
+        # legend
+        f'<rect x="{x0}" y="452" width="30" height="20" fill="{INK}"/>',
+        f'<text x="{x0 + 44}" y="471" font-family="{MONO}" font-size="24" fill="{MUTED}">'
+        f'counted in its 10 s window</text>',
+        f'<rect x="1150" y="452" width="30" height="20" fill="{PANEL}" stroke="{MUTED}" '
+        f'stroke-width="2"/>',
+        f'<text x="1194" y="471" font-family="{MONO}" font-size="24" fill="{MUTED}">'
+        f'sent on time, routed to the late output</text>',
+    ]
+    y = 510
+    for name, runs in groups:
+        for i, (counted, expected) in enumerate(runs, start=1):
+            share = counted / expected
+            hot = share < 0.99
+            body += [
+                f'<text x="150" y="{y + 30}" font-family="{MONO}" font-size="27" '
+                f'fill="{INK}">{escape(name)} · run {i}</text>',
+                f'<rect x="{x0}" y="{y}" width="{x1 - x0}" height="{bar_h}" fill="{PANEL}" '
+                f'stroke="{LINE}" stroke-width="2"/>',
+                f'<rect x="{x0}" y="{y}" width="{(x1 - x0) * share:.1f}" height="{bar_h}" '
+                f'fill="{INK}"/>',
+                f'<text x="{W - 150}" y="{y + 31}" font-family="{MONO}" font-size="30" '
+                f'fill="{ACCENT if hot else MUTED}" text-anchor="end">{share * 100:.1f}%</text>',
+            ]
+            y += 62
+        y += 24
+    body += [
+        f'<line x1="150" y1="1120" x2="{W - 150}" y2="1120" stroke="{LINE}" stroke-width="2"/>',
+        f'<text x="150" y="1195" font-family="{MONO}" font-size="30" fill="{MUTED}">'
+        f'events.clean · ClickHouse · Iceberg: exact in all nine runs</text>',
+        f'<text x="{W - 150}" y="1195" font-family="{MONO}" font-size="30" fill="{ACCENT}" '
+        f'text-anchor="end">window counts: as low as 59.8%</text>',
+    ]
+    return "".join(body)
+
+
 DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patroni,
             "lakehouse-spine": lakehouse_spine,
             "lakehouse-medallion": lakehouse_medallion,
@@ -1077,6 +1130,7 @@ DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patro
             "governed-agent": governed_agent,
             "retrieval-bench": retrieval_bench,
             "realtime-ml": realtime_ml,
+            "streaming-platform": streaming_platform,
             "prevalence-shift": prevalence_shift}
 
 def svg_for(name: str) -> str:
