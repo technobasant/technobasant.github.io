@@ -16,7 +16,7 @@ cover:
   fallback_width: "1600"
   width: 1600
   height: 900
-  alt: "PostgreSQL elephant beside a locked TLS repo host, corridor marked 8432 to a client"
+  alt: "Topology diagram: an Ansible control node issues certificates to a dedicated pgBackRest TLS repo host, backup1, and a client, pg1, joined by mutual TLS on port 8432, with server-ping at 84 ms and openssl's verify return code 0 as the proof"
   caption: "pgBackRest TLS is a mutual handshake, not an open port. Certs, CN, and SAN have to agree before a backup is even attempted."
 featured: false
 level: intermediate

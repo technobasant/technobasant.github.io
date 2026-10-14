@@ -21,7 +21,7 @@ cover:
   base: "/assets/images/editorial-failover-lab-v1"
   width: 1600
   height: 900
-  alt: "Six database engines in one lab: a failed primary smoking, a neighbor wearing the crown"
+  alt: "Table of eight failover scenarios across six engines, each with what was done and what was measured, from 1,000 majority writes read back on MongoDB to a 383 µs replay lag and timeline 1 to 2 on PostgreSQL, beside 8 of 8 passed and network partitions not tested"
   caption: "Eight scenarios on one 8-CPU rig. A failover test is incomplete until quorum, acknowledged writes, and recovery are measured."
   link: "/writing/failover-lab-six-engines-eight-scenarios/"
 stack: [MongoDB, ScyllaDB, SolrCloud, MariaDB, Galera, Redis, PostgreSQL, Docker, Prometheus, Grafana]

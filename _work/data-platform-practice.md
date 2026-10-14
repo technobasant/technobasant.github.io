@@ -20,7 +20,7 @@ cover:
   base: "/assets/images/editorial-data-platform-ai-v1"
   width: 1600
   height: 900
-  alt: "Abstract event streams passing through governed data layers into a product decision surface"
+  alt: "Schematic: source records, decision records and rebuildable projections as three layers, the proposed, validated, applied, needs_review and rejected states of a model's output, and five fitness signals from freshness to repair time"
   caption: "A reliable product boundary carries contracts, provenance, and recovery paths across every layer."
   link: "/writing/building-data-platforms-and-ai-products/"
 metrics: [professional_processing_improvement, professional_cost_reduction, professional_uptime, professional_query_latency]

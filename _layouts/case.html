@@ -94,9 +94,11 @@ layout: default
       {%- endif %}
     </div>
     {%- if page.cover and page.cover.base -%}
+    {%- assign _cover_dark = page.cover.base | append: "-dark" -%}
     <figure class="case-figure is-wide">
       {%- include picture.html
           base=page.cover.base
+          dark=_cover_dark
           widths="840,1600"
           raster_widths="840,1600"
           ext="jpg"

@@ -18,7 +18,7 @@ cover:
   fallback_width: "1600"
   width: 1600
   height: 900
-  alt: "WireGuard-green tunnel from laptop and phone through a pinned VPS; the latest path crumbles"
+  alt: "Schematic: the wg-easy :latest tag struck out because it still resolves to v14, the pinned :15 tag, and a laptop and phone tunnelling over UDP 51820 to wg-easy on the VPS, whose IPv4 is the address the internet sees"
   caption: "wg-easy :latest still resolves to v14. Pin :15 or the hostname never sticks."
 level: intermediate
 time_estimate: "~25 min hands-on"

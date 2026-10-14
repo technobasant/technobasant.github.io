@@ -17,7 +17,7 @@ cover:
   fallback_width: "1600"
   width: 1600
   height: 900
-  alt: "PostgreSQL elephant on nested Docker mounts; the old /data path sits unused beside PG 18"
+  alt: "Schematic: the pre-18 volume at /var/lib/postgresql/data struck out, the PostgreSQL 18 mount at /var/lib/postgresql with the cluster in 18/docker, and a primary streaming to a hot standby at 383 µs replay lag before pg_promote moves it to timeline 2"
   caption: "PostgreSQL 18 wants the volume at /var/lib/postgresql, with PGDATA one level down. The pre-18 path is the unused mount."
 level: intermediate
 time_estimate: "~35 min hands-on"

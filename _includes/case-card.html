@@ -28,8 +28,9 @@
     figure. Only cases with a `cover` get one; nothing is faked for the rest.
   {%- endcomment -%}
   {%- if _c.cover and _c.cover.base %}
+  {%- assign _thumb_dark = _c.cover.base | append: "-dark" %}
   <div class="case-card__thumb" aria-hidden="true">
-    {%- include picture.html base=_c.cover.base widths="840" ext="jpg" fallback_width="840" sizes="14rem" width="840" height="506" alt="" loading="lazy" -%}
+    {%- include picture.html base=_c.cover.base dark=_thumb_dark widths="840" ext="jpg" fallback_width="840" sizes="14rem" width="840" height="506" alt="" loading="lazy" -%}
   </div>
   {%- endif %}
   {%- if _c.role %}<p class="case-card__role">{{ _c.role }}</p>{% endif -%}

@@ -67,9 +67,16 @@ biggest liability of a tutorial blog into a trust signal costs one paragraph. {%
       </dl>
     </div>
     {%- if page.cover %}
+    {%- comment -%}
+      The hero is the LCP image, and dark is the default theme, so the dark copy
+      loads eagerly at high priority and the light copy is lazy: hidden, it is
+      never fetched. A light-theme reader pays for one extra eager image.
+    {%- endcomment -%}
+    {%- assign _cover_dark = page.cover.base | append: "-dark" %}
     <figure class="article-hero__media">
       {%- include picture.html
           base=page.cover.base
+          dark=_cover_dark
           widths=page.cover.widths
           raster_widths=page.cover.raster_widths
           ext="jpg"
@@ -79,7 +86,8 @@ biggest liability of a tutorial blog into a trust signal costs one paragraph. {%
           height=page.cover.height
           alt=page.cover.alt
           loading="eager"
-          fetchpriority="high" -%}
+          fetchpriority="high"
+          light_loading="lazy" -%}
       {%- if page.cover.caption %}<figcaption>{{ page.cover.caption }}</figcaption>{% endif -%}
     </figure>
     {%- endif %}
