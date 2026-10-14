@@ -2,7 +2,7 @@
 title: "A failover lab: six database engines, eight scenarios, every one run"
 description: "Six database engines, eight failover scenarios, one 8-CPU Docker rig. The results matrix, the headline measurements, and how to run the first scenario."
 date: 2026-08-04 09:00:00 +0545
-last_modified_at: 2026-10-13
+last_modified_at: 2026-10-14
 type: tutorial
 pillar: database-lifecycle
 tags: [distributed-databases, postgres]

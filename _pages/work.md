@@ -1,6 +1,6 @@
 ---
 title: Selected work
-last_modified_at: 2026-10-03
+last_modified_at: 2026-10-14
 seo_title: "Data Platform, AI Systems & Architecture Case Studies — Basant Bhattarai"
 eyebrow: Case studies
 headline: "Data platforms, AI systems, and the architecture that keeps them running."

@@ -4,7 +4,7 @@ seo_title: "Clinic Records OCR Case Study — Measured, FHIR-Shaped Drafts"
 hook: "Clinicians photograph paper records; the system drafts structured fields for review and refuses what it cannot read."
 description: "A camera-first records product for small clinics: OCR drafts FHIR-shaped fields, a fixed scorer picks the engine, and anything unreadable goes to a person."
 date: 2026-08-20
-last_modified_at: 2026-10-03
+last_modified_at: 2026-10-14
 kind: production
 pillar: ai-systems
 order: 2
