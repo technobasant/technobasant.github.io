@@ -4,6 +4,7 @@ description: "Measure what compaction buys on a small-files partition, then dele
 date: 2026-08-16 10:00:00 +0545
 last_modified_at: 2026-08-16
 type: tutorial
+pillar: data-platforms
 tags: [iceberg-lakehouse, observability-slo]
 series: lakehouse-trino-iceberg
 series_order: 3

@@ -5,6 +5,7 @@ description: "How to run Cursor, Claude Code, and Codex in an existing repo: AGE
 date: 2026-08-16 13:00:00 +0545
 last_modified_at: 2026-08-16 18:15:00 +0545
 type: essay
+pillar: ai-systems
 series: agentic-engineering
 series_order: 1
 editor_pick: true

@@ -5,6 +5,7 @@ description: "A synthetic 20,000-row multilingual lab: normalize to distinct key
 date: 2026-10-03 09:20:00 +0545
 last_modified_at: 2026-10-13
 type: essay
+pillar: ai-systems
 tags: [applied-ml, data-quality]
 toc: true
 featured: true

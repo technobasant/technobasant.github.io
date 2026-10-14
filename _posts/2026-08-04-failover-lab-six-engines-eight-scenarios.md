@@ -4,6 +4,7 @@ description: "Six database engines, eight failover scenarios, one 8-CPU Docker r
 date: 2026-08-04 09:00:00 +0545
 last_modified_at: 2026-10-13
 type: tutorial
+pillar: database-lifecycle
 tags: [distributed-databases, postgres]
 series: failover-lab
 series_order: 1

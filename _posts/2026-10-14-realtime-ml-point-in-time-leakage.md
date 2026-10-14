@@ -5,6 +5,7 @@ description: "A naively joined fraud model beat the point-in-time one on validat
 date: 2026-10-14 09:15:00 +0545
 last_modified_at: 2026-10-14
 type: essay
+pillar: ai-systems
 series: reference-systems
 series_order: 4
 tags:

@@ -5,6 +5,7 @@ description: "Want a free mailbox for your domain? Run Stalwart on Docker, skip 
 date: 2026-08-04 09:00:00 +0545
 last_modified_at: 2026-08-11 11:30:00 +0545
 type: tutorial
+pillar: self-hosted
 tags: [self-hosted]
 series: self-hosted-ops
 series_order: 3

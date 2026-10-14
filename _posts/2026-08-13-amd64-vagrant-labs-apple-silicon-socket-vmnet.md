@@ -4,6 +4,7 @@ description: "Apple Silicon labs that boot still fail host and mesh ping when yo
 date: 2026-08-13 10:00:00 +0545
 last_modified_at: 2026-08-13
 type: tutorial
+pillar: delivery-infrastructure
 tags: [self-hosted, postgres]
 toc: true
 cover:

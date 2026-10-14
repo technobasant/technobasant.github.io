@@ -4,6 +4,7 @@ description: "Every gate in this repository exists because something got through
 date: 2026-08-16 14:00:00 +0545
 last_modified_at: 2026-08-16
 type: essay
+pillar: ai-systems
 series: agentic-engineering
 series_order: 2
 tags: [ai-agents, data-quality]

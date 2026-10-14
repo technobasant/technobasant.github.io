@@ -5,6 +5,7 @@ description: "Schema changes teams call safe still break someone. A JSON Schema 
 date: 2026-10-14 09:25:00 +0545
 last_modified_at: 2026-10-14
 type: essay
+pillar: data-platforms
 series: reference-systems
 series_order: 6
 tags:

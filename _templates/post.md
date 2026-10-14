@@ -4,6 +4,9 @@ title: "{{TITLE}}"
 description: ""
 date: {{DATE}}
 type: essay
+# One of the ids in _data/writing_groups.yml: data-platforms, ai-systems,
+# database-lifecycle, delivery-infrastructure, self-hosted. `rake content` enforces it.
+pillar: ""
 # One to three existing slugs from _data/tags.yml.
 tags:
   - career

@@ -5,6 +5,7 @@ description: "A 10% filter cut pgvector's post-filtered answer to 3.9 of 10 rows
 date: 2026-10-14 09:10:00 +0545
 last_modified_at: 2026-10-14
 type: essay
+pillar: ai-systems
 series: reference-systems
 series_order: 3
 tags:

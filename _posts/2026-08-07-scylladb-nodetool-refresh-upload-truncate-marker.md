@@ -5,6 +5,7 @@ description: "Why a valid ScyllaDB snapshot restore can return zero rows with no
 date: 2026-08-07 09:00:00 +0545
 last_modified_at: 2026-10-14
 type: tutorial
+pillar: database-lifecycle
 tags: [distributed-databases]
 series: failover-lab
 series_order: 2

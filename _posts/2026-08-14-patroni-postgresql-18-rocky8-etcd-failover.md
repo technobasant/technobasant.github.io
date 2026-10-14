@@ -4,6 +4,7 @@ description: "Build a two-node Patroni cluster on Rocky 8 under QEMU, then SIGKI
 date: 2026-08-14 09:00:00 +0545
 last_modified_at: 2026-10-13
 type: tutorial
+pillar: database-lifecycle
 tags: [postgres, distributed-databases]
 series: rhel8-pg-ansible
 series_order: 2

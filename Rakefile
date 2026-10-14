@@ -133,6 +133,7 @@ desc "Validate published post metadata, structure and tutorial contracts"
 task :content do
   failures = []
   posts = Dir.glob("_posts/*.{md,markdown}").sort
+  writing_groups = YAML.safe_load(File.read("_data/writing_groups.yml")).map { |g| g["id"] }
 
   posts.each do |path|
     raw = File.read(path)
@@ -187,6 +188,11 @@ task :content do
     end
 
     failures << "#{path}: type must be essay, tutorial or note" unless %w[essay tutorial note].include?(type)
+
+    # Every post is filed under one subject group on /writing/.
+    unless writing_groups.include?(data["pillar"].to_s)
+      failures << "#{path}: pillar must be one of #{writing_groups.join(', ')} (_data/writing_groups.yml)"
+    end
 
     tags = data["tags"]
     unless tags.is_a?(Array) && (1..3).cover?(tags.size)

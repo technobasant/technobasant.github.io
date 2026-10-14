@@ -4,6 +4,7 @@ description: "Stand up a dedicated pgBackRest TLS repo host on generic/rhel8 wit
 date: 2026-08-13 12:30:00 +0545
 last_modified_at: 2026-08-13 14:10:00 +0545
 type: tutorial
+pillar: database-lifecycle
 tags: [postgres, self-hosted]
 series: rhel8-pg-ansible
 series_order: 1

@@ -4,6 +4,7 @@ description: "Build a medallion pipeline with dbt-trino on Iceberg, orchestrate 
 date: 2026-08-16 11:00:00 +0545
 last_modified_at: 2026-08-16
 type: tutorial
+pillar: data-platforms
 tags: [iceberg-lakehouse, data-quality]
 series: lakehouse-trino-iceberg
 series_order: 2

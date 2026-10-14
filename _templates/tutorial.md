@@ -4,6 +4,9 @@ title: "{{TITLE}}"
 description: ""
 date: {{DATE}}
 type: tutorial
+# One of the ids in _data/writing_groups.yml: data-platforms, ai-systems,
+# database-lifecycle, delivery-infrastructure, self-hosted. `rake content` enforces it.
+pillar: ""
 tags:
   - distributed-databases
 toc: true

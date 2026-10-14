@@ -5,6 +5,7 @@ description: "Want a free VPN you actually control? Pin wg-easy to :15, mount /l
 date: 2026-06-03 09:00:00 +0545
 last_modified_at: 2026-08-11 11:30:00 +0545
 type: tutorial
+pillar: self-hosted
 tags: [self-hosted]
 series: self-hosted-ops
 series_order: 2

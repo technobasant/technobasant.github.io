@@ -554,10 +554,17 @@
     }
 
     var byId = {};
+    // Number every row of the list, group header rows included, so that
+    // restoring the unfiltered order puts each header back above its posts.
+    if (list) {
+      Array.prototype.forEach.call(list.children, function (row, i) {
+        row.setAttribute("data-origin", String(i));
+      });
+    }
     Array.prototype.forEach.call(items, function (el, i) {
       var id = el.getAttribute("data-id") || "";
       var row = el.closest("li") || el;
-      row.setAttribute("data-origin", String(i));
+      if (!row.hasAttribute("data-origin")) row.setAttribute("data-origin", String(i));
       if (id) byId[id] = { el: el, row: row };
     });
 

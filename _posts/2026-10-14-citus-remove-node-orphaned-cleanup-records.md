@@ -5,6 +5,7 @@ description: "Draining a Citus worker and removing it straight away left cleanup
 date: 2026-10-14 09:35:00 +0545
 last_modified_at: 2026-10-14
 type: essay
+pillar: database-lifecycle
 series: reference-systems
 series_order: 8
 tags:

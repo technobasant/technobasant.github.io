@@ -1,0 +1,19 @@
+# Subject groups for the writing index, in display order. Every post declares
+# one `pillar:` from this list (`rake content` enforces it). The first four
+# match the capability groups on /work/; the last holds the follow-along
+# self-hosting runbooks, kept on the site and filed under their own heading.
+- id: data-platforms
+  title: "Data platforms"
+  detail: "Streaming, lakehouse, data contracts, and the upgrades that break them"
+- id: ai-systems
+  title: "AI systems"
+  detail: "Evaluation, agents, retrieval and applied ML, measured"
+- id: database-lifecycle
+  title: "Databases and distributed systems"
+  detail: "Sharding, failover, backup and restore on real clusters"
+- id: delivery-infrastructure
+  title: "Delivery and infrastructure"
+  detail: "Progressive delivery and the lab infrastructure underneath"
+- id: self-hosted
+  title: "Self-hosted runbooks"
+  detail: "Follow-along setups for a VPS you own"
