@@ -1,9 +1,9 @@
 ---
-title: "nodetool refresh only reads upload/ — and TRUNCATE hides your SSTables"
+title: "nodetool refresh only reads the live table's upload/ directory"
 seo_title: "ScyllaDB nodetool refresh only reads upload/"
-description: "Three ScyllaDB behaviors that make a perfectly valid snapshot restore return zero rows, with the repro, the fix, and the AIO limit that stops node three."
+description: "Why a valid ScyllaDB snapshot restore can return zero rows with no error, the restore that works after a TRUNCATE, and the AIO limit that stops node three."
 date: 2026-08-07 09:00:00 +0545
-last_modified_at: 2026-10-13
+last_modified_at: 2026-10-14
 type: tutorial
 tags: [distributed-databases]
 series: failover-lab
@@ -11,14 +11,14 @@ series_order: 2
 featured: true
 toc: true
 cover:
-  base: "/assets/images/editorial-scylla-refresh-v1"
+  base: "/assets/images/editorial-scylla-restore-v1"
   widths: "840,1600"
   raster_widths: "840,1600"
   fallback_width: "1600"
   width: 1600
   height: 900
-  alt: "Scylla node with SSTable discs; only the upload tray glows, a TRUNCATE marker hides older files"
-  caption: "nodetool refresh only reads upload/, and a TRUNCATE marker keeps pre-truncate SSTables invisible even when the files are back."
+  alt: "Schematic: snapshot, TRUNCATE with its automatic snapshot, copy into the live table's upload/ directory, refresh with load-and-stream on one node, and three of three rows back at QUORUM with no DROP"
+  caption: "nodetool refresh only reads the live table's upload/. Files anywhere else are ignored with exit 0; files owned by root fail with exit 4."
 level: advanced
 time_estimate: "~40 min hands-on"
 what_youll_build: "A three-node ScyllaDB cluster at RF=3 that survives a node loss at QUORUM, and a snapshot restore that actually returns your rows instead of zero."
@@ -30,25 +30,28 @@ prerequisites:
 tested_on: "ScyllaDB 2026.1 · Docker Compose v2 · 8 CPU / 12.5 GB"
 key_takeaways:
   - "nodetool refresh only scans the live table directory's upload/ subdirectory; valid SSTables placed beside the live files are ignored without an error."
-  - "A TRUNCATE marker keeps pre-truncate SSTables invisible, so recovery requires dropping and recreating the table before loading the snapshot."
-  - "The recreated table has a new UUID and directory; verify that identity in system_schema.tables before copying files or running refresh."
+  - "TRUNCATE does not block a restore: snapshot SSTables copied into the same table's upload/ after a TRUNCATE load normally, which is the order ScyllaDB's own restore procedure uses."
+  - "A dropped and recreated table has a new UUID directory; refresh against the old one exits 0 and loads nothing, so match system_schema.tables.id first."
+  - "With tablets, the 2026.1 default, refresh on one node streams to every replica, so upload each snapshot once rather than on every node."
 ---
+
+<div class="callout callout--warn" markdown="1">
+**Correction, 14 October 2026.** An earlier version of this post said that `TRUNCATE` leaves a marker that hides pre-truncate SSTables, and that recovering needs `DROP TABLE` and a recreate. That was wrong. I re-ran the sequence on ScyllaDB 2026.1 on one node and on this three-node ring, with tablets and with vnodes: snapshot SSTables copied into the truncated table's `upload/` loaded with a plain `nodetool refresh`, and all three rows came back at ONE, QUORUM and ALL, and after a restart. ScyllaDB's own [restore procedure](https://github.com/scylladb/scylladb/blob/master/docs/operating-scylla/procedures/backup-restore/restore.rst) truncates first. The truncation record governs commitlog, batchlog and Paxos replay, not SSTables loaded later. I cannot reproduce the zero I recorded in August; the two ways I can reproduce it are below, and neither involves `TRUNCATE`. Steps 6 to 8 and the troubleshooting table are rewritten.
+</div>
 
 ## What went wrong
 
-I had a good snapshot. I had the SSTable files on disk. I ran `nodetool refresh` on all three nodes, got no errors, and `SELECT count(*)` returned zero.
+I had a good snapshot. I had the SSTable files on disk. I ran `nodetool refresh`, got no error, and `SELECT count(*)` returned zero.
 
-It took three separate discoveries to get the rows back, and none of them produced an error message at any point. That is what makes this expensive: every step in the obvious restore procedure succeeds, and the data still is not there.
+That is what makes a restore on this engine expensive to debug: the obvious procedure succeeds at every step, and the data is still not there. Three behaviors decide whether the rows come back, stated up front so you can stop reading if one of them is your problem:
 
-The three behaviors, stated up front so you can stop reading if one of them is your problem:
-
-1. **`nodetool refresh` only loads SSTables from the table's `upload/` subdirectory.** Files dropped into the table directory itself are ignored — silently, with a zero exit code.
-2. **`TRUNCATE` writes a truncation marker**, and that marker hides every SSTable written before it. You can put the old files back and they stay invisible. Recovering from a `TRUNCATE` needs `DROP TABLE` and a recreate, not another restore attempt.
-3. **Recreating a table gives it a new UUID**, and the on-disk directory is named after that UUID. The path you carefully copied files into a minute ago now belongs to a dead table.
+1. **`nodetool refresh` only loads SSTables from the table's `upload/` subdirectory.** Files placed in the table directory itself are ignored, silently, with a zero exit code.
+2. **The `upload/` has to belong to the live table.** A dropped and recreated table gets a new UUID and a new directory, and the old one survives on disk. Loading into the old one also exits 0 and loads nothing.
+3. **The files must be owned by the `scylla` user.** This one is loud: `refresh` exits 4 and says so.
 
 There is a fourth thing, which happens before any of this and is the reason the cluster would not start in the first place. It gets Step 1.
 
-The compose file is reproduced inline below. There is no public repository to clone.
+The compose file is reproduced inline below. It is also in the public [db-failover-lab](https://github.com/technobasant/db-failover-lab/tree/main/scylla-ha) repository.
 
 ## Step 1 — Raise fs.aio-max-nr before the third node
 
@@ -243,15 +246,18 @@ for n in 1 2 3; do
 done
 ```
 
-**Verify.** The snapshot directory exists under the table directory:
+**Verify.** The snapshot directory exists under the table directory, and it holds at least one `*-Data.db` file:
 {: .verify}
 
 ```console
-$ docker exec scylla-ha-scylla1-1 sh -c 'ls -d /var/lib/scylla/data/poc/sensor_by_day-*/snapshots/poc_bkp'
-/var/lib/scylla/data/poc/sensor_by_day-6f1c8ad0-6373-11f1-9c4d-3a17e2c3b901/snapshots/poc_bkp
+$ docker exec scylla-ha-scylla1-1 sh -c 'ls -d /var/lib/scylla/data/poc/sensor_by_day-*/snapshots/poc_bkp; ls /var/lib/scylla/data/poc/sensor_by_day-*/snapshots/poc_bkp | grep -c Data.db'
+/var/lib/scylla/data/poc/sensor_by_day-b573cef0c7c011f1b6ea6fae48e15e5e/snapshots/poc_bkp
+1
 ```
 
-The UUID in that path is the table's identity, and it will be different on your ring. Remember that it is there. It becomes the third gotcha in Step 7.
+The UUID in that path is the table's identity, and it will be different on your ring. Remember that it is there; it matters in Step 7.
+
+Check every node, not just the first. On the re-run, `scylla2` had been stopped within seconds of the inserts in Step 4, came back without them, and its snapshot held no data file at all. With the default periodic commitlog sync, a node stopped right after a write can lose it locally; the other replicas still have it. A snapshot is only as good as what that node had flushed.
 
 ## Step 6 — Destroy the data
 
@@ -274,6 +280,12 @@ cqlsh> SELECT count(*) FROM poc.sensor_by_day;
 (1 rows)
 ```
 
+`TRUNCATE` also takes a snapshot of its own before it deletes anything, because `auto_snapshot` is on by default. It appears next to yours, named `<epoch-ms>-sensor_by_day` (on the re-run, `1791976469830-sensor_by_day`), and it is a complete restore source if you never took one:
+
+```bash
+docker exec scylla-ha-scylla1-1 sh -c 'ls /var/lib/scylla/data/poc/sensor_by_day-*/snapshots/'
+```
+
 ## Step 7 — Why the obvious restore does nothing
 
 The obvious restore is: copy the snapshot's SSTables back next to the live ones, then tell the node to pick them up.
@@ -285,52 +297,27 @@ docker exec scylla-ha-scylla1-1 sh -c '
 docker exec scylla-ha-scylla1-1 nodetool refresh poc sensor_by_day
 ```
 
-That command exits 0. It prints nothing. And the count is still zero.
+That command exits 0. It prints nothing. And the count is still zero, at every consistency level and from every coordinator.
 
 <div class="callout callout--gotcha" markdown="1">
-**Gotcha 1 — `refresh` only reads `upload/`.** `nodetool refresh` does not scan the table directory. It scans the table's `upload/` subdirectory, loads whatever valid SSTables it finds there, and returns. Files sitting directly in the table directory are not an error and not a warning; they are simply not looked at. Create `upload/` if it does not exist and put the files inside it.
+**Gotcha 1 — `refresh` only reads `upload/`.** `nodetool refresh` does not scan the table directory. It scans the table's `upload/` subdirectory, loads whatever valid SSTables it finds there, and returns. Files sitting directly in the table directory are not an error and not a warning; they are simply not looked at.
 </div>
 
-Move the files into `upload/` and refresh again, and the count is *still* zero. That is the second behavior.
+Do not leave them there, either. Copying files into a running node's table directory is not a supported operation, and the node will read whatever is in that directory at its next start. Delete the copies, which carry the same names as the files in `snapshots/poc_bkp/`, before you go on.
 
 <div class="callout callout--gotcha" markdown="1">
-**Gotcha 2 — `TRUNCATE` leaves a marker that hides older SSTables.** Truncate does not just delete files. It records a truncation record for the table, and every SSTable whose data predates that record is treated as truncated away, no matter how it arrived on disk afterwards. Loading a pre-truncate snapshot into a table that has been truncated gets you nothing. The marker belongs to the table, so the way out is `DROP TABLE` and recreate — which discards the marker along with the table.
+**Gotcha 2 — the `upload/` must belong to the live table.** The on-disk path is `<table_name>-<table_id>`. If someone dropped and recreated the table, `CREATE` minted a fresh id, and the old directory survives on disk with your snapshot inside it, which is why nothing looks broken. Files loaded into that directory's `upload/` exit 0 and load nothing. The live one is the directory whose suffix matches `system_schema.tables.id`.
 </div>
-
-So: drop, recreate, copy into `upload/`, refresh. And it is still zero, for a third reason.
 
 <div class="callout callout--gotcha" markdown="1">
-**Gotcha 3 — a recreated table gets a new UUID and a new directory.** The on-disk path is `<table_name>-<table_id>`, and `DROP` + `CREATE` mints a fresh id. The old directory survives on disk with your snapshot inside it, which is why nothing looks broken. You are loading files into a directory that no longer belongs to any live table. The live one is the directory whose suffix matches `system_schema.tables.id` for that table.
+**Gotcha 3 — the files must be owned by `scylla`.** Files copied in by `docker cp`, or by anything running as root, are refused: `refresh` exits 4 with `File not owned by current euid: 998. Owner is: 0`. In this image `docker exec` already runs as the `scylla` user, so a `cp` through `docker exec` gets ownership right; anything else needs a `chown -R scylla:scylla` first.
 </div>
 
-Three behaviors, three silent no-ops, one restore that has to be done in a specific order to work.
+What is not on this list is the truncation. A pre-truncate snapshot loads into the truncated table normally, and the next step does exactly that.
 
 ## Step 8 — The restore that works
 
-The ordering matters: stage the snapshot files **out** of the table directory first, because the drop in the next command takes the directory context with it.
-
-Stage on every node:
-
-```bash
-for n in 1 2 3; do
-  docker exec scylla-ha-scylla$n-1 sh -c '
-    mkdir -p /tmp/stage &&
-    cp /var/lib/scylla/data/poc/sensor_by_day-*/snapshots/poc_bkp/* /tmp/stage/'
-done
-```
-
-Drop and recreate the table, which discards the truncation marker:
-
-```bash
-docker exec scylla-ha-scylla1-1 cqlsh -e "DROP TABLE poc.sensor_by_day;"
-docker exec scylla-ha-scylla1-1 cqlsh -e "
-CREATE TABLE poc.sensor_by_day (
-  sensor_id text, day date, ts timestamp, value double,
-  PRIMARY KEY ((sensor_id, day), ts)
-) WITH CLUSTERING ORDER BY (ts DESC);"
-```
-
-Confirm which directory is now the live one. The id here is what the directory suffix has to match:
+No drop, no recreate. First confirm which directory is the live table. The id is what the directory suffix has to match:
 
 ```bash
 docker exec scylla-ha-scylla1-1 cqlsh -e "
@@ -338,34 +325,18 @@ SELECT id FROM system_schema.tables
  WHERE keyspace_name='poc' AND table_name='sensor_by_day';"
 ```
 
-```bash
-docker exec scylla-ha-scylla1-1 sh -c 'ls -d /var/lib/scylla/data/poc/sensor_by_day-*'
-```
+On a table that was never dropped there is exactly one `sensor_by_day-*` directory, and its suffix is that id without the hyphens. If there are two, someone dropped and recreated the table, and only the one that matches is live.
 
-You will see at least two directories: the stale one from before the drop, and the new live one. Copy into the new one's `upload/`, on every node:
+Copy one node's snapshot into the live table's `upload/`, as the `scylla` user, then refresh on that node only:
 
 ```bash
-for n in 1 2 3; do
-  docker exec scylla-ha-scylla$n-1 sh -c '
-    LIVE=$(ls -dt /var/lib/scylla/data/poc/sensor_by_day-* | head -1)
-    echo "$LIVE"
-    mkdir -p "$LIVE/upload"
-    cp /tmp/stage/* "$LIVE/upload/"
-    chown -R scylla:scylla "$LIVE/upload"'
-done
+docker exec scylla-ha-scylla1-1 sh -c '
+  cp /var/lib/scylla/data/poc/sensor_by_day-*/snapshots/poc_bkp/* \
+     /var/lib/scylla/data/poc/sensor_by_day-*/upload/'
+docker exec scylla-ha-scylla1-1 nodetool refresh poc sensor_by_day --load-and-stream
 ```
 
-<div class="callout callout--warn" markdown="1">
-**Check the directory, do not trust the sort.** `ls -dt | head -1` picks the most recently modified directory, which is the newly created one on a clean run. If you have dropped and recreated the table more than once, or touched the stale directory in between, that heuristic will pick the wrong one. Compare the printed path against the `id` you just read from `system_schema.tables` before you trust it.
-</div>
-
-Now refresh, on every node:
-
-```bash
-for n in 1 2 3; do
-  docker exec scylla-ha-scylla$n-1 nodetool refresh poc sensor_by_day
-done
-```
+One node is enough. A 2026.1 keyspace uses tablets by default, and on a tablets keyspace `refresh` streams each loaded SSTable to the replicas that own its data whether or not you pass `--load-and-stream`; I pass it so the command means the same thing on a vnode keyspace, where a plain `refresh` loads only into the local node. Upstream's procedure is the same: upload each SSTable to one node, refresh with `--load-and-stream`. Loading all three nodes' snapshots streams every row three times. My August run loaded all three, which is the likeliest reason it reported an SSTable count of 6.
 
 **Verify.**
 {: .verify}
@@ -382,13 +353,21 @@ cqlsh> SELECT count(*) FROM poc.sensor_by_day;
 (1 rows)
 ```
 
-Three rows, read at QUORUM, restored from a snapshot taken before a truncate. `nodetool tablestats` will confirm the loaded files are being served — on my run it reported a read count of 40 and an SSTable count of 6 for this table after the exercise.
+Three rows, at QUORUM, from a snapshot taken before the truncate and loaded into the truncated table. The same count came back at ONE through each of the three coordinators and at ALL. `nodetool tablestats` on each node confirms the load reached every replica:
 
 ```bash
-docker exec scylla-ha-scylla1-1 nodetool tablestats poc.sensor_by_day
+for n in 1 2 3; do
+  docker exec scylla-ha-scylla$n-1 nodetool tablestats poc.sensor_by_day | grep "SSTable count"
+done
 ```
 
-Two things worth saying about what this restore is and is not. First, snapshots are per node and this ring is RF=3, so every node had a complete copy and loading all three was straightforward; on a larger ring with RF smaller than the node count, each node's snapshot is a different subset and the staging has to keep them apart. Second, `refresh` is a load, not a repair. Real disaster recovery on this engine also involves `nodetool repair` for anti-entropy and node `rebuild` to restream from replicas, and `gc_grace_seconds` governs when tombstones can actually be collected — get that wrong and you resurrect deleted rows.
+```console
+		SSTable count: 1
+		SSTable count: 1
+		SSTable count: 1
+```
+
+Two things worth saying about what this restore is and is not. First, snapshots are per node. On this ring RF=3, so one healthy node's snapshot holds every row; on a larger ring with RF smaller than the node count, each node's snapshot is a different subset, and you load each of them, each once, with `--load-and-stream`. Second, `refresh` is a load, not a repair. Real disaster recovery on this engine also involves `nodetool repair` for anti-entropy and node `rebuild` to restream from replicas, and `gc_grace_seconds` governs when tombstones can actually be collected — get that wrong and you resurrect deleted rows.
 
 For monitoring, ScyllaDB exposes Prometheus metrics on port 9180 — `scylla_storage_proxy_*` for coordinator-side latency and errors, and reactor utilization for the shard-per-core saturation signal that is specific to this engine.
 
@@ -414,11 +393,11 @@ Three nodes' worth of SSTables and snapshots come to real disk. `down` without `
 | --- | --- | --- |
 | Node exits at startup: `system does not satisfy minimum AIO requirements` | `fs.aio-max-nr` in the Docker VM is below what Seastar reserves per reactor | `docker run --rm --privileged alpine sysctl -w fs.aio-max-nr=1048576`, then restart the node |
 | That AIO fix worked yesterday and does not today | Docker Desktop restarted and rebuilt its VM, discarding the sysctl | Re-run the privileged sysctl container after every restart |
-| `nodetool refresh` exits 0 and nothing is loaded | SSTables are in the table directory, not in `upload/` | Copy them into `<table-dir>/upload/` and refresh again |
-| Files are in `upload/`, refresh is clean, rows still missing | A `TRUNCATE` marker is hiding every SSTable older than the truncate | `DROP TABLE` and recreate, then load the snapshot into the new table |
-| Restore works on one node, count is short at QUORUM | `refresh` was only run on some nodes | Run `nodetool snapshot` and `nodetool refresh` on every node |
-| Refresh finds nothing right after a `DROP` + `CREATE` | The recreate minted a new table UUID, so the directory you loaded is stale | Read `system_schema.tables.id` and load into the directory whose suffix matches it |
-| Refresh logs a permission error | Files were copied into `upload/` as root, and the server runs as `scylla` | `chown -R scylla:scylla <table-dir>/upload` before refreshing |
+| `nodetool refresh` exits 0 and nothing is loaded | SSTables are in the table directory, not in `upload/` | Delete them from the table directory, copy them into `<table-dir>/upload/` and refresh again |
+| Files are in `upload/`, refresh is clean, rows still missing | The `upload/` belongs to a dropped table's stale directory, or the snapshot has no `*-Data.db` file | Load into the directory whose suffix matches `system_schema.tables.id`; check the snapshot holds data, or use the `TRUNCATE` auto-snapshot |
+| Restored rows are only on the node you refreshed | A vnode keyspace and a plain `refresh`, which loads locally | Refresh with `--load-and-stream` |
+| Every row was streamed three times | Every node's full snapshot was loaded with `--load-and-stream` on an RF=3 ring | Load one node's snapshot when one node holds all the data; otherwise each node's, once |
+| `refresh` exits 4: `File not owned by current euid` | Files were placed by `docker cp` or as root; the server runs as `scylla` | `chown -R scylla:scylla <table-dir>/upload` before refreshing |
 | A joiner sits at `UJ` for a long time | Bootstrap streaming on a one-shard, 1200 MB node is slow, not stuck | Wait, and watch progress with `nodetool netstats` |
 | A joiner never appears in `nodetool status` | All three nodes were started at once, before the seed was `UN` | Start `scylla1`, wait for `UN`, then start `scylla2` and `scylla3` one at a time |
 | `SELECT` fails with an unavailable exception at QUORUM | Two of three nodes are down, so QUORUM of RF=3 cannot be met | Bring a node back; do not lower the consistency level to hide it |

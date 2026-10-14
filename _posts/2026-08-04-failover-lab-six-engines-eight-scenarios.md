@@ -293,7 +293,7 @@ These are the measurements, not the marketing. All of them came off this rig.
 
 Two of the eight are written up in full, and both are the write-ups I went looking for and could not find while I was stuck:
 
-- [nodetool refresh only reads upload/ — and TRUNCATE hides your SSTables](/writing/scylladb-nodetool-refresh-upload-truncate-marker/) — three separate ScyllaDB behaviors that each make a valid restore look empty, with the repro and the fix for all three.
+- [nodetool refresh only reads the live table's upload/ directory](/writing/scylladb-nodetool-refresh-upload-truncate-marker/) — the ScyllaDB behaviors that make a valid restore look empty, the restore that works after a TRUNCATE, and a correction to my first version of it.
 - [PostgreSQL 18 won't take a volume at /var/lib/postgresql/data](/writing/postgresql-18-docker-volume-path-change/) — the mount-point change that breaks every compose file copied from a PG 12–17 guide, then streaming replication, promotion and PITR on top of the corrected one.
 
 Queued from the same lab notes: the Galera `wsrep_provider_options` read-only surprise and the graceful-versus-ungraceful quorum behavior; Redis Cluster against Sentinel with the timings side by side; SolrCloud's ORANGE state and the `solr.allowPaths` backup failure; and the MongoDB shard-key explain plan. They will appear under [/writing/](/writing/) as they are finished.

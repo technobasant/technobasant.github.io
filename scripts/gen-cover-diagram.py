@@ -1303,6 +1303,24 @@ def clickhomes() -> str:
     )
 
 
+def scylla_restore() -> str:
+    """The restore that works: the live table's upload/, one refresh, no DROP."""
+    return _five_stage(
+        "SCYLLADB 2026.1 · SNAPSHOT RESTORE",
+        "refresh only reads upload/.",
+        "TRUNCATE does not get in the way.",
+        [
+            ("Snapshot", "nodetool snapshot", "hardlinks, per node", False, "check *-Data.db exists"),
+            ("TRUNCATE", "auto-snapshot taken", "the loss", False, "auto-snapshot kept"),
+            ("Copy", "into upload/", "live table's dir", True, "match tables.id"),
+            ("Refresh", "--load-and-stream", "one node", False, "tablets: every replica"),
+            ("Rows", "3 of 3 at QUORUM", "restored", False, "no DROP needed"),
+        ],
+        "table dir: exit 0 · stale UUID dir: exit 0 · root-owned: exit 4",
+        "re-tested on 2026.1",
+    )
+
+
 DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patroni,
             "lakehouse-spine": lakehouse_spine,
             "lakehouse-medallion": lakehouse_medallion,
@@ -1330,6 +1348,7 @@ DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patro
             "distributed-db-lab": distributed_db_lab,
             "governed-ai-delivery": governed_ai_delivery,
             "clickhomes": clickhomes,
+            "scylla-restore": scylla_restore,
             "prevalence-shift": prevalence_shift}
 
 def svg_for(name: str) -> str:
