@@ -29,7 +29,7 @@ layout: default
           {%- for _g in site.data.writing_groups %}
           {%- assign _gn = site.posts | where: "pillar", _g.id | size %}
           {%- if _gn > 0 %}
-          <a href="#{{ _g.id }}">{{ _g.title }} <span>{{ _gn }}</span></a>
+          <a href="#{{ _g.id }}" data-pillar="{{ _g.id }}">{{ _g.title }} <span>{{ _gn }}</span></a>
           {%- endif %}
           {%- endfor %}
         </nav>
@@ -38,7 +38,7 @@ layout: default
           {%- for _g in site.data.writing_groups %}
           {%- assign _in = site.posts | where: "pillar", _g.id %}
           {%- if _in.size > 0 %}
-          <li class="writing-group" id="{{ _g.id }}">
+          <li class="writing-group" data-pillar="{{ _g.id }}" id="{{ _g.id }}">
             <h3>{{ _g.title }}</h3>
             <p>{{ _in.size }} {% if _in.size == 1 %}piece{% else %}pieces{% endif %} · {{ _g.detail }}</p>
           </li>

@@ -26,9 +26,11 @@
 <article class="post-card" data-catalog-item data-id="{{ _p.url }}" data-kind="{{ _type }}" data-tags="{{ _p.tags | join: ' ' }}" data-series="{{ _p.series }}" data-search="{% include writing-search.html post=_p %}">
   {%- if include.index %}<span class="post-card__index" aria-hidden="true">0{{ include.index }}</span>{% endif %}
   {%- if _p.cover and include.cover %}
+  {%- assign _cover_dark = _p.cover.base | append: "-dark" %}
   <div class="post-card__cover" aria-hidden="true">
     {%- include picture.html
         base=_p.cover.base
+        dark=_cover_dark
         widths="840"
         raster_widths="840"
         fallback_width="840"

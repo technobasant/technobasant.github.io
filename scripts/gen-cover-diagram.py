@@ -12,9 +12,22 @@ drawn in the site's own type and palette, and it costs nothing to regenerate
 when the topology changes.
 
     python3 scripts/gen-cover-diagram.py patroni-pg18
+    python3 scripts/gen-cover-diagram.py patroni-pg18 --dark
 
-Writes _source/covers/editorial-<name>-v1-master.png at 2400x1350; the derived
-1600/840 jpg/webp/avif come from `./scripts/gen-images.sh covers`.
+Writes _source/covers/editorial-<name>-v1-master.png at 2400x1350, or
+editorial-<name>-v1-dark-master.png with --dark; the derived 1600/840
+jpg/webp/avif come from `./scripts/gen-images.sh covers`, which turns every
+master into <stem>-{840,1600}.{jpg,webp,avif}.
+
+Every cover exists in two palettes. A raster cannot follow the theme, so the
+site ships both and shows the one that matches: the dark master in the dark
+theme (the default), the light master in the light theme. The light master is
+also the og:image, because platforms composite link previews onto a light
+background. Both palettes are taken from the theme tokens in _sass/_tokens.scss,
+so a cover reads as part of the page it sits on rather than a plate pasted onto
+it. The drawing functions read the palette globals at call time; --dark swaps
+them before rendering, so one function draws both versions and they cannot
+drift apart.
 
 Stdlib only, plus rsvg-convert (brew install librsvg) — same dependency as
 scripts/gen-og.py. No Pillow, no ImageMagick.
@@ -32,24 +45,52 @@ OUT = ROOT / "_source" / "covers"
 
 W, H = 2400, 1350
 
-# Light palette only. A cover is a raster: it cannot follow the theme, and the
-# og:image is composited by platforms that assume a light background.
-PAPER = "#fbfaf8"
-INK = "#15181c"
-MUTED = "#5d646d"
-ACCENT = "#7c5a18"
-LINE = "#d8d0c2"
-PANEL = "#ffffff"
+# Two palettes. The light one is the og:image and the light theme's figure; the
+# dark one is what the dark theme (the site default) shows. Each value maps to a
+# token in _sass/_tokens.scss so the figure sits in its page.
+LIGHT = {
+    "PAPER": "#fbfaf8",   # --surface-0, light
+    "INK": "#15181c",     # --ink-1
+    "MUTED": "#5d646d",   # --ink-3
+    "ACCENT": "#7c5a18",  # --accent, light
+    "LINE": "#d8d0c2",
+    "PANEL": "#ffffff",   # --surface-1
+}
+# Dark: the page behind a figure is --surface-0 (#0d0f12), so the plate is one
+# step up (--surface-1) and a node one more (--surface-2); that keeps the figure
+# legible as an object without a frame. Text contrast on the panel, the lowest
+# background any text sits on here: ink 13.5:1, muted 5.4:1, brass 9.2:1 (the
+# light palette's muted is 6.0:1 on its panel). LINE is --line-strong (ink at
+# 17%) flattened onto --surface-1, because librsvg would composite an rgba
+# stroke over whatever it crosses; 1.65:1 against the plate, light's is 1.47:1.
+DARK = {
+    "PAPER": "#14171c",   # --surface-1
+    "INK": "#ece8e1",     # --ink-1
+    "MUTED": "#98938a",   # --ink-3
+    "ACCENT": "#d9be8e",  # --accent-hi / --brand-brass-lift
+    "LINE": "#3a3d42",    # --line-strong over --surface-1
+    "PANEL": "#1b1f26",   # --surface-2
+}
+PAPER = INK = MUTED = ACCENT = LINE = PANEL = ""
+
+
+def use_palette(palette: dict[str, str]) -> None:
+    """Point the drawing globals at one palette; every function reads them at call time."""
+    globals().update(palette)
+
+
+use_palette(LIGHT)
 
 SERIF = "Fraunces, Georgia, 'Times New Roman', serif"
 MONO = "'JetBrains Mono', ui-monospace, Menlo, monospace"
 
 
-def node_box(x, y, w, h, title, sub, badge=None, accent=False):
+def node_box(x, y, w, h, title, sub, badge=None, accent=False, dashed=False):
     edge = ACCENT if accent else LINE
+    dash = ' stroke-dasharray="12 10"' if dashed else ""
     parts = [
         f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="6" fill="{PANEL}" '
-        f'stroke="{edge}" stroke-width="{3 if accent else 2}"/>',
+        f'stroke="{edge}" stroke-width="{3 if accent else 2}"{dash}/>',
         f'<text x="{x + 34}" y="{y + 62}" font-family="{SERIF}" font-size="46" '
         f'font-weight="600" fill="{INK}">{escape(title)}</text>',
         f'<text x="{x + 34}" y="{y + 108}" font-family="{MONO}" font-size="27" '
@@ -168,7 +209,7 @@ def lakehouse_spine() -> str:
         f'<text x="1700" y="920" font-family="{MONO}" font-size="26" fill="{ACCENT}">AccessDenied</text>',
         f'<line x1="150" y1="1120" x2="{W - 150}" y2="1120" stroke="{LINE}" stroke-width="2"/>',
         f'<text x="150" y="1195" font-family="{MONO}" font-size="30" fill="{MUTED}">'
-        f'native arm64 \u00b7 nothing emulated \u00b7 one laptop</text>',
+        f'native arm64 \u00b7 nothing emulated \u00b7 two-node Trino cluster</text>',
         f'<text x="{W - 150}" y="1195" font-family="{MONO}" font-size="30" fill="{ACCENT}" '
         f'text-anchor="end">Apache Iceberg \u00b7 Apache Polaris</text>',
     ]
@@ -298,33 +339,52 @@ def rag_lakehouse() -> str:
 
 
 def coding_agents_review() -> str:
-    """Agent output is a candidate; the repo's gates decide merge."""
+    """Agent output is a candidate; four layers steer it, and only one of them is a hard stop."""
+    # The essay's layer table: what each kind of instruction is for, where it
+    # lives, and what it can actually guarantee.
+    layers = [
+        ("facts", "root AGENTS.md · CLAUDE.md imports it", "advisory, every session", False),
+        ("procedures", "skills, loaded on demand", "advisory, cheap until used", False),
+        ("isolation", "subagents, a tight tool list", "still a model", False),
+        ("hard stops", "hooks · Cursor hooks · CI", "deterministic", True),
+    ]
+    listing = [
+        f'<text x="150" y="778" font-family="{MONO}" font-size="24" letter-spacing="3" '
+        f'fill="{MUTED}">LAYER</text>',
+        f'<text x="560" y="778" font-family="{MONO}" font-size="24" letter-spacing="3" '
+        f'fill="{MUTED}">WHERE IT LIVES</text>',
+        f'<text x="1480" y="778" font-family="{MONO}" font-size="24" letter-spacing="3" '
+        f'fill="{MUTED}">GUARANTEE</text>',
+        f'<line x1="150" y1="800" x2="{W - 150}" y2="800" stroke="{LINE}" stroke-width="2"/>',
+    ]
+    for i, (layer, home, guarantee, hot) in enumerate(layers):
+        y = 856 + i * 60
+        listing += [
+            f'<text x="150" y="{y}" font-family="{MONO}" font-size="28" fill="{INK}">{escape(layer)}</text>',
+            f'<text x="560" y="{y}" font-family="{MONO}" font-size="28" fill="{MUTED}">{escape(home)}</text>',
+            f'<text x="1480" y="{y}" font-family="{MONO}" font-size="28" '
+            f'fill="{ACCENT if hot else MUTED}">{escape(guarantee)}</text>',
+        ]
     body = [
         f'<rect width="{W}" height="{H}" fill="{PAPER}"/>',
         f'<text x="150" y="190" font-family="{MONO}" font-size="30" letter-spacing="6" '
-        f'fill="{ACCENT}">AGENT GOVERNANCE</text>',
+        f'fill="{ACCENT}">AGENTS IN A REAL REPOSITORY · PART 1</text>',
         f'<text x="150" y="300" font-family="{SERIF}" font-size="86" font-weight="600" '
         f'fill="{INK}">Agents write the diff.</text>',
         f'<text x="150" y="382" font-family="{SERIF}" font-size="86" font-weight="600" '
         f'fill="{INK}">The repo decides merge.</text>',
-        node_box(150, 520, 520, 210, "agent session", "Cursor · Claude Code · Codex", "untrusted draft"),
-        node_box(820, 520, 520, 210, "candidate PR", "types · tests · scans", "evidence attached"),
-        node_box(1490, 520, 560, 210, "named owner", "CODEOWNERS + CI", "merge or refuse", accent=True),
-        arrow(680, 625, 810, 625, ""),
-        arrow(1350, 625, 1480, 625, ""),
-        f'<line x1="150" y1="830" x2="{W - 150}" y2="830" stroke="{LINE}" stroke-width="2"/>',
-        f'<text x="150" y="905" font-family="{MONO}" font-size="29" fill="{MUTED}">AGENTS.md</text>',
-        f'<text x="620" y="905" font-family="{MONO}" font-size="29" fill="{MUTED}">skills</text>',
-        f'<text x="980" y="905" font-family="{MONO}" font-size="29" fill="{MUTED}">hooks</text>',
-        f'<text x="1320" y="905" font-family="{MONO}" font-size="29" fill="{ACCENT}">CI is policy</text>',
-        f'<text x="150" y="975" font-family="{MONO}" font-size="29" fill="{MUTED}">nested per package</text>',
-        f'<text x="820" y="975" font-family="{MONO}" font-size="29" fill="{MUTED}">plan before code</text>',
-        f'<text x="1450" y="975" font-family="{MONO}" font-size="29" fill="{ACCENT}">author must explain</text>',
+        node_box(150, 470, 560, 210, "agent session", "Cursor · Claude Code · Codex", "candidate state"),
+        node_box(870, 470, 560, 210, "pull request", "types · tests · scans", "test diff read first"),
+        node_box(1590, 470, 660, 210, "named owner", "CODEOWNERS + required CI", "explain it or no merge",
+                 accent=True),
+        arrow(720, 575, 860, 575, ""),
+        arrow(1440, 575, 1580, 575, ""),
+        *listing,
         f'<line x1="150" y1="1120" x2="{W - 150}" y2="1120" stroke="{LINE}" stroke-width="2"/>',
         f'<text x="150" y="1195" font-family="{MONO}" font-size="30" fill="{MUTED}">'
-        f'generation is candidate state \u2014 same rule as product agents</text>',
+        f'METR 2025: 19% slower, felt 20% faster · AI-co-authored PRs ~1.7× issues</text>',
         f'<text x="{W - 150}" y="1195" font-family="{MONO}" font-size="30" fill="{ACCENT}" '
-        f'text-anchor="end">review the evidence</text>',
+        f'text-anchor="end">policy lives in the repo</text>',
     ]
     return "".join(body)
 
@@ -1321,6 +1381,318 @@ def scylla_restore() -> str:
     )
 
 
+def _t(x, y, s, fill, size=27, anchor="", tracking=0):
+    """One line of mono text. `fill` is passed per call: a default would bind the palette at import."""
+    a = f' text-anchor="{anchor}"' if anchor else ""
+    ls = f' letter-spacing="{tracking}"' if tracking else ""
+    return (f'<text x="{x}" y="{y}" font-family="{MONO}" font-size="{size}"{ls} '
+            f'fill="{fill}"{a}>{escape(s)}</text>')
+
+
+def _head(kicker, line1, line2):
+    return [
+        f'<rect width="{W}" height="{H}" fill="{PAPER}"/>',
+        f'<text x="150" y="190" font-family="{MONO}" font-size="30" letter-spacing="6" '
+        f'fill="{ACCENT}">{escape(kicker)}</text>',
+        f'<text x="150" y="300" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">{escape(line1)}</text>',
+        f'<text x="150" y="382" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">{escape(line2)}</text>',
+    ]
+
+
+def _foot(left, right):
+    return [
+        f'<line x1="150" y1="1120" x2="{W - 150}" y2="1120" stroke="{LINE}" stroke-width="2"/>',
+        f'<text x="150" y="1195" font-family="{MONO}" font-size="30" fill="{MUTED}">{escape(left)}</text>',
+        f'<text x="{W - 150}" y="1195" font-family="{MONO}" font-size="30" fill="{ACCENT}" '
+        f'text-anchor="end">{escape(right)}</text>',
+    ]
+
+
+def _strip_row(x, y, w, h, left, right, accent=False, excluded=False):
+    """A full-width row: a value on the left, its verdict on the right; struck through when excluded."""
+    edge = ACCENT if accent else LINE
+    dash = ' stroke-dasharray="12 10"' if excluded else ""
+    base = y + h / 2 + 11
+    out = [
+        f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="6" fill="{PANEL}" '
+        f'stroke="{edge}" stroke-width="{3 if accent else 2}"{dash}/>',
+        _t(x + 34, f"{base:.0f}", left, MUTED if excluded else INK, 30),
+        _t(x + w - 34, f"{base:.0f}", right, ACCENT if accent else MUTED, 27, anchor="end"),
+    ]
+    if excluded:
+        # JetBrains Mono, and every fallback in MONO, advances 0.6 em per glyph.
+        end = x + 34 + len(left) * 30 * 0.6
+        out.append(f'<line x1="{x + 28}" y1="{base - 10:.0f}" x2="{end + 6:.0f}" y2="{base - 10:.0f}" '
+                   f'stroke="{MUTED}" stroke-width="3"/>')
+    return "".join(out)
+
+
+def _link(x1, y1, x2, y2):
+    """A two-way solid link, for a relationship that runs both ways (mTLS, a mesh)."""
+    return (f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" stroke="{MUTED}" stroke-width="3" '
+            f'marker-start="url(#a)" marker-end="url(#a)"/>')
+
+
+def stalwart_mail() -> str:
+    """Gmail delivers to :25, clients talk to Stalwart directly, and nginx keeps :443."""
+    dns = [("A", "mail → VPS IPv4", False), ("MX", "@ → mail, priority 10", False),
+           ("TXT", "SPF · DKIM · DMARC", False), ("PTR", "set at the VPS panel", True)]
+    body = _head("SELF-HOSTED MAIL · STALWART v0.16",
+                 "Mail is not up when it starts.",
+                 "It is up when Gmail says PASS.")
+    body += [
+        node_box(150, 470, 500, 200, "Gmail", "delivers to MX on :25", "show original"),
+        node_box(850, 470, 700, 200, "Stalwart", "25 · 465 · 587 · 993 published", "its own copy of the LE cert",
+                 accent=True),
+        node_box(1750, 470, 500, 200, "mail client", "IMAP 993 · SMTP 465", "full address login"),
+        arrow(660, 570, 840, 570, ":25", up=True),
+        arrow(1740, 570, 1560, 570, "993 · 465", up=True),
+        node_box(850, 790, 700, 190, "nginx :443", "the website + admin proxy", "ACME off in Stalwart"),
+        arrow(1200, 782, 1200, 680, ""),
+        _t(1230, 740, "127.0.0.1:8088", MUTED, 26),
+        _t(150, 812, "DNS", MUTED, 24, tracking=3),
+        _t(1750, 812, "GMAIL · SHOW ORIGINAL", MUTED, 24, tracking=3),
+    ]
+    for i, (rtype, value, hot) in enumerate(dns):
+        y = 862 + i * 45
+        body += [_t(150, y, rtype, INK, 27), _t(260, y, value, ACCENT if hot else MUTED, 27)]
+    for i, check in enumerate(("SPF", "DKIM", "DMARC")):
+        y = 862 + i * 45
+        body += [_t(1750, y, check, INK, 27), _t(1950, y, "PASS", ACCENT, 27)]
+    body += _foot("Docker Compose · UFW · ~100–200 MB idle · admin on loopback",
+                  "80 and 443 stay with the website")
+    return "".join(body)
+
+
+def failover_lab() -> str:
+    """Eight scenarios, each a fault and the number that showed what survived it."""
+    # From the series post's results section; all measured on the rig.
+    rows = [
+        ("MongoDB 8.0", "stop the primary", "1,000 majority writes read back", False),
+        ("ScyllaDB 2026.1", "1 of 3 nodes down", "3 rows at QUORUM, RF=3", False),
+        ("SolrCloud 9", "stop a node", "GREEN → ORANGE → GREEN, numFound 6", False),
+        ("Galera 4", "one row, 2 masters", "counter 300 on all 3 nodes", False),
+        ("Redis 8 Cluster", "kill a slot owner", "epoch 2 → 7, 16,384 slots ok", False),
+        ("Redis 8 Sentinel", "stop the primary", "replica promoted in ~5 s", True),
+        ("PostgreSQL 18", "pg_promote()", "replay lag 383 µs · TL 1 → 2", True),
+        ("Observability", "scrape PG + Redis", "all targets up · 27.7 cmd/s", False),
+    ]
+    body = _head("THE FAILOVER LAB · SIX ENGINES · EIGHT SCENARIOS",
+                 "Eight scenarios, all of them run.",
+                 "Each one measured what survived.")
+    body += [
+        _t(150, 490, "ENGINE", MUTED, 24, tracking=3),
+        _t(520, 490, "SCENARIO", MUTED, 24, tracking=3),
+        _t(950, 490, "MEASURED", MUTED, 24, tracking=3),
+        f'<line x1="150" y1="510" x2="1600" y2="510" stroke="{LINE}" stroke-width="2"/>',
+    ]
+    for i, (engine, fault, measured, hot) in enumerate(rows):
+        y = 560 + i * 60
+        body += [
+            _t(150, y, engine, INK, 27),
+            _t(520, y, fault, MUTED, 27),
+            _t(950, y, measured, ACCENT if hot else INK, 27),
+        ]
+    body += [
+        node_box(1700, 470, 550, 220, "8 of 8 passed", "my own test plan", "one stack at a time", accent=True),
+        node_box(1700, 760, 550, 220, "not tested", "network partitions", "one Docker host"),
+    ]
+    body += _foot("Docker · 8 CPU / 12.5 GB · one container per node · nine stacks",
+                  "quorum · acked writes · recovery")
+    return "".join(body)
+
+
+def pgbackrest_tls() -> str:
+    """Ansible issues the certs; backup1 and pg1 prove a mutual handshake before any backup."""
+    body = _head("PGBACKREST 2.59 · DEDICATED TLS REPO HOST · RHEL 8",
+                 "An open port is not a backup host.",
+                 "The mutual handshake is the gate.")
+    body += [
+        node_box(150, 470, 580, 210, "Ansible control", "Python 3.12 · core 2.15.13", "private CA stays here"),
+        node_box(1000, 470, 640, 210, "backup1", "192.168.105.130 · :8432", "repo host · authorizes pg1",
+                 accent=True),
+        node_box(1000, 790, 640, 210, "pg1", "192.168.105.131 · client", "cert CN must be pg1"),
+        arrow(740, 575, 990, 575, "certs + conf", up=True),
+        arrow(740, 650, 990, 880, ""),
+        _link(1320, 688, 1320, 782),
+        _t(1350, 745, "mTLS :8432", MUTED, 26),
+        _t(1720, 505, "PROOF, FROM PG1", MUTED, 24, tracking=3),
+        _t(1720, 560, "server-ping", INK, 28),
+        _t(1720, 600, "84 ms · aliveness only", MUTED, 26),
+        _t(1720, 670, "openssl s_client", INK, 28),
+        _t(1720, 710, "Verify return code: 0", ACCENT, 26),
+        _t(1720, 835, "CERT RULES", MUTED, 24, tracking=3),
+        _t(1720, 885, "CN = hostname", INK, 27),
+        _t(1720, 928, "SAN = DNS + lab IP", INK, 27),
+        _t(1720, 971, "serverAuth + clientAuth", INK, 27),
+        _t(1720, 1014, "tls-server-auth=pg1=*", MUTED, 27),
+    ]
+    body += _foot("generic/rhel8 · 1 GB / 1 CPU each · Ansible owns every file",
+                  "keys 0600, owned by pgbackrest")
+    return "".join(body)
+
+
+def postgres_volume() -> str:
+    """The PG 18 image mounts the parent; the cluster lives in 18/docker; then a standby and a promotion."""
+    body = _head("POSTGRES:18 IMAGE · DOCKER COMPOSE",
+                 "The volume moved up one level.",
+                 "PGDATA now lives in 18/docker.")
+    body += [
+        _t(150, 490, "MOUNT POINT", MUTED, 24, tracking=3),
+        _strip_row(150, 515, 1200, 110, "pgdata:/var/lib/postgresql/data", "12–17 only · 18 exits",
+                   excluded=True),
+        _strip_row(150, 650, 1200, 110, "pgdata:/var/lib/postgresql", "mount the parent", accent=True),
+        # the directory tree beneath the corrected mount
+        f'<path d="M 220 760 V 905 M 220 830 H 258 M 220 905 H 258" fill="none" stroke="{MUTED}" '
+        f'stroke-width="3"/>',
+        _t(275, 840, "18/docker", INK, 30),
+        _t(560, 840, "PGDATA · the cluster", MUTED, 27),
+        _t(275, 915, "19/docker", MUTED, 30),
+        _t(560, 915, "the next major, side by side", MUTED, 27),
+        _t(150, 1010, "pg_upgrade --link needs both on one filesystem", MUTED, 26),
+        node_box(1500, 470, 750, 190, "primary", "host :5434 · slot replica1_slot", "timeline 1"),
+        node_box(1500, 750, 750, 190, "hot standby", "pg_basebackup -D $$PGDATA", "pg_promote(): TL 1 → 2",
+                 accent=True),
+        arrow(1875, 670, 1875, 740, ""),
+        _t(1905, 714, "streaming", MUTED, 26),
+        _t(1500, 1010, "write 104 µs · replay 383 µs · 0 bytes", MUTED, 26),
+    ]
+    body += _foot("official postgres:18 · Compose v2 · primary + streaming standby",
+                  "not /var/lib/postgresql/data")
+    return "".join(body)
+
+
+def wireguard_v15() -> str:
+    """Which tag you pull decides which product you configure; then the full-tunnel path."""
+    body = _head("WG-EASY · A FULL-TUNNEL VPN ON YOUR VPS",
+                 ":latest is still v14.",
+                 "Pin :15 or the hostname never sticks.")
+    body += [
+        _t(150, 482, "IMAGE TAG", MUTED, 24, tracking=3),
+        _strip_row(150, 505, 2100, 100, "ghcr.io/wg-easy/wg-easy:latest", "v14 · WG_HOST, PASSWORD_HASH",
+                   excluded=True),
+        _strip_row(150, 625, 2100, 100, "ghcr.io/wg-easy/wg-easy:15", "v15 · first-run wizard · /lib/modules:ro",
+                   accent=True),
+        node_box(150, 830, 560, 200, "laptop · phone", "AllowedIPs 0.0.0.0/0, ::/0", "one client per device"),
+        node_box(890, 830, 640, 200, "VPS · wg-easy", "wg0 · 10.8.0.0/24 · ~50 MB idle", "UI on 127.0.0.1:51821",
+                 accent=True),
+        node_box(1710, 830, 540, 200, "the internet", "sees the VPS IPv4", "proof: curl ipify"),
+        arrow(720, 930, 880, 930, "UDP 51820", up=True),
+        arrow(1540, 930, 1700, 930, "egress", up=True),
+    ]
+    body += _foot("Docker-published ports bypass UFW · reach the UI over SSH",
+                  "handshake in the last 2 min")
+    return "".join(body)
+
+
+def rustdesk_relay() -> str:
+    """hbbs introduces the two ends, hbbr carries the session, and UDP 21116 has to arrive."""
+    body = _head("RUSTDESK SERVER · HBBS + HBBR ON YOUR VPS",
+                 "Public sessions dropped at ~30 s.",
+                 "Yours holds, if UDP 21116 lands.")
+    body += [
+        _t(150, 500, "THE ONLY DURABLE SECRET", MUTED, 24, tracking=3),
+        _t(150, 555, "data/id_ed25519", INK, 30),
+        _t(150, 598, "clients pin the .pub", MUTED, 27),
+        _t(150, 638, "lose it: re-key every client", MUTED, 27),
+        node_box(870, 470, 660, 190, "hbbs", "-r relay.example.com:21117", "rendezvous · 21115 · 21116"),
+        _t(1640, 500, "THE PROOF", MUTED, 24, tracking=3),
+        _t(1640, 555, "session past 60 s", ACCENT, 28),
+        _t(1640, 598, "ESTABLISHED on 21117", MUTED, 27),
+        _t(1640, 638, "hbbr logs the traffic", MUTED, 27),
+        node_box(150, 790, 520, 200, "controller", "laptop · ID + password", "pinned public key"),
+        node_box(870, 790, 660, 200, "hbbr", "relay · TCP 21117", "ALWAYS_USE_RELAY=Y", accent=True),
+        node_box(1730, 790, 520, 200, "remote machine", "permanent password", "pinned public key"),
+        arrow(680, 890, 860, 890, "21117", up=True),
+        arrow(1540, 890, 1720, 890, "21117", up=True),
+        arrow(410, 780, 860, 650, "", dashed=True),
+        arrow(1990, 780, 1540, 650, "", dashed=True),
+        _t(600, 692, "UDP 21116", ACCENT, 26, anchor="end"),
+        _t(1800, 692, "UDP 21116", ACCENT, 26),
+    ]
+    body += _foot("rustdesk/rustdesk-server · Docker Compose · cloud firewall + UFW",
+                  "prove UDP with tcpdump, not nc")
+    return "".join(body)
+
+
+def amd64_vagrant() -> str:
+    """amd64 guests on their own /24, wired to the host bridge through fd 3, proven by four pings."""
+    pings = [("host → .111", "1–2 ms"), ("host → .121", "2–3 ms"),
+             (".111 → .121", "2–4 ms"), (".121 → .111", "1–2 ms")]
+    body = _head("APPLE SILICON · AMD64 GUESTS UNDER QEMU TCG",
+                 "The lab subnet was the Wi-Fi.",
+                 "Give the lab its own /24.")
+    body += [
+        node_box(150, 470, 600, 200, "Wi-Fi LAN", "en0 · 192.168.1.68/24", "old lab: same /24", dashed=True),
+        node_box(150, 770, 600, 210, "host bridge", "bridge100 · 192.168.105.1", "socket_vmnet, KeepAlive",
+                 accent=True),
+        node_box(1000, 470, 560, 200, "ubuntu1", "192.168.105.111", "Ubuntu 22.04 · amd64"),
+        node_box(1000, 770, 560, 210, "rocky1", "192.168.105.121", "RHEL family · amd64"),
+        arrow(760, 815, 990, 625, ""),
+        arrow(760, 875, 990, 875, "fd=3 · lab0", up=True),
+        _link(1280, 678, 1280, 762),
+        _t(1310, 730, "mesh", MUTED, 26),
+        _t(1000, 1045, "net0 is SLIRP, for vagrant ssh only", MUTED, 26),
+        _t(1700, 500, "PASS CRITERIA", MUTED, 24, tracking=3),
+        _t(1700, 800, "NOT A GATE", MUTED, 24, tracking=3),
+        _t(1700, 855, "guest → .1 ICMP", INK, 27),
+        _t(W - 150, 855, "100% loss", MUTED, 27, anchor="end"),
+        _t(1700, 900, "gateway ARP", INK, 27),
+        _t(W - 150, 900, "REACHABLE", MUTED, 27, anchor="end"),
+    ]
+    for i, (path, rtt) in enumerate(pings):
+        y = 555 + i * 45
+        body += [_t(1700, y, path, INK, 27), _t(W - 150, y, rtt, ACCENT, 27, anchor="end")]
+    body += _foot("Vagrant 2.4.9 · vagrant-qemu 0.6.3 · QEMU 11.0.3 · x86_64 under TCG",
+                  "fd 3 must be a unix socket")
+    return "".join(body)
+
+
+def data_platform_ai() -> str:
+    """Three layers of record, the states a model's output passes through, and five fitness signals."""
+    signals = [
+        ("freshness", "newest fact inside its decision window?", False),
+        ("completeness", "the population, not merely some rows?", False),
+        ("validity", "values meet the contract at publication?", False),
+        ("decision latency", "source event to product action", False),
+        ("repair time", "detection to a corrected product state", True),
+    ]
+    # Column positions of the state line, in mono advances (0.6 em at 30 px).
+    adv, x0 = 18, 150
+    proposed_x = x0 + 4 * adv
+    validated_x = x0 + 11 * adv + 4.5 * adv
+    body = _head("OPERATING MODEL · DATA AND AI PRODUCTS",
+                 "Every layer can be green",
+                 "while the product is wrong.")
+    body += [
+        node_box(150, 470, 560, 210, "source records", "event time · stable source id", "kept as received"),
+        node_box(840, 470, 680, 210, "decision records", "policy_version · source_refs",
+                 "appended, never overwritten", accent=True),
+        node_box(1650, 470, 600, 210, "projections", "one per read path", "rebuilt from the first two"),
+        arrow(720, 575, 830, 575, ""),
+        arrow(1530, 575, 1640, 575, ""),
+        _t(150, 790, "MODEL OUTPUT", MUTED, 24, tracking=3),
+        _t(x0, 855, "proposed → validated → applied", INK, 30),
+        f'<path d="M {validated_x:.0f} 872 V 925 H 520" fill="none" stroke="{MUTED}" stroke-width="3" '
+        f'marker-end="url(#a)"/>',
+        f'<path d="M {proposed_x:.0f} 872 V 995 H 520" fill="none" stroke="{MUTED}" stroke-width="3" '
+        f'marker-end="url(#a)"/>',
+        _t(540, 935, "needs_review", MUTED, 28),
+        _t(540, 1005, "rejected", MUTED, 28),
+        _t(1000, 790, "SIGNAL", MUTED, 24, tracking=3),
+        _t(1360, 790, "QUESTION IT ANSWERS", MUTED, 24, tracking=3),
+        f'<line x1="1000" y1="810" x2="{W - 150}" y2="810" stroke="{LINE}" stroke-width="2"/>',
+    ]
+    for i, (name, question, hot) in enumerate(signals):
+        y = 858 + i * 48
+        body += [_t(1000, y, name, INK, 27), _t(1360, y, question, ACCENT if hot else MUTED, 27)]
+    body += _foot("key = sha256(subject_id, policy_version, source_snapshot)",
+                  "ON CONFLICT DO NOTHING")
+    return "".join(body)
+
+
 DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patroni,
             "lakehouse-spine": lakehouse_spine,
             "lakehouse-medallion": lakehouse_medallion,
@@ -1349,7 +1721,16 @@ DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patro
             "governed-ai-delivery": governed_ai_delivery,
             "clickhomes": clickhomes,
             "scylla-restore": scylla_restore,
-            "prevalence-shift": prevalence_shift}
+            "prevalence-shift": prevalence_shift,
+            "coding-agents-review": coding_agents_review,
+            "stalwart-mail": stalwart_mail,
+            "failover-lab": failover_lab,
+            "pgbackrest-tls": pgbackrest_tls,
+            "postgres-volume": postgres_volume,
+            "wireguard-v15": wireguard_v15,
+            "rustdesk-relay": rustdesk_relay,
+            "amd64-vagrant": amd64_vagrant,
+            "data-platform-ai": data_platform_ai}
 
 def svg_for(name: str) -> str:
     return (
@@ -1363,17 +1744,21 @@ def svg_for(name: str) -> str:
 
 
 def main() -> int:
-    if len(sys.argv) != 2 or sys.argv[1] not in DIAGRAMS:
-        print(f"usage: {sys.argv[0]} [{'|'.join(DIAGRAMS)}]", file=sys.stderr)
+    args = sys.argv[1:]
+    dark = "--dark" in args
+    names = [a for a in args if a != "--dark"]
+    if len(names) != 1 or names[0] not in DIAGRAMS or len(args) - len(names) > 1:
+        print(f"usage: {sys.argv[0]} [{'|'.join(DIAGRAMS)}] [--dark]", file=sys.stderr)
         return 2
     if not shutil.which("rsvg-convert"):
         print("rsvg-convert not found (brew install librsvg)", file=sys.stderr)
         return 1
 
-    name = sys.argv[1]
+    name = names[0]
+    use_palette(DARK if dark else LIGHT)
     OUT.mkdir(parents=True, exist_ok=True)
     tmp = OUT / ".build.svg"
-    dest = OUT / f"editorial-{name}-v1-master.png"
+    dest = OUT / f"editorial-{name}-v1{'-dark' if dark else ''}-master.png"
     tmp.write_text(svg_for(name), encoding="utf-8")
     subprocess.run(
         ["rsvg-convert", "-w", str(W), "-h", str(H), str(tmp), "-o", str(dest)],

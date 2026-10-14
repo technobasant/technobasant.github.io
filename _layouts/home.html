@@ -3,23 +3,12 @@ layout: default
 ---
 {%- assign _hero = page.hero -%}
 {%- comment -%}
-  Selected work is curated by slug in index.md (`work.selected`), the same way
-  the writing spotlight is. With practice, consulting, open-source, product and
-  lab entries the full list is /work/'s job; the homepage shows one system per
-  register. Falls back to every case in kind order if the list is unset.
+  Evidence first. The hero keeps the headline and portrait and ends in a proof
+  strip whose every figure is counted from the site itself and links to where
+  it can be checked. Below it: four capability rows, each with a case study, a
+  write-up and the code; then a ledger of measured findings, number first.
 {%- endcomment -%}
-{%- assign _selected_work = "" | split: "" -%}
-{%- for _slug in page.work.selected -%}
-  {%- assign _hit = site.work | where: "slug", _slug | first -%}
-  {%- if _hit -%}{%- assign _selected_work = _selected_work | push: _hit -%}{%- endif -%}
-{%- endfor -%}
-{%- if _selected_work.size == 0 -%}
-  {%- assign _practice = site.work | where: "kind", "practice" | sort: "order" -%}
-  {%- assign _products = site.work | where: "kind", "production" | sort: "order" -%}
-  {%- assign _labs = site.work | where: "kind", "lab" | sort: "order" -%}
-  {%- assign _selected_work = _practice | concat: _products | concat: _labs -%}
-{%- endif -%}
-{%- assign _latest_post = site.posts | first -%}
+{%- assign _repos = site.data.open_source.repos | default: empty -%}
 
 <section class="portfolio-hero">
   <div class="wrap wrap--shell portfolio-hero__inner">
@@ -52,14 +41,13 @@ layout: default
       <figcaption><span aria-hidden="true"></span>{{ site.data.availability.headline }}</figcaption>
     </figure>
     {%- endif -%}
-    <ul class="portfolio-proof" aria-label="Selected production context">
-      {%- for key in page.proof.keys -%}
-        {%- assign outcome = site.data.metrics[key] -%}
-        <li>
-          <strong>{{ outcome.value }}</strong>
-          <span>{{ outcome.label }}</span>
-        </li>
-      {%- endfor -%}
+    <ul class="portfolio-proof portfolio-proof--strip" aria-label="Evidence on this site">
+      <li><a href="{{ '/work/' | relative_url }}"><strong>{{ site.work.size }}</strong> <span>case studies</span></a></li>
+      {%- if _repos.size > 0 %}
+      <li><a href="{{ '/open-source/' | relative_url }}"><strong>{{ _repos.size }}</strong> <span>public repositories</span></a></li>
+      {%- endif %}
+      <li><a href="{{ '/writing/' | relative_url }}"><strong>{{ site.posts.size }}</strong> <span>write-ups</span></a></li>
+      <li><a href="{{ '/open-source/#upstream' | relative_url }}"><strong>Upstream</strong> <span>Citus · awslabs</span></a></li>
     </ul>
   </div>
 </section>
@@ -75,19 +63,31 @@ layout: default
       <a class="section-more" href="{{ page.practice.more_url | relative_url }}">{{ page.practice.more }} {% include icon.html name="arrow-right" size=14 %}</a>
     </div>
     {%- comment -%}
-      Three rows, on the same index rail and column grid as the case list below,
-      so the two sections read as one argument rather than two components: the
-      problem, then the work that proves I have solved it. Each row links to its
-      own evidence — a capability claim with nothing behind it would be the one
-      unearned thing on the page.
+      One row per capability (_data/practice.yml), in the same order and colour
+      as the groups on /work/ and /writing/. The claim on the left, the three
+      kinds of evidence on the right: a case study, a write-up, the code.
     {%- endcomment -%}
-    <ol class="portfolio-practice__list">
+    <ol class="capability-list">
       {%- for _p in site.data.practice -%}
-      <li class="portfolio-practice__item">
-        <span class="portfolio-practice__index" aria-hidden="true">{{ forloop.index | prepend: "0" }}</span>
-        <h3 class="portfolio-practice__title"><a href="{{ _p.evidence | relative_url }}">{{ _p.title }}</a></h3>
-        <p class="portfolio-practice__blurb">{{ _p.blurb }}</p>
-        <p class="portfolio-practice__evidence"><span>Evidence</span> {{ _p.evidence_label }}</p>
+      {%- assign _case = site.work | where: "slug", _p.case | first -%}
+      {%- assign _cpost = site.posts | where: "slug", _p.post | first -%}
+      <li class="capability" data-pillar="{{ _p.id }}">
+        <span class="capability__index" aria-hidden="true">{{ forloop.index | prepend: "0" }}</span>
+        <div class="capability__copy">
+          <h3>{{ _p.title }}</h3>
+          <p>{{ _p.blurb }}</p>
+        </div>
+        <ul class="capability__evidence">
+          {%- if _case %}
+          <li><span>Case study</span> <a href="{{ _case.url | relative_url }}">{{ _case.title }}</a></li>
+          {%- endif %}
+          {%- if _cpost %}
+          <li><span>Write-up</span> <a href="{{ _cpost.url | relative_url }}">{{ _cpost.title }}</a></li>
+          {%- endif %}
+          {%- if _p.repo %}
+          <li><span>Code</span> <a href="https://github.com/technobasant/{{ _p.repo }}" rel="noopener">{{ _p.repo }}</a> <small>{{ _p.repo_blurb }}</small></li>
+          {%- endif %}
+        </ul>
       </li>
       {%- endfor -%}
     </ol>
@@ -95,73 +95,34 @@ layout: default
 </section>
 {%- endif -%}
 
-<section class="portfolio-section portfolio-work" aria-labelledby="selected-work-title">
+{%- if site.data.findings and site.data.findings.size > 0 -%}
+<section class="portfolio-section portfolio-findings" aria-labelledby="findings-title">
   <div class="wrap wrap--shell">
     <div class="portfolio-section__head">
       <div>
-        <p class="section-label">{{ page.work.label }}</p>
-        <h2 id="selected-work-title">{{ page.work.headline }}</h2>
+        <p class="section-label">{{ page.findings.label }}</p>
+        <h2 id="findings-title">{{ page.findings.headline }}</h2>
       </div>
-      <a class="section-more" href="{{ page.work.more_url | relative_url }}">{{ page.work.more }} {% include icon.html name="arrow-right" size=14 %}</a>
+      <a class="section-more" href="{{ page.findings.more_url | relative_url }}">{{ page.findings.more }} {% include icon.html name="arrow-right" size=14 %}</a>
     </div>
     {%- comment -%}
-      All four, not three. The limit of 3 dropped `multi-engine-ha-lab` — the
-      one case study carrying a reproducible measured rig — off the homepage
-      entirely, which is the opposite of the selection you would make on merit.
-      Four rows cost about 260px on a page that already scrolls.
+      Number first, then what it measured, then where the method is. Every value
+      is quoted from the linked write-up (_data/findings.yml); a slug that no
+      longer resolves drops its row rather than linking nowhere.
     {%- endcomment -%}
-    <div class="portfolio-work__list">
-      {%- for item in _selected_work -%}
-      {% include case-card.html item=item variant="portfolio" heading="h3" index=forloop.index %}
-      {%- endfor %}
-    </div>
-  </div>
-</section>
-
-{%- if _latest_post -%}
-<section class="portfolio-section portfolio-note" aria-labelledby="latest-note-title">
-  <div class="wrap wrap--shell">
-    <div class="portfolio-section__head">
-      <div>
-        <p class="section-label">{{ page.writing.label }}</p>
-        <h2 id="latest-note-title">{{ page.writing.headline }}</h2>
-      </div>
-      <a class="section-more" href="{{ page.writing.more_url | relative_url }}">{{ page.writing.more }} {% include icon.html name="arrow-right" size=14 %}</a>
-    </div>
-    {%- comment -%}
-      Three, not one. Nine posts existed and the homepage showed a single one,
-      so the writing — the thing that actually demonstrates how someone thinks —
-      read as an afterthought. Each row carries the register where the series
-      declares one, so "Measured on my own hardware" is legible before the
-      click.
-    {%- endcomment -%}
-    <ol class="portfolio-note__list">
-      {%- comment -%}
-        Resolve the curated slugs, falling back to the three most recent if
-        `spotlight` is unset. `where_exp` on the slug rather than the URL so the
-        list stays readable and a typo yields nothing rather than the wrong post.
-      {%- endcomment -%}
-      {%- assign _spotlight = "" | split: "" -%}
-      {%- for _slug in page.writing.spotlight -%}
-        {%- assign _hit = site.posts | where: "slug", _slug | first -%}
-        {%- if _hit -%}{%- assign _spotlight = _spotlight | push: _hit -%}{%- endif -%}
-      {%- endfor -%}
-      {%- if _spotlight.size == 0 -%}{%- assign _spotlight = site.posts | slice: 0, 3 -%}{%- endif -%}
-      {%- for _post in _spotlight -%}
-      {%- assign _pm = nil -%}
-      {%- if _post.series -%}{%- assign _pm = site.data.series | where: "slug", _post.series | first -%}{%- endif -%}
-      <li class="portfolio-note__item">
-        <p class="post-card__meta">
-          <time datetime="{{ _post.date | date_to_xmlschema }}">{{ _post.date | date: "%b %-d, %Y" }}</time>
-          <span class="badge badge--{{ _post.type | default: 'essay' }}">{{ _post.type | default: "essay" | capitalize }}</span>
-          {%- if _pm.register_label %}
-          <span class="post-card__register post-card__register--{{ _pm.register }}">{{ _pm.register_label }}</span>
-          {%- endif %}
-        </p>
-        <h3><a href="{{ _post.url | relative_url }}">{{ _post.title }}</a></h3>
-        <p>{{ _post.description }}</p>
+    <ol class="findings">
+      {%- for _f in site.data.findings -%}
+      {%- assign _fp = site.posts | where: "slug", _f.post | first -%}
+      {%- if _fp %}
+      <li data-pillar="{{ _f.pillar }}">
+        <a href="{{ _fp.url | relative_url }}">
+          <strong class="findings__value">{{ _f.value }}</strong>
+          <span class="findings__claim">{{ _f.claim }}</span>
+          <span class="findings__source">{{ _fp.title }}</span>
+        </a>
       </li>
-      {%- endfor -%}
+      {%- endif -%}
+      {%- endfor %}
     </ol>
   </div>
 </section>

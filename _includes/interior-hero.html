@@ -22,7 +22,7 @@
     {%- if page.hero_signals %}
     <ol class="interior-hero__signals" aria-label="Areas represented in these case studies">
       {%- for signal in page.hero_signals %}
-      <li>
+      <li{% if signal.id %} data-pillar="{{ signal.id }}"{% endif %}>
         <span class="interior-hero__signal-number" aria-hidden="true">0{{ forloop.index }}</span>
         <span>
           {%- if signal.id %}

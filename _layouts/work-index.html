@@ -28,7 +28,7 @@ layout: default
   {%- for _group in page.hero_signals %}
   {%- assign _in_group = site.work | where: "pillar", _group.id -%}
   {%- if _in_group.size > 0 %}
-  <section class="wrap wrap--shell index-section work-group" id="{{ _group.id }}" aria-labelledby="{{ _group.id }}-title">
+  <section class="wrap wrap--shell index-section work-group" data-pillar="{{ _group.id }}" id="{{ _group.id }}" aria-labelledby="{{ _group.id }}-title">
     <div class="writing-index-head">
       <h2 id="{{ _group.id }}-title">{{ _group.title }}</h2>
       <p class="writing-index-head__note">{{ _in_group.size }} {% if _in_group.size == 1 %}case{% else %}cases{% endif %} · {{ _group.detail }}</p>

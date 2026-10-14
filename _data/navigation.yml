@@ -6,6 +6,8 @@ main:
     url: /work/
   - title: Writing
     url: /writing/
+  - title: Open source
+    url: /open-source/
   - title: Résumé
     url: /resume/
   - title: About
@@ -18,6 +20,7 @@ footer:
     links:
       - { title: Work,          url: /work/ }
       - { title: Writing,       url: /writing/ }
+      - { title: Open source,   url: /open-source/ }
       - { title: Résumé,        url: /resume/ }
       - { title: About,         url: /about/ }
       - { title: Work with me,  url: /hire/ }

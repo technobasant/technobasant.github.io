@@ -35,7 +35,7 @@ cover:
   fallback_width: "1600"
   width: 1600
   height: 900
-  alt: "Schematic of a Cursor, Claude Code, or Codex session becoming a candidate pull request, then a named-owner merge gate"
+  alt: "Schematic of a Cursor, Claude Code, or Codex session becoming a candidate pull request, then a named-owner merge gate, above the four instruction layers (facts, procedures, isolation, hard stops) and what each can guarantee"
   caption: "Generation is candidate state. AGENTS.md, types, tests, CODEOWNERS, and CI decide whether it becomes the tree."
 faq:
   - q: "How do you use Cursor, Claude Code, or Codex in an existing repository?"

@@ -1,0 +1,322 @@
+# Public repositories and upstream contributions for /open-source/ and the
+# homepage proof strip. Verified against GitHub on the as_of date (CI state,
+# releases, licences, issue and PR state); findings quote each repository's
+# MEASUREMENTS or README, except spark-sql-kinesis, whose figure comes from its
+# write-up's staging measurements. Re-verify before changing the date.
+as_of: '2026-10-14'
+repos:
+- name: spark-sql-kinesis
+  url: https://github.com/technobasant/spark-sql-kinesis
+  pillar: data-platforms
+  what: Kinesis source and sink for Spark Structured Streaming on Spark 4.2, Scala 2.13 and AWS SDK v2,
+    published to Maven Central.
+  finding: An idle shard costs one GetRecords call per batch, where the alternative connector waits at
+    least six seconds (staging; see the write-up).
+  case: /work/spark-sql-kinesis/
+  post: /writing/spark-4-kinesis-connector-idle-floor/
+  languages:
+  - Scala
+  - Java
+  license: Apache-2.0
+  release:
+    tag: spark-sql-kinesis_2.13-1.3.0_spark-4.2.0
+    date: '2026-08-11'
+    url: https://github.com/technobasant/spark-sql-kinesis/releases/tag/spark-sql-kinesis_2.13-1.3.0_spark-4.2.0
+  ci:
+    conclusion: success
+    url: https://github.com/technobasant/spark-sql-kinesis/actions/workflows/ci.yml
+- name: evalproof
+  url: https://github.com/technobasant/evalproof
+  pillar: ai-systems
+  what: A local-first LLM evaluation tool that calibrates the judge, corrects its pass rate, and gates
+    CI only on significant regressions.
+  finding: Judge pass rate fell 4.8 pts, but p = 0.39 at n = 83, so the gate passed with a warning.
+  case: /work/evalproof/
+  post: /writing/eval-score-drop-twelve-answers/
+  languages:
+  - Python
+  license: Apache-2.0
+  release:
+    tag: v0.1.1
+    date: '2026-10-13'
+    url: https://github.com/technobasant/evalproof/releases/tag/v0.1.1
+  ci:
+    conclusion: success
+    url: https://github.com/technobasant/evalproof/actions/workflows/ci.yml
+- name: governed-agent
+  url: https://github.com/technobasant/governed-agent
+  pillar: ai-systems
+  what: An analytics agent whose output becomes state only after schema, policy and grounding checks and,
+    where required, human approval.
+  finding: 48/54 answers matched the key; 3 of 37 published (8%) were wrong, real numbers answering a
+    different question.
+  case: /work/governed-agent/
+  post: /writing/agent-measured-by-what-it-publishes/
+  languages:
+  - Python
+  - TypeScript
+  license: Apache-2.0
+  release:
+    tag: v0.1.0
+    date: '2026-10-13'
+    url: https://github.com/technobasant/governed-agent/releases/tag/v0.1.0
+  ci:
+    conclusion: success
+    url: https://github.com/technobasant/governed-agent/actions/workflows/ci.yml
+- name: platform-deployments
+  url: https://github.com/technobasant/platform-deployments
+  pillar: delivery-infrastructure
+  what: 'GitOps platform for governed-agent on a three-node kind cluster: Argo CD, Argo Rollouts canaries
+    gated by Prometheus, CloudNativePG, Kyverno.'
+  finding: Canary analysis aborted every bad release in six runs, 30–31 s after the bad pod became Ready
+    (median).
+  case: /work/platform-deployments/
+  post: /writing/canary-analysis-aborted-good-promoted-bad/
+  languages:
+  - HCL
+  - Shell
+  license: Apache-2.0
+  release:
+    tag: v0.1.0
+    date: '2026-10-13'
+    url: https://github.com/technobasant/platform-deployments/releases/tag/v0.1.0
+  ci:
+    conclusion: success
+    url: https://github.com/technobasant/platform-deployments/actions/workflows/ci.yml
+- name: streaming-platform
+  url: https://github.com/technobasant/streaming-platform
+  pillar: data-platforms
+  what: 'Real-time clickstream platform: Avro contracts, exactly-once through Kafka and Flink into ClickHouse
+    and Iceberg, with a freshness SLO and burn-rate alerts.'
+  finding: Every event layer stayed exact through 9 failures; one broker kill pushed up to 40% of on-time
+    events out of the windows.
+  case: /work/streaming-platform/
+  post: /writing/exactly-once-records-not-window-counts/
+  languages:
+  - Python
+  - Makefile
+  license: Apache-2.0
+  release:
+    tag: v0.1.0
+    date: '2026-10-14'
+    url: https://github.com/technobasant/streaming-platform/releases/tag/v0.1.0
+  ci:
+    conclusion: success
+    url: https://github.com/technobasant/streaming-platform/actions/workflows/ci.yml
+- name: realtime-ml
+  url: https://github.com/technobasant/realtime-ml
+  pillar: ai-systems
+  what: Real-time fraud scoring with Feast, LightGBM, MLflow and FastAPI shadow serving, built to measure
+    leakage, training-serving skew and label delay.
+  finding: The naive training join scored validation AUC-PR 0.746, then 0.363 on the next two weeks; point-in-time
+    scored 0.681 then 0.941.
+  case: /work/realtime-ml/
+  post: /writing/realtime-ml-point-in-time-leakage/
+  languages:
+  - Python
+  - Makefile
+  license: Apache-2.0
+  release:
+    tag: v0.1.0
+    date: '2026-10-14'
+    url: https://github.com/technobasant/realtime-ml/releases/tag/v0.1.0
+  ci:
+    conclusion: success
+    url: https://github.com/technobasant/realtime-ml/actions/workflows/ci.yml
+- name: retrieval-bench
+  url: https://github.com/technobasant/retrieval-bench
+  pillar: ai-systems
+  what: 'Vector and hybrid retrieval benchmark: pgvector, Qdrant and OpenSearch on the same embeddings,
+    measuring recall, latency, filtering, build cost and nDCG.'
+  finding: At a 10% filter, pgvector HNSW post-filtering returns 3.9 rows instead of 10, and nothing errors.
+  case: /work/retrieval-bench/
+  post: /writing/filtered-vector-search-four-rows-not-ten/
+  languages:
+  - Python
+  - Makefile
+  license: Apache-2.0
+  release:
+    tag: v0.1.0
+    date: '2026-10-14'
+    url: https://github.com/technobasant/retrieval-bench/releases/tag/v0.1.0
+  ci:
+    conclusion: success
+    url: https://github.com/technobasant/retrieval-bench/actions/workflows/ci.yml
+- name: dataset-registry
+  url: https://github.com/technobasant/dataset-registry
+  pillar: data-platforms
+  what: 'Data-ownership control plane: owners, freshness SLOs, versioned JSON Schema contracts, OpenLineage
+    lineage, and breaking changes that wait for consumer acknowledgement.'
+  finding: 'The compatibility checker called no breaking change safe: 0 false negatives on 51 hand-labelled
+    changes, 2 of 51 false alarms per direction.'
+  case: /work/dataset-registry/
+  post: /writing/json-schema-compatibility-data-contracts/
+  languages:
+  - Go
+  - TypeScript
+  license: Apache-2.0
+  release:
+    tag: v0.1.0
+    date: '2026-10-14'
+    url: https://github.com/technobasant/dataset-registry/releases/tag/v0.1.0
+  ci:
+    conclusion: success
+    url: https://github.com/technobasant/dataset-registry/actions/workflows/ci.yml
+- name: distributed-db-lab
+  url: https://github.com/technobasant/distributed-db-lab
+  pillar: database-lifecycle
+  what: Scaling PostgreSQL out with Citus, time-series with TimescaleDB, and a 2×2 replicated ClickHouse
+    cluster, with rebalances and failures measured.
+  finding: 'Added a Citus worker under write load: 7 shard-group moves in 37.1 s, 977,368 operations,
+    0 errors.'
+  case: /work/distributed-db-lab/
+  post: /writing/citus-remove-node-orphaned-cleanup-records/
+  languages:
+  - Python
+  - Shell
+  license: Apache-2.0
+  release:
+    tag: v1.0.0
+    date: '2026-10-13'
+    url: https://github.com/technobasant/distributed-db-lab/releases/tag/v1.0.0
+  ci:
+    conclusion: success
+    url: https://github.com/technobasant/distributed-db-lab/actions/workflows/ci.yml
+- name: db-failover-lab
+  url: https://github.com/technobasant/db-failover-lab
+  pillar: database-lifecycle
+  what: Eight failover scenarios on multi-node clusters of PostgreSQL 18, Redis, MongoDB, ScyllaDB, SolrCloud
+    and Galera, one container per node.
+  finding: 'Concurrent UPDATEs of one row from two Galera masters converged: 300 / 300 / 300 on all three
+    nodes.'
+  case: /work/multi-engine-ha-lab/
+  post: /writing/failover-lab-six-engines-eight-scenarios/
+  languages:
+  - Shell
+  license: Apache-2.0
+  release:
+    tag: v1.0.0
+    date: '2026-10-13'
+    url: https://github.com/technobasant/db-failover-lab/releases/tag/v1.0.0
+  ci:
+    conclusion: success
+    url: https://github.com/technobasant/db-failover-lab/actions/workflows/ci.yml
+- name: lakehouse-lab
+  url: https://github.com/technobasant/lakehouse-lab
+  pillar: data-platforms
+  what: Iceberg on MinIO with Apache Polaris vending table-scoped credentials to Trino and StarRocks,
+    plus a dbt and Airflow medallion pipeline.
+  finding: rollback_to_snapshot recovered 909,968 deleted rows in 589 ms; expire_snapshots then destroyed
+    that same safety net.
+  case: /work/lakehouse-rag-lab/
+  post: /writing/trino-iceberg-polaris-lakehouse-spine/
+  languages:
+  - Shell
+  - Python
+  license: Apache-2.0
+  release:
+    tag: v1.0.0
+    date: '2026-10-13'
+    url: https://github.com/technobasant/lakehouse-lab/releases/tag/v1.0.0
+  ci:
+    conclusion: success
+    url: https://github.com/technobasant/lakehouse-lab/actions/workflows/ci.yml
+- name: postgres-ha-lab
+  url: https://github.com/technobasant/postgres-ha-lab
+  pillar: database-lifecycle
+  what: 'PostgreSQL 18 HA on three amd64 Rocky 8 VMs: Patroni, etcd and pgBackRest over mutual TLS, with
+    failover and restore performed.'
+  finding: After SIGKILL of the leader, Patroni promoted within a 10–20 s window; PITR returned 5 of 5
+    rows of a dropped table.
+  case: /work/patroni-ha-backup-lab/
+  post: /writing/patroni-postgresql-18-rocky8-etcd-failover/
+  languages:
+  - Shell
+  - Jinja
+  license: Apache-2.0
+  release:
+    tag: v1.0.0
+    date: '2026-10-13'
+    url: https://github.com/technobasant/postgres-ha-lab/releases/tag/v1.0.0
+  ci:
+    conclusion: success
+    url: https://github.com/technobasant/postgres-ha-lab/actions/workflows/ci.yml
+- name: short-text-triage
+  url: https://github.com/technobasant/short-text-triage
+  pillar: ai-systems
+  what: 'Seeded multilingual short-text triage lab: normalize to a key, embed each distinct key once,
+    cluster with HDBSCAN, assign by margin.'
+  finding: A margin rule reached 95.2% precision against 66.2% for the best absolute threshold; labelling
+    per cluster needed 125 LLM calls, not 20,000.
+  post: /writing/classify-distinct-strings-not-rows/
+  languages:
+  - Python
+  - Shell
+  license: Apache-2.0
+  release:
+    tag: v1.0.0
+    date: '2026-10-13'
+    url: https://github.com/technobasant/short-text-triage/releases/tag/v1.0.0
+  ci:
+    conclusion: success
+    url: https://github.com/technobasant/short-text-triage/actions/workflows/ci.yml
+- name: prevalence-shift
+  url: https://github.com/technobasant/prevalence-shift
+  pillar: ai-systems
+  what: Seeded Monte Carlo showing why counting predicted labels flattens a trend, and how ACC, SLD and
+    prediction-powered inference report prevalence honestly.
+  finding: A 95%-accurate classifier counted a rise from 10% to 25% as 8% to 17%, a trend slope 0.628
+    of the true one.
+  post: /writing/count-prevalence-not-classifications/
+  languages:
+  - Python
+  license: Apache-2.0
+  release:
+    tag: v1.0.0
+    date: '2026-10-13'
+    url: https://github.com/technobasant/prevalence-shift/releases/tag/v1.0.0
+  ci:
+    conclusion: success
+    url: https://github.com/technobasant/prevalence-shift/actions/workflows/ci.yml
+- name: rag-pipeline
+  url: https://github.com/technobasant/rag-pipeline
+  pillar: ai-systems
+  what: 'Scrape-to-RAG lakehouse: Airflow, Spark Bronze/Silver/Gold on MinIO, DuckDB catalog, Chroma embeddings
+    and a FastAPI RAG API on Ollama.'
+  post: /writing/rag-lakehouse-delta-spark-chroma/
+  languages:
+  - Python
+  - JavaScript
+  license: Apache-2.0
+  ci:
+    conclusion: success
+    url: https://github.com/technobasant/rag-pipeline/actions/workflows/ci.yml
+upstream:
+- project: awslabs/spark-sql-kinesis-connector
+  ref: '#99'
+  url: https://github.com/awslabs/spark-sql-kinesis-connector/pull/99
+  kind: Pull request
+  what: Adds an opt-in option, kinesis.stopReadWhenMillisBehindLatestIsZero, so a shard's task stops once
+    caught up instead of waiting out empty polls.
+  status: Open, awaiting maintainer review
+- project: citusdata/citus
+  ref: '#7333'
+  url: https://github.com/citusdata/citus/issues/7333#issuecomment-6140552778
+  kind: Reproduction and offered patch
+  what: Confirmed the bug still reproduces on Citus 14.2.0 with PostgreSQL 17.11, adding a minimal repro,
+    root cause and an offered patch.
+  status: Issue open (bug); no maintainer reply yet
+- project: citusdata/citus
+  ref: '#4776'
+  url: https://github.com/citusdata/citus/issues/4776
+  kind: Issue
+  what: Reported that adding a primary key without a constraint name failed on a distributed table; Citus
+    engineers later implemented support.
+  status: Closed as completed; Citus engineers implemented the support in v11.2.0
+- project: roncemer/spark-sql-kinesis
+  ref: '#3'
+  url: https://github.com/roncemer/spark-sql-kinesis/pull/3
+  kind: Pull request
+  what: Moved the connector's build to Scala binary 2.13, fixing conflicting spark-tags cross-version
+    suffixes on Spark 3.2.1.
+  status: Merged July 2023; the repository has since been archived
