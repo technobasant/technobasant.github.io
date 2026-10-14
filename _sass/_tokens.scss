@@ -289,6 +289,9 @@
   --pillar-db: #1f5a96;
   --pillar-arch: #a03f29;
   --pillar-self: #4f5862;
+  // The mat behind a figure follows the theme now that figures do; the
+  // always-dark mat drew a dark hairline round light-theme figures.
+  --media-mat: #e7e2d9;
   --accent-fill: #c4a574;
   --accent-on: #16120b;
   --accent-tint: color-mix(in oklab, var(--accent-fill) 24%, transparent);
