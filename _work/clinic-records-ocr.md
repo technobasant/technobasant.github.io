@@ -6,6 +6,7 @@ description: "A camera-first records product for small clinics: OCR drafts FHIR-
 date: 2026-08-20
 last_modified_at: 2026-10-03
 kind: production
+pillar: ai-systems
 order: 2
 featured: true
 role: "Founder and sole engineer — built outside my day job"

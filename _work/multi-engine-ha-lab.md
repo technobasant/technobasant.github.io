@@ -5,6 +5,7 @@ description: "A home lab, not a production system: six database engines, eight f
 date: 2026-08-04
 last_modified_at: 2026-10-13
 kind: lab
+pillar: database-lifecycle
 order: 4
 featured: true
 role: "Personal lab"

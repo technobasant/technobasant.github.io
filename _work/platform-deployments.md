@@ -6,6 +6,8 @@ description: "Open-source GitOps platform: Argo CD, canary analysis on Envoy met
 date: 2026-10-14
 last_modified_at: 2026-10-14
 kind: open-source
+pillar: system-architecture
+related: [governed-agent, distributed-db-lab, streaming-platform]
 order: 7
 role: "Author"
 org: "Open source"

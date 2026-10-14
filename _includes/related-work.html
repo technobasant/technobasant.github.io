@@ -1,0 +1,41 @@
+{%- comment -%}
+  Related case studies, so a case page is not a dead end.
+
+  `related:` in a case's front matter names the systems it is actually wired
+  to (governed-agent is deployed by platform-deployments and gated by
+  evalproof, for instance). A case without it falls back to the other cases
+  in its `pillar`. Three at most; the work index is one click away for more.
+{%- endcomment -%}
+{%- assign _limit = include.limit | default: 3 -%}
+{%- assign _n = 0 -%}
+{%- capture _cards -%}
+{%- if page.related and page.related.size > 0 -%}
+  {%- for _slug in page.related -%}
+    {%- assign _u = "/work/" | append: _slug | append: "/" -%}
+    {%- assign _c = site.work | where: "url", _u | first -%}
+    {%- if _c and _n < _limit -%}
+      {%- assign _n = _n | plus: 1 %}
+      {% include case-card.html item=_c variant="related" heading="h3" %}
+    {%- endif -%}
+  {%- endfor -%}
+{%- elsif page.pillar -%}
+  {%- assign _same = site.work | where: "pillar", page.pillar | sort: "order" -%}
+  {%- for _c in _same -%}
+    {%- if _c.url != page.url and _n < _limit -%}
+      {%- assign _n = _n | plus: 1 %}
+      {% include case-card.html item=_c variant="related" heading="h3" %}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
+{%- endcapture -%}
+{%- if _n > 0 %}
+<section class="related related--work reveal" aria-labelledby="related-work-title">
+  <div class="section-head">
+    <h2 class="section-label" id="related-work-title">{% if page.related %}Connected systems{% else %}Related work{% endif %}</h2>
+    <a class="section-more" href="{{ '/work/' | relative_url }}">All case studies {% include icon.html name="arrow-right" size=14 %}</a>
+  </div>
+  <div class="card-grid">
+    {{ _cards }}
+  </div>
+</section>
+{%- endif -%}

@@ -5,6 +5,7 @@ description: "A measured lab where a Trino/Iceberg lakehouse and a Delta-backed 
 date: 2024-01-27
 last_modified_at: 2026-10-13
 kind: lab
+pillar: data-platforms
 order: 6
 featured: true
 role: "Personal lab"

@@ -840,6 +840,50 @@
   object-fit: cover;
 }
 
+// Related work on a case page: picture first, then kind, title and hook. The
+// figures and stack belong to the case itself, one click away.
+.case-card--related .case-card__thumb {
+  display: block;
+  order: -1;
+  margin: calc(0rem - var(--card-pad)) calc(0rem - var(--card-pad)) 0;
+}
+
+.case-card--related .case-card__thumb picture {
+  border: 0;
+  border-block-end: 1px solid var(--line-strong);
+}
+
+.case-card--related :is(.case-card__metrics, .case-card__stack, .post-card__tags) {
+  display: none;
+}
+
+// Groups on the work index: the head carries the capability and its size.
+.work-group + .work-group {
+  margin-block-start: var(--sp-8);
+}
+
+.work-group .writing-index-head {
+  margin-block-end: 0;
+}
+
+.interior-hero__signal-count {
+  margin-inline-start: var(--sp-2);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  font-weight: 400;
+  color: var(--ink-3);
+}
+
+.interior-hero__signals a {
+  color: inherit;
+  text-decoration-color: var(--line-control);
+  text-underline-offset: 0.2em;
+}
+
+.interior-hero__signals a:hover {
+  color: var(--accent-hi);
+}
+
 // `.prose figure` resets margins at (0,1,1); the page scope wins it back.
 .page--case .case-figure {
   margin: var(--sp-6) 0 0;

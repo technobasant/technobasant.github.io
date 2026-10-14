@@ -5,6 +5,7 @@ description: "How I rebuilt core processing, led a Kubernetes migration, evolved
 date: 2020-02-01
 last_modified_at: 2026-08-15
 kind: practice
+pillar: data-platforms
 order: 1
 featured: true
 role: "Data Engineer → Senior Data Engineer"

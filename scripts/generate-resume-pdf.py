@@ -372,6 +372,21 @@ def build_story(
     ], s)
     story.append(KeepTogether(tail2))
 
+    # Public repositories a reviewer can open. Short on purpose: one line each,
+    # the case studies carry the detail.
+    story += section("Selected open source", s)
+    story += bullets([
+        "<b>spark-sql-kinesis</b> (maintainer): Kinesis source and sink for Spark 4.2 on AWS SDK v2, on Maven "
+        "Central; an idle shard costs one GetRecords call, not a multi-second floor per batch.",
+        "<b>evalproof</b>: LLM evaluation with judge calibration and CI gates that fail only on drops that are "
+        "both large and significant.",
+        "<b>governed-agent</b>: a LangGraph and MCP agent whose answers become state only after schema, policy, "
+        "grounding and review.",
+        "<b>distributed-db-lab</b>: Citus sharding, online rebalance and tenant isolation, measured against "
+        "TimescaleDB and replicated ClickHouse. Also streaming, real-time ML, retrieval, data contracts and "
+        "GitOps delivery. github.com/technobasant",
+    ], s)
+
     # No forced page break here any more. It existed to give the Independent work
     # panel a clean page; with that section gone it stranded 124 words on page 2.
     story += section("Capability map", s)

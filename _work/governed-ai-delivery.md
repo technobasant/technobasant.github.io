@@ -6,6 +6,8 @@ description: "Governed AI delivery case study: a production agentic analytics wo
 date: 2024-02-01
 last_modified_at: 2026-08-15
 kind: practice
+pillar: ai-systems
+related: [governed-agent, evalproof, consulting-short-text-and-alerting]
 order: 2
 featured: true
 role: "Senior Data Engineer"

@@ -1,10 +1,11 @@
 ---
 title: Résumé
-last_modified_at: 2026-10-03
+last_modified_at: 2026-10-14
 seo_title: "Basant Bhattarai — Senior Data & AI Engineer résumé"
 eyebrow: Career
 headline: "Nine years across data platforms, databases, and production agentic systems."
 hero_code: "CAREER / LOG"
+lede: "Roles, measured outcomes, open-source work, and the stack behind each: data platforms, database lifecycle, system architecture, and AI systems in production."
 page_class: page-resume
 permalink: /resume/
 description: "Nine years across data platforms, database lifecycle operations, system architecture, and agentic systems in production. Roles, measured outcomes, and the stack behind each."
@@ -53,6 +54,15 @@ redirect_from:
 - Made schema evolution, replay, late data, and backfills designed interfaces with idempotent loads and explicit watermarks.
 - Reduced p95 query latency by {{ site.data.metrics.professional_query_latency.value }} across {{ site.data.metrics.professional_query_volume.value }} analytical queries per day through partitioning, clustering, and model redesign.
 - Led a Kubernetes migration of the data and database infrastructure that lowered cost by {{ site.data.metrics.professional_cost_reduction.value }} while sustaining {{ site.data.metrics.professional_uptime.value }} uptime.
+
+## Selected open source
+
+- **[spark-sql-kinesis](https://github.com/technobasant/spark-sql-kinesis)** — maintainer of a Kinesis source and sink for Spark 4.2 on AWS SDK v2, published to Maven Central; an idle shard costs one `GetRecords` call instead of a multi-second floor per batch.
+- **[evalproof](/work/evalproof/)** — LLM evaluation as measurement: judge calibration, and CI gates that fail only on drops that are both large and significant (paired McNemar and bootstrap).
+- **[governed-agent](/work/governed-agent/)** — a LangGraph and MCP agent whose answers become state only after schema, policy, grounding and, where required, a person.
+- **[distributed-db-lab](/work/distributed-db-lab/)** — Citus sharding, online rebalance and tenant isolation, measured against TimescaleDB and a replicated ClickHouse cluster.
+- Also [streaming-platform](/work/streaming-platform/), [realtime-ml](/work/realtime-ml/), [retrieval-bench](/work/retrieval-bench/), [dataset-registry](/work/dataset-registry/) and [platform-deployments](/work/platform-deployments/), each with its method and measurements in the repository.
+- Upstream: a minimal reproduction and an offered patch for [citusdata/citus#7333](https://github.com/citusdata/citus/issues/7333); an opt-in early-stop option for [awslabs/spark-sql-kinesis-connector](https://github.com/awslabs/spark-sql-kinesis-connector/pull/99) (in review).
 
 ## Capability map
 {: #skills }

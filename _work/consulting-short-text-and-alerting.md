@@ -6,6 +6,7 @@ description: "Consulting case study: multilingual short-text classification, met
 date: 2026-08-25
 last_modified_at: 2026-10-03
 kind: consulting
+pillar: ai-systems
 order: 1
 role: "Consultant — data and AI"
 org: "Consulting client (confidential)"

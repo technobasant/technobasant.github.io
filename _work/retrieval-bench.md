@@ -6,6 +6,8 @@ description: "pgvector, Qdrant and OpenSearch measured on the same 381,559 vecto
 date: 2026-10-14
 last_modified_at: 2026-10-14
 kind: lab
+pillar: ai-systems
+related: [lakehouse-rag-lab, governed-agent, evalproof]
 order: 7
 role: "Author"
 org: "Open source"

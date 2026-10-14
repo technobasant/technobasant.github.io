@@ -6,6 +6,8 @@ description: "Open-source LLM evaluation: calibrate the judge against gold label
 date: 2026-10-14
 last_modified_at: 2026-10-14
 kind: open-source
+pillar: ai-systems
+related: [governed-agent, realtime-ml, retrieval-bench]
 order: 2
 role: "Author"
 org: "Open source"

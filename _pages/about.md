@@ -31,7 +31,7 @@ Architecture is what ties the two together, and it is most of what I am asked to
 
 At UXCam I work across the data platform and the stores underneath it: processing, serving, database reliability, governance, and architecture review. I also own the production agent workflows — LangGraph and Google ADK for orchestration, MCP for the tool surface — with the same requirement as any other producer: what they emit lands in the governed stores, typed and reviewable, or it does not land.
 
-Outside that I keep a multi-engine failover lab with restartable scenarios, published commands and measured outcomes. I build independent products where I own every layer from the schema and API to the deployment: an agent that does its work on the user's own machine, and a records system for small outpatient clinics whose OCR accuracy I measure before I promise it.
+Outside that I maintain [spark-sql-kinesis](https://github.com/technobasant/spark-sql-kinesis), a Kinesis source for Spark 4, and publish reference systems with their method and measurements in the repository: LLM evaluation, a governed agent, filtered vector retrieval, real-time ML, exactly-once streaming, data contracts, progressive delivery and sharded databases. They are [on the work page](/work/), alongside a multi-engine failover lab with restartable scenarios, published commands and measured outcomes. I build independent products where I own every layer from the schema and API to the deployment: an agent that does its work on the user's own machine, and a records system for small outpatient clinics whose OCR accuracy I measure before I promise it.
 
 *Updated {{ site.data.availability.updated | date: "%B %Y" }}.*
 
