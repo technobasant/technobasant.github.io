@@ -52,3 +52,10 @@
   register_label: "Observed in production"
   blurb: "Failures and decisions from running a streaming analytics platform: a Spark 4 upgrade that wrote nothing, and a Hive Metastore 4 upgrade that validation called a success. Ratios and mechanisms, never internal scale."
   status: in-progress
+
+- slug: reference-systems
+  title: "Reference systems, measured"
+  register: measurement
+  register_label: "Measured on my own hardware"
+  blurb: "Eight open-source systems built from scratch across LLM evaluation, governed agents, streaming, real-time ML, retrieval, data contracts, progressive delivery and sharded databases. Each repository carries its method and numbers; each post is the result that changed what I would do."
+  status: in-progress
