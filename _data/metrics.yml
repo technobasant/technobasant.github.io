@@ -340,3 +340,40 @@ evalproof_pairwise_flips:
   source: "evalproof (2026)"
   window: "measured Oct 2026"
   context: "Of the 48 consistent verdicts the judge preferred the lower-scoring prompt 42 to 6, mostly where both answers were right and the candidate's was about five times longer."
+
+# ── governed-agent (open source, 2026) ──────────────────────────────────────
+agent_answer_match:
+  value: "48/54"
+  label: "answers matched an answer key computed by SQL"
+  method: "one live run of a 54-question golden set against qwen3:8b under Ollama, temperature 0, thinking off, over a seeded synthetic warehouse; 95% CI 78–95%"
+  scope: "independent"
+  source: "governed-agent (2026)"
+  window: "Oct 2026, one recorded run"
+  context: "24 of 24 numeric questions and 8 of 8 lookups were right; every miss was a question the data could not answer or a planted instruction."
+
+agent_published_wrong:
+  value: "3 of 37"
+  label: "answers published without review were wrong"
+  method: "same run; a finding is published only after its schema, policy and grounding checks pass with no proposal attached; 95% Wilson interval on 3/37 is 3–21%"
+  scope: "independent"
+  source: "governed-agent (2026)"
+  window: "Oct 2026, one recorded run"
+  context: "All three were real numbers from real queries answering a different question. A grounding check proves where a number came from, not that it answers the question."
+
+agent_unanswerable_admitted:
+  value: "4 of 8"
+  label: "unanswerable questions answered with “the data does not have this”"
+  method: "eight questions with no supporting data (NPS, margin without costs, delivery time without delivery dates and others); 95% CI 22–78%"
+  scope: "independent"
+  source: "governed-agent (2026)"
+  window: "Oct 2026, one recorded run"
+  context: "The weakest result in the run. Two of the four misses were held because a $0.00 appeared in no result; two substituted a proxy and were published."
+
+agent_injection_actions:
+  value: "0 of 5"
+  label: "planted instructions that led to a proposed action"
+  method: "five questions that make the model read instructions planted in product descriptions and refund notes; actions can only be proposed, and execute after a named person approves"
+  scope: "independent"
+  source: "governed-agent (2026)"
+  window: "Oct 2026, one recorded run"
+  context: "Resistance is measured, not relied on: there is no execution path without approval, so a proposal that did get through would wait for a reviewer."

@@ -884,6 +884,51 @@ def evalproof() -> str:
     return "".join(body)
 
 
+def governed_agent() -> str:
+    """Where 54 answers went: the published route is the one no person saw."""
+    body = [
+        f'<rect width="{W}" height="{H}" fill="{PAPER}"/>',
+        f'<text x="150" y="190" font-family="{MONO}" font-size="30" letter-spacing="6" '
+        f'fill="{ACCENT}">GOVERNED AGENT · ONE LIVE RUN · 54 QUESTIONS</text>',
+        f'<text x="150" y="300" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">48 of 54 answers were right.</text>',
+        f'<text x="150" y="390" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">3 wrong ones published themselves.</text>',
+        node_box(150, 560, 500, 210, "54 questions", "qwen3:8b · temp 0", "keys computed by SQL"),
+        node_box(790, 560, 640, 210, "the gates", "schema · policy · grounding", "a person for any action",
+                 accent=True),
+        arrow(660, 665, 780, 665, ""),
+        node_box(1600, 470, 650, 190, "published · 37", "34 right · 3 wrong", "no person saw these",
+                 accent=True),
+        node_box(1600, 680, 650, 190, "held for review · 8", "5 right · 3 wrong", "invented $0.00 · claimed change"),
+        node_box(1600, 890, 650, 190, "can't answer · 9", "9 right · 0 wrong", "honest fallback"),
+        arrow(1440, 640, 1590, 565, ""),
+        arrow(1440, 665, 1590, 775, ""),
+        arrow(1440, 690, 1590, 985, ""),
+        f'<text x="150" y="880" font-family="{MONO}" font-size="26" letter-spacing="3" '
+        f'fill="{MUTED}">ALSO MEASURED</text>',
+        *[
+            part
+            for y, label, value in (
+                (945, "unanswerable admitted", "4 of 8"),
+                (1000, "planted instructions acted on", "0 of 5"),
+                (1055, "actions executed unapproved", "0"),
+            )
+            for part in (
+                f'<text x="150" y="{y}" font-family="{MONO}" font-size="30" fill="{INK}">{label}</text>',
+                f'<text x="960" y="{y}" font-family="{MONO}" font-size="30" fill="{INK}" '
+                f'text-anchor="end">{value}</text>',
+            )
+        ],
+        f'<line x1="150" y1="1120" x2="{W - 150}" y2="1120" stroke="{LINE}" stroke-width="2"/>',
+        f'<text x="150" y="1195" font-family="{MONO}" font-size="30" fill="{MUTED}">'
+        f'Ollama · temperature 0 · recorded once, replayed in CI</text>',
+        f'<text x="{W - 150}" y="1195" font-family="{MONO}" font-size="30" fill="{ACCENT}" '
+        f'text-anchor="end">provenance is not relevance</text>',
+    ]
+    return "".join(body)
+
+
 DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patroni,
             "lakehouse-spine": lakehouse_spine,
             "lakehouse-medallion": lakehouse_medallion,
@@ -902,6 +947,7 @@ DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patro
             "alert-state": alert_state,
             "ocr-engines": ocr_engines,
             "evalproof": evalproof,
+            "governed-agent": governed_agent,
             "prevalence-shift": prevalence_shift}
 
 def svg_for(name: str) -> str:
