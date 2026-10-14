@@ -303,3 +303,40 @@ rag_refusal:
   source: "2026 RAG lakehouse rebuild"
   window: "measured 2026 · 2025 stack rebuilt"
   context: "The response carried a retrieve timing and no generate timing at all. Grounding enforced at the retriever, not in the prompt."
+
+# ── evalproof (open source, 2026) ───────────────────────────────────────────
+evalproof_noise_gate:
+  value: "p = 0.39"
+  label: "for a 4.8-point judge drop the gate declined to fail"
+  method: "exact McNemar on 83 paired cases — 8 worse, 4 better, 71 unchanged — qwen3:1.7b judged by qwen3:8b on Ollama, temperature 0"
+  scope: "independent"
+  source: "evalproof (2026)"
+  window: "measured Oct 2026"
+  context: "A gate on the pass-rate delta alone, with a 3-point tolerance, would have failed the same change. On 83 cases no drop smaller than six net cases can reach p < 0.05."
+
+evalproof_latency_p95:
+  value: "1,469 → 4,422 ms"
+  label: "p95 latency, the regression that was real"
+  method: "system latency over the same 83 cases, sequential, one Apple M5; mean answer length went from 19 to 77 tokens"
+  scope: "independent"
+  source: "evalproof (2026)"
+  window: "measured Oct 2026"
+  context: "With a 2,500 ms p95 budget the gate fails the change with exit 3 and still prints the quality warning."
+
+evalproof_gold_errors:
+  value: "7 vs 4"
+  label: "judge–key disagreements where the key, not the judge, was wrong"
+  method: "all 13 disagreements across both runs read by hand; 2 were ambiguous"
+  scope: "independent"
+  source: "evalproof (2026)"
+  window: "measured Oct 2026"
+  context: "A regex answer key can see that the right fact is present but not that a wrong one is absent. Most of the bias calibration corrected was the gold's."
+
+evalproof_pairwise_flips:
+  value: "42.2%"
+  label: "pairwise verdicts that flipped with answer order"
+  method: "35 of 83 pairs judged in both orders (166 calls) by qwen3:8b; order-dependent verdicts are reported as ties"
+  scope: "independent"
+  source: "evalproof (2026)"
+  window: "measured Oct 2026"
+  context: "Of the 48 consistent verdicts the judge preferred the lower-scoring prompt 42 to 6, mostly where both answers were right and the candidate's was about five times longer."

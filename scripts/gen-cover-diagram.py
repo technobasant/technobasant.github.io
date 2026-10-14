@@ -835,6 +835,55 @@ def prevalence_shift() -> str:
     return "".join(body)
 
 
+def evalproof() -> str:
+    """83 paired cases, 71 unchanged: the verdict on a 4.8-point drop rests on twelve."""
+    # Judge verdicts from evalproof's support-qa runs, in case-id order (q01–q83).
+    worse = {8, 28, 32, 33, 58, 72, 79, 83}
+    better = {7, 56, 65, 81}
+    cells = []
+    for i in range(83):
+        cx, cy = 150 + (i % 12) * 76, 480 + (i // 12) * 76
+        case = i + 1
+        if case in worse:
+            cells.append(f'<rect x="{cx}" y="{cy}" width="58" height="58" rx="4" fill="{ACCENT}"/>')
+        elif case in better:
+            cells.append(f'<rect x="{cx}" y="{cy}" width="58" height="58" rx="4" fill="{INK}"/>')
+        else:
+            cells.append(f'<rect x="{cx}" y="{cy}" width="58" height="58" rx="4" fill="{PANEL}" '
+                         f'stroke="{LINE}" stroke-width="2"/>')
+    legend = []
+    for j, (fill, stroke, label) in enumerate(((ACCENT, None, "8 worse"), (INK, None, "4 better"),
+                                               (PANEL, LINE, "71 unchanged"))):
+        y = 520 + j * 80
+        edge = f' stroke="{stroke}" stroke-width="2"' if stroke else ""
+        legend.append(f'<rect x="1100" y="{y - 34}" width="40" height="40" rx="4" fill="{fill}"{edge}/>')
+        legend.append(f'<text x="1160" y="{y}" font-family="{MONO}" font-size="28" '
+                      f'fill="{INK}">{escape(label)}</text>')
+    body = [
+        f'<rect width="{W}" height="{H}" fill="{PAPER}"/>',
+        f'<text x="150" y="190" font-family="{MONO}" font-size="30" letter-spacing="6" '
+        f'fill="{ACCENT}">LLM EVALUATION · EVALPROOF</text>',
+        f'<text x="150" y="300" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">The score fell 4.8 points.</text>',
+        f'<text x="150" y="382" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">Twelve answers held the evidence.</text>',
+        *cells,
+        *legend,
+        f'<text x="1100" y="780" font-family="{MONO}" font-size="26" fill="{MUTED}">only changed</text>',
+        f'<text x="1100" y="818" font-family="{MONO}" font-size="26" fill="{MUTED}">cases count</text>',
+        node_box(1500, 470, 750, 190, "delta gate", "−4.8 pts, tolerance 3", "fails the change"),
+        node_box(1500, 680, 750, 190, "paired gate", "8 vs 4 · McNemar p = 0.39", "pass, with a warning",
+                 accent=True),
+        node_box(1500, 890, 750, 190, "latency budget", "p95 1,469 → 4,422 ms", "exit 3 · the real one"),
+        f'<line x1="150" y1="1120" x2="{W - 150}" y2="1120" stroke="{LINE}" stroke-width="2"/>',
+        f'<text x="150" y="1195" font-family="{MONO}" font-size="30" fill="{MUTED}">'
+        f'83 paired cases · qwen3:1.7b judged by qwen3:8b · local</text>',
+        f'<text x="{W - 150}" y="1195" font-family="{MONO}" font-size="30" fill="{ACCENT}" '
+        f'text-anchor="end">fail only if large AND significant</text>',
+    ]
+    return "".join(body)
+
+
 DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patroni,
             "lakehouse-spine": lakehouse_spine,
             "lakehouse-medallion": lakehouse_medallion,
@@ -852,6 +901,7 @@ DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patro
             "agent-knowledge": agent_knowledge,
             "alert-state": alert_state,
             "ocr-engines": ocr_engines,
+            "evalproof": evalproof,
             "prevalence-shift": prevalence_shift}
 
 def svg_for(name: str) -> str:
