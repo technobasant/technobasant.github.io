@@ -1200,6 +1200,42 @@ def platform_deployments() -> str:
     return "".join(body)
 
 
+def distributed_db_lab() -> str:
+    """A removed node's cleanup records outlive it and block a later move."""
+    body = [
+        f'<rect width="{W}" height="{H}" fill="{PAPER}"/>',
+        f'<text x="150" y="190" font-family="{MONO}" font-size="30" letter-spacing="6" '
+        f'fill="{ACCENT}">CITUS 14.2 · DISTRIBUTED-DB-LAB</text>',
+        f'<text x="150" y="300" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">The node was removed.</text>',
+        f'<text x="150" y="382" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">Its cleanup records were not.</text>',
+        # row 1: the reset, in one session
+        f'<text x="150" y="478" font-family="{MONO}" font-size="26" letter-spacing="3" '
+        f'fill="{MUTED}">THE RESET · ONE SESSION</text>',
+        node_box(150, 500, 600, 190, "drain worker3", "move every shard away", "deferred drop queued"),
+        node_box(900, 500, 600, 190, "remove worker3", "straight away", "its group leaves the catalog"),
+        node_box(1650, 500, 600, 190, "pg_dist_cleanup", "8 rows, group 7", "no primary: skipped", accent=True),
+        arrow(750, 595, 890, 595, ""),
+        arrow(1500, 595, 1640, 595, ""),
+        # row 2: minutes later, a new worker and a rebalance
+        f'<text x="150" y="788" font-family="{MONO}" font-size="26" letter-spacing="3" '
+        f'fill="{MUTED}">MINUTES LATER · NEW WORKER, REBALANCE</text>',
+        node_box(150, 810, 600, 190, "rebalance", "7 moves in 37.1 s", "0 errors under load"),
+        node_box(900, 810, 600, 190, "8th move", "orphaned shard … not cleaned", "retried 33× in 33 min",
+                 accent=True),
+        node_box(1650, 810, 600, 190, "delete stale rows", "group not in pg_dist_node", "move done in 5.3 s"),
+        arrow(750, 905, 890, 905, ""),
+        arrow(1500, 905, 1640, 905, ""),
+        f'<line x1="150" y1="1120" x2="{W - 150}" y2="1120" stroke="{LINE}" stroke-width="2"/>',
+        f'<text x="150" y="1195" font-family="{MONO}" font-size="30" fill="{MUTED}">'
+        f'PostgreSQL 17.11 · reproduced 3 of 3 · citusdata/citus#7333</text>',
+        f'<text x="{W - 150}" y="1195" font-family="{MONO}" font-size="30" fill="{ACCENT}" '
+        f'text-anchor="end">clean up, then remove</text>',
+    ]
+    return "".join(body)
+
+
 DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patroni,
             "lakehouse-spine": lakehouse_spine,
             "lakehouse-medallion": lakehouse_medallion,
@@ -1224,6 +1260,7 @@ DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patro
             "streaming-platform": streaming_platform,
             "dataset-registry": dataset_registry,
             "platform-deployments": platform_deployments,
+            "distributed-db-lab": distributed_db_lab,
             "prevalence-shift": prevalence_shift}
 
 def svg_for(name: str) -> str:

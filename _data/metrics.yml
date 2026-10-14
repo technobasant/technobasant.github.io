@@ -580,3 +580,49 @@ deploy_bootstrap:
   source: "platform-deployments (2026)"
   window: "measured Oct 2026 · kind, three nodes"
   context: "Range 10 min 46 s to 27 min 37 s. Most of it is image pulls; the PostgreSQL image alone took 6 min 20 s in the slowest run."
+
+# ── distributed-db-lab (2026) ────────────────────────────────────────────────
+ddb_rebalance_errors:
+  value: "0 errors"
+  label: "while a worker joined and 7 shard groups moved under load"
+  method: "8 client threads for 600 s, 80% one-tenant reads and 20% single-row inserts against the Citus coordinator; every acknowledged write counted back afterwards"
+  scope: "independent"
+  source: "distributed-db-lab (2026)"
+  window: "measured Oct 2026"
+  context: "977,368 operations and all 195,543 acknowledged writes present. The moves took 37.1 s; write p99 rose from 38.0 ms to 54.7 ms while they ran."
+
+ddb_colocation_join:
+  value: "4.2×"
+  label: "faster join co-located than repartitioned"
+  method: "the same join over tenants 1–400, both returning 617,895 rows; p50 of 7 runs, 1,251.7 ms co-located on (tenant_id, user_id) vs 5,206.0 ms against a copy distributed by user_id"
+  scope: "independent"
+  source: "distributed-db-lab (2026)"
+  window: "measured Oct 2026"
+  context: "Citus refuses the repartitioned version until citus.enable_repartition_joins is on. A one-tenant query routed to a single shard ran at a p50 of 3.77 ms."
+
+ddb_skew_spread:
+  value: "2.36× → 1.10×"
+  label: "spread between the largest and smallest worker"
+  method: "node bytes after the default by_disk_size rebalance, then after isolating the largest tenant to its own shard and rebalancing with citus.rebalancer_by_disk_size_base_cost set to 0"
+  scope: "independent"
+  source: "distributed-db-lab (2026)"
+  window: "measured Oct 2026"
+  context: "The largest tenant's events shard was 7.4× the median. Isolation took 12.8 s and the follow-up rebalance 13.9 s; no move can split a shard, so moving alone could not fix it."
+
+ddb_tsdb_compression:
+  value: "17.0×"
+  label: "smaller after TimescaleDB columnstore"
+  method: "11 of 12 one-day chunks of 20.7M ticks, segmented by entity and metric; 2,785.5 MB → 163.4 MB from hypertable_compression_stats"
+  scope: "independent"
+  source: "distributed-db-lab (2026)"
+  window: "measured Oct 2026"
+  context: "Compression took 17.1 s. A one-entity hourly average over 2.5 days went from a p50 of 56.3 ms to 12.6 ms."
+
+ddb_ch_replica_outage:
+  value: "40 of 40"
+  label: "inserts succeeded with a ClickHouse replica down"
+  method: "one replica of a 2-shard × 2-replica ReplicatedMergeTree cluster killed for 60.3 s while inserts and reads ran through the Distributed table"
+  scope: "independent"
+  source: "distributed-db-lab (2026)"
+  window: "measured Oct 2026"
+  context: "30 of 30 reads also succeeded. The replica missed 1,452,437 rows, was serving 3.5 s after restart, and caught up 0.8 s after that."
