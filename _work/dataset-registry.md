@@ -15,6 +15,14 @@ scale: "Go API, PostgreSQL 18, Next.js UI and Prometheus as containers on one ho
 problem: "Data contracts usually fail one of two ways: a checker that blocks every breaking change, so teams route around it with _v2 tables, or no checker, so consumers learn about the change from an incident. Neither knows who depends on what."
 decision: "Make ownership the first rule, check every contract change in both directions with a checker allowed to over-report but never to under-report, and turn a breaking change into an acknowledgement from each registered consumer."
 repo: "https://github.com/technobasant/dataset-registry"
+flow: dataset-registry
+cover:
+  base: "/assets/images/editorial-dataset-registry-v1"
+  width: 1600
+  height: 900
+  alt: "Table of eight schema changes teams call safe, each marked as breaking history or breaking consumers, beside the checker's score on 51 labelled changes: no breaking change called safe, two false alarms per direction"
+  caption: "Widening a contract breaks consumers and narrowing it breaks history, and across 51 labelled changes the checker never called a breaking one safe."
+  link: "/writing/json-schema-compatibility-data-contracts/"
 metrics: [registry_false_negatives, registry_false_alarms, registry_ingest]
 stack: [Go, "PostgreSQL 18", sqlc, OpenLineage, "JSON Schema", Next.js, "React Flow", Prometheus, Playwright, "Docker Compose"]
 tags: [data-quality, postgres]
@@ -50,6 +58,41 @@ One Go binary holds five parts, all writing to PostgreSQL 18:
 - **Freshness evaluator.** Runs on an interval, records every status transition, and exports staleness to Prometheus, which owns the alerting.
 
 Every transition goes into an append-only audit log whose triggers refuse `UPDATE`, `DELETE` and `TRUNCATE`. The Next.js UI is server-rendered and calls the API with bearer tokens. It shows datasets by SLO status, contract diffs with the checker's report, a React Flow lineage graph and the change-request review.
+
+## In the code
+
+The zero in the results comes from two choices in the checker. Each change records which directions it breaks before `verdict` applies the dataset's mode, and any keyword the checker cannot reason about counts as breaking both ways, which is where the `anyOf` and `multipleOf` false alarms come from.
+
+```go
+func verdict(mode Mode, bb, bf bool) (bool, string) {
+	switch {
+	case mode.checksForward() && bf:
+		return true, "breaking under " + string(mode) + ": consumers validating against the old version can receive documents that fail it"
+	case mode.checksBackward() && bb:
+		return true, "breaking under " + string(mode) + ": documents written under the old version (history, replays) can fail the new one"
+	case mode == None:
+		return false, "not checked: the dataset's compatibility mode is NONE"
+	case bb || bf:
+		return false, "safe under " + string(mode) + ": it only breaks the direction this mode does not require"
+	default:
+		return false, "safe in both directions"
+	}
+}
+// …
+	for _, k := range sortedKeys(keys) {
+		if supported[k] || annotations[k] {
+			continue
+		}
+		if reflect.DeepEqual(o[k], n[k]) {
+			continue
+		}
+		c.add(path, "unsupported_keyword",
+			fmt.Sprintf("`%s` differs; the checker does not reason about it, so it is treated as breaking both ways", k), true, true)
+	}
+```
+{: data-file="api/internal/compat/compat.go" }
+
+The rest of the checker, including the rule that a field missing from `properties` takes the schema of `additionalProperties`, is in [api/internal/compat/compat.go](https://github.com/technobasant/dataset-registry/blob/main/api/internal/compat/compat.go).
 
 ## Decisions and trade-offs
 

@@ -15,6 +15,14 @@ scale: "Daily batches of short multilingual user comments on a lakehouse"
 problem: "A comment-classification notebook failed in production, and the per-row model calls proposed to replace it would have been the most expensive way to buy the cheapest inference available."
 decision: "Make the distinct normalized string the unit of work, cache its label per taxonomy version, discover new categories on clusters of strings, and ship the model inside the image."
 stack: [Databricks, "Delta Lake", Python, "multilingual-e5", UMAP, HDBSCAN, Docker, "Slack API"]
+flow: consulting-short-text-and-alerting
+cover:
+  base: "/assets/images/editorial-short-text-triage-v1"
+  width: 1600
+  height: 900
+  alt: "Schematic: 20,000 rows narrowing to 3,018 raw strings, 1,537 normalized keys and 124 clusters, then a margin test sending new strings to assigned, review or outlier"
+  caption: "The model never needed to see a row. It needed to see each meaning once, and to say so when a new string did not clearly belong."
+  link: "/writing/classify-distinct-strings-not-rows/"
 tags: [applied-ml, data-quality, ai-agents]
 image: /assets/og/og-agents.png
 image_alt: "Consulting case study: short-text classification and alerting on a lakehouse — Basant Bhattarai"

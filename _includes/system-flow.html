@@ -26,7 +26,11 @@
       <span class="system-flow__index" aria-hidden="true">{{ forloop.index | prepend: "0" }}</span>
       <strong>{{ _s.name }}</strong>
       {%- if _s.tech and _s.tech.size > 0 %}
-      <span class="system-flow__tech">{{ _s.tech | join: " · " }}</span>
+      {%- comment -%}
+        One nowrap span per component with the separator attached to the end,
+        so a wrapped line never starts with a stray "·" or splits a name.
+      {%- endcomment %}
+      <span class="system-flow__tech">{% for _t in _s.tech %}<span>{{ _t }}{% unless forloop.last %}&nbsp;·{% endunless %}</span>{% unless forloop.last %}&#32;{% endunless %}{% endfor %}</span>
       {%- endif %}
       {%- if _s.note %}
       <span class="system-flow__note">{{ _s.note }}</span>

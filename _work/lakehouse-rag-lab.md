@@ -16,6 +16,13 @@ problem: "This site claims I design data platforms and the agentic systems that 
 decision: "Rebuild two real client stacks on current versions rather than write about the originals, measure everything server-side, and publish the failures — including the ones where the tool reported success."
 flow: rag
 repo: "https://github.com/technobasant/lakehouse-lab"
+cover:
+  base: "/assets/images/editorial-lakehouse-spine-v1"
+  width: 1600
+  height: 900
+  alt: "Topology diagram: Trino holding no S3 credential, Polaris as the Iceberg REST catalog calling MinIO's STS, and a sibling table returning AccessDenied"
+  caption: "Trino authenticates to the catalog, not to storage. Polaris decides, then lends a credential scoped to one table prefix."
+  link: "/writing/trino-iceberg-polaris-lakehouse-spine/"
 stack: [Trino, "Apache Iceberg", "Apache Polaris", StarRocks, "Apache Spark", "Delta Lake", dbt, Airflow, Chroma, Ollama, MinIO]
 metrics: [lakehouse_partition_prune, lakehouse_rollback, rag_refusal]
 tags: [iceberg-lakehouse, rag, distributed-databases]

@@ -15,6 +15,14 @@ scale: "381,559 vectors × 384 dimensions; PostgreSQL 18 with pgvector, Qdrant a
 problem: "Every RAG system meets the same early question — do we need a vector database, or is Postgres enough, and do we need hybrid search at all? Vendor benchmarks answer it for their own engine. I wanted the answer on public data, with pinned versions, measuring the trade-offs that actually decide a production choice."
 decision: "Embed once and load identical vectors into every engine, compute exact ground truth, compare engines at equal recall rather than equal settings, and publish the runs that flatter nobody — including my own measurement mistakes."
 repo: "https://github.com/technobasant/retrieval-bench"
+flow: retrieval-bench
+cover:
+  base: "/assets/images/editorial-retrieval-bench-v1"
+  width: 1600
+  height: 900
+  alt: "Chart: recall@10 against filter selectivity. pgvector post-filtering falls from 0.966 at 50% to 0.391 at 10% and 0.038 at 1%; OpenSearch's efficient filter dips to 0.745 at 10% and recovers to 1.000 at 1%; pgvector's iterative scan stays near 0.95"
+  caption: "The 10% filter is the risk: post-filtered pgvector returned 3.9 of 10 rows and OpenSearch's filtered graph walk recalled 0.745, while pgvector's iterative scan held near 0.95."
+  link: "/writing/filtered-vector-search-four-rows-not-ten/"
 metrics: [retrieval_filter_rows, retrieval_filter_middle, retrieval_iterative_scan, retrieval_engine_quality]
 stack: [pgvector, "PostgreSQL 18", Qdrant, OpenSearch, Faiss, Python, numpy, "sentence-transformers", Docker]
 tags: [rag, postgres]
@@ -40,6 +48,35 @@ The engines run on one host, each in its own container capped at 4 CPUs and 5 Gi
 ## Architecture
 
 A small Python harness, `rbench`, downloads the BEIR datasets, embeds each corpus once with `bge-small-en-v1.5` at a pinned revision, and computes exact nearest neighbours in numpy — with any filter applied — as ground truth. Each engine is one adapter class behind a common protocol: build from scratch, search with an `ef_search` or `probes` setting and an optional filter, insert, report sizes. The same runner drives quality runs against human relevance judgements, recall–latency sweeps, filtered search, concurrency from 1 to 16 client processes, and inserts while querying. `make smoke` pushes synthetic data through every adapter in CI.
+
+## In the code
+
+The 10% result turns on one session setting, not on the query. With `hnsw.iterative_scan` off, the index scan hands Postgres `ef_search` candidates (40 here) and the `WHERE` clause runs on those, so a 10% filter leaves about four; with `relaxed_order`, the same SQL keeps walking the graph until ten rows pass.
+
+```python
+ITERATIVE = {"default": "off", "post": "off", "relaxed": "relaxed_order", "strict": "strict_order"}
+# …
+    def _configure(self, q: Query) -> None:
+        mode = ITERATIVE[q.strategy]
+        if self.index == "hnsw":
+            self._set("hnsw.ef_search", str(q.ef or 40))
+            self._set("hnsw.iterative_scan", mode)
+        else:
+            if mode == "strict_order":
+                raise ValueError("ivfflat supports relaxed_order only")
+            self._set("ivfflat.probes", str(q.probes or 1))
+            self._set("ivfflat.iterative_scan", mode)
+
+    def _sql(self, q: Query) -> tuple[str, tuple[object, ...]]:
+        where, args = "", tuple[object, ...]()
+        if q.bucket_lt is not None:
+            where, args = "WHERE bucket < %s", (q.bucket_lt,)
+        sql = f"SELECT id FROM {self.table} {where} ORDER BY embedding <#> %s LIMIT %s"
+        return sql, args + (q.vector, q.k)
+```
+{: data-file="src/retrieval_bench/engines/pgvector.py" }
+
+The whole adapter, including the `EXPLAIN` the harness records beside every filtered result, is in [src/retrieval_bench/engines/pgvector.py](https://github.com/technobasant/retrieval-bench/blob/main/src/retrieval_bench/engines/pgvector.py).
 
 ## Decisions and trade-offs
 

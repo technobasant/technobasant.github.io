@@ -1236,6 +1236,73 @@ def distributed_db_lab() -> str:
     return "".join(body)
 
 
+def _five_stage(kicker, line1, line2, stages, foot_left, foot_right):
+    """Five stages left to right; the accented one is the decision the case is about."""
+    x, w, gap = 150, 380, 50
+    body = [
+        f'<rect width="{W}" height="{H}" fill="{PAPER}"/>',
+        f'<text x="150" y="190" font-family="{MONO}" font-size="30" letter-spacing="6" '
+        f'fill="{ACCENT}">{escape(kicker)}</text>',
+        f'<text x="150" y="300" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">{escape(line1)}</text>',
+        f'<text x="150" y="382" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">{escape(line2)}</text>',
+    ]
+    for i, (title, sub, badge, accent, note) in enumerate(stages):
+        bx = x + i * (w + gap)
+        body.append(node_box(bx, 560, w, 230, title, sub, badge, accent=accent))
+        body.append(
+            f'<text x="{bx}" y="880" font-family="{MONO}" font-size="27" '
+            f'fill="{ACCENT if accent else MUTED}">{escape(note)}</text>'
+        )
+        if i:
+            body.append(arrow(bx - gap + 4, 675, bx - 6, 675))
+    body += [
+        f'<line x1="150" y1="1120" x2="{W - 150}" y2="1120" stroke="{LINE}" stroke-width="2"/>',
+        f'<text x="150" y="1195" font-family="{MONO}" font-size="30" fill="{MUTED}">'
+        f'{escape(foot_left)}</text>',
+        f'<text x="{W - 150}" y="1195" font-family="{MONO}" font-size="30" fill="{ACCENT}" '
+        f'text-anchor="end">{escape(foot_right)}</text>',
+    ]
+    return "".join(body)
+
+
+def governed_ai_delivery() -> str:
+    """Model output is a candidate; one step writes state."""
+    return _five_stage(
+        "GOVERNED AI DELIVERY",
+        "Model output is a candidate.",
+        "Only one step writes state.",
+        [
+            ("Retrieve", "Milvus · MCP tools", "cited or dropped", False, "every claim sourced"),
+            ("Generate", "LangGraph · ADK", "candidate only", False, "never final state"),
+            ("Validate", "Pydantic · policy", "failing is normal", False, "schema and policy"),
+            ("Review", "human queue", "a person decides", False, "publish or fall back"),
+            ("Persist", "PostgreSQL", "the only write", True, "durable, correctable"),
+        ],
+        "typed state · provenance · evaluation · review",
+        "the fallback is defined up front",
+    )
+
+
+def clickhomes() -> str:
+    """Postgres holds the truth; ClickHouse is derived and rebuildable."""
+    return _five_stage(
+        "CLICKHOMES · INDEPENDENT PRODUCT",
+        "PostgreSQL holds the truth.",
+        "ClickHouse can be rebuilt from it.",
+        [
+            ("Feed", "RESO Web API", "the only way in", False, "rights kept per record"),
+            ("Normalise", "Python · contracts", "quarantine batch", False, "never patch a field"),
+            ("Truth", "PostgreSQL", "system of record", True, "versioned migrations"),
+            ("Speed", "ClickHouse", "disposable", False, "derived from truth"),
+            ("Serve", "FastAPI · Next.js", "separate pools", False, "reads never share"),
+        ],
+        "90+ versioned migrations · no schema drift by hand",
+        "rebuildable at any time",
+    )
+
+
 DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patroni,
             "lakehouse-spine": lakehouse_spine,
             "lakehouse-medallion": lakehouse_medallion,
@@ -1261,6 +1328,8 @@ DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patro
             "dataset-registry": dataset_registry,
             "platform-deployments": platform_deployments,
             "distributed-db-lab": distributed_db_lab,
+            "governed-ai-delivery": governed_ai_delivery,
+            "clickhomes": clickhomes,
             "prevalence-shift": prevalence_shift}
 
 def svg_for(name: str) -> str:

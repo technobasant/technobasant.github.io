@@ -15,6 +15,14 @@ team: "Solo"
 scale: "Small outpatient clinics in Nepal; evaluated on a private corpus of real captures"
 problem: "Outpatient records live on paper. Retyping them is slow, and OCR that guesses confidently is worse than none, because a plausible wrong value can reach a patient's chart."
 decision: "Treat every extracted value as a draft: measure accuracy per document class with a scorer written first, refuse what the recogniser could not read, and commit nothing without a clinician."
+flow: clinic-records-ocr
+cover:
+  base: "/assets/images/editorial-ocr-engines-v1"
+  width: 1600
+  height: 900
+  alt: "Schematic of eight OCR engines feeding one fixed scorer, with the shipped engine, the switched-off vision-language sidecar, and the engines rejected on accuracy, memory and licence"
+  caption: "Same pages, same scorer, only the engine changes. The strongest reader lost on the property a reviewer needs most: knowing when it is unsure."
+  link: "/writing/choosing-an-ocr-engine-for-clinic-records/"
 metrics: [clinic_ocr_lab_value_accuracy, clinic_ocr_engines_evaluated]
 stack: [Python, FastAPI, PostgreSQL, RapidOCR, ONNX Runtime, React, "FHIR R4", Docker]
 tags: [applied-ml, data-quality, postgres]

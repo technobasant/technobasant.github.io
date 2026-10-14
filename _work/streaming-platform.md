@@ -15,6 +15,14 @@ scale: "Three KRaft brokers, a Flink JobManager and two TaskManagers, ClickHouse
 problem: "Exactly-once is usually asserted from configuration. I wanted it counted: every event at every layer, against a ledger of every fault injected, through the failures that are supposed to break it."
 decision: "Make every hop transactional or idempotent, put a reconciler that counts by sequence number at the end of every run, and treat the window aggregates as a separate claim with its own check."
 repo: "https://github.com/technobasant/streaming-platform"
+flow: streaming-platform
+cover:
+  base: "/assets/images/editorial-streaming-platform-v1"
+  width: 1600
+  height: 900
+  alt: "Bar chart: across nine failure runs, events.clean, ClickHouse and Iceberg stayed exact, while 10-second window counts held between 59.8% and 100% of on-time events"
+  caption: "Every event layer stayed exact through nine failure runs, while the 10-second window counts fell to as little as 59.8% of on-time events."
+  link: "/writing/exactly-once-records-not-window-counts/"
 metrics: [stream_failure_exactness, stream_window_undercount, stream_freshness_p99, stream_stall_page]
 stack: ["Apache Kafka 4.3", "Apache Flink 1.20", ClickHouse, "Apache Iceberg", "Schema Registry · Avro", Prometheus, Grafana, Python, Docker]
 tags: [kafka-streaming, clickhouse, iceberg-lakehouse]
@@ -40,6 +48,37 @@ All nodes are containers on one Docker VM with 8 vCPU and 11.7 GiB, so replicati
 A generator sends Avro through an idempotent producer into `clickstream.raw`. A transactional gatekeeper decodes and validates each batch inside one Kafka transaction, writing valid events to `events.valid` and bad bytes, with a reason, to `events.dlq`. Flink 1.20 runs two SQL jobs: `clean` deduplicates on `event_id` and writes `events.clean` through a two-phase-commit Kafka sink and an Iceberg table that commits a snapshot per checkpoint; `windows` computes 10-second tumbling counts and 30-second sessions by event time and routes anything behind the watermark to `events.late`. ClickHouse reads every topic `read_committed` into `ReplacingMergeTree` tables keyed on the event. A probe exporter sends one synthetic event every 5 seconds through the front door and watches for it in ClickHouse; Prometheus turns those probes into multi-window burn-rate alerts.
 
 Kafka is three KRaft nodes, each broker and controller, with every topic replicated three times and `min.insync.replicas=2`. Checkpoints run every 5 seconds to S3 on SeaweedFS.
+
+## In the code
+
+The window counts were the one layer that did not stay exact, and this split is why: the late filter routes on the same condition the window uses to drop, which keeps every event in exactly one place only while disorder stays inside the 5-second watermark. Catching up after a failure reorders partitions beyond that bound, so on-time events land in `events.late`, and after a restore `CURRENT_WATERMARK` is `NULL` until the first new watermark, so a late event read in that gap is dropped by the window and never routed.
+
+```sql
+CREATE TABLE events_clean (
+  -- …
+  -- Out-of-order tolerance: an event up to 5 s behind the newest one seen is on time.
+  WATERMARK FOR event_time AS event_time - INTERVAL '5' SECOND
+-- …
+  INSERT INTO agg_windows
+  SELECT window_start, window_end, event_type,
+         COUNT(*), SUM(COALESCE(amount_cents, 0)), COUNT(DISTINCT session_id)
+  FROM TABLE(TUMBLE(TABLE shopper_events, DESCRIPTOR(event_time), INTERVAL '10' SECOND))
+  GROUP BY window_start, window_end, event_type;
+  -- …
+  -- The window operator drops a record when the watermark has reached the last
+  -- millisecond of its window (window_end - 1 ms), not merely its own timestamp.
+  -- Route on the same condition so that every event lands in exactly one place.
+  INSERT INTO events_late
+  SELECT event_id, event_type, event_time, CURRENT_WATERMARK(event_time)
+  FROM shopper_events
+  WHERE CURRENT_WATERMARK(event_time) IS NOT NULL
+    AND TIMESTAMPADD(SECOND, 10 - MOD(CAST(EXTRACT(SECOND FROM event_time) AS INT), 10),
+          CAST(FLOOR(event_time TO SECOND) AS TIMESTAMP(3))) - INTERVAL '0.001' SECOND
+        <= CURRENT_WATERMARK(event_time);
+```
+{: data-file="flink/sql/20-windows.sql" }
+
+The whole job, including the parallelism and idle-timeout settings that each fixed an earlier miscount, is in [flink/sql/20-windows.sql](https://github.com/technobasant/streaming-platform/blob/main/flink/sql/20-windows.sql).
 
 ## Decisions and trade-offs
 

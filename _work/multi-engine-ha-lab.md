@@ -16,6 +16,13 @@ problem: "Documentation describes expected failover; I wanted current, measured 
 decision: "Run one reproducible cluster at a time, seed known state, inject a specific fault, and record promotion, recovery, and data-survival evidence."
 flow: lab
 repo: "https://github.com/technobasant/db-failover-lab"
+cover:
+  base: "/assets/images/editorial-failover-lab-v1"
+  width: 1600
+  height: 900
+  alt: "Six database engines in one lab: a failed primary smoking, a neighbor wearing the crown"
+  caption: "Eight scenarios on one 8-CPU rig. A failover test is incomplete until quorum, acknowledged writes, and recovery are measured."
+  link: "/writing/failover-lab-six-engines-eight-scenarios/"
 stack: [MongoDB, ScyllaDB, SolrCloud, MariaDB, Galera, Redis, PostgreSQL, Docker, Prometheus, Grafana]
 metrics: [lab_scenarios, lab_pg_replay_lag, lab_redis_promotion]
 tags: [distributed-databases, postgres, observability-slo]

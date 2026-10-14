@@ -644,7 +644,7 @@
 
 .case-card--portfolio {
   display: grid;
-  grid-template-columns: 3rem minmax(12rem, 0.75fr) minmax(18rem, 1.25fr) auto;
+  grid-template-columns: 3rem minmax(12rem, 1fr) minmax(16rem, 1fr) auto;
   gap: var(--sp-5) var(--sp-6);
   align-items: start;
   margin-inline: calc(0rem - var(--sp-3));
@@ -789,6 +789,76 @@
   grid-column: 4;
   grid-row: 2;
   align-self: start;
+  white-space: nowrap;
+}
+
+// The case's figure as a thumbnail. Hidden outside the portfolio list (the
+// writing catalog reuses this card), under the stack between 48 and 64rem, and
+// beside the link from 64rem, where column 4 has the room.
+.case-card__thumb {
+  display: none;
+}
+
+.case-card--portfolio .case-card__thumb {
+  display: block;
+  grid-column: 3;
+  grid-row: 4;
+  width: min(100%, 16rem);
+  margin-block-start: var(--sp-3);
+}
+
+// From 64rem the figure sits beside the title and the link drops under it, so
+// column 4 reads period, picture, action with no hole between them.
+@media (min-width: 64rem) {
+  .case-card--portfolio .case-card__thumb {
+    grid-column: 4;
+    grid-row: 2;
+    width: 13rem;
+    margin-block-start: var(--sp-1);
+  }
+
+  .case-card--portfolio:has(.case-card__thumb) .case-card__open {
+    grid-row: 3;
+    margin-block-start: var(--sp-3);
+  }
+}
+
+.case-card__thumb picture,
+.case-figure picture {
+  display: block;
+  overflow: hidden;
+  background: var(--media-mat);
+  border: 1px solid var(--line-strong);
+}
+
+.case-card__thumb img,
+.case-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+// `.prose figure` resets margins at (0,1,1); the page scope wins it back.
+.page--case .case-figure {
+  margin: var(--sp-6) 0 0;
+}
+
+.case-figure picture {
+  box-shadow: var(--shadow-2);
+}
+
+.case-figure figcaption {
+  padding-block-start: var(--sp-3);
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.case-figure figcaption a {
+  color: var(--accent-hi);
   white-space: nowrap;
 }
 
@@ -1507,6 +1577,13 @@
 
   .case-card--portfolio .case-card__metrics,
   .case-card--portfolio .case-card__stack {
+    margin-block-start: 0;
+  }
+
+  .case-card--portfolio .case-card__thumb {
+    grid-column: 2;
+    grid-row: auto;
+    width: 100%;
     margin-block-start: 0;
   }
 
