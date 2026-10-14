@@ -5,6 +5,7 @@ description: "Slack alerts with Acknowledge and Resolve buttons on warehouse met
 date: 2026-10-03 10:30:00 +0545
 last_modified_at: 2026-10-03
 type: essay
+pillar: data-platforms
 tags:
   - observability-slo
   - data-quality

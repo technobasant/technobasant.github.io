@@ -5,6 +5,7 @@ description: "An analytics agent answered 48 of 54 questions correctly on a loca
 date: 2026-10-14 09:05:00 +0545
 last_modified_at: 2026-10-14
 type: essay
+pillar: ai-systems
 series: reference-systems
 series_order: 2
 tags:

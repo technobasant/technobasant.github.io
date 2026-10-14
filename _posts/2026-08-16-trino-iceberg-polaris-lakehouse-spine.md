@@ -4,6 +4,7 @@ description: "Build Trino 483 on Iceberg with Apache Polaris as the REST catalog
 date: 2026-08-16 12:00:00 +0545
 last_modified_at: 2026-10-13
 type: tutorial
+pillar: data-platforms
 tags: [iceberg-lakehouse, distributed-databases]
 series: lakehouse-trino-iceberg
 series_order: 1

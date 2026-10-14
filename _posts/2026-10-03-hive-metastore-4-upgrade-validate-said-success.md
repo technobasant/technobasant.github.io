@@ -5,6 +5,7 @@ description: "A Hive Metastore 4 upgrade rehearsed on a clone: zero constraints,
 date: 2026-10-03 08:00:00 +0545
 last_modified_at: 2026-10-03
 type: essay
+pillar: data-platforms
 series: production-notes
 series_order: 2
 tags:

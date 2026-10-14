@@ -5,6 +5,7 @@ description: "Agents fail on stale or contradictory knowledge before they fail o
 date: 2026-10-03 10:40:00 +0545
 last_modified_at: 2026-10-03
 type: essay
+pillar: ai-systems
 series: agentic-engineering
 series_order: 3
 tags:

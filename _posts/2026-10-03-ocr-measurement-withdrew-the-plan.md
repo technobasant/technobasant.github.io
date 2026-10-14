@@ -5,6 +5,7 @@ description: "An OCR plan blamed skewed, creased phone photos for lost accuracy.
 date: 2026-10-03 09:00:00 +0545
 last_modified_at: 2026-10-03
 type: essay
+pillar: ai-systems
 tags:
   - applied-ml
   - data-quality

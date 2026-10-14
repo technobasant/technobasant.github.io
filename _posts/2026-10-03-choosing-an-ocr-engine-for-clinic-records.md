@@ -5,6 +5,7 @@ description: "Eight OCR engines on real clinic records, one fixed scorer. The st
 date: 2026-10-03 10:10:00 +0545
 last_modified_at: 2026-10-03
 type: essay
+pillar: ai-systems
 tags:
   - applied-ml
   - data-quality

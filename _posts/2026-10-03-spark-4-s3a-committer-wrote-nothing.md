@@ -5,6 +5,7 @@ description: "Spark 4.2 on hadoop-aws 3.5 read 9,029 records and wrote zero obje
 date: 2026-10-03 07:00:00 +0545
 last_modified_at: 2026-10-03
 type: essay
+pillar: data-platforms
 series: production-notes
 series_order: 1
 tags:

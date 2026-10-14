@@ -4,6 +4,7 @@ description: "Attach StarRocks to the same Polaris REST catalog Trino writes thr
 date: 2026-08-16 09:00:00 +0545
 last_modified_at: 2026-10-13
 type: tutorial
+pillar: data-platforms
 tags: [iceberg-lakehouse, clickhouse]
 series: lakehouse-trino-iceberg
 series_order: 4

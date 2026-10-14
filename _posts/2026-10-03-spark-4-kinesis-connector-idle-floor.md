@@ -5,6 +5,7 @@ description: "The awslabs Kinesis connector for Spark 4 waits on every idle shar
 date: 2026-10-03 10:00:00 +0545
 last_modified_at: 2026-10-03
 type: essay
+pillar: data-platforms
 tags: [kafka-streaming, spark]
 toc: true
 featured: true

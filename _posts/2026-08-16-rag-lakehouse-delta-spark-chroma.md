@@ -4,6 +4,7 @@ description: "Scrape to bronze, silver, gold on Spark 4 and Delta, embed into Ch
 date: 2026-08-16 08:00:00 +0545
 last_modified_at: 2026-08-16
 type: tutorial
+pillar: ai-systems
 tags: [rag, iceberg-lakehouse]
 toc: true
 cover:

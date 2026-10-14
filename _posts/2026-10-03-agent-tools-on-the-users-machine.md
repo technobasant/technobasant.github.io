@@ -5,6 +5,7 @@ description: "A cloud agent that drives a browser on a user's Mac kept reporting
 date: 2026-10-03 09:10:00 +0545
 last_modified_at: 2026-10-03
 type: essay
+pillar: ai-systems
 tags:
   - ai-agents
   - kubernetes

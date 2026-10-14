@@ -5,6 +5,7 @@ description: "Kafka, Flink, ClickHouse and Iceberg stayed exact through nine fai
 date: 2026-10-14 09:20:00 +0545
 last_modified_at: 2026-10-14
 type: essay
+pillar: data-platforms
 series: reference-systems
 series_order: 5
 tags:

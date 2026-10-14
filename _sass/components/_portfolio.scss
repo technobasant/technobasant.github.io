@@ -1374,6 +1374,75 @@
   white-space: nowrap;
 }
 
+// Above 56.25rem the cover sits in the action column, picture over link, the
+// same arrangement the work index uses. Below it the 8rem leading column the
+// mobile rules already reserve for a cover takes over.
+@media (min-width: 56.3rem) {
+  .writing-feed .post-card__cover {
+    grid-column: 3;
+    grid-row: 1 / span 2;
+    width: 11rem;
+  }
+
+  .writing-feed .post-card:has(.post-card__cover) .post-card__open {
+    grid-row: 3;
+  }
+}
+
+// Subject groups: a header row inside the list, and a jump row above it.
+.writing-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--sp-1) var(--sp-4);
+  padding-block: var(--sp-7) var(--sp-3);
+  border-block-end: 1px solid var(--line-strong);
+}
+
+.writing-group:first-child {
+  padding-block-start: var(--sp-4);
+}
+
+.writing-group h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+}
+
+.writing-group p {
+  margin: 0;
+  font-size: var(--step--1);
+  color: var(--ink-3);
+}
+
+.writing-groups-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-5);
+  margin-block-end: var(--sp-4);
+  font-size: var(--step--1);
+}
+
+.writing-groups-nav a {
+  color: var(--ink-2);
+  text-underline-offset: 0.2em;
+}
+
+.writing-groups-nav a:hover {
+  color: var(--accent-hi);
+}
+
+.writing-groups-nav span {
+  font-family: var(--font-mono);
+  font-size: var(--step--2);
+  color: var(--ink-3);
+}
+
+// While search or a filter is live the hits are one ranked list.
+.page--writing.is-filtering :is(.writing-group, .writing-groups-nav) {
+  display: none;
+}
+
 .writing-subscribe {
   margin-block-start: var(--sp-8);
   padding: var(--card-pad);

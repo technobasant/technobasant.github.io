@@ -5,6 +5,7 @@ description: "A prompt change cost 4.8 points on an LLM judge, and 12 of 83 pair
 date: 2026-10-14 09:00:00 +0545
 last_modified_at: 2026-10-14
 type: essay
+pillar: ai-systems
 series: reference-systems
 series_order: 1
 tags:

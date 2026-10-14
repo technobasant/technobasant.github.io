@@ -4,6 +4,7 @@ description: "The mount point moved in the PG 18 image, so every compose file co
 date: 2026-08-11 09:00:00 +0545
 last_modified_at: 2026-10-13
 type: tutorial
+pillar: database-lifecycle
 tags: [postgres]
 series: failover-lab
 series_order: 3

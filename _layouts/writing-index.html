@@ -15,11 +15,39 @@ layout: default
           <a class="section-more" href="{{ '/writing/tags/' | relative_url }}">Browse topics {% include icon.html name="arrow-right" size=14 %}</a>
         </div>
 
+        {%- comment -%}
+          Grouped by subject (_data/writing_groups.yml; every post declares a
+          `pillar`). The groups are header rows inside the one list rather
+          than separate lists, because search ranks and reorders rows within
+          #writing-results: while a filter is live the header rows hide and
+          the hits read as one ranked list, and clearing it restores this
+          order. Covers are on here now, at the 840px AVIF (about 16 KB each,
+          lazy-loaded): a case for text-only lists is a case for density, and
+          a group heading per subject buys the scanning back.
+        {%- endcomment %}
+        <nav class="writing-groups-nav" aria-label="Writing by subject">
+          {%- for _g in site.data.writing_groups %}
+          {%- assign _gn = site.posts | where: "pillar", _g.id | size %}
+          {%- if _gn > 0 %}
+          <a href="#{{ _g.id }}">{{ _g.title }} <span>{{ _gn }}</span></a>
+          {%- endif %}
+          {%- endfor %}
+        </nav>
+
         <ol id="writing-results" class="writing-feed">
-          {%- for post in site.posts -%}
-          <li>
-            {% include post-card.html post=post heading="h3" %}
+          {%- for _g in site.data.writing_groups %}
+          {%- assign _in = site.posts | where: "pillar", _g.id %}
+          {%- if _in.size > 0 %}
+          <li class="writing-group" id="{{ _g.id }}">
+            <h3>{{ _g.title }}</h3>
+            <p>{{ _in.size }} {% if _in.size == 1 %}piece{% else %}pieces{% endif %} · {{ _g.detail }}</p>
           </li>
+          {%- for post in _in %}
+          <li>
+            {% include post-card.html post=post heading="h4" cover=true %}
+          </li>
+          {%- endfor %}
+          {%- endif %}
           {%- endfor %}
         </ol>
 

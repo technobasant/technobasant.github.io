@@ -5,6 +5,7 @@ description: "A Prometheus canary analysis aborted a good release and promoted a
 date: 2026-10-14 09:30:00 +0545
 last_modified_at: 2026-10-14
 type: essay
+pillar: delivery-infrastructure
 series: reference-systems
 series_order: 7
 tags:

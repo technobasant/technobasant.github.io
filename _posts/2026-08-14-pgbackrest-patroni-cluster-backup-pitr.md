@@ -4,6 +4,7 @@ description: "Wire pgBackRest into a running Patroni cluster over mutual TLS wit
 date: 2026-08-14 16:30:00 +0545
 last_modified_at: 2026-08-14
 type: tutorial
+pillar: database-lifecycle
 tags: [postgres, distributed-databases]
 series: rhel8-pg-ansible
 series_order: 3
