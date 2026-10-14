@@ -72,7 +72,7 @@ scenarios:
     unit: ""
     metric: "replicas held key"
     result: "reads served at RF=3"
-    note: "Restore needed the table's upload/ subdirectory; a TRUNCATE marker hides older SSTables."
+    note: "Restore needed the live table's upload/ subdirectory; files anywhere else load nothing, with exit 0."
 
   - engine: "SolrCloud"
     version: "9"
@@ -119,8 +119,8 @@ findings:
     url: /writing/scylladb-nodetool-refresh-upload-truncate-marker/
 
   - engine: "ScyllaDB"
-    headline: "A valid snapshot restored zero rows, three times, with no error"
-    detail: "`nodetool refresh` only reads the table's `upload/` subdirectory. `TRUNCATE` writes a marker that hides every older SSTable even after you put them back. And recreating a table gives it a new UUID, so the directory you just copied into belongs to a dead table."
+    headline: "A valid snapshot restored zero rows, with no error"
+    detail: "`nodetool refresh` only reads the live table's `upload/` subdirectory: files beside the live SSTables, or in a dropped table's stale UUID directory, load nothing and exit 0. A TRUNCATE does not get in the way; I first blamed it, and a re-test on 2026.1 showed the truncated table restores normally."
     url: /writing/scylladb-nodetool-refresh-upload-truncate-marker/
 
   - engine: "PostgreSQL 18"
