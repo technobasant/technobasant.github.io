@@ -192,6 +192,13 @@
 
   --accent: #c4a574; // 8.21:1
   --accent-hi: #d9be8e; // 10.70:1
+  // One hue per capability, for wayfinding across /work/, /writing/ and the
+  // homepage. Text-safe (rake tokens checks each on every surface).
+  --pillar-data: #5cc2b4;
+  --pillar-ai: #b3a1f0;
+  --pillar-db: #86b6ee;
+  --pillar-arch: #ec9c86;
+  --pillar-self: #a8b0b8;
   --accent-fill: #c4a574;
   --accent-on: #16120b;
   --accent-tint: color-mix(in oklab, var(--accent) 12%, transparent);
@@ -277,6 +284,11 @@
 
   --accent: #7c5a18; // 6.04:1
   --accent-hi: #5e4310;
+  --pillar-data: #0d6b63;
+  --pillar-ai: #5a43a6;
+  --pillar-db: #1f5a96;
+  --pillar-arch: #a03f29;
+  --pillar-self: #4f5862;
   --accent-fill: #c4a574;
   --accent-on: #16120b;
   --accent-tint: color-mix(in oklab, var(--accent-fill) 24%, transparent);

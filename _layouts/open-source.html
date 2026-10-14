@@ -1,0 +1,82 @@
+---
+layout: default
+---
+{%- comment -%}
+  Open source. Every public repository, grouped by the same capabilities as
+  /work/ and /writing/, each with what it is, the result it measured, and where
+  that result is written up; then the contributions to other people's projects
+  with their state as of the date in _data/open_source.yml. Nothing here is
+  fetched at build time, so the date is stated rather than implied.
+{%- endcomment -%}
+{%- assign _os = site.data.open_source -%}
+
+{% include interior-hero.html variant="index" code="SOURCE / OPEN" stacked=true %}
+<div class="page page--index page--open-source">
+  {%- assign _intro = content | strip -%}
+  {%- if _intro != "" %}
+  <div class="prose index-intro wrap wrap--shell">
+    {{ content }}
+  </div>
+  {%- endif %}
+
+  {%- for _g in site.data.writing_groups %}
+  {%- assign _in = _os.repos | where: "pillar", _g.id %}
+  {%- if _in.size > 0 %}
+  <section class="wrap wrap--shell index-section work-group" data-pillar="{{ _g.id }}" id="{{ _g.id }}" aria-labelledby="{{ _g.id }}-title">
+    <div class="writing-index-head">
+      <h2 id="{{ _g.id }}-title">{{ _g.title }}</h2>
+      <p class="writing-index-head__note">{{ _in.size }} {% if _in.size == 1 %}repository{% else %}repositories{% endif %}</p>
+    </div>
+    <ul class="repo-list">
+      {%- for _r in _in %}
+      <li class="repo">
+        <div class="repo__name">
+          <h3><a href="{{ _r.url }}" rel="noopener">{{ _r.name }}</a></h3>
+          <p>{{ _r.what }}</p>
+        </div>
+        {%- if _r.finding %}
+        <p class="repo__finding">{{ _r.finding }}</p>
+        {%- else %}
+        <p class="repo__finding repo__finding--none">No published measurement yet.</p>
+        {%- endif %}
+        <div class="repo__meta">
+          <p>
+            {%- for _l in _r.languages %}<span>{{ _l }}</span> · {% endfor -%}
+            {%- if _r.license %}<span>{{ _r.license }}</span>{% endif -%}
+            {%- if _r.release and _r.release.tag %} · <span><a href="{{ _r.release.url }}" rel="noopener">{{ _r.release.tag }}</a></span>{% endif -%}
+            {%- if _r.ci and _r.ci.conclusion == "success" %} · <span><a href="{{ _r.ci.url }}" rel="noopener">CI passing</a></span>{% endif -%}
+          </p>
+          <p class="repo__links">
+            {%- if _r.case %}<a href="{{ _r.case | relative_url }}">Case study</a>{% endif -%}
+            {%- if _r.post %}<a href="{{ _r.post | relative_url }}">Write-up</a>{% endif -%}
+            <a href="{{ _r.url }}" rel="noopener">Repository</a>
+          </p>
+        </div>
+      </li>
+      {%- endfor %}
+    </ul>
+  </section>
+  {%- endif %}
+  {%- endfor %}
+
+  {%- if _os.upstream and _os.upstream.size > 0 %}
+  <section class="wrap wrap--shell index-section work-group" id="upstream" aria-labelledby="upstream-title">
+    <div class="writing-index-head">
+      <h2 id="upstream-title">Upstream</h2>
+      <p class="writing-index-head__note">Contributions to projects I do not maintain · state as of {{ _os.as_of | date: "%B %-d, %Y" }}</p>
+    </div>
+    <ul class="repo-list">
+      {%- for _u in _os.upstream %}
+      <li class="repo">
+        <div class="repo__name">
+          <h3><a href="{{ _u.url }}" rel="noopener">{{ _u.project }} {{ _u.ref }}</a></h3>
+          <p>{{ _u.kind }}</p>
+        </div>
+        <p class="repo__finding">{{ _u.what }}</p>
+        <div class="repo__meta"><p>{{ _u.status }}</p></div>
+      </li>
+      {%- endfor %}
+    </ul>
+  </section>
+  {%- endif %}
+</div>

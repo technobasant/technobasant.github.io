@@ -1,0 +1,49 @@
+# The homepage findings ledger: one measured result per line, the number first.
+# Every value and claim is quoted from the linked write-up, where the method,
+# sample and limits are stated. `post` is a slug; a slug that does not resolve
+# renders nothing, so check the build after renaming a post.
+
+- value: "p = 0.39"
+  claim: "A 4.8-point eval drop that 12 changed answers out of 83 could not separate from noise"
+  post: eval-score-drop-twelve-answers
+  pillar: ai-systems
+
+- value: "3 of 37"
+  claim: "auto-published agent answers were wrong, and no check in the pipeline could see them"
+  post: agent-measured-by-what-it-publishes
+  pillar: ai-systems
+
+- value: "0.746 → 0.363"
+  claim: "AUC-PR of the leaky fraud model: on validation, then on the next two weeks"
+  post: realtime-ml-point-in-time-leakage
+  pillar: ai-systems
+
+- value: "3.9 of 10"
+  claim: "rows returned by post-filtered vector search at a 10% filter, with no error raised"
+  post: filtered-vector-search-four-rows-not-ten
+  pillar: ai-systems
+
+- value: "59.8%"
+  claim: "of on-time events counted by 10-second windows in the worst broker kill, while every record stayed exact"
+  post: exactly-once-records-not-window-counts
+  pillar: data-platforms
+
+- value: "33 retries"
+  claim: "of one Citus shard move, blocked by cleanup records for a node that no longer existed"
+  post: citus-remove-node-orphaned-cleanup-records
+  pillar: database-lifecycle
+
+- value: "6 of 6"
+  claim: "bad releases aborted by canary analysis, once it judged against stable and refused empty windows"
+  post: canary-analysis-aborted-good-promoted-bad
+  pillar: system-architecture
+
+- value: "0"
+  claim: "breaking schema changes the contract checker passed as safe, across 51 labelled changes"
+  post: json-schema-compatibility-data-contracts
+  pillar: data-platforms
+
+- value: "63%"
+  claim: "of a real trend recovered by counting a 95%-accurate classifier's labels"
+  post: count-prevalence-not-classifications
+  pillar: ai-systems

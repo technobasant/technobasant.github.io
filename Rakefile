@@ -615,7 +615,7 @@ TOKENS_FILE = "_sass/_tokens.scss".freeze
 SURFACES = %w[surface-0 surface-1 surface-2 surface-3].freeze
 
 # 4.5:1 — body-weight text tokens used freely across surfaces.
-TEXT_TOKENS = %w[ink-1 ink-2 ink-3 accent accent-hi].freeze
+TEXT_TOKENS = %w[ink-1 ink-2 ink-3 accent accent-hi pillar-data pillar-ai pillar-db pillar-arch pillar-self].freeze
 
 # Tokens that are NOT free to land anywhere: each is checked only against the
 # backgrounds it is actually painted on. Pairing them against all four surfaces

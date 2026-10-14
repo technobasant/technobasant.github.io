@@ -1,42 +1,50 @@
-# The three problems people actually write to me about.
-#
-# Why this file exists: the site was legible to an engineer reading it and
-# opaque to the person who signs off the engagement. `availability.yml` names
-# four *shapes* an engagement takes, but that only renders on /hire/, which is
-# not in the header nav — so nothing above the fold said what I get hired for.
-#
-# The rule here is the same one metrics.yml enforces: every capability names
-# the artefact that backs it. `evidence` must point at a case study on this
-# site, not at a claim. If a row cannot cite one, it does not belong on the
-# homepage.
-#
-# Order is deliberate: data, then AI, then architecture — the three pillars
-# the practice is hired for. Databases used to be a pillar of their own; they
-# now sit inside the data row, because a reader deciding whether to call me
-# needs "the platform and the stores under it" as one problem, and the
-# architecture row is what the database lab was standing in for anyway.
+# The homepage's "what I'm hired for" rows: one per capability, in the same
+# order and with the same ids as the groups on /work/ and /writing/. Each row
+# carries its own evidence — a case study, a write-up and the code — because a
+# capability claim with nothing behind it would be the one unearned thing on
+# the page. `case` and `post` are slugs (checked at build: an unknown slug
+# renders nothing), `repo` is a public repository under github.com/technobasant.
 
-- title: "Data platforms, and the databases under them"
+- id: data-platforms
+  title: "Data platforms that keep working at the next scale"
   blurb: >-
-    Ingestion, processing and serving that worked at one scale and stopped
-    working at the next — and the stores underneath, with failover, backup
-    and upgrades your team can run after I leave.
-  evidence: /work/data-platform-practice/
-  evidence_label: "Rebuilding a production data platform"
+    Ingestion, processing and serving that worked at one scale and stopped at
+    the next: streams that stay exact through failure, lakehouse tables you can
+    roll back, and contracts that wait for the consumers they would break.
+  case: data-platform-practice
+  post: exactly-once-records-not-window-counts
+  repo: spark-sql-kinesis
+  repo_blurb: "Kinesis source and sink for Spark 4, on Maven Central"
 
-- title: "AI systems that have to touch production data"
+- id: ai-systems
+  title: "AI systems that have to touch production data"
   blurb: >-
-    Agents with typed output, provenance and a review path, and the
-    evaluation under them: extraction and classification measured against a
-    scorer written before the model ran, with a defined answer for when it
-    cannot decide.
-  evidence: /work/governed-ai-delivery/
-  evidence_label: "Turning model output into auditable product state"
+    Agents with typed output, provenance and a review path, and the evaluation
+    under them: a gate that can tell a regression from noise, and a defined
+    answer for when the model cannot decide.
+  case: governed-ai-delivery
+  post: eval-score-drop-twelve-answers
+  repo: evalproof
+  repo_blurb: "LLM evaluation as measurement, gated in CI"
 
-- title: "System architecture with the recovery path designed first"
+- id: database-lifecycle
+  title: "Databases that scale out and survive failure"
   blurb: >-
-    Where state lives, what is idempotent, what a second delivery does, and
-    how the system degrades when a dependency is slow — decided before the
-    incident and written down as decisions you can revisit.
-  evidence: /work/consulting-short-text-and-alerting/
-  evidence_label: "Classification and alerting, redesigned around state"
+    Sharding and rebalancing, failover, backup and point-in-time recovery, and
+    the upgrades in between, measured on real clusters before anyone depends
+    on them.
+  case: distributed-db-lab
+  post: citus-remove-node-orphaned-cleanup-records
+  repo: db-failover-lab
+  repo_blurb: "Six engines, eight failover scenarios, measured"
+
+- id: system-architecture
+  title: "System architecture with the recovery path designed first"
+  blurb: >-
+    Where state lives, what is idempotent, what a second delivery does, and how
+    a release stops itself when it is bad — decided before the incident and
+    written down as decisions you can revisit.
+  case: clickhomes
+  post: canary-analysis-aborted-good-promoted-bad
+  repo: platform-deployments
+  repo_blurb: "GitOps with a canary that aborts bad releases"

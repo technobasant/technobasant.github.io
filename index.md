@@ -46,66 +46,22 @@ hero:
     sizes: "(max-width: 48rem) 88px, 19rem"
     alt: "Basant Bhattarai"
 
-proof:
-  keys:
-    - experience
-    - professional_platform_scale
-    - professional_event_volume
-
 # The band that answers "what do I hire you for". Rows come from
 # _data/practice.yml; this is only the heading and the exit link. `more` points
 # at /hire/. Hire is also in the header nav.
 practice:
   label: "What I'm hired for"
-  headline: "Three problems worth calling me about."
+  headline: "Four problems worth calling me about."
   more: "How an engagement works"
   more_url: /hire/
 
-work:
-  label: "Selected work"
-  # "…with measured outcomes" described the page rather than the work. The cards
-  # below already carry the numbers; the headline should carry the claim.
-  headline: "Six systems across data, AI and architecture, and the decisions that kept them running."
-  more: "View all work"
-  more_url: /work/
-  # Curated by slug, one per register: employer practice (data, then AI),
-  # consulting, open source, independent product, measured lab. The lab slot is
-  # the sharded-database lab: horizontal scaling is the rarer evidence, and the
-  # failover lab is one click away. Everything else — including ClickHomes,
-  # which the README keeps to /work/ — is on /work/. A slug that does not
-  # resolve is skipped, so check the build.
-  selected:
-    - data-platform-practice
-    - governed-ai-delivery
-    - consulting-short-text-and-alerting
-    - spark-sql-kinesis
-    - clinic-records-ocr
-    - distributed-db-lab
-
-writing:
-  label: "Start here"
-  headline: "What I learned, written clearly."
-  more: "Browse writing"
+# The ledger of measured results under the capability rows. Rows come from
+# _data/findings.yml; each links to the write-up that holds its method.
+findings:
+  label: "Findings"
+  headline: "Measured, with the method in each write-up."
+  more: "All writing"
   more_url: /writing/
-  # Curated, not `site.posts limit: 3`.
-  #
-  # Posts sort by `date`, and several articles are dated to the client project
-  # they were rebuilt from rather than to publication. That is deliberate and it
-  # is correct for the structured data — but it put the whole lakehouse series
-  # at positions 13 to 17 of 16, so the four strongest technical pieces on the
-  # site never reached the front page and the feed read as PostgreSQL-only.
-  #
-  # An explicit list fixes the shop window without touching a single date. Slugs,
-  # so a rename fails loudly at build rather than silently dropping a row.
-  #
-  # One slot per register the site is hired for: applied-ML evaluation (the
-  # paired-gate LLM evaluation piece; the OCR measurement that withdrew its own
-  # plan is one click away), agent governance, and the
-  # lakehouse. "Ten gates" stays one click away as part two of the series.
-  spotlight:
-    - eval-score-drop-twelve-answers
-    - coding-agents-repo-governance
-    - trino-iceberg-polaris-lakehouse-spine
 
 contact:
   label: "Contact"
