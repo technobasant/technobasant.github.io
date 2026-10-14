@@ -1109,6 +1109,63 @@ def streaming_platform() -> str:
     return "".join(body)
 
 
+def dataset_registry() -> str:
+    """Which direction each 'safe' schema change breaks, and how often the checker was wrong."""
+    # Labels from dataset-registry's api/internal/compat/cases.json (open objects).
+    rows = [
+        ("optional field added", True, False),
+        ("optional field removed", False, True),
+        ("optional → required", True, False),
+        ("required → optional", False, True),
+        ("integer → number", False, True),
+        ("enum value added", False, True),
+        ("nullable added", False, True),
+        ("required added, with default", True, False),
+    ]
+    listing = [
+        f'<text x="150" y="490" font-family="{MONO}" font-size="24" letter-spacing="3" '
+        f'fill="{MUTED}">CHANGE · OPEN OBJECT</text>',
+        f'<text x="920" y="490" font-family="{MONO}" font-size="24" letter-spacing="3" '
+        f'fill="{MUTED}" text-anchor="middle">HISTORY</text>',
+        f'<text x="1200" y="490" font-family="{MONO}" font-size="24" letter-spacing="3" '
+        f'fill="{MUTED}" text-anchor="middle">CONSUMERS</text>',
+        f'<line x1="150" y1="512" x2="1330" y2="512" stroke="{LINE}" stroke-width="2"/>',
+    ]
+    for i, (name, back, fwd) in enumerate(rows):
+        y = 568 + i * 62
+        listing.append(
+            f'<text x="150" y="{y}" font-family="{MONO}" font-size="28" '
+            f'fill="{INK}">{escape(name)}</text>'
+        )
+        for x, breaks in ((920, back), (1200, fwd)):
+            listing.append(
+                f'<text x="{x}" y="{y}" font-family="{MONO}" font-size="28" text-anchor="middle" '
+                f'fill="{ACCENT if breaks else MUTED}">{"breaks" if breaks else "·"}</text>'
+            )
+    body = [
+        f'<rect width="{W}" height="{H}" fill="{PAPER}"/>',
+        f'<text x="150" y="190" font-family="{MONO}" font-size="30" letter-spacing="6" '
+        f'fill="{ACCENT}">DATA CONTRACTS · 51 LABELLED SCHEMA CHANGES</text>',
+        f'<text x="150" y="300" font-family="{SERIF}" font-size="80" font-weight="600" '
+        f'fill="{INK}">Removing an optional field breaks consumers.</text>',
+        f'<text x="150" y="382" font-family="{SERIF}" font-size="80" font-weight="600" '
+        f'fill="{INK}">Adding one breaks history.</text>',
+        *listing,
+        node_box(1500, 470, 750, 190, "breaking, called safe", "0 · every case, every mode",
+                 "the one error it may not make", accent=True),
+        node_box(1500, 680, 750, 190, "safe, called breaking", "2 of 51 per direction",
+                 "regex · anyOf · multipleOf"),
+        node_box(1500, 890, 750, 190, "labels checked", "8,092 probes · real validator",
+                 "oracle agrees on 51 of 51"),
+        f'<line x1="150" y1="1120" x2="{W - 150}" y2="1120" stroke="{LINE}" stroke-width="2"/>',
+        f'<text x="150" y="1195" font-family="{MONO}" font-size="30" fill="{MUTED}">'
+        f'compatibility defined on the documents each version accepts</text>',
+        f'<text x="{W - 150}" y="1195" font-family="{MONO}" font-size="30" fill="{ACCENT}" '
+        f'text-anchor="end">FORWARD by default</text>',
+    ]
+    return "".join(body)
+
+
 DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patroni,
             "lakehouse-spine": lakehouse_spine,
             "lakehouse-medallion": lakehouse_medallion,
@@ -1131,6 +1188,7 @@ DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patro
             "retrieval-bench": retrieval_bench,
             "realtime-ml": realtime_ml,
             "streaming-platform": streaming_platform,
+            "dataset-registry": dataset_registry,
             "prevalence-shift": prevalence_shift}
 
 def svg_for(name: str) -> str:
