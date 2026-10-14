@@ -993,6 +993,69 @@ def retrieval_bench() -> str:
     return "".join(body)
 
 
+def realtime_ml() -> str:
+    """The leaky join wins validation and loses the future; the PIT join does the opposite."""
+    # v2 features, AUC-PR, from realtime-ml results/leakage.json (seed 7).
+    lines = [("naive join", 0.746, 0.363, MUTED, True), ("point-in-time", 0.681, 0.941, ACCENT, False)]
+    xa, xb, y0, y1, lo, hi = 470, 1180, 1040, 500, 0.2, 1.0
+
+    def py(v):
+        return y0 - (y0 - y1) * (v - lo) / (hi - lo)
+
+    body = [
+        f'<rect width="{W}" height="{H}" fill="{PAPER}"/>',
+        f'<text x="150" y="190" font-family="{MONO}" font-size="30" letter-spacing="6" '
+        f'fill="{ACCENT}">REAL-TIME ML · POINT-IN-TIME FEATURES</text>',
+        f'<text x="150" y="300" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">Validation picked the model</text>',
+        f'<text x="150" y="382" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">that had read the future.</text>',
+        f'<text x="150" y="{py(1.0) + 9:.1f}" font-family="{MONO}" font-size="26" fill="{MUTED}">AUC-PR</text>',
+    ]
+    for v in (0.4, 0.6, 0.8, 1.0):
+        # Gridlines only: every point carries its own value, so tick labels would collide.
+        body.append(f'<line x1="{xa - 60}" y1="{py(v):.1f}" x2="{xb + 60}" y2="{py(v):.1f}" stroke="{LINE}" '
+                    f'stroke-width="1.5" stroke-dasharray="4 8"/>')
+    for x in (xa, xb):
+        body.append(f'<line x1="{x}" y1="{y1 - 20}" x2="{x}" y2="{y0}" stroke="{LINE}" stroke-width="2"/>')
+    body += [
+        f'<text x="{xa}" y="{y0 + 48}" font-family="{MONO}" font-size="26" fill="{MUTED}" '
+        f'text-anchor="middle">validation</text>',
+        f'<text x="{xb}" y="{y0 + 48}" font-family="{MONO}" font-size="26" fill="{MUTED}" '
+        f'text-anchor="middle">next two weeks</text>',
+    ]
+    for name, a, b, colour, dashed in lines:
+        dash = ' stroke-dasharray="14 10"' if dashed else ""
+        body += [
+            f'<line x1="{xa}" y1="{py(a):.1f}" x2="{xb}" y2="{py(b):.1f}" stroke="{colour}" '
+            f'stroke-width="6"{dash}/>',
+            f'<circle cx="{xa}" cy="{py(a):.1f}" r="12" fill="{colour}"/>',
+            f'<circle cx="{xb}" cy="{py(b):.1f}" r="12" fill="{colour}"/>',
+            f'<text x="{xa - 30}" y="{py(a) + 10:.1f}" font-family="{MONO}" font-size="30" fill="{colour}" '
+            f'text-anchor="end">{a:.3f}</text>',
+            f'<text x="{xb + 30}" y="{py(b) + 10:.1f}" font-family="{MONO}" font-size="30" '
+            f'fill="{colour}">{b:.3f}</text>',
+        ]
+    body += [
+        f'<text x="{xb - 20}" y="{py(0.363) + 62:.1f}" font-family="{MONO}" font-size="26" fill="{MUTED}" '
+        f'text-anchor="end">naive join</text>',
+        f'<text x="{xb - 20}" y="{py(0.941) - 30:.1f}" font-family="{MONO}" font-size="26" fill="{ACCENT}" '
+        f'text-anchor="end">point-in-time join</text>',
+        node_box(1500, 470, 750, 190, "naive join", "latest row as of the pull day",
+                 "100% of rows read the future"),
+        node_box(1500, 680, 750, 190, "point-in-time join", "features at t − 1 ms, via Feast",
+                 "82.5% of fraud cost saved", accent=True),
+        node_box(1500, 890, 750, 190, "feature PSI", "0 of 5 tactics drifts caught",
+                 "fraud is 0.8% of traffic"),
+        f'<line x1="150" y1="1120" x2="{W - 150}" y2="1120" stroke="{LINE}" stroke-width="2"/>',
+        f'<text x="150" y="1195" font-family="{MONO}" font-size="30" fill="{MUTED}">'
+        f'seeded payments · 874,446 transactions · 0.80% fraud</text>',
+        f'<text x="{W - 150}" y="1195" font-family="{MONO}" font-size="30" fill="{ACCENT}" '
+        f'text-anchor="end">only the join differs</text>',
+    ]
+    return "".join(body)
+
+
 DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patroni,
             "lakehouse-spine": lakehouse_spine,
             "lakehouse-medallion": lakehouse_medallion,
@@ -1013,6 +1076,7 @@ DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patro
             "evalproof": evalproof,
             "governed-agent": governed_agent,
             "retrieval-bench": retrieval_bench,
+            "realtime-ml": realtime_ml,
             "prevalence-shift": prevalence_shift}
 
 def svg_for(name: str) -> str:
