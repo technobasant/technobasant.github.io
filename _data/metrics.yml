@@ -377,3 +377,40 @@ agent_injection_actions:
   source: "governed-agent (2026)"
   window: "Oct 2026, one recorded run"
   context: "Resistance is measured, not relied on: there is no execution path without approval, so a proposal that did get through would wait for a reviewer."
+
+# ── retrieval-bench (2026) ──────────────────────────────────────────────────
+retrieval_filter_rows:
+  value: "3.9 of 10"
+  label: "rows returned by post-filtered HNSW at 10% selectivity"
+  method: "pgvector 0.8.7 HNSW at ef_search 40 with iterative scan off, 1,000 queries over 381,559 vectors, a filter keeping 10% of rows; recall@10 0.391 against exact kNN over the rows that pass"
+  scope: "independent"
+  source: "retrieval-bench (2026)"
+  window: "measured 2026"
+  context: "Median latency stayed at 0.63 ms, the same as a full answer, and nothing errored. At 1% it returned 0.38 rows."
+
+retrieval_filter_middle:
+  value: "0.745"
+  label: "recall@10 of OpenSearch's efficient filter at 10% selectivity"
+  method: "filter inside the knn clause, Faiss HNSW at ef_search 40, 1,000 queries over 381,559 vectors, against exact kNN over the rows that pass"
+  scope: "independent"
+  source: "retrieval-bench (2026)"
+  window: "measured 2026"
+  context: "0.965 unfiltered at the same ef_search, and 1.000 at 1%, where it switched to exact search. Qdrant held 0.925 and pgvector's relaxed_order iterative scan 0.949 at 10%."
+
+retrieval_iterative_scan:
+  value: "0.949"
+  label: "recall@10 restored by pgvector's iterative scan at 10% selectivity"
+  method: "hnsw.iterative_scan = relaxed_order, ef_search 40, same queries and filter as the post-filtered run"
+  scope: "independent"
+  source: "retrieval-bench (2026)"
+  window: "measured 2026"
+  context: "Median latency 1.9× the unfiltered 0.66 ms at 10% and 13× at 1% (8.77 ms, recall 0.964). strict_order cost more and recalled less."
+
+retrieval_engine_quality:
+  value: "≤ 0.0015"
+  label: "nDCG@10 between pgvector, Qdrant and OpenSearch and exact search"
+  method: "the same bge-small vectors loaded into all three engines, ef_search 200, scored against human relevance judgements on SciFact, ArguAna and Touché 2020"
+  scope: "independent"
+  source: "retrieval-bench (2026)"
+  window: "measured 2026"
+  context: "At recall@10 ≈ 0.97 their median latency differed by 0.13 ms. What separated them was filtering, write behaviour, memory and throughput under load."

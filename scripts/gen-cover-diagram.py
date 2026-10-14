@@ -929,6 +929,70 @@ def governed_agent() -> str:
     return "".join(body)
 
 
+def retrieval_bench() -> str:
+    """Recall@10 against filter selectivity: post-filtering collapses, the middle dips."""
+    # retrieval-bench MEASUREMENTS.md section 4: 381,559 vectors, ef_search 40.
+    series = [
+        ("pgvector · relaxed_order", [0.966, 0.949, 0.964], INK, ""),
+        ("OpenSearch · efficient filter", [0.942, 0.745, 1.000], ACCENT, ""),
+        ("pgvector · post-filter", [0.966, 0.391, 0.038], MUTED, ' stroke-dasharray="14 10"'),
+    ]
+    x0, x1, y0, y1 = 260, 1320, 1040, 500
+    xs = [x0 + 90, (x0 + x1) / 2, x1 - 90]
+
+    def py(r):
+        return y0 - (y0 - y1) * r
+
+    body = [
+        f'<rect width="{W}" height="{H}" fill="{PAPER}"/>',
+        f'<text x="150" y="190" font-family="{MONO}" font-size="30" letter-spacing="6" '
+        f'fill="{ACCENT}">FILTERED VECTOR SEARCH · 381,559 VECTORS</text>',
+        f'<text x="150" y="300" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">A filter does not make search fail.</text>',
+        f'<text x="150" y="382" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">It makes it return less.</text>',
+        f'<line x1="{x0}" y1="{y0}" x2="{x1}" y2="{y0}" stroke="{LINE}" stroke-width="2"/>',
+    ]
+    for r in (0.0, 0.5, 1.0):
+        body.append(f'<line x1="{x0}" y1="{py(r):.1f}" x2="{x1}" y2="{py(r):.1f}" stroke="{LINE}" '
+                    f'stroke-width="1.5" stroke-dasharray="4 8"/>')
+        body.append(f'<text x="{x0 - 24}" y="{py(r) + 9:.1f}" font-family="{MONO}" font-size="26" '
+                    f'fill="{MUTED}" text-anchor="end">{r:.1f}</text>')
+    for x, label in zip(xs, ("50% pass", "10% pass", "1% pass")):
+        body.append(f'<text x="{x:.1f}" y="{y0 + 48}" font-family="{MONO}" font-size="24" '
+                    f'fill="{MUTED}" text-anchor="middle">{label}</text>')
+    body.append(f'<text x="{x0 - 70}" y="{y1 - 50}" font-family="{MONO}" font-size="24" '
+                f'fill="{MUTED}">recall@10 against exact kNN over the rows that pass</text>')
+    for name, vals, colour, dash in series:
+        pts = " ".join(f"{x:.1f},{py(v):.1f}" for x, v in zip(xs, vals))
+        body.append(f'<polyline points="{pts}" fill="none" stroke="{colour}" stroke-width="5"{dash}/>')
+        for x, v in zip(xs, vals):
+            body.append(f'<circle cx="{x:.1f}" cy="{py(v):.1f}" r="10" fill="{colour}"/>')
+    body += [
+        f'<text x="{xs[1] + 26:.1f}" y="{py(0.745) + 52:.1f}" font-family="{MONO}" font-size="26" '
+        f'fill="{ACCENT}">0.745</text>',
+        f'<text x="{xs[1] + 40:.1f}" y="{py(0.391) + 12:.1f}" font-family="{MONO}" font-size="26" '
+        f'fill="{MUTED}">3.9 of 10 rows</text>',
+        node_box(1500, 470, 750, 190, "post-filter", "pgvector: 3.9 of 10 rows at 10%",
+                 "as fast as a full answer"),
+        node_box(1500, 680, 750, 190, "iterative scan", "pgvector relaxed_order: 0.949",
+                 "13× the p50 at 1%"),
+        node_box(1500, 890, 750, 190, "filtered graph walk", "OpenSearch: 0.745 at 10%",
+                 "the middle is the risk", accent=True),
+        # legend swatches: each box names the line drawn in its colour
+        f'<line x1="1400" y1="565" x2="1470" y2="565" stroke="{MUTED}" stroke-width="5" '
+        f'stroke-dasharray="14 10"/>',
+        f'<line x1="1400" y1="775" x2="1470" y2="775" stroke="{INK}" stroke-width="5"/>',
+        f'<line x1="1400" y1="985" x2="1470" y2="985" stroke="{ACCENT}" stroke-width="5"/>',
+        f'<line x1="150" y1="1120" x2="{W - 150}" y2="1120" stroke="{LINE}" stroke-width="2"/>',
+        f'<text x="150" y="1195" font-family="{MONO}" font-size="30" fill="{MUTED}">'
+        f'pgvector 0.8.7 · Qdrant 1.19.2 · OpenSearch 3.9.0 · HNSW m 16 · ef_search 40</text>',
+        f'<text x="{W - 150}" y="1195" font-family="{MONO}" font-size="30" fill="{ACCENT}" '
+        f'text-anchor="end">test 10%, not just 1%</text>',
+    ]
+    return "".join(body)
+
+
 DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patroni,
             "lakehouse-spine": lakehouse_spine,
             "lakehouse-medallion": lakehouse_medallion,
@@ -948,6 +1012,7 @@ DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patro
             "ocr-engines": ocr_engines,
             "evalproof": evalproof,
             "governed-agent": governed_agent,
+            "retrieval-bench": retrieval_bench,
             "prevalence-shift": prevalence_shift}
 
 def svg_for(name: str) -> str:
