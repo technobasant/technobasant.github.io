@@ -3,7 +3,7 @@ title: "Validate said SUCCESS. The upgrade would have died halfway."
 seo_title: "Hive Metastore 4 upgrade: clone rehearsal, schematool, blue/green"
 description: "A Hive Metastore 4 upgrade rehearsed on a clone: zero constraints, a validator that passed anyway, and why the plan became blue/green."
 date: 2026-10-03 08:00:00 +0545
-last_modified_at: 2026-10-03
+last_modified_at: 2026-10-14
 type: essay
 pillar: data-platforms
 series: production-notes
@@ -34,7 +34,7 @@ cover:
   fallback_width: "1600"
   width: 1600
   height: 900
-  alt: "Schematic: schematool -validate reports five SUCCESS lines while a restored clone shows zero constraints and an upgrade that fails after its first script commits"
+  alt: "Schematic: schematool -validate reports five SUCCESS checks while a restored clone shows zero constraints and an upgrade that fails after its first script commits"
   caption: "The validator checked that the tables existed. The upgrade needed the constraints inside them."
 faq:
   - q: "Does Spark 4 work with Hive Metastore 4?"
@@ -42,18 +42,18 @@ faq:
   - q: "Why does schematool -validate pass on a metastore that cannot be upgraded?"
     a: "Its checks cover the schema version, sequence numbers, table presence, DFS locations and NULL columns. None of them compares constraints or indexes with a freshly initialised schema, and the upgrade scripts alter constraints by name. Compare pg_constraint and pg_indexes against a reference database instead."
   - q: "How long does a Hive Metastore 3.1 to 4.2 schema migration take?"
-    a: "On a restored clone of a staging metastore with tens of thousands of partitions on a small Postgres instance, the seven upgrade scripts took 115 seconds of wall clock, and the full write-stop window was about four minutes. One script took 59.3 seconds of that. Measure your own clone; the dominant step appears to scale with partition count."
+    a: "On a restored clone of a staging metastore with tens of thousands of partitions on a small Postgres instance, the seven upgrade scripts took 115 seconds of wall clock, and the full write-stop window was about four minutes. One script took 59.3 seconds of that. Measure your own clone: the dominant step's SQL does not explain its time, so the figure does not extrapolate."
   - q: "Should a Hive Metastore upgrade be in-place or blue/green?"
     a: "Blue/green, if you can afford a second database for a day. In-place migrates the only copy one way, so rollback is a snapshot restore. Blue/green migrates a restored copy, validates it before any consumer moves, and rolls back by changing a URI."
 key_takeaways:
-  - "schematool -validate printed five SUCCESS lines for a metastore with zero constraints and zero indexes; a fresh schema at the same version has 133 and 48."
+  - "schematool -validate printed five SUCCESS checks for a metastore with zero constraints and zero indexes; a fresh schema at the same version has 133 and 48."
   - "On that database the upgrade failed in its second script, after the first had already committed, leaving a half-migrated metastore whose only exit is the snapshot."
   - "Spark's metastore version setting caps the client it loads, not the server it talks to: a 4.1.0 client against a 4.2.1 server is valid, and 4.2.1 is where the partition-name SQL injection is fixed."
   - "Measured on the clone, the write-stop window was about four minutes, with one of seven scripts taking 59.3 seconds — numbers that only exist because the rehearsal ran on real data."
   - "Blue/green turned the rollback from a snapshot restore into a URI change, and stopping streaming instead of letting registrations fail removed a mandatory backfill."
 ---
 
-The runbook was four lines long. Snapshot the database, run `schematool -validate`, run `schematool -upgradeSchema`, start the new server. Validate came back with five `[SUCCESS]` lines, which is the condition the runbook said to wait for. A rehearsal on a throwaway schema had already run all six upgrade scripts clean.
+The runbook was four lines long. Snapshot the database, run `schematool -validate`, run `schematool -upgradeSchema`, start the new server. Validate came back with five `[SUCCESS]` checks, which is the condition the runbook said to wait for. A rehearsal on a throwaway schema had already run all six upgrade scripts clean.
 
 On a restored clone of the real metastore, the upgrade failed in its second script — after the first one had committed. That leaves a database at schema 3.2.0, which neither the old server nor the new one was built to run against, and a single way out: the snapshot. The validator had looked at exactly that database and passed it.
 
@@ -114,7 +114,7 @@ Upgrade script upgrade-3.2.0-to-4.0.0-alpha-1.postgres.sql
 
 Note where it stops. The first script has committed, so the database now says 3.2.0 — a version neither the old server nor the new one was built to run against. In production that is a metastore outage with a snapshot restore as its only exit.
 
-Then the part that justifies the rest of this post. On that same database:
+Then the part that justifies the rest of this post. On that same database (output condensed):
 
 ```text
 $ schematool -dbType postgres -validate
@@ -183,10 +183,10 @@ upgrade-4.1.0-to-4.2.0                    7.5 s
                                 sum      97.6 s   (wall clock 115 s)
 ```
 
-These numbers do not transfer. The other environments' metastore databases run on different instance sizes and do not even share a Postgres major version with staging. The dominant script appears to scale with partition count. Each environment gets its own constraint check and its own clone before anyone commits to a window.
+These numbers do not transfer. The other environments' metastore databases run on different instance sizes and do not even share a Postgres major version with staging. The dominant script only adds columns to the compaction tables and a check constraint to `NOTIFICATION_SEQUENCE`; its 59.3 seconds is not explained by its SQL, and I have not isolated the cause. Each environment gets its own constraint check and its own clone before anyone commits to a window.
 
 <div class="callout callout--note" markdown="1">
-**Boundary.** Every figure here was measured on a restored clone of the staging metastore, or in local containers built from the deploy image. Nothing ran against production, and production's constraint state was unknown when this plan was written. Two claims are inferences, not measurements: that the 59.3-second script scales with partition count, and that the missing indexes contribute to metastore timeouts.
+**Boundary.** Every figure here was measured on a restored clone of the staging metastore, or in local containers built from the deploy image. Nothing ran against production, and production's constraint state was unknown when this plan was written. One claim is an inference, not a measurement: that the missing indexes contribute to metastore timeouts. Why one script took 59.3 seconds is unexplained.
 </div>
 
 ## Why the plan became blue/green
@@ -208,7 +208,7 @@ The sequence follows from that. Snapshot, restore into a new instance, clean up 
 Rollback is free until Spark writes to the new metastore. After that, every partition registered on green is missing from blue, so rolling back means a backfill. A job that deletes and rewrites files is worse still: roll back after it runs and the old metastore points at files that no longer exist. The longer Spark writes to green, the more the rollback costs. Decide fast.
 
 <div class="callout callout--gotcha" markdown="1">
-**The selector trap.** If the new Deployment reuses the old pods' `app.kubernetes.io/name` label, the *existing* Service selects the new pods too. Thrift calls then round-robin between a 3.1.0 schema and a 4.2.0 one — intermittent, and very confusing. Give the green stack a distinct label value and its own Service.
+**The selector trap.** If the new Deployment reuses the old pods' `app.kubernetes.io/name` label, the *existing* Service selects the new pods too. Thrift connections then spread between a 3.1.0 schema and a 4.2.0 one — intermittent, and very confusing. Give the green stack a distinct label value and its own Service.
 </div>
 
 Apache's official `standalone-metastore` image carries three more defaults worth knowing. Its [entrypoint](https://github.com/apache/hive/blob/rel/release-4.2.1/packaging/src/docker/entrypoint.sh) runs `schematool -initOrUpgradeSchema` on every start unless `IS_RESUME=true` — three replicas, three concurrent migrations. `DB_DRIVER` defaults to Derby. And it adds `-Xmx1G` to the heap options, which, with JVM overhead on top, overruns a container limited to 1 GiB.
@@ -222,7 +222,7 @@ resources:
 ```
 {: data-file="hive-metastore-green-deploy.yaml" }
 
-One config value breaks silently. On Hadoop 3.4, S3A uses AWS SDK v2, and [V1 credential-provider class names must be replaced](https://hadoop.apache.org/docs/stable/hadoop-aws/tools/hadoop-aws/aws_sdk_upgrade.html). With the old `com.amazonaws.auth.WebIdentityTokenCredentialsProvider` left in place, the metastore starts cleanly and then every partition registration fails, because it checks each partition's location in S3. The replacement is `software.amazon.awssdk.auth.credentials.WebIdentityTokenFileCredentialsProvider`.
+One config value breaks silently. On Hadoop 3.4, S3A uses AWS SDK v2, and [V1 credential-provider class names must be replaced](https://hadoop.apache.org/docs/current/hadoop-aws/tools/hadoop-aws/aws_sdk_upgrade.html). With the old `com.amazonaws.auth.WebIdentityTokenCredentialsProvider` left in place, the metastore starts cleanly and then every partition registration fails, because it checks each partition's location in S3. The replacement is `software.amazon.awssdk.auth.credentials.WebIdentityTokenFileCredentialsProvider`.
 
 ## Green signals that were lies
 
@@ -269,7 +269,7 @@ Its checks cover the schema version, sequence numbers, table presence, DFS locat
 
 ### How long does a Hive Metastore 3.1 to 4.2 schema migration take?
 
-On a restored clone of a staging metastore with tens of thousands of partitions on a small Postgres instance, the seven upgrade scripts took 115 seconds of wall clock, and the full write-stop window was about four minutes. One script took 59.3 seconds of that. Measure your own clone; the dominant step appears to scale with partition count.
+On a restored clone of a staging metastore with tens of thousands of partitions on a small Postgres instance, the seven upgrade scripts took 115 seconds of wall clock, and the full write-stop window was about four minutes. One script took 59.3 seconds of that. Measure your own clone: the dominant step's SQL does not explain its time, so the figure does not extrapolate.
 
 ### Should a Hive Metastore upgrade be in-place or blue/green?
 

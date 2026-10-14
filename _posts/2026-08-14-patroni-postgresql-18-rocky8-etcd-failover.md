@@ -2,7 +2,7 @@
 title: "Patroni HA on PostgreSQL 18 with etcd, proven by killing the primary"
 description: "Build a two-node Patroni cluster on Rocky 8 under QEMU, then SIGKILL the leader and measure the promotion, the timeline bump, and the pg_rewind rejoin."
 date: 2026-08-14 09:00:00 +0545
-last_modified_at: 2026-10-13
+last_modified_at: 2026-10-14
 type: tutorial
 pillar: database-lifecycle
 tags: [postgres, distributed-databases]
@@ -44,6 +44,8 @@ This post builds that on three amd64 guests and measures it. The numbers below c
 It is also honest about the shape of the lab. etcd runs on one node, which is a single point of failure — so rather than wave that away, the last section stops etcd and measures what a DCS outage actually costs. The answer is worth knowing before you design one: the healthy leader demotes itself and the cluster goes read-only.
 
 The guests are amd64 under QEMU TCG on an Apple Silicon Mac, on the shared `192.168.105.0/24` fabric from the [networking tutorial](/writing/amd64-vagrant-labs-apple-silicon-socket-vmnet/). Slow on purpose: a lab that lies about the instruction set makes every later packaging and timing story suspect.
+
+The Vagrantfile and the exact etcd and Patroni config files are in [postgres-ha-lab/patroni](https://github.com/technobasant/postgres-ha-lab/tree/main/patroni).
 
 ## Step 1 — Why Rocky 8 and not generic/rhel8
 
@@ -111,7 +113,7 @@ end
 
 Two settings are load-bearing and both were learned the hard way. `boot_timeout = 900` because TCG is slow enough that the default makes Vagrant declare failure on a healthy boot. And `no_daemonize = true` in the provider, because forking drops the inherited lab file descriptor and the lab NIC transmits into nothing.
 
-**Verify.** Every node answers on the fabric, and every node can reach every other:
+**Verify.** Every node holds its lab address:
 
 ```bash
 for n in etcd1 pgn1 pgn2; do
@@ -120,11 +122,16 @@ done
 ```
 
 ```text
-etcd1  192.168.105.140/24  mesh: .140 ok .141 ok .142 ok
-pgn1   192.168.105.141/24  mesh: .140 ok .141 ok .142 ok
-pgn2   192.168.105.142/24  mesh: .140 ok .141 ok .142 ok
+etcd1
+192.168.105.140/24
+pgn1
+192.168.105.141/24
+pgn2
+192.168.105.142/24
 ```
 {: .verify }
+
+Then prove the mesh: host to every guest, and every guest to every other, with the same checks as [`fabric/scripts/verify-mesh.sh`](https://github.com/technobasant/postgres-ha-lab/blob/main/fabric/scripts/verify-mesh.sh) pointed at `.140`–`.142`.
 
 Guest ICMP to the vmnet gateway at `.1` fails on macOS even when everything else is healthy. Host-to-guest and guest-to-guest are the pass criteria; do not chase the gateway ping.
 
@@ -356,7 +363,7 @@ INFO: no action. I am (pgn1), a secondary, and following a leader (pgn2)
 ```
 {: .verify }
 
-`pg_rewind` needs either `wal_log_hints = on` or data checksums to work; the bootstrap above enables checksums via `initdb`, which is why this succeeded without extra configuration. Skip that and the rejoin silently falls back to a full re-clone, which looks identical in `patronictl list` and takes dramatically longer on a database with real data in it.
+`pg_rewind` needs either `wal_log_hints = on` or data checksums to work. The bootstrap above sets no `initdb` options; checksums are on because PostgreSQL 18's `initdb` enables them by default, which is why this succeeded without extra configuration. On a cluster with neither, Patroni cannot rewind, and by default it does not re-clone either: the old primary cannot follow the new timeline until you run `patronictl reinit`, unless `remove_data_directory_on_diverged_timelines` is set.
 
 ## "Doesn't Patroni need three nodes?"
 
@@ -383,7 +390,7 @@ ERROR:  cannot execute INSERT in a read-only transaction
 ```
 {: .verify }
 
-Nothing is wrong with Postgres. Patroni cannot renew the leader key, so it cannot prove it is still the leader, so it refuses to accept writes — which is the correct choice, because the alternative is two nodes both believing they are primary. A DCS outage converts into a **full write outage**, not a degraded one.
+Nothing is wrong with Postgres. Patroni cannot renew the leader key, so it cannot prove it is still the leader, so it refuses to accept writes — which is the correct choice, because the alternative is two nodes both believing they are primary. With Patroni's defaults, a DCS outage converts into a **full write outage**, not a degraded one. [`failsafe_mode: true`](https://patroni.readthedocs.io/en/latest/dcs_failsafe_mode.html) changes that: the leader keeps writing while it can reach every member over the REST API.
 
 Restarting etcd restores service on its own:
 
@@ -406,7 +413,7 @@ So: two Postgres nodes is a legitimate cluster. One etcd node is not a legitimat
 | Patroni starts, never joins | `etcd:` instead of `etcd3:` in the config | Use `etcd3`; the v2 API is gone |
 | Replica stuck in `creating replica` | etcd unreachable from that node | Open 2379/tcp; check `advertise-client-urls` is the lab IP |
 | Vagrant reports boot timeout on a healthy VM | TCG slower than the 300s default | `config.vm.boot_timeout = 900` |
-| Old primary re-clones instead of rewinding | No checksums and no `wal_log_hints` | `initdb` with `data-checksums`, or set the hint parameter |
+| Old primary cannot follow the new leader after a failover | No checksums and no `wal_log_hints`, so `pg_rewind` is impossible | `initdb` with `data-checksums`, or set the hint parameter |
 | Healthy leader goes read-only, no failover in logs | DCS unreachable: Patroni cannot renew the leader key | Restore etcd; run three DCS members so one loss is survivable |
 
 ## Clean up, and what this changes

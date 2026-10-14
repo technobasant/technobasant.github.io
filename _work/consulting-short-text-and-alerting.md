@@ -62,7 +62,7 @@ I reviewed the first version, wrote the redesign and its build specification, bu
 | A generic mechanism label plus a brand and region attribute | One label per impersonated brand | Brand labels multiply across regions and fragment the training data for one mechanism. |
 | One multilingual embedding model | A pipeline per language | Per-language pipelines multiply maintenance; one model shows a wave hitting several markets as one cluster. |
 | Alert state written before Slack; Socket Mode receiver | Notify first; inbound webhook | Notify-first loses alerts when Slack is down; inbound was impossible behind the proxy. |
-| Alert state in a Delta table behind an interface | Managed Postgres from day one | Tens of alerts do not justify an instance, and a scale-to-zero resume can land inside Slack's three-second acknowledgement budget. |
+| Alert state in a Delta table behind an interface | Managed Postgres from day one | Tens of alerts do not justify an instance. A scale-to-zero resume takes a few hundred milliseconds, which would only matter if the handler queried before acknowledging Slack, and it does not. |
 
 ## What the v1 review found
 
@@ -70,13 +70,13 @@ The first version had 22 defects. They fell into five groups, and almost none of
 
 - **Orchestration.** A date parameter was declared and then ignored in favour of `current_date()`, so a backfill processed zero rows and reported success. Steps described as idempotent were insert-only, a counter incremented in place double-counted under retries, and parallel backfills collided on `MERGE` with `ConcurrentAppendException`.
 - **Silent cache misses.** A naive `lower()` and regex normalization gave two encodings of the same visible text — NFC and NFD — two different keys.
-- **Model handling.** Weights were downloaded on every run; clustering ran on raw high-dimensional vectors; an unbounded `toPandas()` sat in the hot path. The e5 models expect a `query: ` prefix, and leaving it off raises no error, so it has to be enforced in code rather than remembered.
+- **Model handling.** Weights were downloaded on every run, and an unbounded `toPandas()` sat in the hot path. The e5 models expect a `query: ` prefix, and leaving it off raises no error, so it has to be enforced in code rather than remembered.
 - **Governance.** There was no taxonomy version, clusters were recreated daily with unstable IDs, unresolved rows were silently dropped, and nothing would notice if the hosted model changed underneath the series.
 - **Supply chain.** A Hugging Face token passed as a Docker build argument is recorded in `docker history`. It became a build secret, and the image check counts zero matches. A model download without file filters also pulled about 2 GB of duplicate formats for a model of roughly 470 MB.
 
 ## Results
 
-The reference implementation ships with 15 tests, each named after the defect it guards, and all passed on the last recorded run. The container check runs with networking disabled and fails the build if the model cannot load. Embedding throughput, measured locally, was about 2,600 short texts per second on four CPU threads. The 20–40× reduction in model tokens was an estimate from stated assumptions, and the proposal said so; its first build step was the profiling query that replaces the assumption with a measurement.
+The reference implementation ships with 15 tests, each named after the defect it guards, and all passed on the last recorded run. The container check runs with networking disabled and fails the build if the model cannot load. The 20–40× reduction in model tokens was an estimate from stated assumptions, and the proposal said so; its first build step was the profiling query that replaces the assumption with a measurement.
 
 Because the client's data stays private, I rebuilt the classification design from scratch on a synthetic corpus and measured it: [label the string, not the row](/writing/classify-distinct-strings-not-rows/).
 

@@ -3,7 +3,7 @@ title: "The classifier was 95% accurate. The trend it counted was a third too fl
 seo_title: "Category trends from a classifier: quantification, not counting"
 description: "A 95%-accurate classifier counted a rise from 10% to 25% as 8% to 17%. Why counting labels flattens trends, and which estimators report them honestly."
 date: 2026-10-03 10:20:00 +0545
-last_modified_at: 2026-10-13
+last_modified_at: 2026-10-14
 type: essay
 pillar: ai-systems
 tags:
@@ -50,7 +50,7 @@ key_takeaways:
 
 The dashboard is one query: `GROUP BY category, week` over the classifier's output. Each week the line for "impersonation scams" ticks up a little, and someone asks how fast it is growing. The classifier behind it is good — about 95% accurate on the mix it was trained on — so the chart gets read as the trend.
 
-It is not the trend. It is the trend multiplied by a number smaller than one, plus a constant, and the multiplier changes every time somebody improves the model. Every estimate gets pulled toward a point that has nothing to do with the world. The better the classifier is at being precise, the flatter the line it draws.
+It is not the trend. It is the trend multiplied by a number smaller than one, plus a constant, and the multiplier changes every time somebody improves the model. Every estimate gets pulled toward a point that has nothing to do with the world. The more a classifier trades recall for precision, the flatter the line it draws.
 
 **Operating rule.** How fast a category is growing is a quantification problem, not a classification problem. Never report the count of predicted labels as prevalence. Correct it with the classifier's error rates, or with a small random sample of human labels from the same period. Then treat every change of model, prompt or taxonomy as a break in the measurement, not as news.
 
@@ -161,7 +161,7 @@ Refreshing the error rates — validating the new model before using it — remo
 PPI needed none of that. Its gold sample is drawn fresh every period, so the correction tracks whichever model is running, and its false-trend rate was 5.8% with no special handling. That is the property worth paying for: a measurement that corrects itself when the instrument changes.
 
 <div class="callout callout--note" markdown="1">
-**Boundary.** This is a simulation. The classifier is an idealised Gaussian-score model, one category is tracked at a time, the gold sample is uniformly random with known size, and label shift is pure — the share changes, while what a report in each category looks like does not. Real report streams break that last assumption when scripts evolve inside a category, and they add problems the simulation leaves out: a mix of sources with different reporting habits, campaign duplicates, and categories too rare for any per-period estimate. What transfers is the direction and mechanism of each bias, not the magnitudes. Every figure here is in the lab's `MEASUREMENTS.md`, rendered from the results file by script.
+**Boundary.** This is a simulation. The classifier is an idealised Gaussian-score model, one category is tracked at a time, the gold sample is uniformly random with known size, and label shift is pure — the share changes, while what a report in each category looks like does not. Real report streams break that last assumption when scripts evolve inside a category, and they add problems the simulation leaves out: a mix of sources with different reporting habits, campaign duplicates, and categories too rare for any per-period estimate. What transfers is the direction and mechanism of each bias, not the magnitudes. Every figure here is in the lab's [`MEASUREMENTS.md`](https://github.com/technobasant/prevalence-shift/blob/main/MEASUREMENTS.md), rendered from the results file by script.
 </div>
 
 ## After the estimate: shares, rates and alarms

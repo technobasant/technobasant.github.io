@@ -2,7 +2,7 @@
 title: "Dedicated pgBackRest TLS on RHEL 8 with Ansible—before Postgres"
 description: "Stand up a dedicated pgBackRest TLS repo host on generic/rhel8 with Ansible-issued certs, then prove server-ping and mTLS from a client VM."
 date: 2026-08-13 12:30:00 +0545
-last_modified_at: 2026-08-13 14:10:00 +0545
+last_modified_at: 2026-10-14
 type: tutorial
 pillar: database-lifecycle
 tags: [postgres, self-hosted]
@@ -42,7 +42,7 @@ I wanted the opposite order. A **dedicated** `backup1` is the TLS repo host. A t
 
 The measured package on this rig was **pgBackRest 2.59.0** from PGDG on `generic/rhel8`. Your `dnf` may land a newer patch; record what you installed. This sits on the [Apple Silicon amd64 networking tutorial](/writing/amd64-vagrant-labs-apple-silicon-socket-vmnet/). If host and mesh ping are not green, stop. A dead fabric looks like a pgBackRest bug and is not one.
 
-There is no public repository to clone. The load-bearing files are reproduced below.
+The load-bearing files are reproduced below; the full playbook, roles and Vagrantfile are in [postgres-ha-lab/pgbackrest-tls](https://github.com/technobasant/postgres-ha-lab/tree/main/pgbackrest-tls).
 
 ## Topology
 
@@ -104,6 +104,7 @@ python3.12 -m venv .venv
 
 Inventory talks to **lab IPs**. `vagrant ssh` over SLIRP is fine for a rescue shell; backups must use the fabric.
 
+{% raw %}
 ```yaml
 all:
   hosts:
@@ -116,17 +117,28 @@ all:
         backup1:
           ansible_host: 192.168.105.130
           ansible_user: vagrant
-          ansible_ssh_private_key_file: .vagrant/machines/backup1/qemu/private_key
+          ansible_ssh_private_key_file: "{{ inventory_dir }}/../../.vagrant/machines/backup1/qemu/private_key"
+          ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentitiesOnly=yes"
           lab_ip: 192.168.105.130
     pgbackrest_clients:
       hosts:
         pg1:
           ansible_host: 192.168.105.131
           ansible_user: vagrant
-          ansible_ssh_private_key_file: .vagrant/machines/pg1/qemu/private_key
+          ansible_ssh_private_key_file: "{{ inventory_dir }}/../../.vagrant/machines/pg1/qemu/private_key"
+          ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentitiesOnly=yes"
           lab_ip: 192.168.105.131
+        pg2:
+          ansible_host: 192.168.105.132
+          ansible_user: vagrant
+          ansible_ssh_private_key_file: "{{ inventory_dir }}/../../.vagrant/machines/pg2/qemu/private_key"
+          ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentitiesOnly=yes"
+          lab_ip: 192.168.105.132
 ```
 {: data-file="ansible/inventory/lab.yml"}
+{% endraw %}
+
+`pg2` is reserved and not booted in this post, so run the playbook with `--limit 'backup1:pg1:localhost'`. It is in the inventory because the repo host's `tls-server-auth` list is rendered from the `pgbackrest_clients` group.
 
 `lab_ip` is not decorative. The cert play uses it as a SAN. If the certificate only names `backup1` and Ansible later connects by IP, OpenSSL will tell you the truth.
 
@@ -198,7 +210,7 @@ Four lines are load-bearing.
 
 **`tls-server-auth=pg1=*`.** Authorize the client certificate whose CN is `pg1` for every stanza. Until Postgres exists the stanza is a placeholder; the auth line is still required or the later backup is refused as an unauthorized client.
 
-**`repo1-bundle` / `repo1-block`.** Current PGDG defaults for a new repo. Harmless on an empty repo; leave them so the next post does not change file format mid-series.
+**`repo1-bundle` / `repo1-block`.** Both are off by default in pgBackRest 2.59; I turn them on before the first backup. Harmless on an empty repo; leave them so the series never changes repo format midway.
 
 **Keys `0600`, owned by `pgbackrest`.** The systemd unit does not run as root. A root-owned key makes `pgbackrest server` fail after a restart that looks unrelated.
 
@@ -323,4 +335,4 @@ vagrant halt backup1 pg1
 
 Leave socket_vmnet running if you will rebuild. Rotate certs by deleting `ansible/artifacts/certs/` and re-running the generate play. Do not commit `*.key`.
 
-Next in this series: install Postgres on the clients, fill `[demo]` with `pg1-path`, and take the first backup over this TLS repo. The operating rule is **dedicated repo host, Ansible-owned TLS, measured handshake before any `pg_basebackup` story.** When that post lands, this one should still be a clean prerequisite, not a fossil inside a combined mega-role.
+Next in this series: [Patroni HA on PostgreSQL 18](/writing/patroni-postgresql-18-rocky8-etcd-failover/), then [pgBackRest against that cluster](/writing/pgbackrest-patroni-cluster-backup-pitr/), which reuses this TLS model with the repository on `etcd1` and the stanza named `pg18lab`. The operating rule is **dedicated repo host, Ansible-owned TLS, measured handshake before any `pg_basebackup` story.**

@@ -58,6 +58,15 @@ tier3:
     - OpenAI Agents SDK
     - Pinecone
     - pgvector
+    - Qdrant
+    - OpenSearch
+    - Feast
+    - LightGBM
+    - "Argo CD / Argo Rollouts"
+    - Kyverno
+    - CloudNativePG
+    - OpenTelemetry
+    - Go
     - Chroma
     - FAISS
     - Weaviate

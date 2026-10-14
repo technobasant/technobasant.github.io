@@ -76,14 +76,16 @@ lighthouse: build
 	JEKYLL_ENV=production $(BUNDLE) jekyll serve --skip-initial-build --no-watch --port $(PORT)
 
 # Visual regression. Refactors that are supposed to be inert — deleting an
-# unreachable rule, folding an override into its base — are gated at zero
-# differing pixels. Needs a server already running on $(PORT).
+# unreachable rule, folding an override into its base — should show zero
+# differing pixels; run it by hand before merging one. Needs a server already
+# running on $(PORT).
 #
 #   make vr-accept   capture the baseline (do this before you start)
 #   make vr          compare the current build against it
 #
 # Local only, never CI: font resolution differs on ubuntu, so macOS baselines
-# would red-flag every run. `rake css:deadwood` is the CI-safe equivalent.
+# would red-flag every run. `rake css:deadwood` checks the same thing without
+# pixels and can run anywhere, though it is not in CI either.
 vr:
 	NODE_PATH=$(NODE_PATH) node scripts/vr.mjs compare http://127.0.0.1:$(PORT)
 

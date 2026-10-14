@@ -2,10 +2,10 @@
 title: "Two engines, one Iceberg catalog: StarRocks beside Trino, neither holding a key"
 description: "Attach StarRocks to the same Polaris REST catalog Trino writes through, measure both on identical data, and check for standing S3 keys."
 date: 2026-08-16 09:00:00 +0545
-last_modified_at: 2026-10-13
+last_modified_at: 2026-10-14
 type: tutorial
 pillar: data-platforms
-tags: [iceberg-lakehouse, clickhouse]
+tags: [iceberg-lakehouse]
 series: lakehouse-trino-iceberg
 series_order: 4
 toc: true
@@ -40,7 +40,7 @@ Parts one to three built a lakehouse on Trino and never left it. That is a fine 
 
 The argument is that the catalog is the system of record, so a second engine should see the tables the first one wrote — without an export, a copy, a `CREATE EXTERNAL TABLE` per table, or a second set of credentials.
 
-That last clause is the part worth checking. [Part one]({{ '/writing/' | relative_url }}) went to some trouble to make Trino hold no standing S3 key. If adding StarRocks means pasting the MinIO keys into a second config file, the boundary is gone and the whole exercise was decoration.
+That last clause is the part worth checking. [Part one]({{ '/writing/trino-iceberg-polaris-lakehouse-spine/' | relative_url }}) went to some trouble to make Trino hold no standing S3 key. If adding StarRocks means pasting the MinIO keys into a second config file, the boundary is gone and the whole exercise was decoration.
 
 So: attach StarRocks 4.1.4 to the same catalog, read the same tables, and see. The original 2024 build ran StarRocks 3.2 beside Trino 437 against Hive Metastore — same question, and the answer has changed.
 
@@ -96,7 +96,7 @@ CREATE EXTERNAL CATALOG lakehouse PROPERTIES (
   'aws.s3.enable_path_style_access' = 'true'
 );
 ```
-{: data-file="starrocks"}
+{: data-file="sql/starrocks-catalog.sql"}
 
 That is the entire integration. No table DDL, no schema mirroring, no sync job.
 
@@ -115,7 +115,7 @@ silver_gold
 silver_silver
 ```
 
-Every namespace Trino created, immediately. Including `silver_gold` and `silver_silver` — the debris from the schema-naming bug in [part two]({{ '/writing/' | relative_url }}), which I had fixed in dbt but never cleaned out of the catalog.
+Every namespace Trino created, immediately. Including `silver_gold` and `silver_silver` — the debris from the schema-naming bug in [part two]({{ '/writing/dbt-trino-iceberg-medallion-airflow/' | relative_url }}), which I had fixed in dbt but never cleaned out of the catalog.
 
 That is a small thing that says something real: **the catalog is shared, so mistakes are shared too.** A second engine is also a second pair of eyes on your namespace hygiene.
 
@@ -151,7 +151,7 @@ Same query, same table, same catalog:
 ```sql
 SELECT count(*), sum(totalprice)
 FROM lakehouse.silver.orders_enriched
-WHERE orderdate >= '1995-03-01' AND orderdate < '1995-04-01';
+WHERE orderdate >= CAST('1995-03-01' AS DATE) AND orderdate < CAST('1995-04-01' AS DATE);
 ```
 
 Getting a comparable number took two attempts. Wall-clock through each engine's CLI is useless: the Trino CLI starts a JVM, the MySQL client does not. Subtracting a `SELECT 1` baseline from each was worse — it gave Trino a **negative** query time, because JVM startup varies by more than the query costs.
@@ -169,14 +169,14 @@ grep 'orders_enriched' /data/deploy/starrocks/fe/log/fe.audit.log \
 | StarRocks 4.1.4 | **34 ms** |
 
 <div class="callout callout--gotcha" markdown="1">
-**This is a narrow test and the number should be read narrowly.** One aggregate, one partition, 100,000 rows, on a single host. That is close to the shape StarRocks' vectorised MPP engine is built for, and it says nothing about the cases Trino is usually chosen for: federating across catalogs, joining a lakehouse table to a Postgres table, or long multi-table joins where the cost model matters more than the scan.
+**This is a narrow test and the number should be read narrowly.** One aggregate over one month partition — about 19,000 rows, since 1.5 million TPC-H orders spread across 80 monthly partitions — on a single host. That is close to the shape StarRocks' vectorised MPP engine is built for, and it says nothing about the cases Trino is usually chosen for: federating across catalogs, joining a lakehouse table to a Postgres table, or long multi-table joins where the cost model matters more than the scan.
 
 The useful conclusion is not "StarRocks is 2.9× faster". It is that **you can now measure that question on your own data without migrating anything**, because both engines read the same tables. Before a REST catalog, answering it meant a copy.
 </div>
 
 ## Step 5 — Clean up the shared debris
 
-Since the catalog is shared, so is the tidying:
+Since the catalog is shared, so is the tidying. From Trino:
 
 ```sql
 DROP TABLE IF EXISTS lakehouse.silver_silver.orders_enriched;
@@ -215,4 +215,4 @@ The rule: **a catalog earns its place when the second engine costs one DDL state
 
 That is a testable bar, and it is worth applying before committing to a catalog rather than after. Attach a second engine to a throwaway namespace, define it with no storage keys, and read a table the first engine wrote. If that works, the catalog is doing the job the architecture diagram claims. If it needs a copy, a manual table registration, or its own set of long-lived keys, you have a metadata service — which may still be worth running, but not for the reasons usually given.
 
-The rest of this series is on GitHub as a single `docker compose` file: [MinIO, Polaris, Trino, dbt, Airflow and StarRocks](https://github.com/technobasant/lakehouse-lab), with every figure in these four posts reproducible from it.
+The rest of this series is on GitHub as a single `docker compose` file: [MinIO, Polaris, Trino, dbt, Airflow and StarRocks](https://github.com/technobasant/lakehouse-lab), with the figures from these four posts, and how each was measured, in its `MEASUREMENTS.md`.

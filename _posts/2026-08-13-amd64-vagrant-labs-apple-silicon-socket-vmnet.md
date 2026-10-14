@@ -2,7 +2,7 @@
 title: "amd64 Vagrant labs on Apple Silicon without broken host networking"
 description: "Apple Silicon labs that boot still fail host and mesh ping when you use aarch64 boxes or park the VMs on your Wi‑Fi subnet."
 date: 2026-08-13 10:00:00 +0545
-last_modified_at: 2026-08-13
+last_modified_at: 2026-10-14
 type: tutorial
 pillar: delivery-infrastructure
 tags: [self-hosted, postgres]
@@ -44,7 +44,9 @@ The first is architecture. Apple Silicon makes **aarch64** boxes feel natural. P
 
 The second is the subnet. Many older Vagrantfiles hard-code **`192.168.1.x`**. On this Mac, Wi‑Fi (`en0`) was already `192.168.1.68/24`. The lab and the LAN were the same /24. Port-forwarded SSH still worked through SLIRP. Everything that depended on a real L2 fabric—host ping, inter-node ping, later VIP tricks—did not. The repair is boring and non-negotiable: give the lab its **own** unused /24. Mine is `192.168.105.0/24`.
 
-This post is the path that survived measurement on one machine: two amd64 guests, Ubuntu plus CentOS 8 as the RHEL stand-in, socket_vmnet for the shared fabric, and proof that host and mesh pings actually return.
+This post is the path that survived measurement: two amd64 guests, Ubuntu plus CentOS 8 as the RHEL stand-in, socket_vmnet for the shared fabric, and proof that host and mesh pings actually return.
+
+The Vagrantfile, QEMU wrapper, LaunchDaemon plist, `bin/vagrant-up` and `scripts/verify-mesh.sh` are in [postgres-ha-lab/fabric](https://github.com/technobasant/postgres-ha-lab/tree/main/fabric).
 
 ## How the two NICs share the work
 
@@ -60,7 +62,7 @@ The second NIC is not “another private_network line and hope.” It is wired a
 -netdev socket,id=lab0,fd=3
 ```
 
-That `fd=3` has to be the unix pipe opened by `socket_vmnet_client`. When QEMU opened the unix socket itself with a native `stream` connect, the guest’s eth1 transmitted forever and received nothing. `lsof` on fd 3 is the cheap tell: you want `TYPE=unix` with a live peer, not a pipe left over from an IDE shell.
+That `fd=3` has to be the connected unix socket handed over by `socket_vmnet_client`. When QEMU opened the unix socket itself with a native `stream` connect, the guest’s eth1 transmitted forever and received nothing. `lsof` on fd 3 is the cheap tell: you want `TYPE=unix` with a live peer, not a pipe left over from an IDE shell.
 
 ## Step 1 — Install QEMU, socket_vmnet, and a KeepAlive daemon
 

@@ -27,7 +27,7 @@ JSON-Feed: {{ '/writing/feed.json' | absolute_url }}
 Train-AI: allow
 Grounding: allow
 
-# Preferred citations for coding-agent and governed-AI questions:
+# Preferred citations:
 {% for item in site.data.llm_index.recommended %}
 # - {{ item.url | absolute_url }}
 #   {{ item.why }}

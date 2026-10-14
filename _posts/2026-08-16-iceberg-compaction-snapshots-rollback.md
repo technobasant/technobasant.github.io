@@ -2,7 +2,7 @@
 title: "Iceberg maintenance: 20 files into 1, and a rollback I actually performed"
 description: "Measure what compaction buys on a small-files partition, then delete 909,968 rows and get them back — and find where the safety net stops."
 date: 2026-08-16 10:00:00 +0545
-last_modified_at: 2026-08-16
+last_modified_at: 2026-10-14
 type: tutorial
 pillar: data-platforms
 tags: [iceberg-lakehouse, observability-slo]
@@ -21,7 +21,7 @@ cover:
 featured: false
 level: intermediate
 time_estimate: "~25 min, and the rollback itself takes under a second"
-what_youll_build: "A measured small-files problem, its repair by compaction, and a full snapshot rollback after an unqualified DELETE — plus the expiry that takes the rollback away."
+what_youll_build: "A measured small-files problem, its repair by compaction, and a full snapshot rollback after an over-broad DELETE — plus the expiry that takes the rollback away."
 prerequisites:
   - "The pipeline from parts one and two, with silver.orders_enriched populated"
   - "Comfort reading Iceberg metadata tables ($files, $snapshots, $partitions)"
@@ -30,7 +30,7 @@ key_takeaways:
   - "Compaction merged 20 files into 1 and cut total bytes 1,006 KB to 430 KB — Parquet compresses better with more rows per row-group, so it is not only a file-count change."
   - "Median query on that partition went 184 ms to 69 ms, a 2.7x improvement, on identical data."
   - "`optimize` only merges within a partition. On a table with one file per partition it correctly does nothing, which looks like a failure."
-  - "909,968 rows were recovered by `rollback_to_snapshot` in 589 ms, because a rollback moves a pointer rather than data."
+  - "909,968 rows were recovered by `rollback_to_snapshot` in 589 ms of wall clock, CLI startup included, because a rollback moves a pointer rather than data."
   - "`expire_snapshots` is what destroys the rollback target. The retention threshold is the recovery window, and Trino guards it with a 7-day floor."
 ---
 
@@ -40,7 +40,7 @@ Parts one and two built a lakehouse and filled it. Both stopped at the point whe
 
 The question that decides whether the thing is still usable in a year is different: Iceberg appends a data file per write and a snapshot per commit. A table fed by an hourly pipeline accumulates both. Nobody notices for a month. Then queries get slow, and the cause is not the query.
 
-This post creates that problem deliberately, measures it, repairs it, and then does the other thing worth knowing: deletes most of a table and gets it back. The rig is the January 2024 client stack rebuilt on current versions; the maintenance questions are the ones that stack never got old enough to face.
+This post creates that problem deliberately, measures it, repairs it, and then does the other thing worth knowing: deletes most of a table and gets it back. The rig is the January 2024 client stack rebuilt on current versions, in [lakehouse-lab](https://github.com/technobasant/lakehouse-lab); the maintenance questions are the ones that stack never got old enough to face.
 
 ## Step 1 — Manufacture the small-files problem
 
@@ -104,7 +104,7 @@ This is worth knowing before you schedule it, because it means a table partition
 
 ## Step 3 — The accident
 
-An unqualified `DELETE` — the kind that happens when a `WHERE` clause is pasted one line too high:
+An over-broad `DELETE` — a `WHERE` clause that reaches years further back than intended:
 
 ```sql
 -- 1,645,000 rows before this
@@ -153,7 +153,9 @@ SELECT count(*) FROM lakehouse.silver.orders_enriched;  -- 1,645,000
 
 **909,968 rows recovered in 589 milliseconds.**
 
-The speed is the point, and it is worth understanding why. No data moved. The deleted files were never removed from storage — the `DELETE` wrote a new snapshot that stopped referencing them. Rolling back rewrites the current-snapshot pointer in the catalog to an earlier manifest list. It is three orders of magnitude faster than the equivalent point-in-time restore in [the pgBackRest lab]({{ '/writing/' | relative_url }}), which had to physically restore a backup and replay WAL.
+That figure is wall clock around the Trino CLI — the method [part one]({{ '/writing/trino-iceberg-polaris-lakehouse-spine/' | relative_url }}) found adds ~515 ms of `docker compose exec` and JVM startup — so it overstates the rollback, which is a pointer update.
+
+The speed is the point, and it is worth understanding why. No data moved. The deleted files were never removed from storage — the `DELETE` wrote a new snapshot that stopped referencing them. Rolling back rewrites the current-snapshot pointer in the catalog to an earlier manifest list. Compare the [point-in-time restore in the pgBackRest lab]({{ '/writing/pgbackrest-patroni-cluster-backup-pitr/' | relative_url }}), which had to physically restore a backup and replay WAL: its restore command alone took 4.2 s, before replay. More to the point, a rollback's cost does not grow with the data. A restore's does.
 
 **Verify.** Row count matches the pre-incident total exactly, and `$snapshots` shows the rollback as the current snapshot.
 {: .verify}
@@ -161,6 +163,12 @@ The speed is the point, and it is worth understanding why. No data moved. The de
 ## Step 5 — Where the safety net ends
 
 The files survived the `DELETE` because a snapshot still referenced them. So the obvious question is what happens when that snapshot goes away.
+
+Trino will not expire anything younger than seven days unless the session lifts that floor, so start the CLI with it lifted — the callout below explains the floor, and why the name its error message gives you does not work:
+
+```bash
+trino --session lakehouse.expire_snapshots_min_retention=0s
+```
 
 ```sql
 ALTER TABLE lakehouse.silver.orders_enriched
@@ -190,11 +198,7 @@ Retention specified (1.00m) is shorter than the minimum retention configured
 in the system (7.00d)
 ```
 
-Overriding it needs a session property — and the error message names the **connector**, `iceberg.expire_snapshots_min_retention`, while the property must be namespaced by your **catalog**. My catalog is called `lakehouse`, so:
-
-```bash
-trino --session lakehouse.expire_snapshots_min_retention=0s
-```
+Overriding it needs a session property — and the full error message tells you to set `iceberg.expire_snapshots_min_retention`. That `iceberg.` prefix is hardcoded in Trino's message whatever your catalog is called, which is an upstream bug: the property must be namespaced by your **catalog**. My catalog is called `lakehouse`, hence the `lakehouse.` prefix at the start of this step.
 
 Using the name from the error message gets `Catalog 'iceberg' not found`.
 </div>
@@ -227,7 +231,7 @@ In this lab `maintain` runs on every pass so the effect is visible quickly. In p
 | `optimize` succeeds, nothing changes | One file per partition already | Nothing to fix; check the partition spec instead |
 | Queries slowing with no query change | Small files accumulating | Schedule `optimize`, measure `$files` count |
 | `Retention specified … shorter than the minimum` | Trino's 7-day floor | Session property namespaced by **catalog** name |
-| `Catalog 'iceberg' not found` | Used the connector name from the error text | Use your catalog's actual name |
+| `Catalog 'iceberg' not found` | Used the hardcoded `iceberg.` prefix from the error text | Use your catalog's actual name |
 | `Iceberg snapshot ID does not exists` | Snapshot already expired | Nothing to do — the window has closed |
 | Storage growing despite `optimize` | Old files still referenced by history | `expire_snapshots`, after compaction |
 
@@ -243,4 +247,4 @@ Three rules came out of this, and only one of them is about performance.
 
 **`optimize` cannot fix a bad partition spec.** It never merges across partitions, so a table partitioned by day when it should be by month has a small-files problem that maintenance cannot reach.
 
-**Retention is a recovery policy, not housekeeping.** The rollback in step 4 took 589 ms and recovered 909,968 rows — but only because the snapshot still existed. Whoever sets `expire_snapshots(retention_threshold => …)` is deciding how long you have to notice a mistake, and that is a decision worth making on purpose rather than inheriting from an example config.
+**Retention is a recovery policy, not housekeeping.** The rollback in step 4 took 589 ms of wall clock and recovered 909,968 rows — but only because the snapshot still existed. Whoever sets `expire_snapshots(retention_threshold => …)` is deciding how long you have to notice a mistake, and that is a decision worth making on purpose rather than inheriting from an example config.
