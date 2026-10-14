@@ -1,6 +1,6 @@
 ---
 title: Writing
-last_modified_at: 2026-10-03
+last_modified_at: 2026-10-14
 seo_title: "Data Platforms, AI Systems & Architecture Writing — Basant Bhattarai"
 eyebrow: Field notes
 headline: "Notes from systems that had to keep working."

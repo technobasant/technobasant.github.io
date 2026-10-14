@@ -4,7 +4,7 @@ seo_title: "Consulting Case Study — Short-Text Classification and Alerting"
 hook: "A comment classifier that failed in production, rebuilt around the unit of work — plus the alerting, agent knowledge and trend measurement around it."
 description: "Consulting case study: multilingual short-text classification, metric alerting and agent knowledge on a lakehouse, designed around distinct strings, not rows."
 date: 2026-08-25
-last_modified_at: 2026-10-03
+last_modified_at: 2026-10-14
 kind: consulting
 pillar: ai-systems
 order: 1

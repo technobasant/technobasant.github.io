@@ -1,6 +1,6 @@
 ---
 title: About
-last_modified_at: 2026-10-03
+last_modified_at: 2026-10-14
 seo_title: "About Basant Bhattarai — Data Platforms, AI Systems & Architecture"
 eyebrow: Profile
 headline: "I design data platforms, the AI systems that write into them, and the architecture that keeps both recoverable."

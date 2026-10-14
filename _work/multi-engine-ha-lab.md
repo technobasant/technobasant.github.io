@@ -3,7 +3,7 @@ title: "Multi-engine HA lab: eight failover scenarios"
 hook: "Six database engines, eight failover scenarios on real multi-node clusters — with the numbers"
 description: "A home lab, not a production system: six database engines, eight failover scenarios I wrote and ran, one container per node, and the numbers each one produced."
 date: 2026-08-04
-last_modified_at: 2026-10-13
+last_modified_at: 2026-10-14
 kind: lab
 pillar: database-lifecycle
 order: 4

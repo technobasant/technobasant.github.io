@@ -4,7 +4,7 @@ seo_title: "spark-sql-kinesis — an Open-Source Kinesis Source for Spark 4"
 hook: "Spark 4 dropped the AWS SDK the streaming connector depended on, and the maintained alternative paid seconds on every idle shard"
 description: "Open-source maintenance case: porting a Kinesis connector to Spark 4.2 and AWS SDK v2, replacing KCL, and upgrading production in place with no drain."
 date: 2026-08-10
-last_modified_at: 2026-10-03
+last_modified_at: 2026-10-14
 kind: open-source
 pillar: data-platforms
 related: [streaming-platform, data-platform-practice, lakehouse-rag-lab]
