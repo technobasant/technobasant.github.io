@@ -6,6 +6,8 @@ description: "Open-source maintenance case: porting a Kinesis connector to Spark
 date: 2026-08-10
 last_modified_at: 2026-10-03
 kind: open-source
+pillar: data-platforms
+related: [streaming-platform, data-platform-practice, lakehouse-rag-lab]
 order: 1
 role: "Maintainer"
 org: "Open source"

@@ -6,6 +6,8 @@ description: "Open-source reference system: a LangGraph and MCP analytics agent 
 date: 2026-10-14
 last_modified_at: 2026-10-14
 kind: open-source
+pillar: ai-systems
+related: [evalproof, platform-deployments, governed-ai-delivery]
 order: 3
 role: "Author"
 org: "Open source"

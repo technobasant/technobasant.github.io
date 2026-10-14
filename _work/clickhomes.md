@@ -5,6 +5,7 @@ description: "An independent real-estate product that shows how I approach data 
 date: 2024-01-01
 last_modified_at: 2026-08-15
 kind: production
+pillar: system-architecture
 order: 3
 featured: true
 role: "Founder and sole engineer — built outside my day job"

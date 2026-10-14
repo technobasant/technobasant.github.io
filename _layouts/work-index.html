@@ -2,25 +2,19 @@
 layout: default
 ---
 {%- comment -%}
-  Work index.
+  Work index, grouped by capability.
 
-  One grid, one heading. This was three sections, each with its own full-width
-  display heading and section label, for four cards in total — one of those
-  sections carried a single card under a heading taller than the card itself.
-  Each card already states its own kind in a badge, so the grouping headings were
-  restating in 60px type what the badge says in 11px, and costing about 600px of
-  vertical space to do it.
+  This was one grid with no headings, which was right at four cards: the badge
+  on each card said what a heading would have said, in a fraction of the space.
+  At seventeen it is not. A reader looking for the AI work, or the database
+  work, had to scan every card to find it. The groups are the four capabilities
+  the hero already names; each hero entry links to its group and says how many
+  cases it holds, and every case declares its `pillar`.
 
-  Order is practice, consulting, open source, independent product, then lab:
-  broadest body of work first, and a reader arriving from the résumé is looking
-  for that one.
+  Inside a group the order is practice, consulting, open source, independent
+  product, then lab: the broadest body of work first.
 {%- endcomment -%}
-{%- assign _practice   = site.work | where: "kind", "practice"    | sort: "order" -%}
-{%- assign _consulting = site.work | where: "kind", "consulting"  | sort: "order" -%}
-{%- assign _oss        = site.work | where: "kind", "open-source" | sort: "order" -%}
-{%- assign _production = site.work | where: "kind", "production"  | sort: "order" -%}
-{%- assign _labs       = site.work | where: "kind", "lab"         | sort: "order" -%}
-{%- assign _all = _practice | concat: _consulting | concat: _oss | concat: _production | concat: _labs -%}
+{%- assign _kinds = "practice,consulting,open-source,production,lab" | split: "," -%}
 
 {% include interior-hero.html variant="index" code="SYSTEM / RECORD" stacked=true %}
 <div class="page page--index">
@@ -31,14 +25,25 @@ layout: default
   </div>
   {%- endif %}
 
-  {%- if _all.size > 0 %}
-  <section class="wrap wrap--shell index-section" aria-labelledby="work-title">
-    <h2 class="sr-only" id="work-title">Case studies</h2>
+  {%- for _group in page.hero_signals %}
+  {%- assign _in_group = site.work | where: "pillar", _group.id -%}
+  {%- if _in_group.size > 0 %}
+  <section class="wrap wrap--shell index-section work-group" id="{{ _group.id }}" aria-labelledby="{{ _group.id }}-title">
+    <div class="writing-index-head">
+      <h2 id="{{ _group.id }}-title">{{ _group.title }}</h2>
+      <p class="writing-index-head__note">{{ _in_group.size }} {% if _in_group.size == 1 %}case{% else %}cases{% endif %} · {{ _group.detail }}</p>
+    </div>
     <div class="portfolio-work__list portfolio-work__list--index">
-      {%- for item in _all %}
-      {% include case-card.html item=item variant="portfolio" index=forloop.index %}
+      {%- assign _i = 0 -%}
+      {%- for _k in _kinds -%}
+      {%- assign _items = _in_group | where: "kind", _k | sort: "order" -%}
+      {%- for item in _items -%}
+      {%- assign _i = _i | plus: 1 %}
+      {% include case-card.html item=item variant="portfolio" index=_i %}
+      {%- endfor -%}
       {%- endfor %}
     </div>
   </section>
   {%- endif %}
+  {%- endfor %}
 </div>

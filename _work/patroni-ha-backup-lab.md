@@ -5,6 +5,7 @@ description: "A Rocky 8 VM cluster running Patroni, etcd and pgBackRest over mut
 date: 2026-08-14
 last_modified_at: 2026-10-13
 kind: lab
+pillar: database-lifecycle
 order: 5
 featured: true
 role: "Personal lab"

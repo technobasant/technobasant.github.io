@@ -6,6 +6,8 @@ description: "Open-source real-time fraud scoring on Kafka, Feast and MLflow, bu
 date: 2026-10-14
 last_modified_at: 2026-10-14
 kind: open-source
+pillar: ai-systems
+related: [evalproof, streaming-platform, dataset-registry]
 order: 4
 role: "Author"
 org: "Open source"

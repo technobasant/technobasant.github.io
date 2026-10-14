@@ -6,6 +6,8 @@ description: "Open-source streaming platform: Kafka, Flink, ClickHouse and Icebe
 date: 2026-10-14
 last_modified_at: 2026-10-14
 kind: open-source
+pillar: data-platforms
+related: [spark-sql-kinesis, dataset-registry, realtime-ml]
 order: 5
 role: "Author"
 org: "Open source"

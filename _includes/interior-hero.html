@@ -25,7 +25,12 @@
       <li>
         <span class="interior-hero__signal-number" aria-hidden="true">0{{ forloop.index }}</span>
         <span>
+          {%- if signal.id %}
+          {%- assign _signal_n = site.work | where: "pillar", signal.id | size %}
+          <strong><a href="#{{ signal.id }}">{{ signal.title }}</a> <span class="interior-hero__signal-count">{{ _signal_n }} {% if _signal_n == 1 %}case{% else %}cases{% endif %}</span></strong>
+          {%- else %}
           <strong>{{ signal.title }}</strong>
+          {%- endif %}
           <small>{{ signal.detail }}</small>
         </span>
       </li>

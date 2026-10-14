@@ -6,6 +6,8 @@ description: "Open-source data-ownership registry in Go and PostgreSQL: owned da
 date: 2026-10-14
 last_modified_at: 2026-10-14
 kind: open-source
+pillar: data-platforms
+related: [streaming-platform, data-platform-practice, governed-agent]
 order: 6
 role: "Author"
 org: "Open source"

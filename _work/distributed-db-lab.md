@@ -6,6 +6,8 @@ description: "A Citus migration that failed six ways before it worked, a rebalan
 date: 2026-10-14
 last_modified_at: 2026-10-14
 kind: lab
+pillar: database-lifecycle
+related: [multi-engine-ha-lab, patroni-ha-backup-lab, clickhomes]
 order: 3
 featured: false
 role: "Author"
