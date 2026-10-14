@@ -1042,6 +1042,10 @@ ol.series-nav__list > li::before {
   text-wrap: pretty;
 }
 
+.system-flow__tech > span {
+  white-space: nowrap;
+}
+
 // The note is what makes this an architecture diagram rather than a technology
 // list: it states the boundary, not the component.
 .system-flow__note {

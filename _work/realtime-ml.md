@@ -15,6 +15,14 @@ scale: "Seeded payments: 874,446 transactions over 90 days, 0.80% fraud; a live 
 problem: "A real-time model can pass every offline check and still fail: the training join reads the future, the backfill computes a feature differently from the stream, labels arrive weeks late, and the drift monitor fires on the calendar instead of the drift."
 decision: "Build each failure on purpose next to the correct version — naive and point-in-time joins, SQL and stream features, mature and immature labels, four drift monitors — on seeded data, and measure the difference instead of asserting it."
 repo: "https://github.com/technobasant/realtime-ml"
+flow: realtime-ml
+cover:
+  base: "/assets/images/editorial-realtime-ml-v1"
+  width: 1600
+  height: 900
+  alt: "Slope chart: a naively joined fraud model falls from 0.746 AUC-PR on validation to 0.363 on the next two weeks, while the point-in-time model rises from 0.681 to 0.941"
+  caption: "Only the training join differs, and the model that won validation scored 0.363 AUC-PR on the next two weeks against 0.941 for the one it beat."
+  link: "/writing/realtime-ml-point-in-time-leakage/"
 metrics: [rtml_leakage, rtml_cost_saved, rtml_parity, rtml_drift_psi]
 stack: [Python, "Apache Kafka", Feast, Redis, DuckDB, LightGBM, MLflow, FastAPI, PostgreSQL, Prometheus, evalproof]
 tags: [applied-ml, data-quality]
@@ -42,6 +50,32 @@ The live stack is Kafka 4.3.1 in KRaft mode, Redis, Postgres, an MLflow server a
 The offline side writes every window feature into Feast from SQL window functions in DuckDB, joins it point-in-time for training, trains LightGBM, and registers champion and challenger in MLflow. The online side recomputes the same features in a per-entity state machine over the Kafka stream and pushes them into Redis, where the API reads them at scoring time. Every prediction, with the features it was served, lands in a Postgres log that feeds the gate and the drift monitor.
 
 Two implementations of each feature is deliberate. A single shared function would hide skew instead of testing for it; two implementations with a parity test make skew a measured quantity.
+
+## In the code
+
+This is the decision behind the leakage result. Both training sets are built from the same rows; the point-in-time join asks Feast for each payment's features one millisecond before that payment, while the naive one hands every row the entity's latest state as of a single pull date, and that one difference is 0.941 against 0.363 AUC-PR on the two weeks that followed.
+
+```python
+# A transaction is scored before its own event reaches the feature pipeline. Offline, the
+# same thing is expressed by asking for features one millisecond before the event.
+SCORE_OFFSET = pd.Timedelta(milliseconds=1)
+# …
+def pit_join(store: FeatureStore, rows: pd.DataFrame) -> pd.DataFrame:
+    """Point-in-time features for ``rows``, through Feast's historical retrieval."""
+    ent = rows[["txn_id", "customer_id", "device_id"]].copy()
+    ent["event_timestamp"] = rows["ts"] - SCORE_OFFSET
+    feats = store.get_historical_features(entity_df=ent, features=FEATURE_REFS).to_df()
+    feats = feats.drop(columns=["customer_id", "device_id", "event_timestamp"])
+    out = rows.merge(feats, on="txn_id", how="left", validate="one_to_one")
+    return out.sort_values("ts").reset_index(drop=True)
+
+
+def naive(rows: pd.DataFrame, tables: dict[str, pd.DataFrame], as_of: pd.Timestamp) -> pd.DataFrame:
+    return naive_join(rows, tables, as_of).sort_values("ts").reset_index(drop=True)
+```
+{: data-file="src/rtml/dataset.py" }
+
+The full file, including the label view a model is allowed to see at training time, is [src/rtml/dataset.py](https://github.com/technobasant/realtime-ml/blob/main/src/rtml/dataset.py).
 
 ## Decisions and trade-offs
 

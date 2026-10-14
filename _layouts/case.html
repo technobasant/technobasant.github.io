@@ -93,6 +93,27 @@ layout: default
       </section>
       {%- endif %}
     </div>
+    {%- if page.cover and page.cover.base -%}
+    <figure class="case-figure is-wide">
+      {%- include picture.html
+          base=page.cover.base
+          widths="840,1600"
+          raster_widths="840,1600"
+          ext="jpg"
+          fallback_width="1600"
+          sizes="(max-width: 64rem) calc(100vw - 32px), 64rem"
+          width=page.cover.width
+          height=page.cover.height
+          alt=page.cover.alt
+          loading="lazy" -%}
+      {%- if page.cover.caption or page.cover.link %}
+      <figcaption>
+        {%- if page.cover.caption %}{{ page.cover.caption }}{% endif -%}
+        {%- if page.cover.link %} <a href="{{ page.cover.link | relative_url }}">Read the analysis {% include icon.html name="arrow-right" size=14 %}</a>{% endif -%}
+      </figcaption>
+      {%- endif %}
+    </figure>
+    {%- endif -%}
     {%- if page.flow -%}
     <div class="case-system is-wide">
       {% include system-flow.html variant=page.flow hide_evidence=true %}

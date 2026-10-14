@@ -16,3 +16,6 @@ vendor/bundle
 # CV sources and application packets never leave this machine: the repo is
 # public and the seeds carry employer detail `rake privacy` rejects.
 /cv/
+
+# Playwright MCP snapshots and screenshots
+.playwright-mcp/

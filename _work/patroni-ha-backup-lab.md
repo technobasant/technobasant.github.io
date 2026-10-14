@@ -16,6 +16,13 @@ problem: "A cluster that has never failed is a cluster whose recovery path is a 
 decision: "Build it on VMs rather than containers so the failure modes are the ones production has, drive the backup path from Ansible and publish the etcd and Patroni bootstrap as exact commands so the lab is rebuildable, and refuse to publish a number that did not come off a run."
 flow: lab
 repo: "https://github.com/technobasant/postgres-ha-lab"
+cover:
+  base: "/assets/images/editorial-patroni-pg18-v1"
+  width: 1600
+  height: 900
+  alt: "Topology diagram: etcd holding the leader key, leasing to two Postgres nodes, with pgn2 promoted and the timeline advancing from 1 to 2"
+  caption: "etcd holds the leader key with a TTL. Patroni does not decide who leads — it asks, and acts on the answer."
+  link: "/writing/patroni-postgresql-18-rocky8-etcd-failover/"
 stack: [PostgreSQL, Patroni, etcd, pgBackRest, Ansible, Rocky Linux, QEMU, Vagrant, TLS]
 metrics: [lab_patroni_promotion, lab_replica_rebuild, lab_pitr_recovery]
 tags: [postgres, distributed-databases, self-hosted]

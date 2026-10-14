@@ -15,6 +15,14 @@ scale: "An 83-question support-assistant suite on local models; a 60-ticket offl
 problem: "LLM features ship on a judge model's pass rate and a 'fail if it dropped by X' gate. The judge has error rates of its own, and a few-point delta on a few dozen cases is mostly noise, so the gate either blocks harmless changes or gets loosened until it catches nothing."
 decision: "Treat the judge as an instrument to calibrate, compare runs on paired cases with exact tests, and fail only when a drop is both beyond tolerance and significant, with latency and cost budgets on their own exit code."
 repo: "https://github.com/technobasant/evalproof"
+flow: evalproof
+cover:
+  base: "/assets/images/editorial-evalproof-v1"
+  width: 1600
+  height: 900
+  alt: "Grid of 83 eval cases: 71 unchanged, 8 worse and 4 better after a prompt change, beside three gates — a delta gate that fails it, a paired gate that warns at p = 0.39, and a latency budget that fails it"
+  caption: "Twelve of 83 cases changed verdict, too few to separate a 4.8-point drop from noise, so the paired gate warned while the latency budget failed the change."
+  link: "/writing/eval-score-drop-twelve-answers/"
 metrics: [evalproof_noise_gate, evalproof_latency_p95, evalproof_gold_errors, evalproof_pairwise_flips]
 stack: [Python, numpy, Pydantic, httpx, Ollama, "Qwen3", "GitHub Actions", uv]
 tags: [applied-ml, ai-agents]
@@ -46,6 +54,40 @@ A suite is one YAML file: a JSONL golden set, the system under test, scorers, an
 - **pairwise** asks the judge to choose between two answers in both orders and reports order-dependent verdicts as ties.
 
 The gate turns a comparison into an exit code: 0 pass (possibly with warnings), 1 quality regression, 3 budget breach, 4 cannot gate, 2 usage error. A composite GitHub Action runs it and writes the report to the job summary.
+
+## In the code
+
+This is the decision behind the headline result. For a pass/fail metric `mc.p_value` is the exact McNemar test on the cases whose verdict changed, so a drop fails only when it is both beyond `max_drop` and significant; the 4.8-point drop on 83 cases took the warning branch, and the latency budget failed the change with its own exit code.
+
+```python
+def decide(cmp: Comparison, gate: GateConfig) -> GateDecision:
+    # …
+    exit_code = EXIT_PASS
+    drop_big = mc.delta <= -gate.max_drop
+    significant = mc.p_value < gate.alpha
+    if drop_big and significant:
+        # …
+        exit_code = EXIT_REGRESSION
+    elif drop_big:
+        warnings.append(
+            f"{gate.metric} dropped {mc.delta:+.3f}, beyond the {gate.max_drop:.3f} threshold, but "
+            f"p={mc.p_value:.3f} ≥ α={gate.alpha}: not distinguishable from noise "
+            f"at n={mc.n_paired}. "
+            "Add cases before trusting either direction."
+        )
+    # …
+    if (
+        gate.max_p95_latency_ms is not None
+        and cmp.candidate.p95_latency_ms > gate.max_p95_latency_ms
+    ):
+        # …
+        exit_code = exit_code or EXIT_BUDGET
+    # …
+    status = "fail" if exit_code else ("warn" if warnings else "pass")
+```
+{: data-file="src/evalproof/gate.py" }
+
+The full function, including the checks that refuse to gate with exit 4, is in [src/evalproof/gate.py](https://github.com/technobasant/evalproof/blob/main/src/evalproof/gate.py).
 
 ## Decisions and trade-offs
 

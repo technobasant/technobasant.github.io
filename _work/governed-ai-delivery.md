@@ -16,6 +16,12 @@ scale: "AI features in a production analytics product"
 problem: "Useful model responses were not enough: downstream workflows needed records that could be validated, traced, reviewed, corrected, and safely withheld."
 decision: "Treat generation as a candidate state, then require schema validation, provenance, evaluation, and a review or fallback decision before publication."
 flow: ai
+cover:
+  base: "/assets/images/editorial-governed-ai-delivery-v1"
+  width: 1600
+  height: 900
+  alt: "Schematic: five stages from retrieve to persist, with model output generated as a candidate, validated against schema and policy, reviewed by a person, and written to PostgreSQL as the only write"
+  caption: "Generation never writes state. A candidate has to survive validation and review before the one step that does."
 metrics: [professional_analytics_delivery, professional_manual_effort]
 stack: [Python, Pydantic, LangGraph, LangChain, CrewAI, "Google-ADK", MCP, Milvus, MLflow, PostgreSQL]
 tags: [ai-agents, data-quality, rag]

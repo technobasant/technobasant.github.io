@@ -15,6 +15,12 @@ scale: "Public details are limited to architecture and operational decisions I c
 problem: "External listing shapes, operational workflows, analytics, and AI-assisted actions had to evolve without corrupting source meaning or making retries unsafe."
 decision: "Keep typed RESO transformation as the only listing path, separate operational and analytical stores, and make every durable workflow replayable and reviewable."
 flow: clickhomes
+cover:
+  base: "/assets/images/editorial-clickhomes-v1"
+  width: 1600
+  height: 900
+  alt: "Schematic: listings flowing from the RESO Web API through normalisation into PostgreSQL as the system of record, with ClickHouse derived from it for speed and FastAPI and Next.js serving reads"
+  caption: "PostgreSQL is the only source of truth; ClickHouse is derived from it and can be rebuilt at any time."
 stack: [Python, FastAPI, PostgreSQL, ClickHouse, RESO, Next.js, Docker]
 metrics: [clickhomes_migrations]
 tags: [postgres, data-quality, ai-agents]

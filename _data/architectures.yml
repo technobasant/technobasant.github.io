@@ -128,3 +128,227 @@ rag:
     - name: "Answer"
       tech: ["llama3.2", "FastAPI"]
       note: "Cites the passages it used, or declines. A refusal costs no tokens."
+
+evalproof:
+  label: "evalproof — the path from a golden set to an exit code"
+  stages:
+    - name: "Suite"
+      tech: ["YAML", "JSONL"]
+      note: "The dataset hash goes into every run; runs on different data refuse to gate (exit 4)."
+    - name: "Run"
+      tech: ["Ollama", "httpx", "SHA-256 cache"]
+      note: "Cached by content: a warm re-run took 0.05 s instead of 363 s, with identical results."
+    - name: "Judge"
+      tech: ["llm_judge", "calibrate"]
+      note: "A classifier with measured error rates: TPR 92.6%, FPR 6.7% against the answer key."
+    - name: "Compare"
+      tech: ["exact McNemar", "paired bootstrap"]
+      note: "Only changed verdicts count: 8 worse against 4 better on 83 cases gave p = 0.39."
+    - name: "Gate"
+      tech: ["exit codes", "GitHub Actions"]
+      note: "Fails only on a drop beyond max_drop at p < alpha; a budget breach has its own exit, 3."
+
+governed-agent:
+  label: "governed-agent — what a model's answer must pass to become state"
+  stages:
+    - name: "Act"
+      tech: ["LangGraph", "Ollama"]
+      note: "Budgets on turns, tool calls and proposals, plus a deadline; the stop reason is recorded."
+    - name: "Query"
+      tech: ["MCP", "sqlglot", "DuckDB"]
+      note: "One parsed query, re-rendered, on a read-only connection. A proposal is only recorded."
+    - name: "Validate"
+      tech: ["Pydantic", "policy rules"]
+      note: "Not a valid Finding after one repair, or holding contact details: rejected outright."
+    - name: "Ground"
+      tech: ["cell match"]
+      note: "An unmatched number holds the finding. A real figure under the wrong label passes."
+    - name: "Review"
+      tech: ["FastAPI", "Next.js", "PostgreSQL"]
+      note: "Every proposal and held finding waits for a named person and a written reason."
+    - name: "Execute"
+      tech: ["outbox", "idempotency key"]
+      note: "An approved action runs at most once: a unique outbox row, then an idempotency key."
+
+retrieval-bench:
+  label: "retrieval-bench — one set of vectors, from corpus to measured recall"
+  stages:
+    - name: "Corpus"
+      tech: ["BEIR", "args.me"]
+      note: "986 near-copies of the queries held out; left in, recall read 0.965 at ef_search 10."
+    - name: "Embed"
+      tech: ["bge-small-en-v1.5", "sentence-transformers"]
+      note: "Embedded once at a pinned revision; every engine loads the same float32 arrays."
+    - name: "Truth"
+      tech: ["numpy"]
+      note: "Exact kNN over only the rows that pass the filter, so lost recall is the index's."
+    - name: "Engines"
+      tech: ["pgvector", "Qdrant", "OpenSearch"]
+      note: "At a 10% filter, post-filtered pgvector HNSW returned 3.9 of 10 rows, and no error."
+    - name: "Measure"
+      tech: ["rbench", "results JSON"]
+      note: "Refuses to time off mains power; five interleaved passes, medians, JSON committed."
+
+realtime-ml:
+  label: "Real-time fraud scoring — where each failure is built and measured"
+  stages:
+    - name: "Backfill"
+      tech: ["DuckDB", "Parquet"]
+      note: "Each row is an entity's state after an event, so training can ask for any instant."
+    - name: "Train"
+      tech: ["Feast", "LightGBM", "MLflow"]
+      note: "Joined 1 ms before each payment; the naive join fell to 0.363 AUC-PR against 0.941."
+    - name: "Stream"
+      tech: ["Kafka", "Feast push", "Redis"]
+      note: "Matched the SQL backfill on 100% of 68,273 rows; a planted defect was caught per feature."
+    - name: "Score"
+      tech: ["FastAPI", "LightGBM"]
+      note: "Served point-in-time features on 99.905% of 9,500 live requests; server p99 under 5 ms."
+    - name: "Gate"
+      tech: ["evalproof", "MLflow"]
+      note: "Promotes only on a significant paired saving within 2 ms p99; refused a reseeded copy."
+    - name: "Monitor"
+      tech: ["Postgres", "Prometheus"]
+      note: "PSI did not see the fraud-tactics drift; the flag rate caught 5 of 5 at 17% false alarms."
+
+streaming-platform:
+  label: "Clickstream platform — the path an event takes, counted at every hop"
+  stages:
+    - name: "Produce"
+      tech: ["Avro", "Schema Registry", "Kafka 4.3"]
+      note: "Idempotent, acks=all: no failed sends through three broker kills; writes paused ~10 s."
+    - name: "Gate"
+      tech: ["gatekeeper", "Kafka transactions"]
+      note: "One transaction per batch; the dead-letter topic held exactly the injected poison."
+    - name: "Dedup"
+      tech: ["Flink 1.20", "Iceberg"]
+      note: "Both sinks commit on checkpoint; exact through nine failures, aborted writes never read."
+    - name: "Window"
+      tech: ["Flink SQL", "events.late"]
+      note: "Exact in steady state; one broker kill sent 40% of on-time events to the late output."
+    - name: "Serve"
+      tech: ["ClickHouse", "ReplacingMergeTree"]
+      note: "At-least-once ingest made harmless by the event key; queryable at p99 6.1–9.1 s."
+    - name: "Alert"
+      tech: ["probe exporter", "Prometheus"]
+      note: "A probe every 5 s through the front door; a frozen pipeline paged in 59–62 s."
+
+dataset-registry:
+  label: "Data ownership registry — the path a dataset takes, from lineage to SLO"
+  stages:
+    - name: "Discover"
+      tech: ["OpenLineage", "Go"]
+      note: "Validated against OpenLineage 2-0-2; a dataset seen only in lineage is recorded unowned."
+    - name: "Own"
+      tech: ["HS256 role tokens", "PostgreSQL 18"]
+      note: "Nobody can register as a consumer, or propose a contract, until a team claims it."
+    - name: "Check"
+      tech: ["Go", "JSON Schema"]
+      note: "May over-report, never under-report: 0 of 51 breaking changes passed as safe."
+    - name: "Review"
+      tech: ["state machine", "partial unique index"]
+      note: "Publishes only once every registered consumer acknowledges; one rejection closes it."
+    - name: "Watch"
+      tech: ["freshness evaluator", "Prometheus"]
+      note: "A breach is noticed half an interval late at p50: 7.5 s at the 15 s default."
+
+platform-deployments:
+  label: "GitOps canary platform — the path a release takes to every pod"
+  stages:
+    - name: "Commit"
+      tech: ["in-cluster Git", "Helm values"]
+      note: "A release is a commit to one values file; that file can also switch fault injection on."
+    - name: "Sync"
+      tech: ["Argo CD", "sync waves"]
+      note: "About 15 s from commit to new ReplicaSet; one host stall delayed a sync by 226 s."
+    - name: "Admit"
+      tech: ["Kyverno", "Pod Security Admission"]
+      note: "6 of 6 violating manifests rejected; a Kyverno outage blocks only the app namespace."
+    - name: "Canary"
+      tech: ["Argo Rollouts", "Envoy sidecar"]
+      note: "20% is one pod in five; keep-alive clients sent it only 1.7–10.9% of their requests."
+    - name: "Analyse"
+      tech: ["Prometheus", "AnalysisRun"]
+      note: "p95 judged against stable's; 6 of 6 bad releases aborted, median 30–31 s after Ready."
+    - name: "Promote"
+      tech: ["AnalysisTemplate"]
+      note: "No promotion below 30 canary requests in 3 min; a bad release once shipped on none."
+
+distributed-db-lab:
+  label: "Distributed DB lab — Citus, TimescaleDB and ClickHouse, run one at a time"
+  stages:
+    - name: "Plan"
+      tech: ["plan_distribution.py", "pg_catalog"]
+      note: "Reads the live catalog and lists all 15 blocking issues before a single table moves."
+    - name: "Distribute"
+      tech: ["Citus 14.2", "PostgreSQL 17.11"]
+      note: "One co-location group by tenant, so a one-tenant query and its joins hit 1 of 32 shards."
+    - name: "Rebalance"
+      tech: ["citus_rebalance_start", "tenant isolation"]
+      note: "0 errors as shards moved under load; the whale's shard, 7.4× the median, needed a split."
+    - name: "Time-series"
+      tech: ["TimescaleDB 2.30", "continuous aggregates"]
+      note: "Raw chunks age out; daily candles, checked against raw, survive the retention drop."
+    - name: "Replicate"
+      tech: ["ClickHouse 25.8", "ReplicatedMergeTree", "Keeper"]
+      note: "2 shards × 2 replicas: with one replica down 60 s, all 40 inserts and 30 reads succeeded."
+    - name: "Compare"
+      tech: ["one 10M-row dataset", "warm and VM-cold"]
+      note: "Same rows in four engines, counts verified equal; each fits a workload, none is crowned."
+
+spark-sql-kinesis:
+  label: "spark-sql-kinesis — one micro-batch, from checkpoint to checkpoint"
+  stages:
+    - name: "Resume"
+      tech: ["Spark checkpoint", "offset JSON"]
+      note: "Layout unchanged across versions, so a new build resumes the query's own checkpoint."
+    - name: "Plan"
+      tech: ["ListShards", "avoidEmptyBatches"]
+      note: "No unread data on any shard means unchanged offsets and no empty micro-batch."
+    - name: "Fetch"
+      tech: ["GetRecords", "AWS SDK v2"]
+      note: "Stops when millisBehindLatest is 0, so an idle shard costs about one round trip."
+    - name: "Decode"
+      tech: ["AggregatorUtil", "KPL protobuf"]
+      note: "Sub-records keep the parent's sequence number, which is what the checkpoint stores."
+    - name: "Commit"
+      tech: ["shard-commit", "Hadoop FileContext"]
+      note: "Advances only to records emitted downstream: a replay can duplicate, never skip."
+
+clinic-records-ocr:
+  label: "Clinic records — from a phone photo to a reviewed timeline entry"
+  stages:
+    - name: "Capture"
+      tech: ["phone camera", "SHA-256"]
+      note: "Each page stored once, immutable and checksummed; OCR reads a stripped copy."
+    - name: "Queue"
+      tech: ["PostgreSQL", "leases"]
+      note: "Compare-and-set claims: no page is read twice, and a dead worker's lease expires."
+    - name: "Read"
+      tech: ["RapidOCR", "ONNX Runtime"]
+      note: "Runs in a child process, so a malformed page cannot take the worker down."
+    - name: "Extract"
+      tech: ["page geometry", "closed vocabularies"]
+      note: "A name needs a margin over the runner-up; unreadable rows are refused, not guessed."
+    - name: "Review"
+      tech: ["clinician", "FHIR R4"]
+      note: "Nothing reaches the timeline until a clinician confirms it, in one atomic commit."
+
+consulting-short-text-and-alerting:
+  label: "Short-text triage — each distinct meaning classified once"
+  stages:
+    - name: "Normalise"
+      tech: ["Python", "Unicode NFKC"]
+      note: "Every comment becomes a key; a small head of distinct strings carries most volume."
+    - name: "Cache"
+      tech: ["Databricks", "taxonomy version"]
+      note: "One label per key and taxonomy version; only cache misses reach a labeller."
+    - name: "Discover"
+      tech: ["multilingual-e5", "UMAP", "HDBSCAN"]
+      note: "New categories come from clusters of distinct strings; one call names a cluster."
+    - name: "Approve"
+      tech: ["human review"]
+      note: "A person approves a category before it labels anything."
+    - name: "Assign"
+      tech: ["similarity floor", "margin"]
+      note: "Past a floor and a margin, or it goes to review or a re-clustered outlier pool."

@@ -442,6 +442,17 @@
   color: var(--ink-1);
 }
 
+// Headers stay on one line where the table scrolls (below 68.75rem). Above it
+// the table is laid out in the wide column, and an unbreakable header such as
+// "Validation AUC-PR (labels known on the training day)" pushed a six-column
+// table past the viewport, so there they wrap, balanced.
+@media (min-width: 68.8rem) {
+  .prose th {
+    white-space: normal;
+    text-wrap: balance;
+  }
+}
+
 @media (max-width: 68.75rem) {
   // Wide table internals can contribute their intrinsic width to the page even
   // when the table itself scrolls. Contain that overflow at the prose shell so

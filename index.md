@@ -98,11 +98,12 @@ writing:
   # An explicit list fixes the shop window without touching a single date. Slugs,
   # so a rename fails loudly at build rather than silently dropping a row.
   #
-  # One slot per register the site is hired for: applied-ML evaluation (a
-  # measurement that withdrew its own plan), agent governance, and the
+  # One slot per register the site is hired for: applied-ML evaluation (the
+  # paired-gate LLM evaluation piece; the OCR measurement that withdrew its own
+  # plan is one click away), agent governance, and the
   # lakehouse. "Ten CI gates" stays one click away as part two of the series.
   spotlight:
-    - ocr-measurement-withdrew-the-plan
+    - eval-score-drop-twelve-answers
     - coding-agents-repo-governance
     - trino-iceberg-polaris-lakehouse-spine
 

@@ -15,6 +15,14 @@ scale: "Streaming jobs that read Kinesis on Spark 4"
 problem: "Spark 4 removed AWS SDK v1, the connector was pinned to SDK v1 and KCL 1.x past end of life, and the awslabs replacement waited out an idle floor on every shard in every micro-batch."
 decision: "Keep the synchronous read model, port it to Spark 4.2 and AWS SDK v2, replace KCL with a small KPL decoder, and keep the checkpoint format byte-identical so production upgrades in place."
 repo: "https://github.com/technobasant/spark-sql-kinesis"
+flow: spark-sql-kinesis
+cover:
+  base: "/assets/images/editorial-spark-kinesis-connector-v1"
+  width: 1600
+  height: 900
+  alt: "Schematic comparing two Kinesis read models: a background queue that waits through empty polls on every idle shard, and an in-task fetch that stops when the shard is caught up and resumes an unchanged checkpoint"
+  caption: "The queue-based reader waits at least six seconds per batch to infer that a shard is idle, while the in-task fetch learns it from a single getRecords response."
+  link: "/writing/spark-4-kinesis-connector-idle-floor/"
 metrics: [kinesis_idle_floor]
 stack: [Scala, "Apache Spark 4.2", "AWS SDK v2", "Amazon Kinesis", "Kinesis Producer Library", Protobuf, Maven, "Maven Central"]
 tags: [kafka-streaming, spark]
@@ -34,6 +42,41 @@ Spark 4 turned maintenance into a decision. The connector was pinned to AWS SDK 
 ## My role
 
 I own the connector end to end: the Spark 4.2 and AWS SDK v2 port, the KCL removal, the test suites, the release pipeline to Maven Central under `io.github.technobasant`, and the in-place production upgrade. Before porting, I measured the awslabs connector on staging and ran a production comparison — which taught me as much about benchmark contamination as about connectors. That story is written up in [Ten seconds per idle shard](/writing/spark-4-kinesis-connector-idle-floor/).
+
+## In the code
+
+This loop is why an idle shard costs about one API round trip instead of a floor. Each Spark task calls `getRecords` inline and stops on something it can observe directly — `millisBehindLatest` of 0, a closed shard, or the one-second fetch budget — rather than inferring the end of data from empty polls.
+
+```scala
+while (fetchedRecords.length == 0 && fetchNext == true)  {
+  val currentTimestamp: Long = System.currentTimeMillis
+  if (canFetchMoreRecords(currentTimestamp) && getShardIterator() != null) {
+    // …
+    addDelayInFetchingRecords(currentTimestamp)
+    val records: GetRecordsResponse = kinesisReader.getKinesisRecords(
+      _shardIterator, recordPerRequest)
+    // de-aggregate records
+    val deaggregateRecords = kinesisReader.deaggregateRecords(records.records, null)
+    fetchedRecords = deaggregateRecords.asScala.toArray
+    _shardIterator = records.nextShardIterator
+    // …
+    if ( _shardIterator == null ) {
+      hasShardClosed = true
+      fetchNext = false
+    }
+    if ( records.millisBehindLatest.longValue() == 0 ) {
+      fetchNext = false
+    }
+  }
+  else {
+    // either we cannot fetch more records or ShardIterator was null
+    fetchNext = false
+  }
+}
+```
+{: data-file="src/main/scala/org/apache/spark/sql/kinesis/KinesisSourceRDD.scala" }
+
+The rest of the per-shard read, including the shard commit on task completion, is in [src/main/scala/org/apache/spark/sql/kinesis/KinesisSourceRDD.scala](https://github.com/technobasant/spark-sql-kinesis/blob/main/src/main/scala/org/apache/spark/sql/kinesis/KinesisSourceRDD.scala).
 
 ## Decisions
 

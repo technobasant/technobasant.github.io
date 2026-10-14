@@ -15,6 +15,14 @@ scale: "kind cluster, one control plane and two workers; 38 pods across eleven A
 problem: "A rolling update checks readiness, and readiness cannot see a release that starts fine and then fails a share of real requests. I wanted releases that stop themselves on evidence, and numbers for what that costs."
 decision: "Make a release a Git commit that Argo CD syncs, ship the api as an Argo Rollouts canary judged on Envoy's per-pod metrics against the stable pods, and refuse promotion without enough canary traffic to judge."
 repo: "https://github.com/technobasant/platform-deployments"
+flow: platform-deployments
+cover:
+  base: "/assets/images/editorial-platform-deployments-v1"
+  width: 1600
+  height: 900
+  alt: "Two rows of results: the first canary analysis aborted a good release whose p95 was below stable's and promoted a bad release that saw no traffic; the final version promoted 3 of 3 good releases with 0 of 18,003 requests failed and aborted 6 of 6 bad ones"
+  caption: "Comparing the canary with stable and refusing to promote it on no traffic turned an analysis that was wrong both ways into 3 of 3 good releases promoted and 6 of 6 bad ones aborted."
+  link: "/writing/canary-analysis-aborted-good-promoted-bad/"
 metrics: [deploy_bad_release_aborted, deploy_good_release_failures, deploy_keepalive_canary_share, deploy_bootstrap]
 stack: [Kubernetes, kind, "Argo CD", "Argo Rollouts", Envoy, Prometheus, "OpenTelemetry Collector", Jaeger, CloudNativePG, PostgreSQL, Kyverno, Helm, k6, Terraform]
 tags: [kubernetes, observability-slo]
@@ -42,6 +50,38 @@ No cloud account was used. The AWS version of the platform is Terraform for a VP
 Argo CD installs the platform from one root Application in sync waves: the operators first (CloudNativePG, Argo Rollouts, Kyverno, a trimmed kube-prometheus-stack, metrics-server), then policies and tracing (Kyverno policies, the OpenTelemetry Collector, Jaeger), then a two-instance PostgreSQL cluster, then the application. A release is a commit to one file on a Git server inside the cluster, so measurement releases never reach the published history.
 
 The api runs as five replicas of a Rollout with an Envoy sidecar in each pod. Envoy provides what the application does not: per-pod request counts and latency histograms for the analysis to query, a fault filter a release can switch on for its own pods, and an `x-release` header on every reply so the load generator can attribute each request to a release. The namespace is held to Pod Security Admission `restricted` plus four Kyverno policies in Enforce mode, with default-deny ingress.
+
+## In the code
+
+The queries decide pass or fail; this wiring decides which pods they judge and when promotion is allowed. Background analysis starts at the first pause with the canary's pod-template hash, which is how every query tells canary pods from stable ones, and the evidence check is appended in the template after the configurable steps, so a release commit can change the weights and pauses but cannot drop the step that refuses to promote on no traffic.
+
+{% raw %}
+```yaml
+  strategy:
+    canary:
+      # No traffic router: the split is by replica count through one Service, so with
+      # five replicas 20% is exactly one canary pod.
+      canaryMetadata: {labels: {role: canary}}
+      stableMetadata: {labels: {role: stable}}
+      analysis:
+        templates:
+          - templateName: {{ include "ga.fullname" . }}-api-health
+        startingStep: 1
+        args:
+          - name: canary-hash
+            valueFrom: {podTemplateHashValue: Latest}
+      steps: {{- toYaml .Values.api.canary.steps | nindent 8 }}
+        - analysis:
+            templates:
+              - templateName: {{ include "ga.fullname" . }}-api-evidence
+            args:
+              - name: canary-hash
+                valueFrom: {podTemplateHashValue: Latest}
+```
+{: data-file="charts/governed-agent/templates/rollout-api.yaml" }
+{% endraw %}
+
+The full Rollout, with the probes and the Envoy sidecar, is in [charts/governed-agent/templates/rollout-api.yaml](https://github.com/technobasant/platform-deployments/blob/main/charts/governed-agent/templates/rollout-api.yaml).
 
 ## Decisions and trade-offs
 

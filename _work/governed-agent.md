@@ -15,6 +15,14 @@ scale: "A 54-question golden set over a seeded warehouse of 9,000 orders; one lo
 problem: "An analytics agent that can query data and propose refunds will be fluently wrong some of the time, and telling the model to behave does not stop a wrong answer or an injected instruction from becoming state."
 decision: "Treat every model output as a candidate. It becomes state only after a typed schema, a policy, a deterministic grounding check and, for anything that would change something, a named reviewer; approved actions run once through an outbox."
 repo: "https://github.com/technobasant/governed-agent"
+flow: governed-agent
+cover:
+  base: "/assets/images/editorial-governed-agent-v1"
+  width: 1600
+  height: 900
+  alt: "Schematic: 54 questions pass through schema, policy and grounding gates into three routes — 37 published with 3 wrong, 8 held for review with 3 wrong, 9 honest fallbacks with none wrong"
+  caption: "The model got 48 of 54 right, but the figure a deployment answers for is the 3 wrong answers among the 37 that published without a person."
+  link: "/writing/agent-measured-by-what-it-publishes/"
 metrics: [agent_answer_match, agent_published_wrong, agent_unanswerable_admitted, agent_injection_actions]
 stack: [Python, LangGraph, MCP, sqlglot, DuckDB, FastAPI, PostgreSQL, "Next.js", Ollama, OpenTelemetry, evalproof]
 tags: [ai-agents, data-quality]
@@ -43,6 +51,35 @@ The agent answers questions about the warehouse of a fictional homewares retaile
 A LangGraph graph with code-owned edges: plan, act and tools in a loop, then draft, validate, policy, ground and route. The only way to the data is an MCP server with four tools. `query_warehouse` sits behind a parser-based SQL guard and a read-only DuckDB connection. `propose_action` checks a proposal against the data and records it, and nothing more.
 
 Findings, proposals, reviews and an append-only audit log live in PostgreSQL behind a FastAPI service. A Next.js review UI shows each run's timeline, every SQL statement, and each number linked to the cell it came from. An approved action executes at most once, through a transactional outbox with an idempotency key. OpenTelemetry traces span the API, the agent and the MCP server.
+
+## In the code
+
+Every gate in the graph feeds this one function, and it is the only code that lets a finding publish without a person. Publication is the fall-through case, reached only when nothing blocked, every number was grounded and no rule asked for review, which is exactly how the three wrong answers that passed every check published themselves.
+
+```python
+# Even a "can't answer" goes to a person if it claims something was done or comes with a
+# proposal: the text would be false, or the proposal needs a decision either way.
+_SEEN_BY_A_PERSON = frozenset({"claims_side_effect", "proposes_action"})
+# …
+def route(finding: Finding | None, checks: Checks, violations: list[Violation]) -> Disposition:
+    """Publish only what passed everything; hold what a person can still rescue."""
+    if finding is None:
+        # No finding at all: the model wrote something unparseable (rejected), or the run
+        # ran out of time before it wrote anything (an honest "can't answer").
+        return Disposition.REJECTED if checks.schema_errors else Disposition.UNANSWERABLE
+    if any(v.severity == "block" for v in violations):
+        return Disposition.REJECTED
+    if finding.status == "unanswerable" and not any(
+        v.code in _SEEN_BY_A_PERSON for v in violations
+    ):
+        return Disposition.UNANSWERABLE
+    if checks.ungrounded or violations:
+        return Disposition.HELD_FOR_REVIEW
+    return Disposition.PUBLISHED
+```
+{: data-file="agent/ga_agent/policy.py" }
+
+The policy rules that produce those violations sit above it in [agent/ga_agent/policy.py](https://github.com/technobasant/governed-agent/blob/main/agent/ga_agent/policy.py).
 
 ## Decisions and trade-offs
 

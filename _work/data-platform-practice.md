@@ -15,6 +15,13 @@ scale: "Production mobile-analytics workloads across ingestion, processing, stor
 problem: "Processing and serving had to scale without making schema change, replay, cost, or on-call work progressively less safe."
 decision: "Rebuild the core processing path, move orchestration onto Kubernetes, and make contracts, ownership, and replay part of the platform interface."
 flow: platform
+cover:
+  base: "/assets/images/editorial-data-platform-ai-v1"
+  width: 1600
+  height: 900
+  alt: "Abstract event streams passing through governed data layers into a product decision surface"
+  caption: "A reliable product boundary carries contracts, provenance, and recovery paths across every layer."
+  link: "/writing/building-data-platforms-and-ai-products/"
 metrics: [professional_processing_improvement, professional_cost_reduction, professional_uptime, professional_query_latency]
 stack: [Python, SQL, "Apache Spark", "Apache Kafka", "Apache Airflow", dbt, "Apache Iceberg", PostgreSQL, ClickHouse, Trino, Kubernetes, Prometheus, Grafana]
 tags: [data-quality, observability-slo, iceberg-lakehouse]
