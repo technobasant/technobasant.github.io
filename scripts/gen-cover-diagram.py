@@ -1166,6 +1166,40 @@ def dataset_registry() -> str:
     return "".join(body)
 
 
+def platform_deployments() -> str:
+    """The first canary analysis failed both ways; a baseline and an evidence floor fixed it."""
+    body = [
+        f'<rect width="{W}" height="{H}" fill="{PAPER}"/>',
+        f'<text x="150" y="190" font-family="{MONO}" font-size="30" letter-spacing="6" '
+        f'fill="{ACCENT}">PLATFORM-DEPLOYMENTS · CANARY ANALYSIS</text>',
+        f'<text x="150" y="300" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">The first analysis was wrong both ways.</text>',
+        f'<text x="150" y="382" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">Judge the canary against stable.</text>',
+        # row 1: absolute thresholds, empty windows pass
+        f'<text x="150" y="478" font-family="{MONO}" font-size="26" letter-spacing="3" '
+        f'fill="{MUTED}">FIRST VERSION · ABSOLUTE THRESHOLDS</text>',
+        node_box(150, 500, 600, 190, "good release", "p95 2.26 s · stable 2.52 s", "aborted"),
+        node_box(900, 500, 600, 190, "bad release", "sync late · no traffic seen", "promoted"),
+        node_box(1650, 500, 600, 190, "cause", "absolute p95 · empty = pass", "no baseline, no floor"),
+        # row 2: p95 relative to stable, and no promotion without evidence
+        f'<text x="150" y="788" font-family="{MONO}" font-size="26" letter-spacing="3" '
+        f'fill="{MUTED}">FINAL VERSION · BASELINE + EVIDENCE</text>',
+        node_box(150, 810, 600, 190, "good releases", "0 of 18,003 requests failed", "3 of 3 promoted",
+                 accent=True),
+        node_box(900, 810, 600, 190, "bad releases", "30% 5xx in the canary pod", "6 of 6 aborted",
+                 accent=True),
+        node_box(1650, 810, 600, 190, "fix", "p95 > 2 × stable · ≥ 30 req", "judged on real traffic",
+                 accent=True),
+        f'<line x1="150" y1="1120" x2="{W - 150}" y2="1120" stroke="{LINE}" stroke-width="2"/>',
+        f'<text x="150" y="1195" font-family="{MONO}" font-size="30" fill="{MUTED}">'
+        f'kind · 3 nodes · Argo Rollouts · Envoy metrics · 20 req/s</text>',
+        f'<text x="{W - 150}" y="1195" font-family="{MONO}" font-size="30" fill="{ACCENT}" '
+        f'text-anchor="end">abort ≈ 30 s after Ready</text>',
+    ]
+    return "".join(body)
+
+
 DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patroni,
             "lakehouse-spine": lakehouse_spine,
             "lakehouse-medallion": lakehouse_medallion,
@@ -1189,6 +1223,7 @@ DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patro
             "realtime-ml": realtime_ml,
             "streaming-platform": streaming_platform,
             "dataset-registry": dataset_registry,
+            "platform-deployments": platform_deployments,
             "prevalence-shift": prevalence_shift}
 
 def svg_for(name: str) -> str:

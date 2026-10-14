@@ -543,3 +543,40 @@ registry_breach_delay:
   source: "dataset-registry (2026)"
   window: "measured Oct 2026"
   context: "Half an interval at the median and about one interval at worst (14.93 s; one of three runs reached 15.30 s on a busy host), which is what an interval scheduler predicts."
+
+# ── platform-deployments (open source, 2026) ────────────────────────────────
+deploy_bad_release_aborted:
+  value: "6 of 6"
+  label: "bad releases aborted by canary analysis"
+  method: "a release whose Envoy sidecar returns 500 on 30% of requests, under 20 req/s from k6; three runs with keep-alive clients, three with a new connection per request; Prometheus analysis every 15 s after a 30 s initial delay"
+  scope: "independent"
+  source: "platform-deployments (2026)"
+  window: "measured Oct 2026 · kind, three nodes"
+  context: "Median 30–31 s from the bad pod becoming Ready to the abort. 11–39 of about 4,800 requests per run failed because of the bad release."
+
+deploy_good_release_failures:
+  value: "0 of 18,003"
+  label: "requests failed across three good canary releases"
+  method: "k6 at 20 req/s for five minutes per run, GET /healthz and GET /review-queue with a 10 s timeout; canary 20% → 50% with 60 s pauses, background analysis and an evidence step before 100%"
+  scope: "independent"
+  source: "platform-deployments (2026)"
+  window: "measured Oct 2026 · kind, three nodes"
+  context: "p95 21–24 ms. About 135 s from new ReplicaSet to promotion, 120 s of it the two pauses. It took four rounds of fixes; before the last one, runs failed up to 8 requests in about 6,000."
+
+deploy_keepalive_canary_share:
+  value: "1.7–10.9%"
+  label: "of keep-alive requests reached a 20%-weight canary"
+  method: "requests counted by the x-release response header while the canary pod was Ready; five api replicas and no traffic router, so a 20% weight is one pod in five"
+  scope: "independent"
+  source: "platform-deployments (2026)"
+  window: "measured Oct 2026 · kind, three nodes"
+  context: "Clients that opened a new connection per request sent the same pod 12.0–13.4%. A kept-alive connection stays on the pod it first reached."
+
+deploy_bootstrap:
+  value: "12 min 24 s"
+  label: "from no cluster to eleven healthy Argo CD Applications"
+  method: "median of three runs: kind create, image load, Argo CD by Helm, then the root Application until every Application is Synced and Healthy; every upstream image pulled again onto new nodes"
+  scope: "independent"
+  source: "platform-deployments (2026)"
+  window: "measured Oct 2026 · kind, three nodes"
+  context: "Range 10 min 46 s to 27 min 37 s. Most of it is image pulls; the PostgreSQL image alone took 6 min 20 s in the slowest run."
