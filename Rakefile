@@ -246,6 +246,11 @@ task :content do
       fallback = cover["fallback_width"] || "1600"
       raster = "#{cover['base'].delete_prefix('/')}-#{fallback}.jpg"
       failures << "#{path}: cover raster missing (#{raster})" unless File.exist?(raster)
+      # The dark theme (the default) shows the dark-palette copy; picture.html
+      # is handed `<base>-dark` unconditionally, so a missing one is a broken
+      # image on every page that shows this cover.
+      dark = "#{cover['base'].delete_prefix('/')}-dark-#{fallback}.jpg"
+      failures << "#{path}: dark cover raster missing (#{dark}) — python3 scripts/gen-cover-diagram.py <name> --dark" unless File.exist?(dark)
     end
 
     verify_count = body.scan(/^\*\*Verify\.\*\*/).size
@@ -271,12 +276,40 @@ task :content do
     puts "  ok    #{File.basename(path)} — #{type}, #{prose_words} prose words, #{h2_count} sections"
   end
 
+  # Case-study covers are optional, but one that is declared is shown in both
+  # palettes: as the case figure (1600 fallback, _layouts/case.html) and as the
+  # work-index thumbnail (840, _includes/case-card.html). Both widths, both
+  # palettes, because both are an <img src>.
+  case_covers = 0
+  Dir.glob("_work/*.{md,markdown}").sort.each do |path|
+    match = File.read(path).match(/\A---\s*\n(.*?)\n---\s*\n/m)
+    next unless match
+
+    begin
+      data = YAML.safe_load(match[1], permitted_classes: [Date, Time], aliases: true) || {}
+    rescue Psych::SyntaxError => e
+      failures << "#{path}: invalid YAML — #{e.message.lines.first.to_s.strip}"
+      next
+    end
+    cover = data["cover"]
+    next unless cover.is_a?(Hash) && cover["base"].to_s != ""
+
+    case_covers += 1
+    base = cover["base"].delete_prefix("/")
+    %w[1600 840].each do |width|
+      raster = "#{base}-#{width}.jpg"
+      dark = "#{base}-dark-#{width}.jpg"
+      failures << "#{path}: cover raster missing (#{raster})" unless File.exist?(raster)
+      failures << "#{path}: dark cover raster missing (#{dark}) — python3 scripts/gen-cover-diagram.py <name> --dark" unless File.exist?(dark)
+    end
+  end
+
   if failures.any?
     failures.each { |failure| warn "  FAIL  #{failure}" }
     abort "content: #{failures.size} editorial contract failure(s)"
   end
 
-  puts "content: ok — #{posts.size} published post(s)"
+  puts "content: ok — #{posts.size} published post(s), #{case_covers} case-study cover(s), every cover in both palettes"
 end
 
 # ── rake privacy ────────────────────────────────────────────────────────────

@@ -17,7 +17,7 @@ cover:
   fallback_width: "1600"
   width: 1600
   height: 900
-  alt: "Abstract event streams passing through governed data layers into a product decision surface"
+  alt: "Schematic: source records, decision records and rebuildable projections as three layers, the proposed, validated, applied, needs_review and rejected states of a model's output, and five fitness signals from freshness to repair time"
   caption: "A reliable product boundary carries contracts, provenance, and recovery paths across every layer."
 key_takeaways:
   - "Define reliability from the consumer's decision window: what must be queryable, how fresh it must be, and who can repair it."

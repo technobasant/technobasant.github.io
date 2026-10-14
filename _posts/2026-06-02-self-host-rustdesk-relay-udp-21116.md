@@ -18,7 +18,7 @@ cover:
   fallback_width: "1600"
   width: 1600
   height: 900
-  alt: "Two desktops mirrored through a self-hosted RustDesk relay while a public session line fades"
+  alt: "Schematic: a controller and a remote machine reach hbbs over UDP 21116 and carry the session through the hbbr relay on TCP 21117, with the private key as the only durable secret and a session past 60 seconds as the proof"
   caption: "Public RustDesk sessions have been dropping around 30 seconds. Your own hbbs/hbbr does not, if UDP 21116 actually reaches the host."
 level: intermediate
 time_estimate: "~30 min hands-on"

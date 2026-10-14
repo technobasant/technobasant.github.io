@@ -14,7 +14,7 @@ cover:
   fallback_width: "1600"
   width: 1600
   height: 900
-  alt: "Apple Silicon host with two labelled amd64 QEMU boxes on a lab fabric above a colliding Wi-Fi subnet"
+  alt: "Topology diagram: the Wi-Fi LAN at 192.168.1.68/24 marked as the old collision, and a host bridge at 192.168.105.1 wiring two amd64 QEMU guests, ubuntu1 and rocky1, onto their own /24, with host and mesh pings of 1 to 4 ms as the pass criteria"
   caption: "The lab subnet has to be unused. Sharing 192.168.1.0/24 with Wi-Fi makes host and mesh ping look randomly broken."
 featured: false
 level: intermediate

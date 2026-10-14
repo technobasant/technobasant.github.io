@@ -18,7 +18,7 @@ cover:
   fallback_width: "1600"
   width: 1600
   height: 900
-  alt: "Brass envelopes entering a self-hosted Stalwart MX vault while a public cloud silhouette fades"
+  alt: "Schematic: Gmail delivers to Stalwart on port 25, mail clients connect to it directly on IMAP 993 and SMTP 465, nginx keeps 443 and proxies the admin UI on 127.0.0.1:8088, with the DNS records to publish and SPF, DKIM and DMARC passing"
   caption: "Mail is not up when the container starts. It is up when Gmail reports SPF, DKIM, and DMARC pass."
 level: intermediate
 time_estimate: "~60 min hands-on"

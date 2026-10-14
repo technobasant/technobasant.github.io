@@ -1,0 +1,30 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// Figures in two palettes
+//
+// An editorial cover is a raster, so it cannot follow the theme the way the
+// HTML/CSS architecture diagrams do. _includes/picture.html (with `dark=`)
+// renders the same figure twice: .pic-dark in the dark palette, .pic-light in
+// the light one. Exactly one is displayed.
+//
+// Dark is the site default and is attached to bare `:root` in _tokens.scss, so
+// the light copy hides whenever the theme is not explicitly light — which also
+// covers the no-JS case where `data-theme` is never set.
+//
+// display:none is load-bearing for bytes, not just looks: a `loading="lazy"`
+// image that is not rendered is never fetched, so the hidden copy of a lazy
+// figure costs nothing. Only an eager image (the post hero's dark copy) is
+// fetched regardless.
+//
+// (0,3,0) beats every container rule that sets a cover's picture to block —
+// `.template-post .article-hero__media picture` is (0,2,1). The one exception
+// is `.card-grid > .post-card > .post-card__cover picture` at (0,3,1), which
+// holds no cover today: post cards show one only on /writing/, a .writing-feed.
+// ─────────────────────────────────────────────────────────────────────────────
+
+:root:not([data-theme="light"]) .pic-light {
+  display: none;
+}
+
+:root[data-theme="light"] .pic-dark {
+  display: none;
+}

@@ -9,16 +9,47 @@
     ext             fallback extension (default "jpg")
     fallback_width  which raster width the <img> src points at (default "800")
     alt width height sizes class loading decoding fetchpriority
+
+  Two palettes (optional)
+    dark            base path of the same figure in the dark palette, e.g.
+                    /assets/images/editorial-x-v1-dark. Renders two <picture>s,
+                    .pic-dark then .pic-light, same widths and attributes; CSS
+                    (_sass/components/_figures.scss) shows the one matching the
+                    theme. A raster cannot follow the theme, so the site ships both.
+    light_loading   `loading` for the light copy only (default: `loading`). Dark
+                    is the default theme, so a hero passes loading="eager" for
+                    the dark copy and light_loading="lazy": a lazy image that is
+                    display:none is never fetched.
+    light_fetchpriority  for the light copy only. Not inherited: only the copy
+                    the default theme shows should compete for LCP priority.
+  Without `dark` the output is exactly the single <picture> it always was.
 {%- endcomment -%}
 {%- assign _base = include.base | relative_url -%}
 {%- assign _widths = include.widths | default: "400,800,1200" | split: "," -%}
 {%- assign _ext = include.ext | default: "jpg" -%}
 {%- assign _fw = include.fallback_width | default: "800" -%}
+{%- assign _loading = include.loading -%}
+{%- assign _fetch = include.fetchpriority -%}
+{%- if include.dark -%}
+{%- assign _loading = include.light_loading | default: include.loading -%}
+{%- assign _fetch = include.light_fetchpriority -%}
+{%- endif -%}
 {%- capture _avif -%}{%- for w in _widths -%}{{ _base }}-{{ w }}.avif {{ w }}w{%- unless forloop.last -%}, {% endunless -%}{%- endfor -%}{%- endcapture -%}
 {%- capture _webp -%}{%- for w in _widths -%}{{ _base }}-{{ w }}.webp {{ w }}w{%- unless forloop.last -%}, {% endunless -%}{%- endfor -%}{%- endcapture -%}
 {%- capture _raster -%}{%- if include.raster_widths -%}{%- assign _rw = include.raster_widths | split: "," -%}{%- for w in _rw -%}{{ _base }}-{{ w }}.{{ _ext }} {{ w }}w{%- unless forloop.last -%}, {% endunless -%}{%- endfor -%}{%- endif -%}{%- endcapture -%}
-<picture>
+{%- if include.dark -%}
+{%- assign _dbase = include.dark | relative_url -%}
+{%- capture _davif -%}{%- for w in _widths -%}{{ _dbase }}-{{ w }}.avif {{ w }}w{%- unless forloop.last -%}, {% endunless -%}{%- endfor -%}{%- endcapture -%}
+{%- capture _dwebp -%}{%- for w in _widths -%}{{ _dbase }}-{{ w }}.webp {{ w }}w{%- unless forloop.last -%}, {% endunless -%}{%- endfor -%}{%- endcapture -%}
+{%- capture _draster -%}{%- if include.raster_widths -%}{%- assign _rw = include.raster_widths | split: "," -%}{%- for w in _rw -%}{{ _dbase }}-{{ w }}.{{ _ext }} {{ w }}w{%- unless forloop.last -%}, {% endunless -%}{%- endfor -%}{%- endif -%}{%- endcapture -%}
+<picture class="pic-dark">
+  <source type="image/avif" srcset="{{ _davif }}"{% if include.sizes %} sizes="{{ include.sizes }}"{% endif %}>
+  <source type="image/webp" srcset="{{ _dwebp }}"{% if include.sizes %} sizes="{{ include.sizes }}"{% endif %}>
+  <img src="{{ _dbase }}-{{ _fw }}.{{ _ext }}"{% if _draster != "" %} srcset="{{ _draster }}"{% endif %}{% if include.sizes and _draster != "" %} sizes="{{ include.sizes }}"{% endif %} alt="{{ include.alt | escape }}"{% if include.width %} width="{{ include.width }}"{% endif %}{% if include.height %} height="{{ include.height }}"{% endif %}{% if include.class %} class="{{ include.class }}"{% endif %}{% if include.loading %} loading="{{ include.loading }}"{% endif %}{% if include.fetchpriority %} fetchpriority="{{ include.fetchpriority }}"{% endif %} decoding="{{ include.decoding | default: 'async' }}">
+</picture>
+{% endif -%}
+<picture{% if include.dark %} class="pic-light"{% endif %}>
   <source type="image/avif" srcset="{{ _avif }}"{% if include.sizes %} sizes="{{ include.sizes }}"{% endif %}>
   <source type="image/webp" srcset="{{ _webp }}"{% if include.sizes %} sizes="{{ include.sizes }}"{% endif %}>
-  <img src="{{ _base }}-{{ _fw }}.{{ _ext }}"{% if _raster != "" %} srcset="{{ _raster }}"{% endif %}{% if include.sizes and _raster != "" %} sizes="{{ include.sizes }}"{% endif %} alt="{{ include.alt | escape }}"{% if include.width %} width="{{ include.width }}"{% endif %}{% if include.height %} height="{{ include.height }}"{% endif %}{% if include.class %} class="{{ include.class }}"{% endif %}{% if include.loading %} loading="{{ include.loading }}"{% endif %}{% if include.fetchpriority %} fetchpriority="{{ include.fetchpriority }}"{% endif %} decoding="{{ include.decoding | default: 'async' }}">
+  <img src="{{ _base }}-{{ _fw }}.{{ _ext }}"{% if _raster != "" %} srcset="{{ _raster }}"{% endif %}{% if include.sizes and _raster != "" %} sizes="{{ include.sizes }}"{% endif %} alt="{{ include.alt | escape }}"{% if include.width %} width="{{ include.width }}"{% endif %}{% if include.height %} height="{{ include.height }}"{% endif %}{% if include.class %} class="{{ include.class }}"{% endif %}{% if _loading %} loading="{{ _loading }}"{% endif %}{% if _fetch %} fetchpriority="{{ _fetch }}"{% endif %} decoding="{{ include.decoding | default: 'async' }}">
 </picture>
