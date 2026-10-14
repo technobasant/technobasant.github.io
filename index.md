@@ -69,16 +69,18 @@ work:
   more: "View all work"
   more_url: /work/
   # Curated by slug, one per register: employer practice (data, then AI),
-  # consulting, open source, independent product, measured lab. Everything
-  # else — including ClickHomes, which the README keeps to /work/ — is one click
-  # away. A slug that does not resolve is skipped, so check the build.
+  # consulting, open source, independent product, measured lab. The lab slot is
+  # the sharded-database lab: horizontal scaling is the rarer evidence, and the
+  # failover lab is one click away. Everything else — including ClickHomes,
+  # which the README keeps to /work/ — is on /work/. A slug that does not
+  # resolve is skipped, so check the build.
   selected:
     - data-platform-practice
     - governed-ai-delivery
     - consulting-short-text-and-alerting
     - spark-sql-kinesis
     - clinic-records-ocr
-    - multi-engine-ha-lab
+    - distributed-db-lab
 
 writing:
   label: "Start here"

@@ -835,6 +835,407 @@ def prevalence_shift() -> str:
     return "".join(body)
 
 
+def evalproof() -> str:
+    """83 paired cases, 71 unchanged: the verdict on a 4.8-point drop rests on twelve."""
+    # Judge verdicts from evalproof's support-qa runs, in case-id order (q01–q83).
+    worse = {8, 28, 32, 33, 58, 72, 79, 83}
+    better = {7, 56, 65, 81}
+    cells = []
+    for i in range(83):
+        cx, cy = 150 + (i % 12) * 76, 480 + (i // 12) * 76
+        case = i + 1
+        if case in worse:
+            cells.append(f'<rect x="{cx}" y="{cy}" width="58" height="58" rx="4" fill="{ACCENT}"/>')
+        elif case in better:
+            cells.append(f'<rect x="{cx}" y="{cy}" width="58" height="58" rx="4" fill="{INK}"/>')
+        else:
+            cells.append(f'<rect x="{cx}" y="{cy}" width="58" height="58" rx="4" fill="{PANEL}" '
+                         f'stroke="{LINE}" stroke-width="2"/>')
+    legend = []
+    for j, (fill, stroke, label) in enumerate(((ACCENT, None, "8 worse"), (INK, None, "4 better"),
+                                               (PANEL, LINE, "71 unchanged"))):
+        y = 520 + j * 80
+        edge = f' stroke="{stroke}" stroke-width="2"' if stroke else ""
+        legend.append(f'<rect x="1100" y="{y - 34}" width="40" height="40" rx="4" fill="{fill}"{edge}/>')
+        legend.append(f'<text x="1160" y="{y}" font-family="{MONO}" font-size="28" '
+                      f'fill="{INK}">{escape(label)}</text>')
+    body = [
+        f'<rect width="{W}" height="{H}" fill="{PAPER}"/>',
+        f'<text x="150" y="190" font-family="{MONO}" font-size="30" letter-spacing="6" '
+        f'fill="{ACCENT}">LLM EVALUATION · EVALPROOF</text>',
+        f'<text x="150" y="300" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">The score fell 4.8 points.</text>',
+        f'<text x="150" y="382" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">Twelve answers held the evidence.</text>',
+        *cells,
+        *legend,
+        f'<text x="1100" y="780" font-family="{MONO}" font-size="26" fill="{MUTED}">only changed</text>',
+        f'<text x="1100" y="818" font-family="{MONO}" font-size="26" fill="{MUTED}">cases count</text>',
+        node_box(1500, 470, 750, 190, "delta gate", "−4.8 pts, tolerance 3", "fails the change"),
+        node_box(1500, 680, 750, 190, "paired gate", "8 vs 4 · McNemar p = 0.39", "pass, with a warning",
+                 accent=True),
+        node_box(1500, 890, 750, 190, "latency budget", "p95 1,469 → 4,422 ms", "exit 3 · the real one"),
+        f'<line x1="150" y1="1120" x2="{W - 150}" y2="1120" stroke="{LINE}" stroke-width="2"/>',
+        f'<text x="150" y="1195" font-family="{MONO}" font-size="30" fill="{MUTED}">'
+        f'83 paired cases · qwen3:1.7b judged by qwen3:8b · local</text>',
+        f'<text x="{W - 150}" y="1195" font-family="{MONO}" font-size="30" fill="{ACCENT}" '
+        f'text-anchor="end">fail only if large AND significant</text>',
+    ]
+    return "".join(body)
+
+
+def governed_agent() -> str:
+    """Where 54 answers went: the published route is the one no person saw."""
+    body = [
+        f'<rect width="{W}" height="{H}" fill="{PAPER}"/>',
+        f'<text x="150" y="190" font-family="{MONO}" font-size="30" letter-spacing="6" '
+        f'fill="{ACCENT}">GOVERNED AGENT · ONE LIVE RUN · 54 QUESTIONS</text>',
+        f'<text x="150" y="300" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">48 of 54 answers were right.</text>',
+        f'<text x="150" y="390" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">3 wrong ones published themselves.</text>',
+        node_box(150, 560, 500, 210, "54 questions", "qwen3:8b · temp 0", "keys computed by SQL"),
+        node_box(790, 560, 640, 210, "the gates", "schema · policy · grounding", "a person for any action",
+                 accent=True),
+        arrow(660, 665, 780, 665, ""),
+        node_box(1600, 470, 650, 190, "published · 37", "34 right · 3 wrong", "no person saw these",
+                 accent=True),
+        node_box(1600, 680, 650, 190, "held for review · 8", "5 right · 3 wrong", "invented $0.00 · claimed change"),
+        node_box(1600, 890, 650, 190, "can't answer · 9", "9 right · 0 wrong", "honest fallback"),
+        arrow(1440, 640, 1590, 565, ""),
+        arrow(1440, 665, 1590, 775, ""),
+        arrow(1440, 690, 1590, 985, ""),
+        f'<text x="150" y="880" font-family="{MONO}" font-size="26" letter-spacing="3" '
+        f'fill="{MUTED}">ALSO MEASURED</text>',
+        *[
+            part
+            for y, label, value in (
+                (945, "unanswerable admitted", "4 of 8"),
+                (1000, "planted instructions acted on", "0 of 5"),
+                (1055, "actions executed unapproved", "0"),
+            )
+            for part in (
+                f'<text x="150" y="{y}" font-family="{MONO}" font-size="30" fill="{INK}">{label}</text>',
+                f'<text x="960" y="{y}" font-family="{MONO}" font-size="30" fill="{INK}" '
+                f'text-anchor="end">{value}</text>',
+            )
+        ],
+        f'<line x1="150" y1="1120" x2="{W - 150}" y2="1120" stroke="{LINE}" stroke-width="2"/>',
+        f'<text x="150" y="1195" font-family="{MONO}" font-size="30" fill="{MUTED}">'
+        f'Ollama · temperature 0 · recorded once, replayed in CI</text>',
+        f'<text x="{W - 150}" y="1195" font-family="{MONO}" font-size="30" fill="{ACCENT}" '
+        f'text-anchor="end">provenance is not relevance</text>',
+    ]
+    return "".join(body)
+
+
+def retrieval_bench() -> str:
+    """Recall@10 against filter selectivity: post-filtering collapses, the middle dips."""
+    # retrieval-bench MEASUREMENTS.md section 4: 381,559 vectors, ef_search 40.
+    series = [
+        ("pgvector · relaxed_order", [0.966, 0.949, 0.964], INK, ""),
+        ("OpenSearch · efficient filter", [0.942, 0.745, 1.000], ACCENT, ""),
+        ("pgvector · post-filter", [0.966, 0.391, 0.038], MUTED, ' stroke-dasharray="14 10"'),
+    ]
+    x0, x1, y0, y1 = 260, 1320, 1040, 500
+    xs = [x0 + 90, (x0 + x1) / 2, x1 - 90]
+
+    def py(r):
+        return y0 - (y0 - y1) * r
+
+    body = [
+        f'<rect width="{W}" height="{H}" fill="{PAPER}"/>',
+        f'<text x="150" y="190" font-family="{MONO}" font-size="30" letter-spacing="6" '
+        f'fill="{ACCENT}">FILTERED VECTOR SEARCH · 381,559 VECTORS</text>',
+        f'<text x="150" y="300" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">A filter does not make search fail.</text>',
+        f'<text x="150" y="382" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">It makes it return less.</text>',
+        f'<line x1="{x0}" y1="{y0}" x2="{x1}" y2="{y0}" stroke="{LINE}" stroke-width="2"/>',
+    ]
+    for r in (0.0, 0.5, 1.0):
+        body.append(f'<line x1="{x0}" y1="{py(r):.1f}" x2="{x1}" y2="{py(r):.1f}" stroke="{LINE}" '
+                    f'stroke-width="1.5" stroke-dasharray="4 8"/>')
+        body.append(f'<text x="{x0 - 24}" y="{py(r) + 9:.1f}" font-family="{MONO}" font-size="26" '
+                    f'fill="{MUTED}" text-anchor="end">{r:.1f}</text>')
+    for x, label in zip(xs, ("50% pass", "10% pass", "1% pass")):
+        body.append(f'<text x="{x:.1f}" y="{y0 + 48}" font-family="{MONO}" font-size="24" '
+                    f'fill="{MUTED}" text-anchor="middle">{label}</text>')
+    body.append(f'<text x="{x0 - 70}" y="{y1 - 50}" font-family="{MONO}" font-size="24" '
+                f'fill="{MUTED}">recall@10 against exact kNN over the rows that pass</text>')
+    for name, vals, colour, dash in series:
+        pts = " ".join(f"{x:.1f},{py(v):.1f}" for x, v in zip(xs, vals))
+        body.append(f'<polyline points="{pts}" fill="none" stroke="{colour}" stroke-width="5"{dash}/>')
+        for x, v in zip(xs, vals):
+            body.append(f'<circle cx="{x:.1f}" cy="{py(v):.1f}" r="10" fill="{colour}"/>')
+    body += [
+        f'<text x="{xs[1] + 26:.1f}" y="{py(0.745) + 52:.1f}" font-family="{MONO}" font-size="26" '
+        f'fill="{ACCENT}">0.745</text>',
+        f'<text x="{xs[1] + 40:.1f}" y="{py(0.391) + 12:.1f}" font-family="{MONO}" font-size="26" '
+        f'fill="{MUTED}">3.9 of 10 rows</text>',
+        node_box(1500, 470, 750, 190, "post-filter", "pgvector: 3.9 of 10 rows at 10%",
+                 "as fast as a full answer"),
+        node_box(1500, 680, 750, 190, "iterative scan", "pgvector relaxed_order: 0.949",
+                 "13× the p50 at 1%"),
+        node_box(1500, 890, 750, 190, "filtered graph walk", "OpenSearch: 0.745 at 10%",
+                 "the middle is the risk", accent=True),
+        # legend swatches: each box names the line drawn in its colour
+        f'<line x1="1400" y1="565" x2="1470" y2="565" stroke="{MUTED}" stroke-width="5" '
+        f'stroke-dasharray="14 10"/>',
+        f'<line x1="1400" y1="775" x2="1470" y2="775" stroke="{INK}" stroke-width="5"/>',
+        f'<line x1="1400" y1="985" x2="1470" y2="985" stroke="{ACCENT}" stroke-width="5"/>',
+        f'<line x1="150" y1="1120" x2="{W - 150}" y2="1120" stroke="{LINE}" stroke-width="2"/>',
+        f'<text x="150" y="1195" font-family="{MONO}" font-size="30" fill="{MUTED}">'
+        f'pgvector 0.8.7 · Qdrant 1.19.2 · OpenSearch 3.9.0 · HNSW m 16 · ef_search 40</text>',
+        f'<text x="{W - 150}" y="1195" font-family="{MONO}" font-size="30" fill="{ACCENT}" '
+        f'text-anchor="end">test 10%, not just 1%</text>',
+    ]
+    return "".join(body)
+
+
+def realtime_ml() -> str:
+    """The leaky join wins validation and loses the future; the PIT join does the opposite."""
+    # v2 features, AUC-PR, from realtime-ml results/leakage.json (seed 7).
+    lines = [("naive join", 0.746, 0.363, MUTED, True), ("point-in-time", 0.681, 0.941, ACCENT, False)]
+    xa, xb, y0, y1, lo, hi = 470, 1180, 1040, 500, 0.2, 1.0
+
+    def py(v):
+        return y0 - (y0 - y1) * (v - lo) / (hi - lo)
+
+    body = [
+        f'<rect width="{W}" height="{H}" fill="{PAPER}"/>',
+        f'<text x="150" y="190" font-family="{MONO}" font-size="30" letter-spacing="6" '
+        f'fill="{ACCENT}">REAL-TIME ML · POINT-IN-TIME FEATURES</text>',
+        f'<text x="150" y="300" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">Validation picked the model</text>',
+        f'<text x="150" y="382" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">that had read the future.</text>',
+        f'<text x="150" y="{py(1.0) + 9:.1f}" font-family="{MONO}" font-size="26" fill="{MUTED}">AUC-PR</text>',
+    ]
+    for v in (0.4, 0.6, 0.8, 1.0):
+        # Gridlines only: every point carries its own value, so tick labels would collide.
+        body.append(f'<line x1="{xa - 60}" y1="{py(v):.1f}" x2="{xb + 60}" y2="{py(v):.1f}" stroke="{LINE}" '
+                    f'stroke-width="1.5" stroke-dasharray="4 8"/>')
+    for x in (xa, xb):
+        body.append(f'<line x1="{x}" y1="{y1 - 20}" x2="{x}" y2="{y0}" stroke="{LINE}" stroke-width="2"/>')
+    body += [
+        f'<text x="{xa}" y="{y0 + 48}" font-family="{MONO}" font-size="26" fill="{MUTED}" '
+        f'text-anchor="middle">validation</text>',
+        f'<text x="{xb}" y="{y0 + 48}" font-family="{MONO}" font-size="26" fill="{MUTED}" '
+        f'text-anchor="middle">next two weeks</text>',
+    ]
+    for name, a, b, colour, dashed in lines:
+        dash = ' stroke-dasharray="14 10"' if dashed else ""
+        body += [
+            f'<line x1="{xa}" y1="{py(a):.1f}" x2="{xb}" y2="{py(b):.1f}" stroke="{colour}" '
+            f'stroke-width="6"{dash}/>',
+            f'<circle cx="{xa}" cy="{py(a):.1f}" r="12" fill="{colour}"/>',
+            f'<circle cx="{xb}" cy="{py(b):.1f}" r="12" fill="{colour}"/>',
+            f'<text x="{xa - 30}" y="{py(a) + 10:.1f}" font-family="{MONO}" font-size="30" fill="{colour}" '
+            f'text-anchor="end">{a:.3f}</text>',
+            f'<text x="{xb + 30}" y="{py(b) + 10:.1f}" font-family="{MONO}" font-size="30" '
+            f'fill="{colour}">{b:.3f}</text>',
+        ]
+    body += [
+        f'<text x="{xb - 20}" y="{py(0.363) + 62:.1f}" font-family="{MONO}" font-size="26" fill="{MUTED}" '
+        f'text-anchor="end">naive join</text>',
+        f'<text x="{xb - 20}" y="{py(0.941) - 30:.1f}" font-family="{MONO}" font-size="26" fill="{ACCENT}" '
+        f'text-anchor="end">point-in-time join</text>',
+        node_box(1500, 470, 750, 190, "naive join", "latest row as of the pull day",
+                 "100% of rows read the future"),
+        node_box(1500, 680, 750, 190, "point-in-time join", "features at t − 1 ms, via Feast",
+                 "82.5% of fraud cost saved", accent=True),
+        node_box(1500, 890, 750, 190, "feature PSI", "0 of 5 tactics drifts caught",
+                 "fraud is 0.8% of traffic"),
+        f'<line x1="150" y1="1120" x2="{W - 150}" y2="1120" stroke="{LINE}" stroke-width="2"/>',
+        f'<text x="150" y="1195" font-family="{MONO}" font-size="30" fill="{MUTED}">'
+        f'seeded payments · 874,446 transactions · 0.80% fraud</text>',
+        f'<text x="{W - 150}" y="1195" font-family="{MONO}" font-size="30" fill="{ACCENT}" '
+        f'text-anchor="end">only the join differs</text>',
+    ]
+    return "".join(body)
+
+
+def streaming_platform() -> str:
+    """Every event layer exact through nine failures; the window counts were not."""
+    # counted_in_windows / on_time_expected per run, from the repo's results/*.json.
+    groups = [
+        ("broker kill", [(197745, 197749), (159729, 197752), (118229, 197749)]),
+        ("TaskManager kill", [(177987, 177997), (177990, 177993), (163326, 177997)]),
+        ("150 s stall", [(142984, 163178), (123801, 163177), (133821, 163178)]),
+    ]
+    x0, x1, bar_h = 640, 2000, 40
+    body = [
+        f'<rect width="{W}" height="{H}" fill="{PAPER}"/>',
+        f'<text x="150" y="190" font-family="{MONO}" font-size="30" letter-spacing="6" '
+        f'fill="{ACCENT}">STREAMING-PLATFORM · NINE FAILURE RUNS</text>',
+        f'<text x="150" y="300" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">Every event landed exactly once.</text>',
+        f'<text x="150" y="382" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">The window counts did not.</text>',
+        # legend
+        f'<rect x="{x0}" y="452" width="30" height="20" fill="{INK}"/>',
+        f'<text x="{x0 + 44}" y="471" font-family="{MONO}" font-size="24" fill="{MUTED}">'
+        f'counted in its 10 s window</text>',
+        f'<rect x="1150" y="452" width="30" height="20" fill="{PANEL}" stroke="{MUTED}" '
+        f'stroke-width="2"/>',
+        f'<text x="1194" y="471" font-family="{MONO}" font-size="24" fill="{MUTED}">'
+        f'sent on time, routed to the late output</text>',
+    ]
+    y = 510
+    for name, runs in groups:
+        for i, (counted, expected) in enumerate(runs, start=1):
+            share = counted / expected
+            hot = share < 0.99
+            body += [
+                f'<text x="150" y="{y + 30}" font-family="{MONO}" font-size="27" '
+                f'fill="{INK}">{escape(name)} · run {i}</text>',
+                f'<rect x="{x0}" y="{y}" width="{x1 - x0}" height="{bar_h}" fill="{PANEL}" '
+                f'stroke="{LINE}" stroke-width="2"/>',
+                f'<rect x="{x0}" y="{y}" width="{(x1 - x0) * share:.1f}" height="{bar_h}" '
+                f'fill="{INK}"/>',
+                f'<text x="{W - 150}" y="{y + 31}" font-family="{MONO}" font-size="30" '
+                f'fill="{ACCENT if hot else MUTED}" text-anchor="end">{share * 100:.1f}%</text>',
+            ]
+            y += 62
+        y += 24
+    body += [
+        f'<line x1="150" y1="1120" x2="{W - 150}" y2="1120" stroke="{LINE}" stroke-width="2"/>',
+        f'<text x="150" y="1195" font-family="{MONO}" font-size="30" fill="{MUTED}">'
+        f'events.clean · ClickHouse · Iceberg: exact in all nine runs</text>',
+        f'<text x="{W - 150}" y="1195" font-family="{MONO}" font-size="30" fill="{ACCENT}" '
+        f'text-anchor="end">window counts: as low as 59.8%</text>',
+    ]
+    return "".join(body)
+
+
+def dataset_registry() -> str:
+    """Which direction each 'safe' schema change breaks, and how often the checker was wrong."""
+    # Labels from dataset-registry's api/internal/compat/cases.json (open objects).
+    rows = [
+        ("optional field added", True, False),
+        ("optional field removed", False, True),
+        ("optional → required", True, False),
+        ("required → optional", False, True),
+        ("integer → number", False, True),
+        ("enum value added", False, True),
+        ("nullable added", False, True),
+        ("required added, with default", True, False),
+    ]
+    listing = [
+        f'<text x="150" y="490" font-family="{MONO}" font-size="24" letter-spacing="3" '
+        f'fill="{MUTED}">CHANGE · OPEN OBJECT</text>',
+        f'<text x="920" y="490" font-family="{MONO}" font-size="24" letter-spacing="3" '
+        f'fill="{MUTED}" text-anchor="middle">HISTORY</text>',
+        f'<text x="1200" y="490" font-family="{MONO}" font-size="24" letter-spacing="3" '
+        f'fill="{MUTED}" text-anchor="middle">CONSUMERS</text>',
+        f'<line x1="150" y1="512" x2="1330" y2="512" stroke="{LINE}" stroke-width="2"/>',
+    ]
+    for i, (name, back, fwd) in enumerate(rows):
+        y = 568 + i * 62
+        listing.append(
+            f'<text x="150" y="{y}" font-family="{MONO}" font-size="28" '
+            f'fill="{INK}">{escape(name)}</text>'
+        )
+        for x, breaks in ((920, back), (1200, fwd)):
+            listing.append(
+                f'<text x="{x}" y="{y}" font-family="{MONO}" font-size="28" text-anchor="middle" '
+                f'fill="{ACCENT if breaks else MUTED}">{"breaks" if breaks else "·"}</text>'
+            )
+    body = [
+        f'<rect width="{W}" height="{H}" fill="{PAPER}"/>',
+        f'<text x="150" y="190" font-family="{MONO}" font-size="30" letter-spacing="6" '
+        f'fill="{ACCENT}">DATA CONTRACTS · 51 LABELLED SCHEMA CHANGES</text>',
+        f'<text x="150" y="300" font-family="{SERIF}" font-size="80" font-weight="600" '
+        f'fill="{INK}">Removing an optional field breaks consumers.</text>',
+        f'<text x="150" y="382" font-family="{SERIF}" font-size="80" font-weight="600" '
+        f'fill="{INK}">Adding one breaks history.</text>',
+        *listing,
+        node_box(1500, 470, 750, 190, "breaking, called safe", "0 · every case, every mode",
+                 "the one error it may not make", accent=True),
+        node_box(1500, 680, 750, 190, "safe, called breaking", "2 of 51 per direction",
+                 "regex · anyOf · multipleOf"),
+        node_box(1500, 890, 750, 190, "labels checked", "8,092 probes · real validator",
+                 "oracle agrees on 51 of 51"),
+        f'<line x1="150" y1="1120" x2="{W - 150}" y2="1120" stroke="{LINE}" stroke-width="2"/>',
+        f'<text x="150" y="1195" font-family="{MONO}" font-size="30" fill="{MUTED}">'
+        f'compatibility defined on the documents each version accepts</text>',
+        f'<text x="{W - 150}" y="1195" font-family="{MONO}" font-size="30" fill="{ACCENT}" '
+        f'text-anchor="end">FORWARD by default</text>',
+    ]
+    return "".join(body)
+
+
+def platform_deployments() -> str:
+    """The first canary analysis failed both ways; a baseline and an evidence floor fixed it."""
+    body = [
+        f'<rect width="{W}" height="{H}" fill="{PAPER}"/>',
+        f'<text x="150" y="190" font-family="{MONO}" font-size="30" letter-spacing="6" '
+        f'fill="{ACCENT}">PLATFORM-DEPLOYMENTS · CANARY ANALYSIS</text>',
+        f'<text x="150" y="300" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">The first analysis was wrong both ways.</text>',
+        f'<text x="150" y="382" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">Judge the canary against stable.</text>',
+        # row 1: absolute thresholds, empty windows pass
+        f'<text x="150" y="478" font-family="{MONO}" font-size="26" letter-spacing="3" '
+        f'fill="{MUTED}">FIRST VERSION · ABSOLUTE THRESHOLDS</text>',
+        node_box(150, 500, 600, 190, "good release", "p95 2.26 s · stable 2.52 s", "aborted"),
+        node_box(900, 500, 600, 190, "bad release", "sync late · no traffic seen", "promoted"),
+        node_box(1650, 500, 600, 190, "cause", "absolute p95 · empty = pass", "no baseline, no floor"),
+        # row 2: p95 relative to stable, and no promotion without evidence
+        f'<text x="150" y="788" font-family="{MONO}" font-size="26" letter-spacing="3" '
+        f'fill="{MUTED}">FINAL VERSION · BASELINE + EVIDENCE</text>',
+        node_box(150, 810, 600, 190, "good releases", "0 of 18,003 requests failed", "3 of 3 promoted",
+                 accent=True),
+        node_box(900, 810, 600, 190, "bad releases", "30% 5xx in the canary pod", "6 of 6 aborted",
+                 accent=True),
+        node_box(1650, 810, 600, 190, "fix", "p95 > 2 × stable · ≥ 30 req", "judged on real traffic",
+                 accent=True),
+        f'<line x1="150" y1="1120" x2="{W - 150}" y2="1120" stroke="{LINE}" stroke-width="2"/>',
+        f'<text x="150" y="1195" font-family="{MONO}" font-size="30" fill="{MUTED}">'
+        f'kind · 3 nodes · Argo Rollouts · Envoy metrics · 20 req/s</text>',
+        f'<text x="{W - 150}" y="1195" font-family="{MONO}" font-size="30" fill="{ACCENT}" '
+        f'text-anchor="end">abort ≈ 30 s after Ready</text>',
+    ]
+    return "".join(body)
+
+
+def distributed_db_lab() -> str:
+    """A removed node's cleanup records outlive it and block a later move."""
+    body = [
+        f'<rect width="{W}" height="{H}" fill="{PAPER}"/>',
+        f'<text x="150" y="190" font-family="{MONO}" font-size="30" letter-spacing="6" '
+        f'fill="{ACCENT}">CITUS 14.2 · DISTRIBUTED-DB-LAB</text>',
+        f'<text x="150" y="300" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">The node was removed.</text>',
+        f'<text x="150" y="382" font-family="{SERIF}" font-size="86" font-weight="600" '
+        f'fill="{INK}">Its cleanup records were not.</text>',
+        # row 1: the reset, in one session
+        f'<text x="150" y="478" font-family="{MONO}" font-size="26" letter-spacing="3" '
+        f'fill="{MUTED}">THE RESET · ONE SESSION</text>',
+        node_box(150, 500, 600, 190, "drain worker3", "move every shard away", "deferred drop queued"),
+        node_box(900, 500, 600, 190, "remove worker3", "straight away", "its group leaves the catalog"),
+        node_box(1650, 500, 600, 190, "pg_dist_cleanup", "8 rows, group 7", "no primary: skipped", accent=True),
+        arrow(750, 595, 890, 595, ""),
+        arrow(1500, 595, 1640, 595, ""),
+        # row 2: minutes later, a new worker and a rebalance
+        f'<text x="150" y="788" font-family="{MONO}" font-size="26" letter-spacing="3" '
+        f'fill="{MUTED}">MINUTES LATER · NEW WORKER, REBALANCE</text>',
+        node_box(150, 810, 600, 190, "rebalance", "7 moves in 37.1 s", "0 errors under load"),
+        node_box(900, 810, 600, 190, "8th move", "orphaned shard … not cleaned", "retried 33× in 33 min",
+                 accent=True),
+        node_box(1650, 810, 600, 190, "delete stale rows", "group not in pg_dist_node", "move done in 5.3 s"),
+        arrow(750, 905, 890, 905, ""),
+        arrow(1500, 905, 1640, 905, ""),
+        f'<line x1="150" y1="1120" x2="{W - 150}" y2="1120" stroke="{LINE}" stroke-width="2"/>',
+        f'<text x="150" y="1195" font-family="{MONO}" font-size="30" fill="{MUTED}">'
+        f'PostgreSQL 17.11 · reproduced 3 of 3 · citusdata/citus#7333</text>',
+        f'<text x="{W - 150}" y="1195" font-family="{MONO}" font-size="30" fill="{ACCENT}" '
+        f'text-anchor="end">clean up, then remove</text>',
+    ]
+    return "".join(body)
+
+
 DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patroni,
             "lakehouse-spine": lakehouse_spine,
             "lakehouse-medallion": lakehouse_medallion,
@@ -852,6 +1253,14 @@ DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patro
             "agent-knowledge": agent_knowledge,
             "alert-state": alert_state,
             "ocr-engines": ocr_engines,
+            "evalproof": evalproof,
+            "governed-agent": governed_agent,
+            "retrieval-bench": retrieval_bench,
+            "realtime-ml": realtime_ml,
+            "streaming-platform": streaming_platform,
+            "dataset-registry": dataset_registry,
+            "platform-deployments": platform_deployments,
+            "distributed-db-lab": distributed_db_lab,
             "prevalence-shift": prevalence_shift}
 
 def svg_for(name: str) -> str:

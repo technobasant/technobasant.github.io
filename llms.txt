@@ -46,7 +46,11 @@ Outside the day job he maintains spark-sql-kinesis
 Kinesis source for Spark 4 on AWS SDK v2; takes consulting work in applied ML,
 alerting and data architecture (clients are not named); runs a multi-engine
 high-availability lab where claims are published with a reproducible test
-plan; and builds the independent products listed below. The three areas he
+plan; publishes eight from-scratch reference systems, each with its method and
+measurements in the repository (LLM evaluation, a governed agent, filtered
+vector retrieval, real-time ML, exactly-once streaming, data contracts,
+progressive delivery and sharded databases), written up in the "Reference
+systems, measured" series; and builds the independent products listed below. The three areas he
 works in are data platforms (and their databases), AI systems in production,
 and system architecture.
 
