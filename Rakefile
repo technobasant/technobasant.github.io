@@ -176,6 +176,20 @@ task :content do
     end
     failures << "#{path}: unclosed fenced code block" if in_fence
 
+    # Liquid renders `{{ … }}` and `{% … %}` even inside a code fence, so an
+    # Ansible or Helm template in an example silently loses its variables on
+    # the page (`ansible_python_interpreter: ""`). Templated code needs raw.
+    in_code = false
+    in_raw = false
+    body.each_line.with_index(1) do |line, line_number|
+      in_raw = true if line.include?("{% raw %}")
+      in_code = !in_code if line.start_with?("```")
+      if in_code && !in_raw && line.match?(/\{\{|\{%/)
+        failures << "#{path}:#{line_number}: Liquid syntax inside a code block needs {% raw %} … {% endraw %}"
+      end
+      in_raw = false if line.include?("{% endraw %}")
+    end
+
     %w[title description date type tags key_takeaways].each do |key|
       value = data[key]
       empty = value.nil? || (value.respond_to?(:empty?) && value.empty?)

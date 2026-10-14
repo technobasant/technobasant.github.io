@@ -173,7 +173,7 @@ lab_pg_replay_lag:
 lab_redis_promotion:
   value: "~5 s"
   label: "Redis Sentinel primary promotion"
-  method: "wall-clock from SIGKILL of the primary to a writable replica"
+  method: "wall-clock from `docker stop` of the primary to a writable replica"
   scope: "independent"
   source: "2026 multi-engine HA lab"
   context: "Redis Cluster promoted with zero data loss, config epoch 2 → 7."
@@ -192,7 +192,7 @@ clickhomes_migrations:
 kinesis_idle_floor:
   value: "≥ 6 s"
   label: "per idle shard, every batch, on the alternative connector"
-  method: "connector source plus staging Spark UI stage timings; floor = empty-poll count × poll timeout, and 2 × 3 s is the lowest the connector accepts"
+  method: "connector source plus staging Spark UI stage timings; floor = empty-poll count × poll timeout, and the connector requires that product to exceed 5 s, so 6 s is the lowest it accepts"
   window: "Aug 2026, staging"
   scope: "open-source"
   source: "spark-sql-kinesis design notes; staging measurements"
@@ -279,11 +279,11 @@ lakehouse_compaction:
 lakehouse_rollback:
   value: "909,968"
   label: "rows recovered by snapshot rollback"
-  method: "unqualified DELETE, then ALTER TABLE EXECUTE rollback_to_snapshot, counted against the pre-incident total"
+  method: "an over-broad DELETE (a WHERE reaching years further back than intended), then ALTER TABLE EXECUTE rollback_to_snapshot, counted against the pre-incident total"
   scope: "independent"
   source: "2026 Trino/Iceberg lakehouse lab"
   window: "measured 2026 · 2024 stack rebuilt"
-  context: "Completed in 589 ms because a rollback rewrites the current-snapshot pointer rather than moving data."
+  context: "589 ms wall clock around the CLI, most of it client startup; a rollback rewrites the current-snapshot pointer rather than moving data."
 
 # ── RAG lakehouse (2025 build, 2026 rebuild) ─────────────────────────────────
 rag_embed_throughput:
@@ -293,7 +293,7 @@ rag_embed_throughput:
   scope: "independent"
   source: "2026 RAG lakehouse rebuild"
   window: "measured 2026 · 2025 stack rebuilt"
-  context: "Read from Delta in 0.21 s and upserted into Chroma in 0.25 s; embedding is the only stage that scales with corpus size."
+  context: "Read from Delta in 0.21 s and upserted into Chroma in 0.16–0.25 s across runs; embedding is the only stage that scales with corpus size."
 
 rag_refusal:
   value: "0 tokens"

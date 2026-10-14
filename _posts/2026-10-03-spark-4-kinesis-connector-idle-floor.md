@@ -3,7 +3,7 @@ title: "Ten seconds per idle shard: why I maintain a Kinesis connector for Spark
 seo_title: "Spark 4 Kinesis connector: AWS SDK v2 and no idle-shard floor"
 description: "The awslabs Kinesis connector for Spark 4 waits on every idle shard. Why I ported the synchronous connector to Spark 4.2 and AWS SDK v2, and maintain it in public."
 date: 2026-10-03 10:00:00 +0545
-last_modified_at: 2026-10-03
+last_modified_at: 2026-10-14
 type: essay
 pillar: data-platforms
 tags: [kafka-streaming, spark]
@@ -35,7 +35,7 @@ cover:
   caption: "On a stream with many quiet shards, the read model decides batch latency. Tuning the other one only moves the floor."
 faq:
   - q: "Why is the awslabs Kinesis connector for Spark slow when shards are idle?"
-    a: "It fetches on a background thread into a queue and decides a shard is exhausted only after a number of consecutive empty polls. With the defaults of two polls at five seconds each, every shard in every micro-batch waits about ten seconds even when it holds zero records. The lowest value the connector accepts is two polls of three seconds."
+    a: "It fetches on a background thread into a queue and decides a shard is exhausted only after a number of consecutive empty polls. With the defaults of two polls at five seconds each, every shard in every micro-batch waits about ten seconds even when it holds zero records. The connector requires the empty-poll count times the poll timeout to exceed five seconds, so the lowest floor it accepts is six seconds, for example two polls of three."
   - q: "Which Kinesis connector works with Spark 4 and AWS SDK v2?"
     a: "Besides the awslabs connector, io.github.technobasant:spark-sql-kinesis_2.13:1.3.0_spark-4.2.0 on Maven Central is a Spark 4.2, Scala 2.13, Java 17 build of the synchronous connector originally written by Qubole, ported to AWS SDK v2 with KCL removed. Each jar targets one Spark minor version, which is why the Spark version is part of the artifact version."
   - q: "Can a running Spark 3.4 streaming query move to the Spark 4 build without a new checkpoint?"
@@ -101,7 +101,7 @@ dataQueue.poll(dataQueueWaitTimeout.getSeconds, SECONDS)
 // ... end-of-data only after maxDataQueueEmptyCount consecutive empty polls
 ```
 
-The defaults are two empty polls of five seconds. **Every shard pays ten seconds in every micro-batch, including shards that hold no records at all.** An idle shard on the synchronous connector costs one round trip.
+The defaults are two empty polls of five seconds. **Every idle shard pays ten seconds in every micro-batch, and a shard with data still waits one more poll after its last record.** An idle shard on the synchronous connector costs one round trip.
 
 The connector maps one Spark task to each shard, and a task blocked in `poll` holds a task slot while using almost no CPU. So the read stage runs in waves:
 
@@ -137,14 +137,14 @@ IllegalArgumentException: kinesis.internal.maxDataQueueEmptyCount
   * kinesis.internal.dataQueueWaitTimeoutSec must be greater than 5
 ```
 
-That is a data-safety guard — it stops a slow fetch being mistaken for an empty shard — and I would not patch it out. But it is validated when the streaming query starts, after the checkpoint has been restored, so each attempt ran the driver for about three minutes before dying. Under `restartPolicy: Always` that crash-looped staging for roughly forty minutes. Two polls of three seconds is the lowest legal floor.
+That is a data-safety guard — it stops a slow fetch being mistaken for an empty shard — and I would not patch it out. But it is validated when the streaming query starts, after the checkpoint has been restored, so each attempt ran the driver for about three minutes before dying. Under `restartPolicy: Always` that crash-looped staging for roughly forty minutes. The rule is that the empty-poll count times the poll timeout must exceed five seconds, so six seconds is the lowest legal floor; I used two polls of three.
 
 | Staging configuration | Per-task read | Batch (`addBatch`) |
 | --- | --- | --- |
 | 1 slot, 10 s floor (defaults) | 10.1–11.9 s, serialised | 174 s |
 | 16 slots, 6 s floor (lowest legal) | 8.4 s, all in parallel | **47 s** |
 
-That is 3.7× on the batch, and the remaining forty-odd seconds are sequential table writes, not the connector. But the best the awslabs design can do on an idle shard is six seconds, against one round trip, and it costs a slot and a queue per shard to get there.
+That is 3.7× on the batch, and most of the remaining 39 seconds are sequential table writes, not the connector. But the best the awslabs design can do on an idle shard is six seconds, against one round trip, and it costs a slot and a queue per shard to get there. Upstream has tracked the wait since 2024 ([issue #11](https://github.com/awslabs/spark-sql-kinesis-connector/issues/11)). I have since opened [PR #99](https://github.com/awslabs/spark-sql-kinesis-connector/pull/99), which adds an opt-in `kinesis.stopReadWhenMillisBehindLatestIsZero` so a caught-up shard stops without waiting out its polls; it is open and in review. Until a release includes it, six seconds is the floor.
 
 <div class="callout callout--gotcha" markdown="1">
 **Silent options.** Both connectors ignore option names they do not recognise. A half-finished migration from one to the other starts cleanly, reads with defaults you did not choose, and looks configured. Lock the option contract your job emits in a test, and make that test *fail*, not cancel, when the connector jar is missing from the classpath.
@@ -218,7 +218,7 @@ Two rules came with it:
 
 ### Why is the awslabs Kinesis connector for Spark slow when shards are idle?
 
-It fetches on a background thread into a queue and decides a shard is exhausted only after a number of consecutive empty polls. With the defaults of two polls at five seconds each, every shard in every micro-batch waits about ten seconds even when it holds zero records. The lowest value the connector accepts is two polls of three seconds.
+It fetches on a background thread into a queue and decides a shard is exhausted only after a number of consecutive empty polls. With the defaults of two polls at five seconds each, every shard in every micro-batch waits about ten seconds even when it holds zero records. The connector requires the empty-poll count times the poll timeout to exceed five seconds, so the lowest floor it accepts is six seconds, for example two polls of three.
 
 ### Which Kinesis connector works with Spark 4 and AWS SDK v2?
 

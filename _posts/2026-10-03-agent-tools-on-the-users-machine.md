@@ -3,7 +3,7 @@ title: "The user's laptop is not a server. Make it a queue consumer."
 seo_title: "Running agent tools on a user's machine from a multi-pod backend"
 description: "A cloud agent that drives a browser on a user's Mac kept reporting it offline. The fix was not sticky routing: model the laptop as a queue consumer."
 date: 2026-10-03 09:10:00 +0545
-last_modified_at: 2026-10-03
+last_modified_at: 2026-10-14
 type: essay
 pillar: ai-systems
 tags:
@@ -21,9 +21,7 @@ about:
   - at-least-once delivery
   - WebSocket backpressure
 mentions:
-  - LangGraph
   - Redis
-  - Playwright
   - websockets
   - Kubernetes
 cover:

@@ -3,7 +3,7 @@ title: "The best OCR model I tested does not ship. The scorer decided why."
 seo_title: "Choosing an OCR engine for clinic records: eight engines, one scorer"
 description: "Eight OCR engines on real clinic records, one fixed scorer. The strongest reader stays switched off: slower on the target box, and it cannot say when it is unsure."
 date: 2026-10-03 10:10:00 +0545
-last_modified_at: 2026-10-03
+last_modified_at: 2026-10-14
 type: essay
 pillar: ai-systems
 tags:
@@ -55,7 +55,7 @@ key_takeaways:
 
 Handwriting is where extraction fails on clinic records, so a better OCR model was the obvious fix. The 2026 field is crowded with candidates, several posting headline scores in the mid-nineties on document-parsing benchmarks, and the engine I ship is a classic detect-then-recognise pipeline on ONNX Runtime that nobody would put at the top of a leaderboard.
 
-I measured eight engines against it. The one that read best overall is not the one that ships, and the reasons it lost are worth more than the scores.
+I measured seven others against it, eight engines through one scorer. The one that read best overall is not the one that ships, and the reasons it lost are worth more than the scores.
 
 **Operating rule.** Choose an OCR engine by its per-class accuracy, its failure mode and its latency on the box you will actually deploy, measured through your own scorer on your own pages. Hold the scorer fixed and swap only the engine. A benchmark that changes two things at once has measured the benchmark.
 
@@ -92,9 +92,9 @@ Nothing needed changing, and every alternative failed the same way.
 
 The detection parameters told the same story. I started from the values the documentation and the DB post-processing literature recommend: lower thresholds to recover faint strokes, higher input resolution for small text. Every one of six settings scored worse than the library default, and false positives roughly tripled while true positives barely moved. The advice is sound for **scans of documents**. These are **photographs of paper on a desk**, where "competing documents in frame" is one of the commonest attributes in the corpus. More sensitive detection recovers the neighbouring document, and every recovered line becomes a candidate field.
 
-Then two other engines, through the same pipeline:
+Then two other engines, through the same pipeline, in a separate run — which is why the shipped engine's 11-page row differs slightly from the table above:
 
-| Engine | Pages | F1 | Precision | Recall | s/page |
+| Engine | Pages | F1 | Precision | Recall | s/page (separate run) |
 |---|---|---:|---:|---:|---:|
 | **RapidOCR, PP-OCRv6 (shipped)** | 11 mixed | **0.426** | 0.722 | 0.302 | 4.4 |
 | docTR `fast_base` + `parseq`, rotation on | 11 mixed | 0.217 | 0.382 | 0.151 | 9.4 |
@@ -153,7 +153,7 @@ PaddleOCR-VL is in the codebase as a sidecar behind two off-by-default switches.
 | Handwritten field that motivated the test | wrong | still wrong |
 | Printed text | good | near-perfect |
 | Text burned into images | partial | exact |
-| Latency on the 2-vCPU target | baseline | about 5× |
+| Latency on the 2-vCPU target | about 1.5 s/page | about 7.2 s/page, about 5× |
 | Weights licence | Apache-2.0 | Apache-2.0 |
 {: aria-label="Shipped engine against the vision-language sidecar" }
 
@@ -176,7 +176,7 @@ The engine was not the lever. On handwritten pages every engine, classic or visi
 - **A re-open condition.** Any challenger must beat the shipped engine's field-level F1 and precision on the same labelled subsets, measured through the same scorer — not a character count, not a benchmark card.
 
 <div class="callout callout--note" markdown="1">
-**Boundary.** The classic-engine comparisons ran on 11 and 26 labelled pages from a private corpus of 198 real clinic captures; the vision-language comparisons ran on one handwritten card and one 17-page packet from a single patient, so they settle a shortlist, not a ranking. All scores are development-set diagnostics from my own machines, not held-out accuracy and not clinical validation. Latencies name their hardware: Apple Silicon development laptop, CPU-only Docker with a 2 GB or 8 GB cgroup, or the 2-vCPU deployment class. Hosted OCR services were out of scope because patient images do not leave the machine. No patient text, value, name or image appears here; the character confusions quoted are generic.
+**Boundary.** The classic-engine comparisons ran on 11 and 26 labelled pages from a private corpus of 198 real clinic captures; the vision-language comparisons ran on one handwritten card and one 17-page packet from a single patient, so they settle a shortlist, not a ranking. All scores are development-set diagnostics from my own machines, not held-out accuracy and not clinical validation. The vision-language latencies and the deployment comparison name their hardware: Apple Silicon development laptop, CPU-only Docker with a 2 GB or 8 GB cgroup, or the 2-vCPU deployment class. The s/page columns in the classic-engine tables come from separate bench runs and compare engines within each table, not across tables. Hosted OCR services were out of scope because patient images do not leave the machine. No patient text, value, name or image appears here; the character confusions quoted are generic.
 </div>
 
 ## Frequently asked questions

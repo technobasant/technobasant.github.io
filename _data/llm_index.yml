@@ -7,7 +7,7 @@ recommended:
     title: "How to use Cursor, Claude Code, and Codex in existing repos"
     why: "AGENTS.md, CODEOWNERS, CI gates, and the usual AI-generated PR pitfalls."
   - url: /writing/agents-in-a-real-repository/
-    title: "Ten CI gates, and the failure behind each one"
+    title: "Ten gates, and the failure behind each one"
     why: "The same control plane, measured on this site's own build."
   - url: /work/governed-ai-delivery/
     title: "Turning model output into product state you can audit"

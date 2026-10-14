@@ -3,7 +3,7 @@ title: "The Spark 4 upgrade that succeeded and wrote nothing"
 seo_title: "Spark 4 on hadoop-aws 3.5: the S3A committer that wrote nothing"
 description: "Spark 4.2 on hadoop-aws 3.5 read 9,029 records and wrote zero objects, and no task failed. Why the S3A committer was bypassed, and the tests that now catch it."
 date: 2026-10-03 07:00:00 +0545
-last_modified_at: 2026-10-03
+last_modified_at: 2026-10-14
 type: essay
 pillar: data-platforms
 series: production-notes
@@ -38,7 +38,7 @@ faq:
   - q: "Why does Spark 4 with hadoop-aws 3.5 report successful batches but write no files to S3?"
     a: "If an S3A committer is configured but spark.sql.sources.commitProtocolClass is left at Spark's default, HadoopMapReduceCommitProtocol only honours a FileOutputCommitter's work path. S3A committers are not FileOutputCommitters, so task output bypasses them. On hadoop-aws 3.3.4 S3A completed those writes itself; on 3.5.0 in cluster mode they stayed as multipart uploads nothing ever completed."
   - q: "Do I need PathOutputCommitProtocol to use the S3A magic committer from Spark?"
-    a: "Yes. Set spark.sql.sources.commitProtocolClass to org.apache.spark.internal.io.cloud.PathOutputCommitProtocol, which ships in the separate spark-hadoop-cloud artifact. It routes task output through the committer. It also refuses dynamic partition overwrite, so jobs that need that must stay on FileOutputCommitter."
+    a: "Yes. Set spark.sql.sources.commitProtocolClass to org.apache.spark.internal.io.cloud.PathOutputCommitProtocol, which ships in the separate spark-hadoop-cloud artifact. It routes task output through the committer. It also refuses dynamic partition overwrite with any S3A committer, so jobs that need that must stay on FileOutputCommitter."
   - q: "Should fs.s3a.committer.abort.pending.uploads be true or false?"
     a: "False if more than one job writes under the same destination at once, because the default aborts every pending upload under the destination when a job commits. The cost is that nothing reclaims a failed job's uploads, so add a bucket lifecycle rule for incomplete multipart uploads and, if you need it sooner, an age-gated, prefix-scoped reaper."
   - q: "Why are Spark executors OOMKilled after moving to AWS SDK v2, with no heap dump?"
@@ -93,20 +93,19 @@ The restored configuration set the factory and left `spark.sql.sources.commitPro
 ```scala
 // org.apache.spark.internal.io.HadoopMapReduceCommitProtocol.newTaskTempFile (abridged)
 val stagingDir: Path = committer match {
-  case _ if dynamicPartitionOverwrite => this.stagingDir
   case f: FileOutputCommitter =>
     new Path(Option(f.getWorkPath).map(_.toString).getOrElse(path))
   case _ => new Path(path)   // every S3A committer lands here
 }
 ```
 
-Every S3A committer extends `PathOutputCommitter`, not `FileOutputCommitter`, so it takes the last branch. The task writes straight to the final table path, the committer's task commit finds nothing staged, and it logs:
+Every S3A committer extends `PathOutputCommitter`, not `FileOutputCommitter`, so it takes the last branch. The task writes straight to the final table path, the committer finds nothing staged, and job commit on the driver logs:
 
 ```text
 Task committer attempt_...: No pending uploads to commit
 ```
 
-On hadoop-aws 3.3.4, S3A completed those direct writes itself. The committer was a no-op and the output landed anyway, which is why this exact configuration ran in production for years while printing that line on every batch. On hadoop-aws 3.5.0, in cluster mode, the same writes stayed as pending multipart uploads that nothing ever completed. Spark's commit code is byte-identical between v3.4.1 and v4.2.0; the behaviour changed underneath it.
+On hadoop-aws 3.3.4, S3A completed those direct writes itself. The committer was a no-op and the output landed anyway, which is why this exact configuration ran in production for years while printing that line on every batch. On hadoop-aws 3.5.0, in cluster mode, the same writes stayed as pending multipart uploads that nothing ever completed. The branch above is unchanged between v3.4.1 and v4.2.0; the behaviour changed underneath it.
 
 | Signal | What it said | What was true |
 | --- | --- | --- |
@@ -118,7 +117,7 @@ On hadoop-aws 3.3.4, S3A completed those direct writes itself. The committer was
 
 The local suite had passed 600 of 600 with the same configuration. It runs `local[4]`, so driver and executor share one JVM, and in that shape S3A completed the writes even with the committer bypassed. A green laptop run sat next to a cluster deployment that wrote nothing.
 
-One more hadoop-aws change makes the trap easier to walk into. While writing a later test I found that `fs.s3a.committer.name` resolves to `magic` by default on hadoop-aws 3.5.0, where it was `file` on 3.3.4. Point the s3a factory at `S3ACommitterFactory`, forget the protocol, and you silently get a magic committer that is never called.
+One more change makes the trap easier to walk into. While writing a later test I found that `fs.s3a.committer.name` resolved to `magic` without my setting it. Hadoop's own default is still `file`. Since Spark 4.1 ([SPARK-47618](https://issues.apache.org/jira/browse/SPARK-47618)), `SparkContext` fills in `magic`, the s3a factory and `PathOutputCommitProtocol` for any of those keys left unset whenever `spark-hadoop-cloud` is on the classpath. Pin the protocol to Spark's classic class, or drop `spark-hadoop-cloud` while keeping explicit committer keys, and you silently get a magic committer that is never called.
 
 ## The fix: four settings that only work together
 
@@ -141,11 +140,11 @@ spark.hadoop.mapreduce.fileoutputcommitter.marksuccessfuljobs=false
 | `committer.name = magic` | The staging committers hand `.pendingset` files from executors to the driver through a shared filesystem, which a cluster-mode split can break |
 | `abort.pending.uploads = false` | The first job to commit aborts every other job's in-flight uploads under the same destination |
 
-Magic keeps both the pending data and its metadata in S3, under `<dest>/__magic_job-<jobId>/`. I checked the property the architecture depends on against the hadoop-aws 3.5.0 source rather than assuming it. The magic path prefix is job-scoped (`__magic_job-`), and `cleanupStagingDirs` deletes only that job's magic path, not the whole `__magic` tree. A committing job cannot reach a sibling's uploads the way `_temporary` cleanup did.
+Magic keeps both the pending data and its metadata in S3, under `<dest>/__magic_job-<jobId>/`. I checked the property the architecture depends on against the hadoop-aws 3.5.0 source rather than assuming it. The magic path prefix is job-scoped (`__magic_job-`), and `cleanupStagingDirs` deletes that job's magic path, not the whole `__magic` tree. It also deletes `<dest>/_temporary`, which magic never writes to but a `FileOutputCommitter` writer on the same path would be using. A committing job cannot reach a sibling's uploads the way `_temporary` cleanup did.
 
-The `abort.pending.uploads` line is Hadoop's own advice. The comment on the key says to change it "if more than one committer is writing to the same destination tree simultaneously; otherwise the first job to complete will cancel all outstanding uploads from the others." The [S3A committers documentation](https://hadoop.apache.org/docs/stable/hadoop-aws/tools/hadoop-aws/committers.html) and Spark's [cloud integration guide](https://spark.apache.org/docs/latest/cloud-integration.html) cover the protocol binding. If you write Parquet rather than ORC, the guide also asks for its binding Parquet committer.
+The `abort.pending.uploads` line is Hadoop's own advice. The comment on the key says to change it "if more than one committer is writing to the same destination tree simultaneously; otherwise the first job to complete will cancel all outstanding uploads from the others." The [S3A committers documentation](https://hadoop.apache.org/docs/current/hadoop-aws/tools/hadoop-aws/committers.html) and Spark's [cloud integration guide](https://spark.apache.org/docs/latest/cloud-integration.html) cover the protocol binding. If you write Parquet rather than ORC, the guide also asks for its binding Parquet committer.
 
-Two constraints come with the protocol. `PathOutputCommitProtocol` ships in `spark-hadoop-cloud`, a separate artifact from `spark-sql`, so a Spark bump or a slimmer base image can drop it while the configuration stays intact. And it refuses dynamic partition overwrite, which is exactly why binning must never inherit it. Code review found a legacy single-partition binning entry point that did inherit the streaming committer. It was not deployed, but it was documented as the way to re-bin by hand.
+Two constraints come with the protocol. `PathOutputCommitProtocol` ships in `spark-hadoop-cloud`, a separate artifact from `spark-sql`, so a Spark bump or a slimmer base image can drop it while the configuration stays intact. And with any S3A committer it refuses dynamic partition overwrite, which is exactly why binning must never inherit it. Code review found a legacy single-partition binning entry point that did inherit the streaming committer. It was not deployed, but it was documented as the way to re-bin by hand.
 
 ## What abort.pending.uploads=false leaves behind
 
@@ -235,7 +234,7 @@ If an S3A committer is configured but `spark.sql.sources.commitProtocolClass` is
 
 ### Do I need PathOutputCommitProtocol to use the S3A magic committer from Spark?
 
-Yes. Set `spark.sql.sources.commitProtocolClass` to `org.apache.spark.internal.io.cloud.PathOutputCommitProtocol`, which ships in the separate `spark-hadoop-cloud` artifact. It routes task output through the committer. It also refuses dynamic partition overwrite, so jobs that need that must stay on `FileOutputCommitter`.
+Yes. Set `spark.sql.sources.commitProtocolClass` to `org.apache.spark.internal.io.cloud.PathOutputCommitProtocol`, which ships in the separate `spark-hadoop-cloud` artifact. It routes task output through the committer. It also refuses dynamic partition overwrite with any S3A committer, so jobs that need that must stay on `FileOutputCommitter`.
 
 ### Should fs.s3a.committer.abort.pending.uploads be true or false?
 

@@ -3,7 +3,7 @@ title: "A free private remote desktop with RustDesk"
 seo_title: "Self-host RustDesk: open UDP 21116 or the client never stays up"
 description: "Want a free private remote desktop? Self-host RustDesk on Docker, open UDP 21116, pin the key, and keep sessions past the public cutoff."
 date: 2026-06-02 09:00:00 +0545
-last_modified_at: 2026-08-11 11:30:00 +0545
+last_modified_at: 2026-10-14
 type: tutorial
 pillar: self-hosted
 tags: [self-hosted]
@@ -19,17 +19,17 @@ cover:
   width: 1600
   height: 900
   alt: "Two desktops mirrored through a self-hosted RustDesk relay while a public session line fades"
-  caption: "Public RustDesk cuts sessions around 30 seconds. Your own hbbs/hbbr does not, if UDP 21116 actually reaches the host."
+  caption: "Public RustDesk sessions have been dropping around 30 seconds. Your own hbbs/hbbr does not, if UDP 21116 actually reaches the host."
 level: intermediate
 time_estimate: "~30 min hands-on"
-what_youll_build: "Your own RustDesk server on a VPS, so two machines can connect without the public 30-second cutoff or a paid plan."
+what_youll_build: "Your own RustDesk server on a VPS, so two machines can connect without the public servers' sign-in or the 30-second drops seen there."
 prerequisites:
   - "A Linux VPS with a public IPv4 address and Docker Compose v2"
   - "A DNS A record you can point at that VPS, for example relay.example.com"
   - "Two machines with the RustDesk client (laptop plus the machine you want to control)"
 tested_on: "rustdesk/rustdesk-server · Docker Compose v2 · Debian/Ubuntu VPS with UFW"
 key_takeaways:
-  - "Public RustDesk cuts sessions around 30 seconds; your own hbbs/hbbr does not, if UDP 21116 and TCP 21117 actually reach the host."
+  - "Public RustDesk is a demo service that now makes the controller sign in, and sessions there have dropped around 30 seconds; your own hbbs/hbbr does not, if UDP 21116 and TCP 21117 actually reach the host."
   - "hbbs advertises the relay with -r hostname:21117; ALWAYS_USE_RELAY=Y is how you prove traffic hits hbbr instead of silent P2P."
   - "The only durable secret is data/id_ed25519; lose it and every client must be re-keyed, even if the containers look healthy."
 work: clickhomes
@@ -37,7 +37,7 @@ work: clickhomes
 
 ## Why bother
 
-Want a TeamViewer-style remote desktop without a subscription, and without handing connection metadata to someone else's relay? RustDesk is fully open source. The clients are free. The public servers will connect you — and then drop the session at about thirty seconds unless you pay.
+Want a TeamViewer-style remote desktop without a subscription, and without handing connection metadata to someone else's relay? RustDesk is fully open source. The clients are free. The public servers will connect you, but they are a demo service: the controlling side must now sign in, and sessions through them have been dropping at about thirty seconds.
 
 You can skip that tax. Run the official `hbbs` (rendezvous) and `hbbr` (relay) containers on any small Linux VPS, point `relay.example.com` at it, and paste one public key into each client. Idle cost is tens of megabytes of RAM. Bandwidth is whatever your VPS already has.
 
@@ -49,7 +49,7 @@ Two things usually waste the first hour, so we will treat them as part of the se
 Substitute your domain below. Do not publish the private key.
 
 <div class="callout callout--note" markdown="1">
-**What “done” means.** Not `docker compose ps` saying healthy. Done is: UDP 21116 answers from outside, the client shows `Ready (relay.example.com)`, and a session through your relay lasts past sixty seconds.
+**What “done” means.** Not `docker compose ps` saying healthy. Done is: UDP 21116 arrives from outside, the client shows `Ready (relay.example.com)`, and a session through your relay lasts past sixty seconds.
 </div>
 
 ## Step 1 — DNS, firewall, and the compose file
@@ -133,14 +133,21 @@ docker compose logs hbbr --tail=20
 
 Look for `ALWAYS_USE_RELAY=Y` in the `hbbs` log and a listen line on 21117 in `hbbr`. Treat a healthcheck of `unhealthy` as untrusted if the image has no shell for `CMD-SHELL`. Ports listening plus an external `nc` are the real signals.
 
-**Verify.** From a machine that is not the VPS, all four of these should report open. If TCP works and UDP fails, the firewall or provider security group is incomplete.
+**Verify.** From a machine that is not the VPS, the three TCP checks should report open. `nc -u` cannot prove UDP, because it reports success even when packets are dropped, so prove UDP 21116 with a capture on the VPS instead. If TCP works and no UDP packet arrives, the provider security group is incomplete: Docker-published ports bypass UFW, so UFW is not what blocks them.
 {: .verify}
 
 ```bash
 nc -vz relay.example.com 21115
 nc -vz relay.example.com 21116
 nc -vz relay.example.com 21117
-nc -vzu relay.example.com 21116
+```
+
+```bash
+# on the VPS
+sudo tcpdump -ni any udp port 21116
+
+# from outside, while the capture runs; one packet in tcpdump is the proof
+echo x | nc -u -w1 relay.example.com 21116
 ```
 
 ## Step 2 — Pin the key, then configure the clients
@@ -159,7 +166,7 @@ On each RustDesk client:
 1. Install the app (`brew install --cask rustdesk` on a Mac).
 2. Settings → Network → unlock network settings.
 3. **ID Server** = `relay.example.com`.
-4. **Relay Server** = leave empty. `hbbs -r` advertises the relay; the official docs discourage setting this on every client.
+4. **Relay Server** = leave empty. `hbbs -r` advertises the relay; the official docs say it can be left blank and RustDesk works it out.
 5. **API Server** = leave empty (Pro).
 6. **Key** = the exact contents of `id_ed25519.pub`, no quotes, no trailing space.
 7. Apply, then restart the app.
@@ -190,7 +197,7 @@ With `ALWAYS_USE_RELAY=Y` you should see `hbbr` activity and established sockets
 
 That is also why I default to relay-on. It costs server bandwidth. It makes the failure mode visible. Set `RUSTDESK_ALWAYS_USE_RELAY=N` later if you want hole-punched P2P and only fall back to `hbbr`.
 
-**Verify.** The session is still connected at 60 seconds, `hbbr` logged traffic, and `ss` shows ESTABLISHED on 21117. That is the proof you are not on the public 30-second relay.
+**Verify.** The session is still connected at 60 seconds, `hbbr` logged traffic, and `ss` shows ESTABLISHED on 21117. That is the proof you are on your own relay, not the public one.
 {: .verify}
 
 ## Failure modes
@@ -198,7 +205,7 @@ That is also why I default to relay-on. It costs server bandwidth. It makes the 
 | Symptom | Cause | Repair |
 | --- | --- | --- |
 | Client stays on the public server message | Key has spaces/quotes, or ID Server is wrong | Paste `id_ed25519.pub` exactly; restart the app |
-| TCP `nc` works, UDP 21116 fails | UFW or cloud SG missing UDP | `ufw allow 21116/udp` and the matching provider rule |
+| TCP `nc` works, no UDP 21116 packet in `tcpdump` | Cloud SG missing UDP (UFW does not filter Docker ports) | Add the matching UDP rule at the provider |
 | Session starts, `hbbr` stays quiet | P2P / same LAN, or `ALWAYS_USE_RELAY` not `Y` | Confirm the env in `hbbs` logs; test from a different network |
 | Containers “unhealthy” but ports listen | Image healthcheck needs a shell the image may lack | Ignore the health label; trust `ss` and `nc` |
 | Every client dies after a recreate | `./data/id_ed25519` was deleted | Restore the backup, or distribute the new public key |

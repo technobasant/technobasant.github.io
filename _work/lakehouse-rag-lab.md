@@ -37,7 +37,7 @@ The two case studies above this one evidence the halves. `data-platform-practice
 
 So this is one rig where it does. A lakehouse underneath: object storage, an Iceberg REST catalog that decides who may touch a table, two query engines reading the same tables. A retrieval pipeline on top: the same storage refined through Delta, embedded, and served as answers that cite their sources.
 
-Both halves were rebuilt from client projects — a January 2024 Trino/Iceberg build and a July 2025 RAG pipeline. Neither could be simply refreshed. The 2024 stack's catalog image is archived and its metastore is superseded; the 2025 stack's Spark image **no longer exists on Docker Hub at all**, and it required three hand-downloaded JARs that were absent from its own repository. That failure is in the write-ups because it is the more useful lesson: the stack did not break from a bad upgrade, it broke because a vendor changed its distribution model and `:latest` left nothing to fall back to.
+Both halves were rebuilt from client projects — a January 2024 Trino/Iceberg build and a July 2025 RAG pipeline. Neither could be simply refreshed. The 2024 stack's catalog image has not been updated since August 2024 and its metastore is superseded; the 2025 stack's Spark image **has no tags left on Docker Hub** (the `bitnamilegacy` copies are frozen), and it required three hand-downloaded JARs that were absent from its own repository. That failure is in the write-ups because it is the more useful lesson: the stack did not break from a bad upgrade, it broke because a vendor changed its distribution model and `:latest` left nothing to fall back to.
 
 ## What it proves
 
@@ -52,7 +52,7 @@ credential vended for bronze.orders
 
 StarRocks was then attached to the same catalog with one DDL statement, no table definitions, and no S3 credentials of its own. The boundary is engine-independent, which is the actual argument for a REST catalog over a metastore — and the reason to test it before choosing one.
 
-**A recovery that was performed, not described.** An unqualified `DELETE` removed 909,968 rows. `rollback_to_snapshot` returned all of them in 589 ms, because a rollback moves a pointer rather than data. Then `expire_snapshots` demonstrated where that safety net ends: the same time-travel read afterwards returns `Iceberg snapshot ID does not exists`. Retention is a recovery policy, not housekeeping.
+**A recovery that was performed, not described.** An over-broad `DELETE` removed 909,968 rows. `rollback_to_snapshot` returned all of them in 589 ms of wall clock, most of it CLI startup, because a rollback moves a pointer rather than data. Then `expire_snapshots` demonstrated where that safety net ends: the same time-travel read afterwards returns `Iceberg snapshot ID does not exists`. Retention is a recovery policy, not housekeeping.
 
 **Grounding enforced at the retriever.** The RAG endpoint answers with the passages it used, or declines. Asked something outside its corpus, the nearest passage sat at cosine distance 0.923 against a 0.75 threshold — so the response carried a retrieve timing and **no generate timing at all**. The model was never called. A refusal that costs no inference is a threshold, not a prompt, and it is the cheapest safety property in the system.
 

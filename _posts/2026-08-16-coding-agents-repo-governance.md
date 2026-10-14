@@ -3,7 +3,7 @@ title: "Agents write the diff. The repo has to review it."
 seo_title: "How to use Cursor, Claude Code, and Codex in existing repos"
 description: "How to run Cursor, Claude Code, and Codex in an existing repo: AGENTS.md, CODEOWNERS, CI gates, and the AI-generated PR pitfalls that blow up review."
 date: 2026-08-16 13:00:00 +0545
-last_modified_at: 2026-08-16 18:15:00 +0545
+last_modified_at: 2026-10-14
 type: essay
 pillar: ai-systems
 series: agentic-engineering
@@ -28,7 +28,6 @@ mentions:
   - Cursor
   - Claude Code
   - Codex
-  - GitHub Copilot
 cover:
   base: "/assets/images/editorial-coding-agents-review-v1"
   widths: "840,1600"
@@ -40,9 +39,9 @@ cover:
   caption: "Generation is candidate state. AGENTS.md, types, tests, CODEOWNERS, and CI decide whether it becomes the tree."
 faq:
   - q: "How do you use Cursor, Claude Code, or Codex in an existing repository?"
-    a: "Do not start with a longer chat prompt. Put a short AGENTS.md at the repo root with install, test, and never-touch paths. Point Claude Code at it from CLAUDE.md. Keep Cursor-only globs in .cursor/rules. Then make CI and CODEOWNERS refuse merges the model can talk past."
+    a: "Do not start with a longer chat prompt. Put a short AGENTS.md at the repo root with install, test, and never-touch paths. Claude Code reads it directly; if you also keep a CLAUDE.md, import it there. Keep Cursor-only globs in .cursor/rules. Then make CI and CODEOWNERS refuse merges the model can talk past."
   - q: "What is the difference between AGENTS.md, CLAUDE.md, Cursor rules, skills, and hooks?"
-    a: "AGENTS.md is the portable file for facts every agent should always know. CLAUDE.md should import it rather than duplicate it. Cursor rules add path-scoped constraints AGENTS.md cannot express. Skills are on-demand procedures. Hooks and CI are the only hard stops, because the model cannot skip them."
+    a: "AGENTS.md is the portable file for facts every agent should always know. A CLAUDE.md, if you keep one, should import it rather than duplicate it. Cursor rules add path-scoped constraints AGENTS.md cannot express. Skills are on-demand procedures. Hooks and CI are the only hard stops, because the model cannot skip them."
   - q: "How do you govern AI-generated PRs in a monorepo when non-developers open them?"
     a: "Use nested AGENTS.md files per package, CODEOWNERS on auth, data, infra, and instruction files, and fenced paths where design or QA agents may land. Require a plan before implementation for new surfaces. The person who opened the PR must be able to explain the diff."
   - q: "What are the most common Cursor, Claude Code, and Codex pitfalls?"
@@ -65,7 +64,7 @@ That is the control plane this essay specifies. [Part two](/writing/agents-in-a-
 
 ## Why AI coding agents slow seniors down — and why they still feel faster
 
-Self-reported speed is a bad instrument here. METR’s 2025 randomized trial on experienced open-source developers, working real issues in repositories they already knew, found that allowing early-2025 AI tools — mostly Cursor with Claude 3.5/3.7 Sonnet — made them **19% slower**, while those same developers still believed they had sped up by about 20%. The paper is a snapshot of one setting, not a law of physics; METR’s later replication widened the error bars. The durable fact is the perception gap: agents feel fast while the hidden cost moves into reading, repairing, and re-deriving intent.
+Self-reported speed is a bad instrument here. METR’s 2025 randomized trial on experienced open-source developers, working real issues in repositories they already knew, found that allowing early-2025 AI tools — mostly Cursor with Claude 3.5/3.7 Sonnet — made them **19% slower**, while those same developers still believed they had sped up by about 20%. The paper is a snapshot of one setting, not a law of physics. [METR’s February 2026 follow-up](https://metr.org/blog/2026-02-24-uplift-update/) estimated “a speedup of -18% with a confidence interval between -38% and +9%” for returning developers and -4%, “with a confidence interval between -15% and +9%”, for new ones, and METR itself calls that data “only very weak evidence” because of who declined to take part. The durable fact is the perception gap: agents feel fast while the hidden cost moves into reading, repairing, and re-deriving intent.
 
 Quality data points the same way. [CodeRabbit’s 2025 comparison](https://www.coderabbit.ai/blog/state-of-ai-vs-human-code-generation-report) of 470 open-source pull requests found AI-co-authored changes carried about **1.7× more issues** than human-only PRs, with logic/correctness up ~75% and security findings up to ~2.7×. It is a vendor-run taxonomy on public OSS, so treat the multipliers as directional. The operating consequence does not depend on the third decimal: agents over-produce plausible code, and reviewers inherit the comprehension debt.
 
@@ -73,7 +72,7 @@ An [empirical study of agentic GitHub PRs](https://arxiv.org/abs/2601.00477) fou
 
 [The New Stack](https://thenewstack.io/ai-generated-code-crisis/) is right about the queue: open-source maintainers saw it first, enterprise teams get it next, and the person who opened the PR often cannot explain the change when asked. That is the tell. If the author cannot walk the diff, the agent did not make them faster. It made them a courier.
 
-Martin Fowler’s distinction is the one worth keeping. **Vibe coding** is prompting, running, and forgetting that the code exists — fine for a throwaway. **Agentic programming** is an agent that reads the repo, edits, tests, and iterates, while people keep ownership of structure and behaviour. [vm0](https://www.vm0.ai/en/blog/posts/engineering-quality-vibe-coded-codebase) published the volume version of that model: six engineers, 630 merged PRs in a week, median merge around 53 minutes, with types, contracts, real databases, browser loops, and a merge queue carrying what line-by-line review can no longer carry. They did not get there by asking seniors to read harder.
+Martin Fowler’s distinction is the one worth keeping. **Vibe coding** is prompting, running, and forgetting that the code exists — fine for a throwaway. **Agentic programming** is an agent that reads the repo, edits, tests, and iterates, while people keep ownership of structure and behaviour. [vm0](https://www.okou.ai/en/blog/posts/engineering-quality-vibe-coded-codebase) published the volume version of that model: six engineers authoring 556 of the 630 PRs merged in one week (release automation authored the rest), median merge around 53 minutes, with types, contracts, real databases, browser loops, and a merge queue carrying what line-by-line review can no longer carry. They did not get there by asking seniors to read harder.
 
 ## How to integrate Cursor, Claude Code, or Codex into an existing repository
 
@@ -83,12 +82,12 @@ The first integration step is not a better prompt in chat. It is making the repo
 
 | Layer | What it is for | Where it lives | Guarantee |
 |---|---|---|---|
-| Facts the agent must always know | Layout, install, test, “never touch” | Root [`AGENTS.md`](https://agents.md/) (portable); `CLAUDE.md` imports it | Advisory. Loaded every session. Keep it short. |
+| Facts the agent must always know | Layout, install, test, “never touch” | Root [`AGENTS.md`](https://agents.md/) (portable); Claude Code reads it directly, or a `CLAUDE.md` imports it | Advisory. Loaded every session. Keep it short. |
 | Procedures used sometimes | PR shape, security review, release, “add a design token” | Skills (`SKILL.md`), invoked on demand | Advisory. Cheap until used. |
 | Isolation | Deep search, adversarial review, log archaeology | Subagents with a tight tool list | Still a model. Fresh context, summary returns. |
 | Hard stops | Ban `rm -rf`, force lint after edit, block secret files | Hooks / Cursor hooks / CI | Deterministic. The model cannot talk its way around it. |
 
-[Anthropic’s own steering note](https://claude.com/blog/steering-claude-code-skills-hooks-rules-subagents-and-more) is the practical split: `CLAUDE.md` for always-on facts under ~200 lines; skills for runbooks; hooks for anything that must happen even when the model would rather skip it. Cursor’s native equivalent is path-scoped `.cursor/rules/*.mdc` plus root `AGENTS.md`. Codex reads `AGENTS.md` natively, including nested files. Claude Code still wants `CLAUDE.md`; the compatibility move is a one-line import, not a second copy of the same novel.
+[Anthropic’s own steering note](https://claude.com/blog/steering-claude-code-skills-hooks-rules-subagents-and-more) is the practical split: `CLAUDE.md` for always-on facts under ~200 lines; skills for runbooks; hooks for anything that must happen even when the model would rather skip it. Cursor’s native equivalent is path-scoped `.cursor/rules/*.mdc` plus root `AGENTS.md`. Codex reads `AGENTS.md` natively, including nested files. Claude Code [reads `AGENTS.md` directly](https://code.claude.com/docs/en/memory#agents-md) from v2.1.277 when the repo has no `CLAUDE.md`; once you also keep a `CLAUDE.md`, or for sessions that cannot load `AGENTS.md`, the compatibility move is a one-line import, not a second copy of the same novel.
 
 ```markdown
 # CLAUDE.md
@@ -122,13 +121,13 @@ Root `AGENTS.md` should answer the questions you would give a new teammate on da
 
 That file is policy. Put it under `CODEOWNERS`. A prompt-injection in an issue is annoying; an unreviewed edit to `AGENTS.md` is an instruction to every future agent. GitHub Well-Architected’s advice here is the right one: treat agent instruction files like IAM.
 
-For Cursor-only constraints that `AGENTS.md` cannot express — a glob that should fire only on `apps/web/**` — keep a thin `.cursor/rules/` layer. Do not maintain three essays that say the same thing in `.cursorrules`, `CLAUDE.md`, and `AGENTS.md`. Drift is how agents learn yesterday’s architecture.
+For path-scoped constraints that `AGENTS.md` cannot express — a glob that should fire only on `apps/web/**` — keep a thin layer in each tool's rules directory: `.cursor/rules/*.mdc` for Cursor, `.claude/rules/` with a `paths:` field for Claude Code. Do not maintain three essays that say the same thing in `.cursorrules`, `CLAUDE.md`, and `AGENTS.md`. Drift is how agents learn yesterday’s architecture.
 
 ## How to govern AI-generated PRs in a monorepo
 
 Once designers, QA, and managers can open PRs, a single root file becomes a liability. It either stays vague and the agent invents, or it grows until the model ignores the middle. Nested files are the intended design. [AGENTS.md](https://agents.md/) says the closest file wins; OpenAI’s own monorepo has shipped dozens of them. Cursor scopes a nested `AGENTS.md` to its subtree. Claude Code walks from the working directory and concatenates.
 
-Put repo-wide facts at the root. Put the package’s test command, data store, and “do not migrate from here” at the package. State facts (“this service owns `payments.ledger`”) rather than global slogans. Datadog’s pattern of a gitignored `AGENTS.local.md` for personal overrides is the right split: local taste does not merge into main and silently retune every session.
+Put repo-wide facts at the root. Put the package’s test command, data store, and “do not migrate from here” at the package. State facts (“this service owns `payments.ledger`”) rather than global slogans. Datadog’s pattern of a gitignored `AGENTS.local.md` for personal overrides is the right split: local taste does not merge into main and silently retune every session. Check that your tools load it: neither Claude Code nor Codex reads `AGENTS.local.md` by default, and a `CLAUDE.local.md` stops Claude Code reading `AGENTS.md` unless you change its project-instructions setting.
 
 Then make Git do the thing Markdown cannot: refuse the merge.
 
@@ -211,7 +210,7 @@ The poisoning row is why `AGENTS.md` is IAM. Indirect prompt injection through a
 
 This is the control plane I want in a repo before I am willing to let a non-specialist agent open PRs against it. It is the same shape as [governed product agents](/work/governed-ai-delivery/): candidate, schema, evidence, review, fallback.
 
-- One portable `AGENTS.md` at the root; `CLAUDE.md` imports it; no duplicate novels.
+- One portable `AGENTS.md` at the root; any `CLAUDE.md` imports it; no duplicate novels.
 - Nested `AGENTS.md` (or path-scoped Cursor rules) per package, reviewed like code.
 - Skills for repeatable workflows; hooks for bans and “run the linter after every edit.”
 - `CODEOWNERS` on instruction files, CI, auth, data, and infra.
@@ -230,11 +229,11 @@ This is the control plane I want in a repo before I am willing to let a non-spec
 
 ### How do you use Cursor, Claude Code, or Codex in an existing repository?
 
-Do not start with a longer chat prompt. Put a short `AGENTS.md` at the repo root with install, test, and never-touch paths. Point Claude Code at it from `CLAUDE.md`. Keep Cursor-only globs in `.cursor/rules`. Then make CI and `CODEOWNERS` refuse merges the model can talk past.
+Do not start with a longer chat prompt. Put a short `AGENTS.md` at the repo root with install, test, and never-touch paths. Claude Code reads it directly; if you also keep a `CLAUDE.md`, import it there. Keep Cursor-only globs in `.cursor/rules`. Then make CI and `CODEOWNERS` refuse merges the model can talk past.
 
 ### What is the difference between AGENTS.md, CLAUDE.md, Cursor rules, skills, and hooks?
 
-`AGENTS.md` is the portable file for facts every agent should always know. `CLAUDE.md` should import it rather than duplicate it. Cursor rules add path-scoped constraints `AGENTS.md` cannot express. Skills are on-demand procedures. Hooks and CI are the only hard stops, because the model cannot skip them.
+`AGENTS.md` is the portable file for facts every agent should always know. A `CLAUDE.md`, if you keep one, should import it rather than duplicate it. Cursor rules add path-scoped constraints `AGENTS.md` cannot express. Skills are on-demand procedures. Hooks and CI are the only hard stops, because the model cannot skip them.
 
 ### How do you govern AI-generated PRs in a monorepo when non-developers open them?
 

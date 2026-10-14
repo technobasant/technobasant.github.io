@@ -2,7 +2,7 @@
 layout: home
 permalink: /
 title: Basant Bhattarai
-last_modified_at: 2026-10-03
+last_modified_at: 2026-10-14
 seo_title: "Basant Bhattarai — Senior Data & AI Engineer"
 description: "Senior Data & AI Engineer. Nine years across data platforms and their databases, AI systems in production, and the system architecture that connects them."
 sitemap:
@@ -101,7 +101,7 @@ writing:
   # One slot per register the site is hired for: applied-ML evaluation (the
   # paired-gate LLM evaluation piece; the OCR measurement that withdrew its own
   # plan is one click away), agent governance, and the
-  # lakehouse. "Ten CI gates" stays one click away as part two of the series.
+  # lakehouse. "Ten gates" stays one click away as part two of the series.
   spotlight:
     - eval-score-drop-twelve-answers
     - coding-agents-repo-governance

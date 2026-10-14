@@ -5,19 +5,19 @@
 
 - slug: spark
   name: "Apache Spark"
-  blurb: "Practical Spark work: shuffle diagnosis, executor sizing, partitioning, skew, and the measurements worth collecting before changing a configuration."
+  blurb: "Spark in production: the Spark 4 upgrade traps (S3A committers, the Hive Metastore), a Kinesis connector for Spark 4, and the measurements worth collecting before changing a configuration."
   og: og-spark.png
   featured: true
 
 - slug: kafka-streaming
   name: "Kafka & streaming"
-  blurb: "Ingestion that survives replay, late events, duplicate deliveries and producers you do not control. Kafka, Kinesis, Structured Streaming, CDC."
+  blurb: "Ingestion that survives replay, late events, duplicate deliveries and producers you do not control. Kafka, Flink, Kinesis, Structured Streaming, CDC."
   og: og-streaming.png
   featured: true
 
 - slug: iceberg-lakehouse
   name: "Iceberg & the lakehouse"
-  blurb: "Table-format engineering: schema evolution, slowly changing dimensions, snapshot expiry, compaction cadence, and repairable data history."
+  blurb: "Table-format engineering on Iceberg: catalogs and vended credentials, medallion models, snapshot expiry, compaction cadence, and a rollback actually performed."
   og: og-lakehouse.png
   featured: true
 
@@ -35,13 +35,13 @@
 
 - slug: distributed-databases
   name: "Distributed databases"
-  blurb: "Quorum, sharding, failover and backup across MongoDB, ScyllaDB, Redis, MariaDB/Galera and Solr — measured on a rig rather than quoted from a docs page."
+  blurb: "Sharding, quorum, failover and backup across Citus, MongoDB, ScyllaDB, Redis, MariaDB/Galera and Solr — measured on real clusters rather than quoted from a docs page."
   og: og-databases.png
   featured: true
 
 - slug: kubernetes
   name: "Kubernetes"
-  blurb: "Stateful data workloads on Kubernetes: scheduling, operators, resource shaping, disruption, and the operational price of explicit control."
+  blurb: "Progressive delivery and stateful workloads on Kubernetes: canary analysis that judges against stable, operators, disruption, and the operational price of explicit control."
   og: og-kubernetes.png
   featured: false
 
@@ -83,12 +83,12 @@
 
 - slug: self-hosted
   name: "Self-hosted ops"
-  blurb: "Free, fully OSS setups you can run yourself: a WireGuard VPN, a RustDesk remote desktop, and a Stalwart mailbox for your own domain."
+  blurb: "Free, fully OSS setups you can run yourself: a WireGuard VPN, a RustDesk remote desktop, a Stalwart mailbox for your own domain, and amd64 lab VMs on Apple Silicon."
   og: og-default-v3.png
   featured: true
 
 - slug: applied-ml
   name: "Applied ML & evaluation"
-  blurb: "Models judged by a scorer you wrote before you saw the output: OCR extraction, short-text classification, embeddings and clustering, and the measurements that withdrew a plan rather than confirming it."
+  blurb: "Models judged by a scorer you wrote before you saw the output: LLM evaluation with paired tests, point-in-time training data, OCR extraction, short-text classification, and the measurements that withdrew a plan rather than confirming it."
   og: og-agents.png
   featured: false

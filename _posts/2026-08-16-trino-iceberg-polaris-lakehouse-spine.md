@@ -2,7 +2,7 @@
 title: "A lakehouse spine: Trino, Iceberg and Polaris, with credentials that expire"
 description: "Build Trino 483 on Iceberg with Apache Polaris as the REST catalog, then prove the vended S3 credentials cannot read the table next door."
 date: 2026-08-16 12:00:00 +0545
-last_modified_at: 2026-10-13
+last_modified_at: 2026-10-14
 type: tutorial
 pillar: data-platforms
 tags: [iceberg-lakehouse, distributed-databases]
@@ -28,9 +28,9 @@ prerequisites:
   - "No AWS account: MinIO stands in for S3, including its STS endpoint"
 tested_on: "macOS Darwin 25 · arm64 host · Docker Desktop 8 CPU / 11.67 GB · Trino 483 · Apache Polaris 1.7.0 · MinIO RELEASE.2025-09-07 · PostgreSQL 18.1 · all images native arm64, nothing emulated"
 key_takeaways:
-  - "POLARIS_BOOTSTRAP_CREDENTIALS does not create the database schema. Polaris starts, reports healthy, then fails every request with `relation \"polaris_schema.entities\" does not exist`."
-  - "MinIO refuses AssumeRole for the root account. Credential vending needs a MinIO user, and the error names the action rather than the identity."
-  - "`kmsUnavailable: true` is mandatory against MinIO, and omitting it lets CREATE TABLE succeed while every subsequent SELECT fails."
+  - "With `relational-jdbc`, Polaris never bootstraps itself, so POLARIS_BOOTSTRAP_CREDENTIALS is ignored. Polaris starts, reports healthy, then fails every request with `relation \"polaris_schema.entities\" does not exist`."
+  - "`Unsupported action AssumeRole` from MinIO does not mean STS is missing: the request never reached MinIO's AssumeRole handler. Explicit keys for a dedicated MinIO user fixed it."
+  - "A placeholder `roleArn` gives Polaris an AWS account id, and with it a KMS statement MinIO rejects — on read-only credentials only, so CREATE TABLE succeeds and every SELECT fails. Leave `roleArn` out, or set `kmsUnavailable: true`."
   - "Setting `register-table-procedure` alongside vended credentials makes Trino refuse to start, not fail at query time."
   - "A vended credential is genuinely scoped: it reads its own table prefix and gets AccessDenied on the table next door."
 ---
@@ -39,11 +39,13 @@ key_takeaways:
 
 I first built this stack in January 2024 for a client who wanted to see whether Trino over Iceberg could replace a warehouse they were outgrowing. That build pinned Trino 437, `tabulario/iceberg-rest:0.2.0` as the catalog, and Hive Metastore underneath it.
 
-Every one of those three has since been superseded. Trino is on 483. The `tabulario` image is archived. Apache Polaris graduated incubation and is on 1.7.0. So this post is the same architecture, rebuilt on current versions and measured, and the interesting part turned out to be the piece the 2024 build did not have at all: **credentials that expire**.
+Every one of those three has since been superseded. Trino is on 483. The `tabulario` image has not been updated since August 2024. Apache Polaris graduated incubation and was on 1.7.0 for this rebuild; 1.8.0 has shipped since. So this post is the same architecture, rebuilt on current versions and measured, and the interesting part turned out to be the piece the 2024 build did not have at all: **credentials that expire**.
 
 The claim I wanted to test is the one that justifies a REST catalog over a metastore. Hive Metastore tells you where a table is. Polaris decides whether you may touch it, and hands out short-lived S3 credentials scoped to that table's prefix. If that works, Trino never holds a standing key. If it does not, you have added a service and gained a lookup.
 
 It works. Proving it took five failures, and four of them fail in a way that points somewhere else.
+
+The compose file, the scripts and the measurements are in [lakehouse-lab](https://github.com/technobasant/lakehouse-lab).
 
 ## Step 1 — Storage, and a catalog that survives a restart
 
@@ -79,14 +81,14 @@ services:
 Polaris defaults to in-memory persistence, which loses every namespace on restart. A lab that forgets its catalog when you reboot is not reproducible, so this one runs on Postgres.
 
 <div class="callout callout--gotcha" markdown="1">
-**`POLARIS_BOOTSTRAP_CREDENTIALS` does not create the schema.** Point Polaris at an empty Postgres with that variable set and it starts cleanly, passes its healthcheck, and then fails every single request:
+**On Postgres, `POLARIS_BOOTSTRAP_CREDENTIALS` does nothing.** The server only bootstraps itself for the persistence types listed in `polaris.persistence.auto-bootstrap-types`, which defaults to `in-memory`. Point Polaris at an empty Postgres with that variable set and it starts cleanly, passes its healthcheck, and then fails every single request:
 
 ```text
 Failed to retrieve polaris entity due to Failed due to
 'ERROR: relation "polaris_schema.entities" does not exist'
 ```
 
-The schema is the admin tool's job. And the admin tool does **not** read `POLARIS_BOOTSTRAP_CREDENTIALS` — that variable belongs to the server. Passing only `-r` exits 3 with `Specify either --credentials or --print-credentials`, so the same credential has to be repeated in the tool's own form.
+The schema is the admin tool's job. And the admin tool does **not** read `POLARIS_BOOTSTRAP_CREDENTIALS` — only the server's in-memory auto-bootstrap does. Passing only `-r` exits 3 with `Specify either --credentials or --print-credentials`, so the same credential has to be repeated in the tool's own form.
 </div>
 
 ```yaml
@@ -117,7 +119,6 @@ Now the server itself:
       polaris-bootstrap: { condition: service_completed_successfully }
     ports: ["8181:8181", "8182:8182"]
     environment:
-      POLARIS_BOOTSTRAP_CREDENTIALS: POLARIS,root,s3cr3t-dev-only
       polaris.realm-context.realms: POLARIS
       polaris.persistence.type: relational-jdbc
       quarkus.datasource.jdbc.url: jdbc:postgresql://polaris-db:5432/polaris
@@ -134,7 +135,7 @@ Now the server itself:
 {: data-file="docker-compose.yaml"}
 
 <div class="callout callout--gotcha" markdown="1">
-**`/healthcheck` 404s.** The upstream Spark quickstart still uses `http://localhost:8182/healthcheck`. On 1.7.0 that path is gone — Quarkus serves health under `/q/health`. A healthcheck aimed at a 404 leaves the container in `health: starting` forever, and every service with a `service_healthy` dependency silently never starts. Nothing in the logs mentions it, because from Polaris's point of view nothing is wrong.
+**`/healthcheck` 404s.** The getting-started compose for Polaris's Spark plugin still uses `http://localhost:8182/healthcheck`. That path was removed in 1.3.0 — Quarkus serves health under `/q/health`. Upstream gets away with it only because its `curl` has no `-f`, so the 404 counts as healthy and the check checks nothing. With `-f` it never passes: after 30 failed probes — five minutes here — the container turns `unhealthy`, and Compose refuses to start every service with a `service_healthy` dependency on it. Nothing in Polaris's logs mentions it, because from Polaris's point of view nothing is wrong.
 </div>
 
 ## Step 2 — The grant chain
@@ -179,9 +180,9 @@ Four things in that storage config are worth naming, because three of them cost 
 
 **The S3 knobs are flat camelCase.** `endpoint` and `pathStyleAccess`, not the dotted `s3.endpoint` keys you write in Iceberg *client* configuration. Same concepts, different layer, different spelling.
 
-**`roleArn` is required and ignored.** MinIO returns an empty `AssumedRoleUser.Arn`, but the STS API shape demands one and Polaris will not call STS without it.
+**`roleArn` is optional, and against MinIO it is better left out.** MinIO ignores it and returns an empty `AssumedRoleUser.Arn`, but Polaris parses an AWS account id out of it — and that account id is what adds the KMS statement below.
 
-**`kmsUnavailable: true` is the one that is in no quickstart.** More on that in a moment.
+**`kmsUnavailable: true` is the one that is in no quickstart.** It is only needed because of that placeholder `roleArn`. More on that in a moment.
 
 Then the roles:
 
@@ -234,22 +235,24 @@ That is a startup failure, not a query failure. The coordinator exits 100, every
 
 This is the part worth reading twice, because the failure modes are actively misleading.
 
-### MinIO refuses AssumeRole for root
+### MinIO answers AssumeRole with "Unsupported action"
 
-Polaris mints scoped credentials by calling `sts:AssumeRole`. Point it at MinIO with the root credentials and you get:
+Polaris mints scoped credentials by calling `sts:AssumeRole`. The first attempt against MinIO came back with:
 
 ```text
 <Code>InvalidParameterValue</Code>
 <Message>Unsupported action AssumeRole</Message>
 ```
 
-That message says the *action* is unsupported, so the obvious conclusion is that MinIO has no STS. It does. It refuses AssumeRole **for the root account specifically**. Create a MinIO user and the same call succeeds:
+That message says the *action* is unsupported, so the obvious conclusion is that MinIO has no STS. It does. In MinIO's source, that message never comes from the AssumeRole handler at all: an STS request that arrives without a SigV4 signature is routed to the web-identity handler, which rejects `AssumeRole` as an action it does not handle. The request never reached the code that would have answered it.
+
+What fixed it here was giving Polaris explicit keys for a dedicated MinIO user:
 
 ```bash
 mc admin user add local polaris-svc polaris-svc-dev-only
 mc admin policy attach local readwrite --user polaris-svc
 ```
-{: data-file="minio-init"}
+{: data-file="docker-compose.yaml"}
 
 Then point Polaris at that identity rather than root:
 
@@ -277,12 +280,12 @@ invalid resource 'arn:aws:kms:us-east-1:123456789012:key/*'
 (Service: Sts, Status Code: 400)
 ```
 
-Polaris builds a session policy for the AssumeRole call and, by default, includes a KMS statement. MinIO's policy engine does not understand KMS ARNs and rejects the whole request. `kmsUnavailable: true` on the catalog stops it being added.
+Polaris builds a session policy for the AssumeRole call. When it knows a region and an AWS account id — here, parsed from the placeholder `roleArn` — and the credential is read-only, it adds a wildcard KMS statement for every key in that account. MinIO's policy engine does not understand KMS ARNs and rejects the whole request. Leaving `roleArn` out stops the statement being added; so does `kmsUnavailable: true` on the catalog, which is what this lab uses.
 
 **This is the worst failure in the series.** The data lands. The bucket fills. Only reads break, and the message Trino prints mentions neither KMS, nor STS, nor Polaris.
 
 <div class="callout callout--gotcha" markdown="1">
-**Why writes survived and reads did not.** The write path obtained credentials through a code path that did not need the offending policy; `loadTable` did. If you are debugging this, the tell is that `SHOW TABLES` works and `SELECT` does not.
+**Why writes survived and reads did not.** Polaris adds the wildcard KMS statement only to read-only credentials. The CTAS asked for write access and never carried it; `loadTable` for a `SELECT` did. If you are debugging this, the tell is that `SHOW TABLES` works and `SELECT` does not.
 </div>
 
 ## Step 5 — Prove the scoping, do not trust the label
@@ -349,11 +352,11 @@ Query timings, median of 7 server-side runs read from `system.runtime.queries`:
 | --- | --- | --- |
 | `relation "polaris_schema.entities" does not exist` | Schema never created | Run `polaris-admin-tool bootstrap` before the server |
 | Bootstrap exits 3 | Admin tool ignores `POLARIS_BOOTSTRAP_CREDENTIALS` | Pass `-c realm,clientId,clientSecret` explicitly |
-| Container stuck `health: starting` | Healthcheck points at `/healthcheck` | Use `/q/health/ready` on port 8182 |
+| Container `health: starting`, then `unhealthy` | Healthcheck points at `/healthcheck` | Use `/q/health/ready` on port 8182 |
 | `HTTP 400`, empty body, on catalog create | `storageType: S3_COMPATIBLE` | Use `S3` with flat `endpoint` / `pathStyleAccess` |
 | Trino exits 100 at startup | `register-table-procedure` + vending | Remove the procedure flag |
-| `Unsupported action AssumeRole` | Using MinIO root | Create a MinIO user and use it |
-| Writes succeed, all reads fail | KMS statement in the session policy | `kmsUnavailable: true` on the catalog |
+| `Unsupported action AssumeRole` | STS request reached MinIO unsigned and was routed to the web-identity handler | Give Polaris explicit keys for a dedicated MinIO user |
+| Writes succeed, all reads fail | KMS statement in the read-only session policy, from a placeholder `roleArn` | Drop the placeholder `roleArn`, or `kmsUnavailable: true` on the catalog |
 | `Credential vending was requested … but no credentials are available` | `stsUnavailable: true` | Enable STS, or disable vending and accept standing keys |
 
 ## Clean up and operating consequence
@@ -364,6 +367,6 @@ docker compose down -v
 
 The operating rule this lab produced: **a REST catalog is only worth the extra service if vending actually works.** Turn vending off and Polaris becomes a metadata lookup with a permissions table in front of it, while every Trino user still holds a key to the whole bucket. That is not obviously better than Hive Metastore.
 
-Turn it on and the boundary is real, but you inherit an STS dependency that must be exercised in whatever object store you actually run. Against MinIO that meant a service user and one undocumented flag. Against a different S3-compatible store it will mean something else — and the way to find out is to take a vended credential and try to read the table next door.
+Turn it on and the boundary is real, but you inherit an STS dependency that must be exercised in whatever object store you actually run. Against MinIO that meant a service user and one flag to undo a placeholder role ARN. Against a different S3-compatible store it will mean something else — and the way to find out is to take a vended credential and try to read the table next door.
 
-[Part 2]({{ '/writing/' | relative_url }}) builds bronze, silver and gold on top of this with dbt-trino, where the interesting failure is a partition spec that dbt accepts and silently discards.
+[Part 2]({{ '/writing/dbt-trino-iceberg-medallion-airflow/' | relative_url }}) builds bronze, silver and gold on top of this with dbt-trino, where the interesting failure is a partition spec that dbt accepts and silently discards.

@@ -2,7 +2,7 @@
 title: "A RAG pipeline on a Delta lakehouse, and the bug that survived being fixed"
 description: "Scrape to bronze, silver, gold on Spark 4 and Delta, embed into Chroma, and serve answers that cite their sources or decline to answer."
 date: 2026-08-16 08:00:00 +0545
-last_modified_at: 2026-08-16
+last_modified_at: 2026-10-14
 type: tutorial
 pillar: ai-systems
 tags: [rag, iceberg-lakehouse]
@@ -26,7 +26,7 @@ prerequisites:
   - "Comfort reading a docker-compose file and a PySpark job"
 tested_on: "macOS Darwin 25 · arm64 host · Docker Desktop 8 CPU / 11.67 GB · Spark 4.0.4 · Delta 4.0.0 · MinIO RELEASE.2025-09-07 · Chroma 1.5.9 · Ollama 0.12.11 with llama3.2:1b · all images native arm64"
 key_takeaways:
-  - "`bitnami/spark` no longer exists on Docker Hub, and `bitnamilegacy/spark` publishes only sha256 tags — a 2025 compose file will not start in 2026."
+  - "`bitnami/spark` has no tags left on Docker Hub, and the `bitnamilegacy/spark` copies are frozen — a 2025 compose file will not start in 2026 unchanged."
   - "delta-spark and Spark are pinned minor to minor: 4.0.0 works against Spark 4.0.4, while 4.1.0 and 4.3.1 resolve cleanly then fail at class load."
   - "The `spark` user in `apache/spark` has no home directory, so spark-submit dies writing to `/nonexistent/.ivy2` before resolving a single package."
   - "A refusal that costs no inference is the cheapest safety property here — the retriever rejected an out-of-corpus question at distance 0.923 without calling the model."
@@ -39,6 +39,8 @@ A small end-to-end system: scrape a bounded set of pages, land them in object st
 
 I built the first version in July 2025. Coming back to it in 2026, the most useful thing about it was not that it worked; it was **why it had stopped**.
 
+The July 2025 original is public at [rag-pipeline](https://github.com/technobasant/rag-pipeline); the 2026 rebuild described here is not published yet.
+
 ## Step 0 — Why a 2025 compose file does not start in 2026
 
 Three reasons, and the first is not a version problem.
@@ -49,7 +51,7 @@ marquezproject/marquez:latest      pulls
 chromadb/chroma:latest             pulls
 ```
 
-**`bitnami/spark` is gone.** Broadcom moved the Bitnami catalog behind a paid tier during 2025. A `bitnamilegacy` namespace survives, but it publishes **only sha256 digests** — there is no `3.5`, nothing you can write in a compose file and read six months later.
+**`bitnami/spark:3.5` is gone.** Broadcom moved the Bitnami catalog behind a paid tier during 2025, and `bitnami/spark` now has no tags at all. A `bitnamilegacy` namespace keeps the old tags, `3.5` included, but frozen: no updates, and no promise it stays.
 
 **Nine images were pinned to `:latest`.** Which means the stack that ran in July 2025 is not recoverable, and no assertion about it is checkable. That is the actual cost of `:latest`, and it is not a style preference.
 
@@ -72,7 +74,7 @@ chromadb/chroma:latest             pulls
 ```
 {: data-file="docker-compose.yaml"}
 
-The `jars/` directory is gone entirely. Spark resolves S3A and Delta from Maven at submit time:
+In the rebuild, the `jars/` directory is gone entirely. Spark resolves S3A and Delta from Maven at submit time:
 
 ```bash
 exec /opt/spark/bin/spark-submit \
@@ -103,7 +105,7 @@ Bitnami's image set a home; the official one does not. This is the single most l
 
 | `delta-spark_2.13` | Spark 4.0.4 | result |
 | --- | --- | --- |
-| 4.3.1 (latest) | ✗ | `NoSuchMethodError: ParserInterface.$init$` |
+| 4.3.1 (latest when tested; 4.4.x since) | ✗ | `NoSuchMethodError: ParserInterface.$init$` |
 | 4.1.0 | ✗ | same |
 | **4.0.0** | ✓ | 50,000 rows written |
 
@@ -238,7 +240,7 @@ if os.environ.get("REBUILD", "").lower() in ("1", "true", "yes"):
 | scrape | 187 sections, 10 pages, 883 KB |
 | bronze → silver | 187 → 170 (17 duplicates removed) |
 | embed | 170 chunks in 2.6 s — 64.8/s, 384 dimensions |
-| upsert | 0.16 s |
+| upsert | 0.16–0.25 s across runs |
 | retrieve | 45–58 ms |
 | generate | 20–34 s, llama3.2:1b on CPU |
 

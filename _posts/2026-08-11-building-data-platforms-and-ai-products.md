@@ -3,7 +3,7 @@ title: "The data platform is part of the product"
 seo_title: "Why the data platform belongs inside the product boundary"
 description: "A practical operating model for reliable data and AI products: consumer-facing promises, typed decisions, idempotency, provenance, and repair."
 date: 2026-08-11 10:00:00 +0545
-last_modified_at: 2026-08-11 16:00:00 +0545
+last_modified_at: 2026-10-14
 type: essay
 pillar: data-platforms
 editor_pick: true
@@ -239,6 +239,8 @@ ON CONFLICT (idempotency_key) DO NOTHING
 RETURNING decision_id;
 ```
 {: data-file="queries/insert_decision.sql" }
+
+On a duplicate, `RETURNING` yields no row: the key already exists, so the caller reads the stored decision by `idempotency_key` and returns that.
 
 There is a trade-off: the key encodes what I consider the identity of a decision. Changing that definition is a contract change. I document it and version the policy rather than hiding it in a helper function.
 

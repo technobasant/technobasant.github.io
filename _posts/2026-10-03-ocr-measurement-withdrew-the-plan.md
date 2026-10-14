@@ -3,7 +3,7 @@ title: "The OCR plan said fix the photographs. Its first measurement withdrew it
 seo_title: "OCR accuracy on clinic records: measure the premise before the fix"
 description: "An OCR plan blamed skewed, creased phone photos for lost accuracy. Its first step, a per-defect cost table and a deskew test, showed capture cost nothing."
 date: 2026-10-03 09:00:00 +0545
-last_modified_at: 2026-10-03
+last_modified_at: 2026-10-14
 type: essay
 pillar: ai-systems
 tags:
@@ -124,7 +124,7 @@ creased                            0.205 (n=12)      0.204 (n=27)
 Correlation still cannot settle a causal claim, so the correction was applied and measured. Hough-line deskew on six skewed handwritten pages, detected angles of 1.9° to 10.0°, then re-OCR and compare character yield: −3, +8, +14, 0, −6 and −8 characters. A net +5 across roughly 3,838 characters, with no consistent direction. That is noise.
 
 <div class="callout callout--gotcha" markdown="1">
-**The confounder was in the plan's own evidence.** The original claim quoted the absolute F1 of pages carrying each defect — 0.377 for skewed pages, 0.315 for creased ones — with no comparison group. Low scores on defect pages looked like a defect cost. The within-type cut shows they were mostly the handwritten pages scoring low with or without a crease. Any per-attribute table over a corpus with mixed document types needs that cut before it is allowed to justify work.
+**The confounder was in the plan's own evidence.** The original claim quoted the absolute F1 of pages carrying each defect — 0.377 for skewed pages, 0.315 for creased ones, figures from before the table above was built — with no comparison group. Low scores on defect pages looked like a defect cost. The within-type cut shows they were mostly the handwritten pages scoring low with or without a crease. Any per-attribute table over a corpus with mixed document types needs that cut before it is allowed to justify work.
 </div>
 
 So perspective correction, illumination, sharpening and binarisation were withdrawn for want of evidence. Each can be reopened by a causal test showing a gain on the pages that carry the defect. Three narrower capture items were kept because each had evidence independent of the table: resolving rotation *direction* rather than only the axis (an upside-down page scored 0.000), suppressing background objects so the recogniser stops reading furniture as clinical text, and diagnosing one page that lost an entire left column.
@@ -210,7 +210,7 @@ if won.rowcount != 1:
 ```
 {: data-file="backend/app/services.py" }
 
-The obvious alternative, `SELECT … FOR UPDATE SKIP LOCKED`, is silently ignored by SQLite in development, which let two runners win the same job. Expressed as a guarded `UPDATE`, the claim is correct on both databases with no dialect-specific locking, and a page abandoned by a crashed worker is recovered when its lease expires.
+The obvious alternative, `SELECT … FOR UPDATE SKIP LOCKED`, is silently dropped by SQLAlchemy's SQLite dialect in development, which let two runners win the same job. Expressed as a guarded `UPDATE`, the claim is correct on both databases with no dialect-specific locking, and a page abandoned by a crashed worker is recovered when its lease expires.
 
 The plan's next assumption was that more workers would mean faster packets. Measured: three workers did claim three pages concurrently with one attempt each, so scaling was safe. It was not faster. Six text-heavy pages drained in 14.3 s with one worker, 16.7 s with three at four threads each, and 17.1 s with three at three. ONNX Runtime keeps its own intra-op thread pool and ignores `OMP_NUM_THREADS`, so every worker took every core it could see. The numbers went into the compose file's comments so nobody rediscovers them, and the real fix — setting intra-op threads to cores divided by workers — became its own work item.
 

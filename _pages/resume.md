@@ -70,19 +70,19 @@ redirect_from:
 <ol class="principle-list capability-map is-wide">
   <li>
     <h3>Data platforms</h3>
-    <p>Batch and streaming ingestion, Spark/PySpark processing, Airflow orchestration, Iceberg and dbt modeling, Kubernetes capacity, contracts, lineage, and cost. <a href="/work/data-platform-practice/">Evidence: production platform case study</a>.</p>
+    <p>Batch and streaming ingestion, Spark/PySpark processing, Airflow orchestration, Iceberg and dbt modeling, Kubernetes capacity, contracts, lineage, and cost. Evidence: <a href="/work/data-platform-practice/">production platform case study</a>; <a href="/work/streaming-platform/">exactly-once streaming, measured</a>.</p>
   </li>
   <li>
     <h3>Database lifecycle</h3>
-    <p>PostgreSQL, ClickHouse, Trino, Citus, TimescaleDB, Redis, MongoDB, and MySQL/MariaDB across modeling, HA, replication, backup and PITR, upgrades, access control, and query performance. <a href="/work/multi-engine-ha-lab/">Evidence: measured failover lab</a>.</p>
+    <p>PostgreSQL, ClickHouse, Trino, Citus, TimescaleDB, Redis, MongoDB, and MySQL/MariaDB across modeling, HA, replication, backup and PITR, upgrades, access control, and query performance. Evidence: <a href="/work/distributed-db-lab/">Citus sharding and rebalance lab</a>; <a href="/work/multi-engine-ha-lab/">measured failover lab</a>.</p>
   </li>
   <li>
     <h3>Agentic systems</h3>
-    <p>Production agents on LangGraph, LangChain, Google ADK and MCP tool servers: bounded tools, retrieval, evaluation before rollout, typed output, and a fallback path that fails honestly. Built against the platform already running. <a href="/work/governed-ai-delivery/">Evidence: governed AI case study</a>.</p>
+    <p>Production agents on LangGraph, LangChain, Google ADK and MCP tool servers: bounded tools, retrieval, evaluation before rollout, typed output, and a fallback path that fails honestly. Built against the platform already running. Evidence: <a href="/work/governed-ai-delivery/">governed AI case study</a>; <a href="/work/governed-agent/">governed-agent</a> and <a href="/work/evalproof/">evalproof</a>, measured in public.</p>
   </li>
   <li>
     <h3>System architecture</h3>
-    <p>Application boundaries, schema design, dual OLTP/OLAP stores, typed contracts, and recovery paths a product can actually replay. FastAPI, PostgreSQL, ClickHouse, and the service layers between them. <a href="/work/clickhomes/">Evidence: independent product case study</a>.</p>
+    <p>Application boundaries, schema design, dual OLTP/OLAP stores, typed contracts, and recovery paths a product can actually replay. FastAPI, PostgreSQL, ClickHouse, and the service layers between them. Evidence: <a href="/work/clickhomes/">independent product case study</a>; <a href="/work/platform-deployments/">GitOps canary platform</a>.</p>
   </li>
 </ol>
 

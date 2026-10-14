@@ -2,7 +2,7 @@
 title: "Bronze, silver, gold on Iceberg: the dbt config that is silently ignored"
 description: "Build a medallion pipeline with dbt-trino on Iceberg, orchestrate it with Airflow 3, and find the partition spec dbt accepts and discards without a warning."
 date: 2026-08-16 11:00:00 +0545
-last_modified_at: 2026-08-16
+last_modified_at: 2026-10-14
 type: tutorial
 pillar: data-platforms
 tags: [iceberg-lakehouse, data-quality]
@@ -41,9 +41,9 @@ Every lakehouse article asserts that Iceberg gives you row-level MERGE, so incre
 
 It is also the kind of claim that is easy to state and rarely shown. dbt will happily print `MERGE (25_000 rows)` whether it rewrote one file or all eighty. The evidence is not in dbt's output — it is in Iceberg's `$snapshots` metadata table, which records exactly how many data files each commit added and deleted.
 
-The stack is a rebuild of a January 2024 client project on current versions — Trino 437 became 483, Hive Metastore became Apache Polaris. This post builds bronze → silver → gold on the [spine from part one]({{ '/writing/' | relative_url }}), hands it to Airflow, and then goes and reads that table.
+The stack is a rebuild of a January 2024 client project on current versions — Trino 437 became 483, Hive Metastore became Apache Polaris. This post builds bronze → silver → gold on the [spine from part one]({{ '/writing/trino-iceberg-polaris-lakehouse-spine/' | relative_url }}), hands it to Airflow, and then goes and reads that table. The dbt project and the DAG are in [lakehouse-lab](https://github.com/technobasant/lakehouse-lab), under `dbt/` and `airflow/`.
 
-Four things went wrong on the way. Three of them failed silently.
+Four things went wrong on the way. Two of them failed silently.
 
 ## Step 1 — dbt against Trino, holding no credentials
 
@@ -177,14 +177,14 @@ The cost of getting it wrong, on the same rows and the same predicate:
 
 | table | data files | partitions | median query |
 | --- | --- | --- | --- |
-| `partitioning` at config level (ignored) | 2 | 0 | 131 ms |
+| `partitioning` at config level (ignored) | 2 | — (unpartitioned) | 131 ms |
 | `properties = {"partitioning": …}` | 80 | 80 | 99 ms |
 
 <div class="callout callout--gotcha" markdown="1">
 **`--` comments are a compilation error inside `config()`.** That block is a Jinja expression, not SQL. A `-- like this` line inside it produces `invalid syntax for function call expression`, pointing at the `config(` line rather than the comment. Use `{# … #}` outside the call.
 </div>
 
-**Verify.** `SHOW CREATE TABLE` includes `partitioning = ARRAY['month(orderdate)']`, and `SELECT count(*) FROM "orders_enriched$partitions"` returns 80 rather than 0.
+**Verify.** `SHOW CREATE TABLE` includes `partitioning = ARRAY['month(orderdate)']`, and `SELECT count(*) FROM "orders_enriched$partitions"` returns 80 rather than 1 — on an unpartitioned table, `$partitions` is a single row for the whole table.
 {: .verify}
 
 ## Step 4 — 403 on a drop you did not know you were doing
@@ -278,7 +278,7 @@ def lakehouse_pipeline():
 **`context["logical_date"]` raises `KeyError` on Airflow 3.** AIP-83 made logical date optional: a manually triggered run has none at all, so the key is simply absent and the task dies before it reaches Trino. `dag_run.run_after` is always populated. This is a quiet migration break — the DAG parses, imports cleanly, and only fails when someone presses Trigger.
 </div>
 
-dbt lives inside the Airflow image rather than behind a `DockerOperator`. The alternative means mounting the host Docker socket into Airflow, which is a real privilege escalation for the sake of avoiding one `pip install`. Pinning the same `dbt-trino==1.10.3` in both images means a DAG run and a manual `dbt run` cannot drift.
+dbt lives inside the Airflow image rather than behind a `DockerOperator`. The alternative means mounting the host Docker socket into Airflow, which is a real privilege escalation for the sake of avoiding one `pip install`. Pinning the same `dbt-trino==1.10.3` in both images keeps the adapter identical between a DAG run and a manual `dbt run`. `dbt-core` is left to pip — anything from 1.8 up to 2.0 satisfies the adapter — so pin it too if the two images are built at different times.
 
 **Verify.** All three tasks report `success`, and `land`, `transform`, `maintain` appear in that order.
 {: .verify}
@@ -300,7 +300,7 @@ dbt lives inside the Airflow image rather than behind a `DockerOperator`. The al
 docker compose --profile orchestration --profile tools down -v
 ```
 
-The rule this produced: **verify the physical layout, not the tool's summary line.** Three of the four failures here reported success. dbt said the model built, and it had — unpartitioned. dbt said `MERGE`, and it was, but only because the keys happened not to collide.
+The rule this produced: **verify the physical layout, not the tool's summary line.** Two of the four failures here reported success. dbt said the models built, and they had — in `silver_silver`, and unpartitioned. And dbt said `MERGE` for what Iceberg recorded as an append, only because the keys happened not to collide.
 
 `SHOW CREATE TABLE` and the `$snapshots` / `$files` metadata tables are the ground truth, and they are cheap to query. A CI check that asserts a silver table has the partition count you expect costs one query and catches a config key that everything else in the stack was willing to ignore.
 

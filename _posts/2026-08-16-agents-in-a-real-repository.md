@@ -1,8 +1,8 @@
 ---
-title: "Ten CI gates, and the failure behind each one"
+title: "Ten gates, and the failure behind each one"
 description: "Every gate in this repository exists because something got through. Three of them because a suite reported success against a broken artifact."
 date: 2026-08-16 14:00:00 +0545
-last_modified_at: 2026-08-16
+last_modified_at: 2026-10-14
 type: essay
 pillar: ai-systems
 series: agentic-engineering
@@ -36,8 +36,10 @@ key_takeaways:
 [Part one]({{ '/writing/coding-agents-repo-governance/' | relative_url }}) argued that
 agents move the bottleneck from writing code to believing it, and that the answer
 is policy in the repository rather than a longer prompt. This post is the
-evidence for that claim from one repository — mine, this site — where ten CI
-gates now run on every build.
+evidence for that claim from one repository — mine, this site — where ten
+audit gates now guard every change: eight run in CI on every push and pull
+request to `master`, `resume` runs in the local `rake default`, and
+`css:deadwood` runs on demand.
 
 **Every one of them exists because something got through.** Four were added in a
 single week of agent-assisted work. What follows is each failure, what it cost to
@@ -92,7 +94,7 @@ FAIL  page 1 is effectively blank (0.2% ink)
 FAIL  page 2 is effectively blank (0.2% ink)
 ```
 
-That gate now runs on every build, and I verified it by reinstating the bug and watching it fail.
+That gate now runs in the local `rake default` suite — CI does not run it — and I verified it by reinstating the bug and watching it fail.
 
 ## What the three have in common
 
@@ -104,20 +106,22 @@ Agents make that worse in a specific way: they are very good at satisfying the s
 
 ## Ten gates, and the shape of a good one
 
-The full set in this repository:
+The full set in this repository, and where each one runs:
 
-| gate | what it refuses |
-| --- | --- |
-| `content` | posts missing structure, a cover, or a description in range |
-| `privacy` | employer internals, matched against explicit patterns, in source and built output and the PDF |
-| `check` | broken internal links, missing images, absent OpenGraph |
-| `verify` | the built shape: feed, sitemap, canonical, robots, card affordances |
-| `jsonld` | any structured-data block that does not parse |
-| `tokens` | any text colour that fails AA on any surface it can land on, both themes |
-| `css:literals` | a raw hex colour anywhere in the component layer |
-| `css:budget` | a stylesheet over its gzip ceiling |
-| `css:deadwood` | a selector matching nothing in the built HTML |
-| `resume` | a PDF that parses wrong or has no ink |
+| gate | what it refuses | runs |
+| --- | --- | --- |
+| `content` | posts missing structure, a cover, or a description in range | CI and `rake default` |
+| `privacy` | employer internals, matched against explicit patterns, in source and built output and the PDF | CI and `rake default` |
+| `check` | broken internal links, missing images, absent OpenGraph | CI and `rake default` |
+| `verify` | the built shape: feed, sitemap, canonical, robots, card affordances | CI and `rake default` |
+| `jsonld` | any structured-data block that does not parse | CI and `rake default` |
+| `tokens` | any text colour that fails AA on any surface it can land on, both themes | CI and `rake default` |
+| `css:literals` | a raw hex colour anywhere in the component layer | CI and `rake default` |
+| `css:budget` | a stylesheet over its gzip ceiling | CI and `rake default` |
+| `css:deadwood` | a selector matching nothing in the built HTML | on demand only |
+| `resume` | a PDF that parses wrong or has no ink | `rake default` only |
+
+The deploy workflow adds four guards of its own, outside Rake: a check for future-dated posts, a feed count that catches posts the build dropped, social-card validation (`scripts/check-og.mjs`), and an assertion that the stylesheet compiled.
 
 Three properties separate the ones that get trusted from the ones that get switched off.
 
@@ -178,7 +182,7 @@ What does work is moving the *mechanical* half of review into the machine, so a 
 
 **Publish the budget rather than the taste.** `css:budget` says the stylesheet must stay under 25 KB gzipped. That is arguable but unambiguous, and a contributor can check it before opening a PR. "Keep the CSS lean" cannot be checked by anyone.
 
-**Let the gate teach.** Every gate in this repository carries a comment explaining the failure that produced it. That is not decoration — it is the only thing that stops a future contributor, human or otherwise, from deleting the rule because it looks arbitrary. The best documentation of a constraint is the scar that created it.
+**Let the gate teach.** Most gates in this repository carry a comment explaining the failure that produced it. That is not decoration — it is the only thing that stops a future contributor, human or otherwise, from deleting the rule because it looks arbitrary. The best documentation of a constraint is the scar that created it.
 
 ## What I would not do
 

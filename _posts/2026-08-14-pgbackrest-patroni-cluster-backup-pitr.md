@@ -2,7 +2,7 @@
 title: "pgBackRest against a Patroni cluster: archive, rebuild, and restore"
 description: "Wire pgBackRest into a running Patroni cluster over mutual TLS with Ansible, then prove it: full backup, replica rebuilt from the repo, and a point-in-time restore."
 date: 2026-08-14 16:30:00 +0545
-last_modified_at: 2026-08-14
+last_modified_at: 2026-10-14
 type: tutorial
 pillar: database-lifecycle
 tags: [postgres, distributed-databases]
@@ -24,7 +24,7 @@ time_estimate: "~90 min on an existing cluster; the restore drill itself is ~15 
 what_youll_build: "pgBackRest wired into a two-node Patroni cluster by Ansible over mutual TLS: archiving through the DCS, a full backup, a replica rebuilt from the repo, and a point-in-time restore of a dropped table."
 prerequisites:
   - "The Patroni cluster from part 2 of this series, running PostgreSQL 18 with etcd"
-  - "Ansible on the control node (ansible-core 2.15.x against RHEL-family guests)"
+  - "Ansible on the control node (ansible-core 2.15.x against RHEL-family guests), plus the `ansible.posix` collection: `ansible-galaxy collection install -r ansible/collections/requirements.yml`"
   - "Enough repo disk for one full backup plus WAL — 3 GB is plenty for a lab"
 tested_on: "Rocky Linux 8 · amd64 under QEMU on Apple Silicon · PostgreSQL 18.6 (PGDG) · Patroni 4.1.5 · pgBackRest 2.59.0 over mutual TLS on 8432 · etcd 3.7.0 · ansible-core 2.15.13 · 192.168.105.140–142"
 key_takeaways:
@@ -41,14 +41,15 @@ Backing up one PostgreSQL server is a solved problem with a well-worn runbook. B
 
 So the repository is not configured against "the primary". It is configured against *every member*, and pgBackRest works out which one is writable when it runs. That single decision is what makes the setup survive a failover, and it is visible in the very first command's output.
 
-Everything here is Ansible. Part 1 of this series established the rule and it holds: Vagrant boots the box and wires the lab NIC; packages, configuration, services and certificates belong to Ansible, because a lab you fixed by hand is a lab you cannot rebuild.
+The wiring here is Ansible, playbooks `03`–`05` in [postgres-ha-lab/patroni](https://github.com/technobasant/postgres-ha-lab/tree/main/patroni); the backup, rebuild and restore drills are commands run by hand. Part 1 of this series established the rule and it holds: Vagrant boots the box and wires the lab NIC; packages, configuration, services and certificates belong to Ansible, because a lab you fixed by hand is a lab you cannot rebuild.
 
 The cluster is the one from [part 2](/writing/patroni-postgresql-18-rocky8-etcd-failover/) — `pgn1` and `pgn2` on PostgreSQL 18.6 with etcd on `etcd1`. The repository lives on `etcd1` as well, which is a lab economy and not a recommendation: in production the DCS and the backup repository are separate failure domains, and the repo does not sit on a database host at all.
 
 ## Step 1 — One repo, every member declared
 
-The Ansible play installs pgBackRest on all three nodes, then writes a repository config that lists both cluster members:
+The first play, `03`, installs pgBackRest on all three nodes, then writes a repository config that lists both cluster members:
 
+{% raw %}
 ```jinja
 [global]
 repo1-path={{ pgbackrest_repo_path }}
@@ -63,9 +64,10 @@ pg{{ loop.index }}-path={{ pg_data_dir }}
 pg{{ loop.index }}-port={{ pg_port }}
 {% endfor %}
 ```
-{: data-file="roles — repo host /etc/pgbackrest.conf"}
+{: data-file="playbooks/03_pgbackrest_patroni.yml — repo host /etc/pgbackrest.conf"}
+{% endraw %}
 
-Transport is mutual TLS, the same as part 1, and it is the better answer for a cluster: no shell account on the peers, and authorisation is an explicit CN allow-list rather than "whatever the postgres unix user can reach over ssh". Each side names the other:
+Transport ends up as mutual TLS, the same as part 1, and it is the better answer for a cluster: authorisation is an explicit CN allow-list rather than "whatever the postgres unix user can reach over ssh". The playbooks get there in two moves. `03` and `04` wire the repo over SSH, which is why the template above has `pgN-host-user`, and `04` exchanges `postgres` keys between all three hosts. `05` then rewrites every config for TLS, giving each `pgN-host` a `pgN-host-type=tls`, the port and the certificate files. The SSH trust from `04` stays in place; remove those `authorized_keys` entries if TLS should be the only path. Each side names the other:
 
 ```ini
 tls-server-address=*
@@ -135,6 +137,7 @@ error 9 at 1 depth lookup: certificate is not yet valid
 
 TCG guests drift badly, and chronyd *slews* rather than steps, so it corrects a large offset far too slowly to help. Step the clock, and do it before anything issues a certificate:
 
+{% raw %}
 ```yaml
 - name: Force an immediate step
   ansible.builtin.command: chronyc -a makestep
@@ -145,10 +148,11 @@ TCG guests drift badly, and chronyd *slews* rather than steps, so it corrects a 
     fail_msg: "{{ inventory_hostname }} is too far from the control node; certificates will not validate."
 ```
 {: data-file="playbooks/05_pgbackrest_tls.yml"}
+{% endraw %}
 
 The assertion matters more than the `makestep`. A silent 76-minute skew turns into a TLS error an hour later; a failed assertion names the problem at the point it exists.
 
-**Verify.** With clocks stepped, the handshake works and `check` proves the whole path:
+**Verify.** With clocks stepped, the handshake works and `check` proves the whole path. This capture is from a re-run after the Step 6 restore, hence timeline 4; the first `check` on this cluster is in Step 4:
 
 ```text
 INFO: check repo1 (standby)
@@ -165,6 +169,7 @@ This is where most integrations quietly break, and the split is not arbitrary.
 
 `archive_mode` and `archive_command` describe the whole cluster, so they belong in the **DCS**. Patroni regenerates `postgresql.conf` from the DCS every time it starts a node — so an `archive_command` typed straight into that file works perfectly until the first failover, then vanishes at exactly the moment you need it.
 
+{% raw %}
 ```yaml
 - name: Push archive settings into the DCS
   ansible.builtin.shell: |
@@ -179,6 +184,7 @@ This is where most integrations quietly break, and the split is not arbitrary.
   run_once: true
 ```
 {: data-file="playbooks/04_patroni_archive.yml"}
+{% endraw %}
 
 `create_replica_methods` is the opposite. It names a *command on that host*, so it cannot live in shared cluster state and goes into the local `patroni.yml`:
 
@@ -218,7 +224,7 @@ The DCS has the right values and the server does not. `archive_timeout` is reloa
 | pgn2   | Leader  | running   |  3 | *               | archive_mode: off->on  |
 ```
 
-A rolling restart through `patronictl` handles the replica first and the leader last, so the write outage is one brief switchover rather than the whole cluster:
+`patronictl restart` asks each member to restart PostgreSQL in place, one after another. The leader restarts without a switchover, so writes pause for the length of its restart; to avoid even that, restart the replica, `patronictl switchover`, then restart the old leader. On a lab cluster the simple form is fine:
 
 ```bash
 patronictl -c /etc/patroni/patroni.yml restart pg18lab --force

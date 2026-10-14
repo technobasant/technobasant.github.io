@@ -3,7 +3,7 @@ title: "A warehouse alert is a state machine. Slack is only where it renders."
 seo_title: "Slack alerts on lakehouse metrics: state, idempotency, Socket Mode"
 description: "Slack alerts with Acknowledge and Resolve buttons on warehouse metrics: why the state and its write order come first, and where a receiver can actually live."
 date: 2026-10-03 10:30:00 +0545
-last_modified_at: 2026-10-03
+last_modified_at: 2026-10-14
 type: essay
 pillar: data-platforms
 tags:
@@ -106,7 +106,7 @@ The lifecycle has five states, and most of the rules exist to keep two of them a
       │                                         │   │
       │        healthy × recovery_runs          │   │ [Close]
       │   ┌─────────────────────────────────────┘   │
-      │   │   (auto-resolve, from ACTIVE or ACKED)  │
+      │   │   ([Resolve] or auto, ACTIVE or ACKED)  │
       │   ▼                                         ▼
       └── RESOLVED ──[breach again]──► ACTIVE      CLOSED
                                                     │

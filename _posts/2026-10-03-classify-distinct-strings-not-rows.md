@@ -3,7 +3,7 @@ title: "Label the string, not the row: a short-text triage lab"
 seo_title: "Short-text classification: dedupe, cluster, then assign with a margin"
 description: "A synthetic 20,000-row multilingual lab: normalize to distinct keys, cluster them for one LLM call each, and why a cosine threshold needs a margin."
 date: 2026-10-03 09:20:00 +0545
-last_modified_at: 2026-10-13
+last_modified_at: 2026-10-14
 type: essay
 pillar: ai-systems
 tags: [applied-ml, data-quality]
@@ -39,7 +39,7 @@ faq:
   - q: "What cosine similarity threshold should I use with multilingual-e5?"
     a: "On short multilingual text no single threshold works well: 76% of different-intent pairs scored above 0.80, and an unseen category sat at 0.86 to 0.91. Use the margin between the best label and the best different label, set from a labelled sample, and route small margins to review."
   - q: "Does the e5 'query: ' prefix matter for clustering short text?"
-    a: "In this lab it did not change nearest-neighbour precision in a consistent direction. It does move the same text by up to 0.057 cosine, which is larger than a 0.03 decision margin, so the cache and the assignment step must use the same prefix."
+    a: "In this lab it did not change nearest-neighbour precision in a consistent direction. It does move the same text by 0.057 cosine on average between the 'query: ' and 'passage: ' prefixes, which is larger than a 0.03 decision margin, so the cache and the assignment step must use the same prefix."
 key_takeaways:
   - "Normalizing to NFKC, casefold and trimmed punctuation cut 20,000 rows to 1,537 keys; 89% of what stayed distinct was typos, which only embeddings can fold."
   - "Clustering every row instead of distinct keys produced 1,254 clusters instead of 124 and took about ten times the CPU, because exact duplicates form clusters of their own."
@@ -145,7 +145,7 @@ The lowest score among all 28,680 pairs was 0.715. **76% of different-intent pai
 
 The e5 model card asks for a `query: ` or `passage: ` prefix, and I expected leaving it off to cost precision. It did not, measurably. Nearest-neighbour precision on the 240 wordings was 0.933 with `query: `, 0.896 with `passage: `, and 0.963 with no prefix. Cross-lingual precision was 0.975, 0.992 and 0.971. Mixing prefixes between index and probe stayed in the same range.
 
-What the prefix does change is position. The same text embedded with `query: ` and with `passage: ` has a mean cosine of 0.943 to itself, a shift of 0.057. The next section rests on a decision margin of 0.03. A cache embedded one way and new strings embedded another would move scores by nearly twice the margin, and nothing would raise an error. Pin the prefix with the model revision, version both, and re-embed when either changes.
+What the prefix does change is position. The same text embedded with `query: ` and with `passage: ` has a mean cosine of 0.943 to itself, a shift of 0.057. The next section rests on a decision margin of 0.03. A cache embedded one way and new strings embedded another would put the same text 0.057 away from itself on average, nearly twice the margin, and nothing would raise an error. Pin the prefix with the model revision, version both, and re-embed when either changes.
 
 ## A threshold is not a decision. A margin is.
 
@@ -235,6 +235,6 @@ On short multilingual text no single threshold works well. 76% of different-inte
 
 ### Does the e5 "query: " prefix matter for clustering short text?
 
-In this lab it did not change nearest-neighbour precision in a consistent direction. It does move the same text by up to 0.057 cosine, which is larger than a 0.03 decision margin, so the cache and the assignment step must use the same prefix.
+In this lab it did not change nearest-neighbour precision in a consistent direction. It does move the same text by 0.057 cosine on average between the `query: ` and `passage: ` prefixes, which is larger than a 0.03 decision margin, so the cache and the assignment step must use the same prefix.
 
 The cost argument is the easy one: distinct keys and clusters turn a per-row bill into a per-meaning bill. The argument that matters is about errors. A system that labels rows, or assigns by a bare threshold, is wrong most confidently on exactly the strings that share words with something else. More on [applied ML and evaluation](/writing/tags/applied-ml/) and on [data quality and contracts](/writing/tags/data-quality/).

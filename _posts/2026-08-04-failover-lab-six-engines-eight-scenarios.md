@@ -51,7 +51,7 @@ Six engines, eight scenarios. Redis appears twice because it ships two entirely 
 - **MongoDB 8.0** — a leader-based replica set with RAFT-like elections. This is the "the driver handles it" model, and it is where `w: "majority"` earns its keep.
 - **ScyllaDB 2026.1** — leaderless, quorum per query, RF=3. Nothing gets promoted because nothing was ever a leader. The interesting failure here is not the node loss; it is the restore.
 - **SolrCloud 9** — ZooKeeper-coordinated shards and replicas. Its distinctive behavior is that "degraded" and "unavailable" are genuinely different states, and it will tell you which one you are in.
-- **MariaDB 11.8 + Galera 4** — virtually synchronous multi-master with certification-based conflict resolution. The only engine in the set where a *graceful* shutdown and an *ungraceful* kill of the same node produce opposite cluster states.
+- **MariaDB 11.8 + Galera 4** — virtually synchronous multi-master with certification-based conflict resolution. The only engine in the set where a *graceful* shutdown and an *ungraceful* kill of the same two nodes produce opposite cluster states.
 - **Redis 8** — Cluster (16,384 hash slots, per-shard failover) and Sentinel (one primary, quorum-based promotion). Two promises, two failure models, one product.
 - **PostgreSQL 18** — single primary, streaming replication, and a promotion that you or your orchestrator has to initiate. The one engine here that will not fail over on its own.
 
@@ -276,7 +276,7 @@ Four columns per engine, because "does it fail over" is only a quarter of the qu
 
 These are the measurements, not the marketing. All of them came off this rig.
 
-**PostgreSQL 18 streaming replication** reported `write_lag ≈ 104 µs` and `replay_lag ≈ {{ site.data.metrics.lab_pg_replay_lag.value }}` in `pg_stat_replication`, with replica lag of 0 bytes and the slot showing `active=t`, `wal_status=reserved`. `pg_promote()` returned `t`, `pg_is_in_recovery()` flipped to `f`, and the timeline went from 1 to 2. Sub-millisecond replay on a single host is not a WAN number, but it establishes that the lag you see in production is network and disk, not the protocol.
+**PostgreSQL 18 streaming replication** reported `write_lag ≈ 104 µs` and `replay_lag ≈ {{ site.data.metrics.lab_pg_replay_lag.value }}` in `pg_stat_replication`, with replica lag of 0 bytes and the slot showing `active=t`, `wal_status=reserved`. `pg_promote()` returned `t`, `pg_is_in_recovery()` flipped to `f`, and the timeline went from 1 to 2. Sub-millisecond replay on a single host is not a WAN number: it is a floor for this configuration, not a prediction of lag under load.
 
 **Redis Sentinel** promoted a replica in {{ site.data.metrics.lab_redis_promotion.value }} with `quorum 2` and `down-after-milliseconds 5000`, and demoted the old primary to a replica of the new one when it came back. **Redis Cluster** promoted a replica after I killed a master owning slots 5461–10922, bumped the config epoch from 2 to 7, returned to `cluster_state:ok` with `cluster_slots_ok:16384`, and lost nothing.
 
@@ -297,7 +297,7 @@ Two of the eight are written up in full, and both are the write-ups I went looki
 - [nodetool refresh only reads the live table's upload/ directory](/writing/scylladb-nodetool-refresh-upload-truncate-marker/) — the ScyllaDB behaviors that make a valid restore look empty, the restore that works after a TRUNCATE, and a correction to my first version of it.
 - [PostgreSQL 18 won't take a volume at /var/lib/postgresql/data](/writing/postgresql-18-docker-volume-path-change/) — the mount-point change that breaks every compose file copied from a PG 12–17 guide, then streaming replication, promotion and PITR on top of the corrected one.
 
-Queued from the same lab notes: the Galera `wsrep_provider_options` read-only surprise and the graceful-versus-ungraceful quorum behavior; Redis Cluster against Sentinel with the timings side by side; SolrCloud's ORANGE state and the `solr.allowPaths` backup failure; and the MongoDB shard-key explain plan. They will appear under [/writing/](/writing/) as they are finished.
+Queued from the same lab notes: Galera's graceful-versus-ungraceful quorum behavior; Redis Cluster against Sentinel with the timings side by side; SolrCloud's ORANGE state and the `solr.allowPaths` backup failure; and the MongoDB shard-key explain plan. They will appear under [/writing/](/writing/) as they are finished.
 
 ## Troubleshooting
 

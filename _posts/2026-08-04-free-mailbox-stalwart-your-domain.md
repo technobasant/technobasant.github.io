@@ -3,7 +3,7 @@ title: "A free mailbox for your domain with Stalwart"
 seo_title: "Self-host Stalwart mail: skip ACME when port 443 is already taken"
 description: "Want a free mailbox for your domain? Run Stalwart on Docker, skip ACME when 443 is taken, publish SPF/DKIM/DMARC, and prove a Gmail round-trip."
 date: 2026-08-04 09:00:00 +0545
-last_modified_at: 2026-08-11 11:30:00 +0545
+last_modified_at: 2026-10-14
 type: tutorial
 pillar: self-hosted
 tags: [self-hosted]
@@ -90,7 +90,7 @@ sudo ufw reload
 
 ## Step 2 — Start Stalwart and finish the wizard
 
-This compose file is **standalone**. Admin listens on `127.0.0.1:8088` only. It does not bind 80 or 443.
+This compose file is **standalone**. Admin listens on `127.0.0.1:8088` only. It does not bind 80 or 443, and it publishes only the mail ports opened above: Docker-published ports bypass UFW, so anything listed under `ports:` is public.
 
 ```bash
 mkdir -p stalwart-mail/docker-data/{etc,data}
@@ -122,9 +122,7 @@ services:
       - "25:25"
       - "465:465"
       - "587:587"
-      - "143:143"
       - "993:993"
-      - "4190:4190"
       - "127.0.0.1:${STALWART_ADMIN_PORT:-8088}:8080"
     volumes:
       - ./docker-data/etc:/etc/stalwart
@@ -155,13 +153,13 @@ Wizard choices that matter:
 5. Save the **permanent** admin password from the last screen. The bootstrap password dies after this.
 6. `docker compose restart stalwart`.
 
-In Account Manager create at least:
+Under Management › Directory › Accounts create at least:
 
 - `you@example.com` — the inbox you will use
 - `noreply@example.com` — if an app will send mail
 
 <div class="callout callout--gotcha" markdown="1">
-**Two TLS places.** nginx (or Caddy) can terminate `https://mail.example.com` for the admin UI. Phones and Thunderbird talking to 993/465 talk to **Stalwart directly**. If you only cert the proxy, Android and Gmail's IMAP setup see a self-signed listener. Upload the same Let's Encrypt fullchain + key in Stalwart → Settings → Server → TLS, and set it as the default certificate.
+**Two TLS places.** nginx (or Caddy) can terminate `https://mail.example.com` for the admin UI. Phones and Thunderbird talking to 993/465 talk to **Stalwart directly**. If you only cert the proxy, Android and Gmail's IMAP setup see a self-signed listener. Add the same Let's Encrypt fullchain + key as a certificate under Settings › TLS › Certificates, and select it as the default certificate.
 </div>
 
 If you already have nginx on the host, add a vhost that proxies to the container on the Docker network (join Stalwart to that network, or proxy to `127.0.0.1:8088` from the host). Issue `mail.example.com` with the same certbot you use for the site. Then copy `fullchain.pem` / `privkey.pem` into Stalwart after every renew.
@@ -210,7 +208,7 @@ SMTP_PASSWORD=the-mailbox-password
 
 | Symptom | Cause | Repair |
 | --- | --- | --- |
-| Wizard wants 443 and the site dies | ACME left on | Re-run setup with auto-TLS off; keep 80/443 on the existing proxy |
+| No certificate issued, ACME errors in the log | ACME left on; `:443` belongs to nginx | Remove the ACME provider (Settings › TLS › ACME Providers) and upload the existing LE cert |
 | IMAP/SMTP clients warn about the cert | Cert only on nginx, not in Stalwart | Upload the LE chain as a Stalwart Certificate object |
 | Nothing inbound | Provider blocks 25, or MX/A wrong | `nc -vz mail.example.com 25` from outside; fix SG / MX |
 | Outbound stuck / greylisted | No PTR, or SPF does not name this host | Set PTR to `mail.example.com`; `dig -x` must match |

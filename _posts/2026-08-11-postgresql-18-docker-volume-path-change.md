@@ -29,7 +29,7 @@ prerequisites:
 tested_on: "PostgreSQL 18 (official `postgres:18` image) · Docker Compose v2 · 8 CPU / 12.5 GB"
 key_takeaways:
   - "The PostgreSQL 18 image expects its persistent volume at /var/lib/postgresql, with PGDATA beneath it—not at the pre-18 /var/lib/postgresql/data mount point."
-  - "A replica cloned with pg_basebackup needs PGDATA set explicitly, Compose variable escaping, and postgres-owned files before it can stream safely."
+  - "A replica cloned with pg_basebackup should pin PGDATA so the clone's destination is explicit, and needs Compose variable escaping before it can stream safely."
   - "Promotion creates a new timeline; the former primary must be rewound or rebuilt before it can rejoin without creating split brain."
 ---
 
@@ -42,7 +42,7 @@ volumes:
   - pgdata:/var/lib/postgresql/data
 ```
 
-On `postgres:18` it does not work. The container starts, complains about data in an unused mount or volume, and your data does not end up where you think it does.
+On `postgres:18` it does not work. The container exits at startup with an error listing `/var/lib/postgresql/data (unused mount/volume)` and refuses to initialise.
 
 The image changed where it wants the volume. In 12 through 17 the data directory *was* the mount point. In 18 the mount point is the parent, `/var/lib/postgresql`, and the cluster lives in an `18/docker` subdirectory beneath it. The reason is `pg_upgrade --link`: an in-place major upgrade needs the old and new data directories side by side on the same filesystem, and that is impossible when the data directory is itself the mount point. Moving the mount up one level makes room for `18/docker` and `19/docker` to coexist during an upgrade.
 
@@ -52,12 +52,12 @@ The image changed where it wants the volume. In 12 through 17 the data directory
 +  - pgdata:/var/lib/postgresql
 ```
 
-That is the whole fix, and if that is all you came for you can stop here. The rest of this post builds a primary and a streaming hot standby on top of the corrected file, measures the replication lag, promotes the standby, and sets up WAL archiving for point-in-time recovery — which is where the second half of the change bites, because a replica cloned by `pg_basebackup` needs `PGDATA` set explicitly.
+That is the whole fix, and if that is all you came for you can stop here. The rest of this post builds a primary and a streaming hot standby on top of the corrected file, measures the replication lag, promotes the standby, and sets up WAL archiving for point-in-time recovery — which is where the second half of the change bites, because a replica cloned by `pg_basebackup` writes wherever `-D` points, and that path is worth pinning.
 
-The compose file and the init script are reproduced inline. There is no public repository to clone.
+The compose file and the init script are reproduced inline, and both are in [db-failover-lab/pg-replication](https://github.com/technobasant/db-failover-lab/tree/main/pg-replication).
 
 <div class="callout callout--gotcha" markdown="1">
-**Gotcha.** The message you get contains the phrase `data in unused mount/volume`, which reads like a warning about a stray volume rather than what it is — the image telling you the data directory is not where the mount is. Searching for the phrase is how most people find this; the fix is not in the message.
+**Gotcha.** The error lists `/var/lib/postgresql/data (unused mount/volume)`, which reads like a warning about a stray volume rather than what it is — the image telling you the data directory is not where the mount is. Read past that line: a dozen lines down, the same message suggests the fix, a single mount at `/var/lib/postgresql`.
 </div>
 
 ## Step 1 — Write the compose file PG 18 accepts
@@ -124,11 +124,11 @@ volumes:
 
 Four details in there are load-bearing.
 
-**`PGDATA: /var/lib/postgresql/18/docker` on the replica.** The primary gets this path from the entrypoint's own default because it runs `initdb`. The replica does not run `initdb` — it runs `pg_basebackup`, and `pg_basebackup` writes wherever `-D` points. Without `PGDATA` set, the clone lands in the wrong place and the server then starts against an empty directory. This is the same mount-point change, showing up a second time in a shape that does not mention mounts at all.
+**`PGDATA: /var/lib/postgresql/18/docker` on the replica.** The 18 image already defaults `PGDATA` to this path. The replica does not run `initdb` — it runs `pg_basebackup`, which writes wherever `-D` points, so the line pins the destination in the file rather than leaving it to an image default that has already moved once.
 
 **`$$PGDATA`, with two dollar signs.** Compose does variable interpolation on the file before Docker ever sees it. `$$` escapes to a literal `$`, so the shell inside the container gets `$PGDATA`. A single `$` here means Compose substitutes an empty string and the test becomes `[ ! -s /PG_VERSION ]`.
 
-**`gosu postgres` around `pg_basebackup`.** The command runs as root. A data directory full of root-owned files makes the server refuse to start, with an ownership error that gives no hint about which command created them.
+**`gosu postgres` around `pg_basebackup`.** The command runs as root. The entrypoint chowns `PGDATA` to `postgres` before it starts the server anyway, but cloning as `postgres` keeps ownership right if you ever start the server another way.
 
 **`-Xs -R -S replica1_slot` on `pg_basebackup`.** `-Xs` streams WAL alongside the base backup, so the backup is consistent without needing archived WAL. `-R` writes `standby.signal` and a `primary_conninfo` line so the clone comes up as a standby with no further editing. `-S` binds it to a named replication slot.
 
@@ -249,7 +249,7 @@ SELECT application_name, state, sync_state, write_lag, replay_lag,
 (1 row)
 ```
 
-`write_lag ≈ 104 µs`, `replay_lag ≈ 383 µs`, and zero bytes of outstanding WAL. Both containers are on the same host with no network in between, so treat these as the protocol's floor rather than anything you will see across a WAN — but they do establish that when production lag is measured in seconds, the cost is network and disk, not PostgreSQL.
+`write_lag ≈ 104 µs`, `replay_lag ≈ 383 µs`, and zero bytes of outstanding WAL. Both containers are on the same host with no network in between, so treat these as a floor for the configuration rather than anything you will see across a WAN, and not as a prediction of lag under load.
 
 `sync_state` reads `async`, which is the default and the right default for most setups: the primary does not wait for the standby to acknowledge, so a stalled standby cannot stall your writes. It also means a hard primary failure can lose the last few transactions. If that is unacceptable, `synchronous_standby_names` trades write latency for that guarantee.
 
@@ -270,7 +270,7 @@ SELECT slot_name, slot_type, active, wal_status FROM pg_replication_slots;
 
 ## Step 6 — Fail over with pg_promote()
 
-There is no automatic failover here, and that is not an oversight. PostgreSQL leaves the decision to something that can tell a dead primary apart from an unreachable one — Patroni with etcd and a watchdog, or repmgr. What those tools ultimately call is this:
+There is no automatic failover here, and that is not an oversight. PostgreSQL leaves the decision to something that can tell a dead primary apart from an unreachable one — Patroni with etcd and a watchdog, or repmgr. What those tools ultimately trigger is this promotion:
 
 ```bash
 docker exec pg-replication-pgreplica-1 psql -U admin -d postgres -c "SELECT pg_promote();"
@@ -407,10 +407,8 @@ Note that a promoted replica plus a full base backup is three copies of the same
 
 | Symptom | Cause | Fix |
 | --- | --- | --- |
-| Container complains about `data in unused mount/volume` and the data is not persisted | The volume is mounted at `/var/lib/postgresql/data`, which PG 18 no longer uses as the data directory | Mount at `/var/lib/postgresql`; the cluster lands in `18/docker` beneath it |
-| Replica starts against an empty cluster after a clean clone | `PGDATA` is unset on the replica, so `pg_basebackup -D "$PGDATA"` wrote to the wrong path | Set `PGDATA: /var/lib/postgresql/18/docker` on the replica service |
+| Container exits at startup listing `/var/lib/postgresql/data (unused mount/volume)` | The volume is mounted at `/var/lib/postgresql/data`, which PG 18 no longer uses as the data directory | Mount at `/var/lib/postgresql`; the cluster lands in `18/docker` beneath it |
 | The replica's clone test always fires, even on a warm volume | Single `$` in the compose command, so Compose interpolated `$PGDATA` to an empty string | Write `$$PGDATA` in the compose file |
-| Server refuses to start: data directory has invalid ownership | `pg_basebackup` ran as root | Run it through `gosu postgres` |
 | `pg_basebackup` is rejected with a `pg_hba.conf` entry error | `replication` is a pseudo-database and is not covered by a `host all all` rule | Append `host replication replicator all scram-sha-256` in the init script |
 | `pg_basebackup` fails saying the replication slot does not exist | The slot was never created, or the init script did not run because the volume already had data | Create it with `SELECT pg_create_physical_replication_slot('replica1_slot');`, or `down -v` and start clean |
 | Log shows "ready to accept read-only connections" but never "started streaming WAL" | The standby is replaying from disk and has not connected to the primary | Check `primary_conninfo` in the standby's config, the `pg_hba.conf` line, and the `replicator` password |
@@ -420,4 +418,4 @@ Note that a promoted replica plus a full base backup is three copies of the same
 | Both nodes accept writes after a failover | The old primary was restarted on timeline 1 while the new one is on timeline 2 | Never do this. Rewind the old node with `pg_rewind` or rebuild it from `pg_basebackup` before it rejoins |
 | Recovery stops earlier than the target time | `archive_command` overwrote or skipped a segment | Keep the `test ! -f` guard so archiving fails loudly instead of clobbering |
 
-Earlier in this series: [A failover lab: six database engines, eight scenarios, every one run](/writing/failover-lab-six-engines-eight-scenarios/) for the rig and the full results matrix, and [nodetool refresh only reads upload/](/writing/scylladb-nodetool-refresh-upload-truncate-marker/) for the ScyllaDB restore that returns zero rows three different ways.
+Earlier in this series: [A failover lab: six database engines, eight scenarios, every one run](/writing/failover-lab-six-engines-eight-scenarios/) for the rig and the full results matrix, and [nodetool refresh only reads upload/](/writing/scylladb-nodetool-refresh-upload-truncate-marker/) for the ScyllaDB restore that returns zero rows two different ways.
