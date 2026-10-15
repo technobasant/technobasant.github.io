@@ -127,7 +127,7 @@ The analysis behind the gate's design is in [The eval score fell 4.8 points. Twe
 
 **Anything about other models or domains.** One machine, two small local models, one fictional domain, 83 cases, and a judge with thinking disabled. The numbers describe this setup; the method is what transfers.
 
-The first CI runs also caught one of my own bugs: the Wilson interval's lower bound at zero passes came out as 2.8e-17 on x86_64 Linux and 0.0 on arm64 macOS, a subtraction of two equal quantities rounding differently by platform. Version 0.1.1 pins the boundaries exactly.
+The first CI runs also caught one of my own bugs: the Wilson interval's lower bound at zero passes came out as 2.8e-17 on x86_64 Linux and 0.0 on arm64 macOS, a subtraction of two equal quantities rounding differently by platform. Version 0.1.1 pins the boundaries exactly. Building the [browser app](https://evalproof.streamlit.app) caught another: the exact McNemar test summed binomial terms in floating point, and past about 1,030 changed verdicts, a size a large suite can reach, `comb(n, i)` no longer fits in a float and the comparison raised OverflowError. Version 0.1.2 sums the tail as integers and divides once.
 
 ## What I'd do differently
 

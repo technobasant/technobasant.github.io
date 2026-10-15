@@ -4,7 +4,7 @@
 # MEASUREMENTS or README, except spark-sql-kinesis, whose figure comes from its
 # write-up's staging measurements. Re-verify before changing the date.
 # `demo` is a live app on Streamlit Community Cloud that runs the repository's code.
-as_of: '2026-10-14'
+as_of: '2026-10-15'
 repos:
 - name: spark-sql-kinesis
   url: https://github.com/technobasant/spark-sql-kinesis
@@ -39,9 +39,9 @@ repos:
   - Python
   license: Apache-2.0
   release:
-    tag: v0.1.1
-    date: '2026-10-13'
-    url: https://github.com/technobasant/evalproof/releases/tag/v0.1.1
+    tag: v0.1.2
+    date: '2026-10-15'
+    url: https://github.com/technobasant/evalproof/releases/tag/v0.1.2
   ci:
     conclusion: success
     url: https://github.com/technobasant/evalproof/actions/workflows/ci.yml
