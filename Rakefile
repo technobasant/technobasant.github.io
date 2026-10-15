@@ -85,8 +85,9 @@ namespace :check do
       typhoeus: { timeout: 20, ssl_verifypeer: true },
       hydra: { max_concurrency: 10 },
       ignore_status_codes: [403, 429],
-      # LinkedIn serves a 999/challenge page to anything that is not a browser.
-      ignore_urls: BASE[:ignore_urls] + [%r{^https://www\.linkedin\.com}]
+      # LinkedIn serves a 999/challenge page to anything that is not a browser, and
+      # Streamlit Community Cloud a 303 into its auth handshake.
+      ignore_urls: BASE[:ignore_urls] + [%r{^https://www\.linkedin\.com}, %r{^https://[a-z0-9-]+\.streamlit\.app}]
     )).run
   end
 end

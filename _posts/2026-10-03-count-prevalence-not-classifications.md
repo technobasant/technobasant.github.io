@@ -3,7 +3,7 @@ title: "The classifier was 95% accurate. The trend it counted was a third too fl
 seo_title: "Category trends from a classifier: quantification, not counting"
 description: "A 95%-accurate classifier counted a rise from 10% to 25% as 8% to 17%. Why counting labels flattens trends, and which estimators report them honestly."
 date: 2026-10-03 10:20:00 +0545
-last_modified_at: 2026-10-14
+last_modified_at: 2026-10-15
 type: essay
 pillar: ai-systems
 tags:
@@ -55,6 +55,10 @@ It is not the trend. It is the trend multiplied by a number smaller than one, pl
 **Operating rule.** How fast a category is growing is a quantification problem, not a classification problem. Never report the count of predicted labels as prevalence. Correct it with the classifier's error rates, or with a small random sample of human labels from the same period. Then treat every change of model, prompt or taxonomy as a break in the measurement, not as news.
 
 This came out of a research note I wrote for a team that wanted category trends from model-labelled fraud and scam reports. Their data stays private, so every number below comes from a seeded simulation I wrote for this post, which anyone can rerun: it is public as [prevalence-shift](https://github.com/technobasant/prevalence-shift), and its CI fails if the published figures stop reproducing.
+
+<div class="callout callout--tip" markdown="1">
+**Try it.** [prevalence-shift.streamlit.app](https://prevalence-shift.streamlit.app) reruns this simulation in the browser. Move the classifier and the trend, try a weaker model or a rarer category, or [open the model upgrade](https://prevalence-shift.streamlit.app/?view=upgrade). At the published settings it reproduces every figure below and says so. After a quiet spell it takes about half a minute to wake.
+</div>
 
 ## Why counting flattens a trend
 

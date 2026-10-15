@@ -3,7 +3,7 @@ title: "The eval score fell 4.8 points. Twelve answers decided whether it meant 
 seo_title: "LLM eval release gates: test paired cases, not pass-rate deltas"
 description: "A prompt change cost 4.8 points on an LLM judge, and 12 of 83 paired cases carried all the evidence. Why a release gate needs a paired test, not a delta."
 date: 2026-10-14 09:00:00 +0545
-last_modified_at: 2026-10-14
+last_modified_at: 2026-10-15
 type: essay
 pillar: ai-systems
 series: reference-systems
@@ -58,6 +58,10 @@ Most release gates I have seen for LLM features compare those two numbers agains
 **Operating rule.** An eval gate compares two runs over the same cases, so test the paired difference, not the gap between two pass rates. Fail only when a drop is both larger than the tolerance and statistically distinguishable from noise. When it is large but not distinguishable, say so and say how many cases it would take. Gate latency and cost separately, because they are often the regression the data can actually see.
 
 The tool is [evalproof](https://github.com/technobasant/evalproof), a small open-source measurement layer for LLM evaluation that I wrote to work through this. Everything below comes from runs committed to that repository, made with local models through Ollama: `qwen3:1.7b` answers, `qwen3:8b` judges, on 83 questions about a fictional product, 9 of which the facts do not answer. A script in the repo recomputes every table from the committed run files, and [MEASUREMENTS.md](https://github.com/technobasant/evalproof/blob/main/MEASUREMENTS.md) holds them all.
+
+<div class="callout callout--tip" markdown="1">
+**Try it.** [evalproof.streamlit.app](https://evalproof.streamlit.app) runs the same comparison and gate code in the browser. Start from this run's eight-worse, four-better split, change the counts and watch the verdict, or open the recorded run and read the twelve changed answers side by side. After a quiet spell it takes about half a minute to wake.
+</div>
 
 ## Two pass rates over the same cases are one sample, not two
 

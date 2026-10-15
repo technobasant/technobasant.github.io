@@ -47,6 +47,7 @@ layout: default
             {%- if _r.ci and _r.ci.conclusion == "success" %} · <span><a href="{{ _r.ci.url }}" rel="noopener">CI passing</a></span>{% endif -%}
           </p>
           <p class="repo__links">
+            {%- if _r.demo %}<a href="{{ _r.demo }}" rel="noopener">Try it live</a>{% endif -%}
             {%- if _r.case %}<a href="{{ _r.case | relative_url }}">Case study</a>{% endif -%}
             {%- if _r.post %}<a href="{{ _r.post | relative_url }}">Write-up</a>{% endif -%}
             <a href="{{ _r.url }}" rel="noopener">Repository</a>

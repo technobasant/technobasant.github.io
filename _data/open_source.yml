@@ -3,6 +3,7 @@
 # releases, licences, issue and PR state); findings quote each repository's
 # MEASUREMENTS or README, except spark-sql-kinesis, whose figure comes from its
 # write-up's staging measurements. Re-verify before changing the date.
+# `demo` is a live app on Streamlit Community Cloud that runs the repository's code.
 as_of: '2026-10-14'
 repos:
 - name: spark-sql-kinesis
@@ -33,6 +34,7 @@ repos:
   finding: Judge pass rate fell 4.8 pts, but p = 0.39 at n = 83, so the gate passed with a warning.
   case: /work/evalproof/
   post: /writing/eval-score-drop-twelve-answers/
+  demo: https://evalproof.streamlit.app
   languages:
   - Python
   license: Apache-2.0
@@ -268,6 +270,7 @@ repos:
   finding: A 95%-accurate classifier counted a rise from 10% to 25% as 8% to 17%, a trend slope 0.628
     of the true one.
   post: /writing/count-prevalence-not-classifications/
+  demo: https://prevalence-shift.streamlit.app
   languages:
   - Python
   license: Apache-2.0

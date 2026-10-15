@@ -4,7 +4,7 @@ seo_title: "evalproof — Open-Source LLM Evaluation with Judge Calibration and 
 hook: "An LLM judge's pass rate is a biased estimate, and a few-point drop on a small suite is mostly noise"
 description: "Open-source LLM evaluation: calibrate the judge against gold labels, compare runs on paired cases, and fail CI only on regressions the data can actually show."
 date: 2026-10-14
-last_modified_at: 2026-10-14
+last_modified_at: 2026-10-15
 kind: open-source
 pillar: ai-systems
 related: [governed-agent, realtime-ml, retrieval-bench]
@@ -17,6 +17,7 @@ scale: "An 83-question support-assistant suite on local models; a 60-ticket offl
 problem: "LLM features ship on a judge model's pass rate and a 'fail if it dropped by X' gate. The judge has error rates of its own, and a few-point delta on a few dozen cases is mostly noise, so the gate either blocks harmless changes or gets loosened until it catches nothing."
 decision: "Treat the judge as an instrument to calibrate, compare runs on paired cases with exact tests, and fail only when a drop is both beyond tolerance and significant, with latency and cost budgets on their own exit code."
 repo: "https://github.com/technobasant/evalproof"
+live_url: "https://evalproof.streamlit.app"
 flow: evalproof
 cover:
   base: "/assets/images/editorial-evalproof-v1"
