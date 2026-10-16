@@ -48,6 +48,7 @@ layout: default
           </p>
           <p class="repo__links">
             {%- if _r.demo %}<a href="{{ _r.demo }}" rel="noopener">Try it live</a>{% endif -%}
+            {%- if _r.package %}<a href="{{ _r.package.url }}" rel="noopener">{{ _r.package.name }}</a>{% endif -%}
             {%- if _r.case %}<a href="{{ _r.case | relative_url }}">Case study</a>{% endif -%}
             {%- if _r.post %}<a href="{{ _r.post | relative_url }}">Write-up</a>{% endif -%}
             <a href="{{ _r.url }}" rel="noopener">Repository</a>

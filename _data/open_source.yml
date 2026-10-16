@@ -3,8 +3,9 @@
 # releases, licences, issue and PR state); findings quote each repository's
 # MEASUREMENTS or README, except spark-sql-kinesis, whose figure comes from its
 # write-up's staging measurements. Re-verify before changing the date.
-# `demo` is a live app on Streamlit Community Cloud that runs the repository's code.
-as_of: '2026-10-15'
+# `demo` is a live app on Streamlit Community Cloud that runs the repository's code;
+# `package` is where the published library is installed from.
+as_of: '2026-10-16'
 repos:
 - name: spark-sql-kinesis
   url: https://github.com/technobasant/spark-sql-kinesis
@@ -15,6 +16,9 @@ repos:
     least six seconds (staging; see the write-up).
   case: /work/spark-sql-kinesis/
   post: /writing/spark-4-kinesis-connector-idle-floor/
+  package:
+    name: Maven Central
+    url: https://central.sonatype.com/artifact/io.github.technobasant/spark-sql-kinesis_2.13
   languages:
   - Scala
   - Java
@@ -35,13 +39,16 @@ repos:
   case: /work/evalproof/
   post: /writing/eval-score-drop-twelve-answers/
   demo: https://evalproof.streamlit.app
+  package:
+    name: PyPI
+    url: https://pypi.org/project/evalproof/
   languages:
   - Python
   license: Apache-2.0
   release:
-    tag: v0.1.2
-    date: '2026-10-15'
-    url: https://github.com/technobasant/evalproof/releases/tag/v0.1.2
+    tag: v0.2.1
+    date: '2026-10-16'
+    url: https://github.com/technobasant/evalproof/releases/tag/v0.2.1
   ci:
     conclusion: success
     url: https://github.com/technobasant/evalproof/actions/workflows/ci.yml
