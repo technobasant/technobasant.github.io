@@ -1863,6 +1863,30 @@ def data_quality_defects() -> str:
     return "".join(body)
 
 
+def spark_overwrite() -> str:
+    """Re-running one day under each overwrite mode, and the files a partitioned write makes."""
+    # From data-stack-lab's results/spark.json (PySpark 4.2.0, local[4]).
+    body = _head("PYSPARK 4.2 · A DAILY ROLLUP · 365 PARTITIONS",
+                 "Re-running one day deleted",
+                 "the other 364.")
+    body += [
+        node_box(150, 470, 680, 200, "static (the default)", "1 of 365 partitions left",
+                 "mode(\"overwrite\") on one day", accent=True),
+        node_box(150, 700, 680, 200, "dynamic", "365 of 365 partitions left", "only the day is replaced"),
+        _t(1000, 490, "PARTITIONED WRITE", MUTED, 24, tracking=3),
+        _t(2250, 490, "FILES", MUTED, 24, "end", tracking=3),
+        f'<line x1="1000" y1="512" x2="{W - 150}" y2="512" stroke="{LINE}" stroke-width="2"/>',
+    ]
+    rows = [("a month, AQE off", "5,970"), ("a month, AQE on", "30"),
+            ("a year, AQE on", "1,460"), ("a year, repartitioned by day", "365")]
+    for i, (what, files) in enumerate(rows):
+        y = 580 + i * 95
+        body += [_t(1000, y, what, INK, 32), _t(2250, y, files, ACCENT if i in (0, 2) else MUTED, 34, "end")]
+    body += _foot("spark.sql.sources.partitionOverwriteMode · one file per partition needs repartition()",
+                  "data-stack-lab")
+    return "".join(body)
+
+
 DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patroni,
             "lakehouse-spine": lakehouse_spine,
             "lakehouse-medallion": lakehouse_medallion,
@@ -1905,7 +1929,8 @@ DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patro
             "airflow-backfill": airflow_backfill,
             "data-platform-architecture": data_platform_architecture,
             "ai-platform-architecture": ai_platform_architecture,
-            "data-quality-defects": data_quality_defects}
+            "data-quality-defects": data_quality_defects,
+            "spark-overwrite": spark_overwrite}
 
 def svg_for(name: str) -> str:
     return (

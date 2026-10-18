@@ -262,8 +262,8 @@ data-stack-lab:
       tech: ["Airflow 3", "DuckDB"]
       note: "A daily DAG lands each day's files; monthly extracts feed the snapshots."
     - name: "Model"
-      tech: ["dbt Core", "dbt v2"]
-      note: "A Type 2 star schema and three incremental strategies, in one project."
+      tech: ["dbt Core", "dbt v2", "PySpark"]
+      note: "A Type 2 star schema and three incremental strategies in dbt; a daily rollup in Spark."
     - name: "Test"
       tech: ["unit tests", "mutants"]
       note: "4 of 4 breaks caught; the wrong-version join only by a unit test."
@@ -272,7 +272,7 @@ data-stack-lab:
       note: "September four ways; a real backfill matched the harness exactly."
     - name: "Check"
       tech: ["truth files"]
-      note: "Type 1: 15.1% misplaced. Newest-first watermarks: 96.56% lost."
+      note: "Type 1: 15.1% misplaced. Newest-first watermarks: 96.56% lost. Static overwrite: 1 of 365 days left."
 
 data-platform-architecture:
   label: "Reference data platform — the path data takes, and the decision behind each stage"

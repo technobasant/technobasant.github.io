@@ -5,7 +5,7 @@
 
 - slug: spark
   name: "Apache Spark"
-  blurb: "Spark in production: the Spark 4 upgrade traps (S3A committers, the Hive Metastore), a Kinesis connector for Spark 4, and the measurements worth collecting before changing a configuration."
+  blurb: "Spark in production: the Spark 4 upgrade traps (S3A committers, the Hive Metastore), a Kinesis connector for Spark 4, what re-running one partitioned day deletes, and the measurements worth collecting before changing a configuration."
   og: og-spark.png
   featured: true
 
