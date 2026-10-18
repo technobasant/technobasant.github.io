@@ -171,6 +171,25 @@ repos:
   ci:
     conclusion: success
     url: https://github.com/technobasant/dataset-registry/actions/workflows/ci.yml
+- name: data-platform-architecture
+  url: https://github.com/technobasant/data-platform-architecture
+  pillar: data-platforms
+  what: 'A reference architecture for a SaaS data platform: 13 decision records, each citing results measured
+    in the labs, with quality targets, governance, runbooks and a platform cost model.'
+  finding: 'Per-scan billing beats a Medium Snowflake or Databricks warehouse until an hour of compute scans
+    1.4–3.4 TB (list prices, October 2026).'
+  case: /work/data-platform-architecture/
+  post: /writing/warehouse-bill-per-scan-or-per-hour/
+  languages:
+  - Python
+  license: Apache-2.0
+  release:
+    tag: v0.1.0
+    date: '2026-10-18'
+    url: https://github.com/technobasant/data-platform-architecture/releases/tag/v0.1.0
+  ci:
+    conclusion: success
+    url: https://github.com/technobasant/data-platform-architecture/actions/workflows/ci.yml
 - name: data-stack-lab
   url: https://github.com/technobasant/data-stack-lab
   pillar: data-platforms

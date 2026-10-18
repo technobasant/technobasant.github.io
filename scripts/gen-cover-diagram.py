@@ -1763,6 +1763,41 @@ def airflow_backfill() -> str:
     return "".join(body)
 
 
+def data_platform_architecture() -> str:
+    """Per hour or per scan: how many TB an engine-hour must scan before per-scan costs more."""
+    # From data-platform-architecture's results/cost.json (list prices retrieved 2026-10-18).
+    rows = [
+        ("Trino on EC2, 4 workers", "$2.12", "0.37 TB", "0.42 TB"),
+        ("Snowflake Standard, Medium", "$8.00", "1.41 TB", "1.6 TB"),
+        ("Snowflake Enterprise, Medium", "$12.00", "2.11 TB", "2.4 TB"),
+        ("Databricks SQL Serverless, Medium", "$16.80", "2.96 TB", "3.36 TB"),
+    ]
+    body = _head("DATA PLATFORM ARCHITECTURE · LIST PRICES · OCT 2026",
+                 "Per scan or per hour? It turns on",
+                 "what one hour of compute scans.")
+    body += [
+        _t(150, 490, "PAID BY THE HOUR", MUTED, 24, tracking=3),
+        _t(1260, 490, "PER HOUR", MUTED, 24, "end", tracking=3),
+        _t(1660, 490, "BIGQUERY", MUTED, 24, "end", tracking=3),
+        _t(2250, 490, "ATHENA", MUTED, 24, "end", tracking=3),
+        f'<line x1="150" y1="512" x2="{W - 150}" y2="512" stroke="{LINE}" stroke-width="2"/>',
+    ]
+    for i, (engine, hourly, bq, athena) in enumerate(rows):
+        y = 590 + i * 105
+        body += [
+            _t(150, y, engine, INK, 32),
+            _t(1260, y, hourly, MUTED, 30, "end"),
+            _t(1660, y, bq, ACCENT, 34, "end"),
+            _t(2250, y, athena, ACCENT, 34, "end"),
+        ]
+        if i < len(rows) - 1:
+            body.append(f'<line x1="150" y1="{y + 42}" x2="{W - 150}" y2="{y + 42}" '
+                        f'stroke="{LINE}" stroke-width="1"/>')
+    body += _foot("TB scanned per engine-hour at which per-scan billing costs more",
+                  "data-platform-architecture")
+    return "".join(body)
+
+
 DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patroni,
             "lakehouse-spine": lakehouse_spine,
             "lakehouse-medallion": lakehouse_medallion,
@@ -1802,7 +1837,8 @@ DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patro
             "amd64-vagrant": amd64_vagrant,
             "data-platform-ai": data_platform_ai,
             "data-stack-lab": data_stack_lab,
-            "airflow-backfill": airflow_backfill}
+            "airflow-backfill": airflow_backfill,
+            "data-platform-architecture": data_platform_architecture}
 
 def svg_for(name: str) -> str:
     return (

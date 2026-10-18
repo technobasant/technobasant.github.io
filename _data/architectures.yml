@@ -274,6 +274,28 @@ data-stack-lab:
       tech: ["truth files"]
       note: "Type 1: 15.1% misplaced. Newest-first watermarks: 96.56% lost."
 
+data-platform-architecture:
+  label: "Reference data platform — the path data takes, and the decision behind each stage"
+  stages:
+    - name: "Ingest"
+      tech: ["Kafka", "CDC", "Airflow"]
+      note: "Events, database changes and vendor files, each with its own failure model (0001)."
+    - name: "Record"
+      tech: ["Iceberg", "REST catalog"]
+      note: "Open tables; engines get scoped credentials, never keys (0002)."
+    - name: "Model"
+      tech: ["dbt"]
+      note: "Type 2 history for attributes facts are read against (0005); loads by interval (0006)."
+    - name: "Serve"
+      tech: ["ClickHouse", "Citus", "Trino"]
+      note: "By access pattern: tenant-keyed, transactional, analytical (0008)."
+    - name: "Operate"
+      tech: ["SLO probes", "canaries"]
+      note: "Freshness from the reader's side (0007); rehearsed restores (0009)."
+    - name: "Choose"
+      tech: ["cost model"]
+      note: "Per scan or per hour turns on TB scanned per engine-hour (0013)."
+
 platform-deployments:
   label: "GitOps canary platform — the path a release takes to every pod"
   stages:

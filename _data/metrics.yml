@@ -599,6 +599,25 @@ dsl_default_daily_loaded:
   window: "measured Oct 2026"
   context: "Asking for CronDataIntervalTimetable explicitly gives each run a one-day window, and the same model then lost nothing."
 
+# ── data-platform-architecture (2026) ───────────────────────────────────────
+dpa_decisions_backed:
+  value: "12 of 13"
+  label: "platform decisions backed by results measured in public labs"
+  method: "each decision record cites figures from evidence/evidence.yml, generated into the record by scripts/build.py; CI fails if a figure drifts or a source link breaks"
+  scope: "independent"
+  source: "data-platform-architecture (2026)"
+  window: "Oct 2026"
+  context: "The thirteenth, choosing a managed warehouse or lakehouse per workload, is marked Proposed: it is modelled from list prices, not measured."
+
+dpa_break_even:
+  value: "1.4–3.4 TB"
+  label: "scanned per engine-hour before per-scan billing costs more than a managed warehouse"
+  method: "hourly list price of a Medium Snowflake (Standard, Enterprise) or Databricks SQL Serverless warehouse divided by the price per TB on BigQuery on-demand and Athena; AWS us-east-1, BigQuery US, retrieved 2026-10-18"
+  scope: "independent"
+  source: "data-platform-architecture (2026)"
+  window: "list prices, Oct 2026"
+  context: "Arithmetic on list prices, not a measurement. Against self-run Trino on four r7i.2xlarge workers the line is 0.37–0.42 TB, before the cost of operating it."
+
 # ── platform-deployments (open source, 2026) ────────────────────────────────
 deploy_bad_release_aborted:
   value: "6 of 6"
