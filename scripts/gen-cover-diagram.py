@@ -1798,6 +1798,38 @@ def data_platform_architecture() -> str:
     return "".join(body)
 
 
+def ai_platform_architecture() -> str:
+    """Requests per hour one L40S instance must serve before it beats the API."""
+    # From ai-platform-architecture's results/cost.json (list prices retrieved 2026-10-18),
+    # for a help-centre answer of 3,500 input and 250 output tokens.
+    rows = [
+        ("Claude Sonnet 5", "$0.0095", "196"),
+        ("GPT-6.1 Sol", "$0.0095", "196"),
+        ("Claude Haiku 4.5", "$0.0048", "392"),
+        ("Gemini 3.8 Flash", "$0.0036", "522"),
+        ("GPT-6 Luna", "$0.0005", "3,918"),
+    ]
+    body = _head("AI ARCHITECTURE · LIST PRICES · OCT 2026",
+                 "The cheaper the hosted model,",
+                 "the more a GPU of your own must serve.")
+    body += [
+        _t(150, 490, "HOSTED MODEL", MUTED, 24, tracking=3),
+        _t(1300, 490, "PER ANSWER", MUTED, 24, "end", tracking=3),
+        _t(2250, 490, "L40S BREAKS EVEN AT", MUTED, 24, "end", tracking=3),
+        f'<line x1="150" y1="512" x2="{W - 150}" y2="512" stroke="{LINE}" stroke-width="2"/>',
+    ]
+    for i, (model, per_answer, req) in enumerate(rows):
+        y = 585 + i * 92
+        body += [_t(150, y, model, INK, 32), _t(1300, y, per_answer, MUTED, 30, "end"),
+                 _t(2250, y, f"{req} answers/hour", ACCENT, 32, "end")]
+        if i < len(rows) - 1:
+            body.append(f'<line x1="150" y1="{y + 38}" x2="{W - 150}" y2="{y + 38}" '
+                        f'stroke="{LINE}" stroke-width="1"/>')
+    body += _foot("g6e.xlarge at $1.861/h · price arithmetic; serving that rate is the part to measure",
+                  "ai-platform-architecture")
+    return "".join(body)
+
+
 DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patroni,
             "lakehouse-spine": lakehouse_spine,
             "lakehouse-medallion": lakehouse_medallion,
@@ -1838,7 +1870,8 @@ DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patro
             "data-platform-ai": data_platform_ai,
             "data-stack-lab": data_stack_lab,
             "airflow-backfill": airflow_backfill,
-            "data-platform-architecture": data_platform_architecture}
+            "data-platform-architecture": data_platform_architecture,
+            "ai-platform-architecture": ai_platform_architecture}
 
 def svg_for(name: str) -> str:
     return (

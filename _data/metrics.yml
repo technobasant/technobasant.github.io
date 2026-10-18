@@ -618,6 +618,25 @@ dpa_break_even:
   window: "list prices, Oct 2026"
   context: "Arithmetic on list prices, not a measurement. Against self-run Trino on four r7i.2xlarge workers the line is 0.37–0.42 TB, before the cost of operating it."
 
+# ── ai-platform-architecture (2026) ─────────────────────────────────────────
+aipa_decisions_backed:
+  value: "12 of 13"
+  label: "AI architecture decisions backed by results measured in public labs"
+  method: "each decision record cites figures from evidence/evidence.yml, generated into the record by scripts/build.py; CI fails if a figure drifts or a source link breaks"
+  scope: "independent"
+  source: "ai-platform-architecture (2026)"
+  window: "Oct 2026"
+  context: "The thirteenth, a cost per answer for every feature, is Proposed: modelled from list prices and assumed token counts. Three quality targets are not met in the labs, and the repository lists them."
+
+aipa_self_host_break_even:
+  value: "196 vs 3,918"
+  label: "answers per hour a single-L40S instance must serve to cost less than Claude Sonnet 5, and than GPT-6 Luna"
+  method: "g6e.xlarge on-demand price in us-east-1 divided by the API price of a help-centre answer of 3,500 input and 250 output tokens; list prices retrieved 2026-10-18"
+  scope: "independent"
+  source: "ai-platform-architecture (2026)"
+  window: "list prices, Oct 2026"
+  context: "Arithmetic on prices, not a benchmark: whether one instance can serve that rate with a model that passes the feature's evaluation gate is not measured."
+
 # ── platform-deployments (open source, 2026) ────────────────────────────────
 deploy_bad_release_aborted:
   value: "6 of 6"
