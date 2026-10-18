@@ -637,6 +637,15 @@ aipa_self_host_break_even:
   window: "list prices, Oct 2026"
   context: "Arithmetic on prices, not a benchmark: whether one instance can serve that rate with a model that passes the feature's evaluation gate is not measured."
 
+dsl_quality_block:
+  value: "0 of 3,198"
+  label: "bad rows promoted when any failing data-quality check held the day"
+  method: "September delivered daily with nine injected defects and checked in dbt (contract, row tests, batch tests against seven accepted days, manifest control totals); every delivered row labelled good or bad by its defect"
+  scope: "independent"
+  source: "data-stack-lab (2026)"
+  window: "measured Oct 2026"
+  context: "Blocking held 19,545 good rows for a person; quarantining failing rows instead let 87 bad rows through and held 12,865. Three defects left no bad rows at all and were caught only by control totals, volume and per-platform share."
+
 # ── platform-deployments (open source, 2026) ────────────────────────────────
 deploy_bad_release_aborted:
   value: "6 of 6"

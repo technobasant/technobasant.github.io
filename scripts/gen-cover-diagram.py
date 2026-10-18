@@ -1830,6 +1830,39 @@ def ai_platform_architecture() -> str:
     return "".join(body)
 
 
+def data_quality_defects() -> str:
+    """Nine defects in a month of deliveries, and which layer of checks saw each."""
+    # From data-stack-lab's results/quality.json.
+    rows = [
+        ("duplicate file", "deduplication", "absorbed"),
+        ("nulls in a key", "row test", "wrong"),
+        ("renamed column", "contract", "schema"),
+        ("upload cut at 40%", "manifest, volume", "missing"),
+        ("local time as UTC", "row test", "wrong"),
+        ("new event type", "row test", "legitimate"),
+        ("a platform goes silent", "platform share", "missing"),
+        ("orphan keys", "row test", "wrong"),
+        ("a third arrives late", "volume, once in two", "missing"),
+    ]
+    body = _head("DATA QUALITY · 9 DEFECTS · 30 DAILY DELIVERIES",
+                 "Wrong data and missing data",
+                 "are caught by different checks.")
+    body += [
+        _t(150, 470, "DEFECT", MUTED, 24, tracking=3),
+        _t(1000, 470, "CAUGHT BY", MUTED, 24, tracking=3),
+        _t(2250, 470, "KIND", MUTED, 24, "end", tracking=3),
+        f'<line x1="150" y1="490" x2="{W - 150}" y2="490" stroke="{LINE}" stroke-width="2"/>',
+    ]
+    for i, (defect, caught, kind) in enumerate(rows):
+        y = 545 + i * 62
+        hot = kind == "missing"
+        body += [_t(150, y, defect, INK, 30), _t(1000, y, caught, ACCENT if hot else MUTED, 30),
+                 _t(2250, y, kind, ACCENT if hot else MUTED, 28, "end")]
+    body += _foot("block: 0 of 3,198 bad rows through · quarantine: 87, and 6,680 more good rows",
+                  "data-stack-lab")
+    return "".join(body)
+
+
 DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patroni,
             "lakehouse-spine": lakehouse_spine,
             "lakehouse-medallion": lakehouse_medallion,
@@ -1871,7 +1904,8 @@ DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patro
             "data-stack-lab": data_stack_lab,
             "airflow-backfill": airflow_backfill,
             "data-platform-architecture": data_platform_architecture,
-            "ai-platform-architecture": ai_platform_architecture}
+            "ai-platform-architecture": ai_platform_architecture,
+            "data-quality-defects": data_quality_defects}
 
 def svg_for(name: str) -> str:
     return (
