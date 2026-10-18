@@ -69,6 +69,12 @@
   og: og-observability.png
   featured: false
 
+- slug: data-modeling
+  name: "Data modelling & dbt"
+  blurb: "Star schemas, slowly changing dimensions and the dbt projects that build them: as-of joins, snapshots, contracts, and tests that fail when the model is wrong, scored against data whose truth is known."
+  og: og-lakehouse.png
+  featured: true
+
 - slug: cost-finops
   name: "Cost & FinOps"
   blurb: "Where the money actually goes in a data platform, and the levers that move it: storage layout, compaction, instance shape, and retention nobody wanted to own."

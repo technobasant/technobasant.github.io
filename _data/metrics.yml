@@ -544,6 +544,43 @@ registry_breach_delay:
   window: "measured Oct 2026"
   context: "Half an interval at the median and about one interval at worst (14.93 s; one of three runs reached 15.30 s on a busy host), which is what an interval scheduler predicts."
 
+# ── data-stack-lab (2026) ───────────────────────────────────────────────────
+dsl_type1_misattributed:
+  value: "15.1%"
+  label: "of a year's revenue on the wrong plan with a Type 1 account dimension"
+  method: "5,048 synthetic invoices (seed 7, Oct 2025 – Sep 2026) attributed by each account's current plan and compared with the plan the generator billed; $152,227 of $1,010,202"
+  scope: "independent"
+  source: "data-stack-lab (2026)"
+  window: "measured Oct 2026"
+  context: "Totals still reconcile under Type 1. The share depends on how often accounts change plan; these are the generator's rates, not a constant."
+
+dsl_type2_correct:
+  value: "5,048 of 5,048"
+  label: "invoices on the plan they billed, Type 2 dimension from dbt snapshots"
+  method: "as-of join of each invoice to the dim_account version in effect at billing, scored against the generator's truth file; the dimension was built from 13 monthly snapshot loads"
+  scope: "independent"
+  source: "data-stack-lab (2026)"
+  window: "measured Oct 2026"
+  context: "Invoices fall on the extract instant, which is why missed changes cost them nothing; for daily usage, 734 of 906,015 events (0.08%) landed on the wrong plan."
+
+dsl_snapshot_coverage:
+  value: "533 of 570"
+  label: "account changes in a year seen by monthly snapshots"
+  method: "a change counts as seen if a snapshot version starts at its exact updated_at; signups excluded"
+  scope: "independent"
+  source: "data-stack-lab (2026)"
+  window: "measured Oct 2026"
+  context: "26 of the 37 missed changes were trial upgrades that started and ended between two extracts."
+
+dsl_mutants:
+  value: "4 of 4"
+  label: "deliberate model breaks that failed the build"
+  method: "each break applied to a copy of the dbt project and built twice, with unit tests and with data tests only; recorded per engine and checked in CI"
+  scope: "independent"
+  source: "data-stack-lab (2026)"
+  window: "measured Oct 2026"
+  context: "Joining invoices to the current version passed all 46 data tests and failed one unit test. On dbt v2 2.0.8 two unit tests missed their breaks because expected timestamps are not compared (dbt-labs/dbt#15894)."
+
 # ── platform-deployments (open source, 2026) ────────────────────────────────
 deploy_bad_release_aborted:
   value: "6 of 6"

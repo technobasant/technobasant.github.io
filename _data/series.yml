@@ -59,3 +59,10 @@
   register_label: "Measured on my own hardware"
   blurb: "Eight open-source systems built from scratch across LLM evaluation, governed agents, streaming, real-time ML, retrieval, data contracts, progressive delivery and sharded databases. Each repository carries its method and numbers; each post is the result that changed what I would do."
   status: in-progress
+
+- slug: data-stack-lab
+  title: "The data stack lab"
+  register: measurement
+  register_label: "Measured on my own hardware"
+  blurb: "One synthetic SaaS business, built tool by tool on what data teams hire for: dbt, orchestration, data quality, the warehouse and lakehouse platforms. Each module is small and runnable, and its headline figure is scored against the data's ground truth."
+  status: in-progress

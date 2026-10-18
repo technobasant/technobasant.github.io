@@ -5,7 +5,7 @@
 # write-up's staging measurements. Re-verify before changing the date.
 # `demo` is a live app on Streamlit Community Cloud that runs the repository's code;
 # `package` is where the published library is installed from.
-as_of: '2026-10-16'
+as_of: '2026-10-18'
 repos:
 - name: spark-sql-kinesis
   url: https://github.com/technobasant/spark-sql-kinesis
@@ -171,6 +171,26 @@ repos:
   ci:
     conclusion: success
     url: https://github.com/technobasant/dataset-registry/actions/workflows/ci.yml
+- name: data-stack-lab
+  url: https://github.com/technobasant/data-stack-lab
+  pillar: data-platforms
+  what: 'One synthetic SaaS business built tool by tool. First module: a Kimball star schema in dbt with
+    a Type 2 dimension from monthly snapshots, contracts and unit tests, on dbt Core and dbt v2.'
+  finding: 'A Type 1 dimension put 15.1% of a year''s revenue on the wrong plan; the Type 2 dimension
+    put 5,048 of 5,048 invoices on the plan they billed.'
+  case: /work/data-stack-lab/
+  post: /writing/type-1-dimension-revenue-wrong-plan/
+  languages:
+  - SQL
+  - Python
+  license: Apache-2.0
+  release:
+    tag: v0.1.0
+    date: '2026-10-18'
+    url: https://github.com/technobasant/data-stack-lab/releases/tag/v0.1.0
+  ci:
+    conclusion: success
+    url: https://github.com/technobasant/data-stack-lab/actions/workflows/ci.yml
 - name: distributed-db-lab
   url: https://github.com/technobasant/distributed-db-lab
   pillar: database-lifecycle

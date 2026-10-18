@@ -1693,6 +1693,45 @@ def data_platform_ai() -> str:
     return "".join(body)
 
 
+def data_stack_lab() -> str:
+    """The same invoices, summed by the plan they billed and by the plan the account is on today."""
+    # From data-stack-lab's results/dbt-scd2.json (revenue.by_plan), seed 7.
+    rows = [
+        ("free", "$0", "$10,700", "from paid history"),
+        ("team", "$140,581", "$157,008", "+11.7%"),
+        ("business", "$325,166", "$340,030", "+4.6%"),
+        ("enterprise", "$544,455", "$502,464", "−7.7%"),
+    ]
+    body = _head("DIMENSIONAL MODELLING · DBT · 5,048 INVOICES",
+                 "Type 1 rewrote a year of revenue.",
+                 "Type 2 kept every invoice on its plan.")
+    body += [
+        _t(150, 490, "PLAN", MUTED, 24, tracking=3),
+        _t(800, 490, "BILLED", MUTED, 24, "end", tracking=3),
+        _t(1110, 490, "TYPE 1", MUTED, 24, "end", tracking=3),
+        f'<line x1="150" y1="512" x2="1400" y2="512" stroke="{LINE}" stroke-width="2"/>',
+    ]
+    for i, (plan, billed, type1, delta) in enumerate(rows):
+        y = 580 + i * 92
+        body += [
+            _t(150, y, plan, INK, 32),
+            _t(800, y, billed, INK, 32, "end"),
+            _t(1110, y, type1, ACCENT, 32, "end"),
+            _t(1140, y, delta, MUTED, 24),
+        ]
+    body += [
+        node_box(1500, 470, 750, 190, "Type 2 dimension", "5,048 of 5,048 right",
+                 "as-of join on the version", accent=True),
+        node_box(1500, 680, 750, 190, "Type 1, today's plan", "$152,227 · 15.1% moved",
+                 "totals still reconcile"),
+        node_box(1500, 890, 750, 190, "monthly snapshots", "533 of 570 changes seen",
+                 "26 short trials never seen"),
+    ]
+    body += _foot("13 snapshot loads · dbt Core 1.12 and dbt v2 · scored against ground truth",
+                  "data-stack-lab")
+    return "".join(body)
+
+
 DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patroni,
             "lakehouse-spine": lakehouse_spine,
             "lakehouse-medallion": lakehouse_medallion,
@@ -1730,7 +1769,8 @@ DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patro
             "wireguard-v15": wireguard_v15,
             "rustdesk-relay": rustdesk_relay,
             "amd64-vagrant": amd64_vagrant,
-            "data-platform-ai": data_platform_ai}
+            "data-platform-ai": data_platform_ai,
+            "data-stack-lab": data_stack_lab}
 
 def svg_for(name: str) -> str:
     return (

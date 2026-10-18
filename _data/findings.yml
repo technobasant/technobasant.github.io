@@ -23,6 +23,11 @@
   post: filtered-vector-search-four-rows-not-ten
   pillar: ai-systems
 
+- value: "15.1%"
+  claim: "of a year's revenue landed on the wrong plan when invoices were joined to today's account attributes"
+  post: type-1-dimension-revenue-wrong-plan
+  pillar: data-platforms
+
 - value: "59.8%"
   claim: "of on-time events counted by 10-second windows in the worst broker kill, while every record stayed exact"
   post: exactly-once-records-not-window-counts
