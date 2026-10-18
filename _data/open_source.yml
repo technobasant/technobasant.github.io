@@ -174,12 +174,12 @@ repos:
 - name: data-stack-lab
   url: https://github.com/technobasant/data-stack-lab
   pillar: data-platforms
-  what: 'One synthetic SaaS business built tool by tool. First module: a Kimball star schema in dbt with
-    a Type 2 dimension from monthly snapshots, contracts and unit tests, on dbt Core and dbt v2.'
-  finding: 'A Type 1 dimension put 15.1% of a year''s revenue on the wrong plan; the Type 2 dimension
-    put 5,048 of 5,048 invoices on the plan they billed.'
+  what: 'Hands-on data engineering projects, one per tool, on one synthetic SaaS dataset: a dbt star
+    schema with a Type 2 dimension, and an Airflow 3 DAG comparing three incremental-load strategies.'
+  finding: 'A Type 1 dimension put 15.1% of a year''s revenue on the wrong plan; backfilled newest day
+    first, two high-water-mark loads lost 96.56% of a month with every run green.'
   case: /work/data-stack-lab/
-  post: /writing/type-1-dimension-revenue-wrong-plan/
+  post: /writing/airflow-3-daily-no-data-interval/
   languages:
   - SQL
   - Python

@@ -23,6 +23,11 @@
   post: filtered-vector-search-four-rows-not-ten
   pillar: ai-systems
 
+- value: "0 of 89,508"
+  claim: "events loaded by a data-interval load on Airflow 3's default @daily, in 30 successful runs"
+  post: airflow-3-daily-no-data-interval
+  pillar: data-platforms
+
 - value: "15.1%"
   claim: "of a year's revenue landed on the wrong plan when invoices were joined to today's account attributes"
   post: type-1-dimension-revenue-wrong-plan

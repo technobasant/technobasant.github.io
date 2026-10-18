@@ -1,8 +1,8 @@
 ---
-title: "data-stack-lab: a dbt star schema scored against the truth"
-seo_title: "dbt dimensional modelling: Type 2 dimension, snapshots and tests, measured"
-hook: "One synthetic business, built tool by tool; the first module asks what a slowly changing dimension is worth in dollars"
-description: "A Kimball star schema in dbt with a Type 2 dimension built from monthly snapshots, contracts and unit tests, run on dbt Core and v2 and scored against ground truth."
+title: "data-stack-lab: dbt and Airflow projects, checked against known answers"
+seo_title: "Hands-on dbt and Airflow projects: SCD Type 2 and incremental backfills, measured"
+hook: "One project per tool on one synthetic SaaS dataset, each with a result the data can prove"
+description: "Hands-on data engineering projects on one synthetic SaaS dataset: a dbt star schema with a Type 2 dimension, and an Airflow 3 DAG whose backfills are scored."
 date: 2026-10-18
 last_modified_at: 2026-10-18
 kind: lab
@@ -13,9 +13,9 @@ role: "Author"
 org: "Open source"
 period: "2026"
 team: "One person"
-scale: "1,000 accounts, 11,963 users, 5,048 invoices and 913,388 events over a year; 13 snapshot loads; 11 models, 46 data tests, 3 unit tests, on DuckDB"
-problem: "Most dbt portfolios show a model that runs. Whether it is right is a different question, and the usual checks on a fact table, keys and totals, cannot answer it: a join to the wrong version of a dimension is complete, correctly keyed and wrong."
-decision: "Generate the data so its truth is known, build the model the way a warehouse would see the data (one monthly extract at a time), score every design choice against the truth, and break the model on purpose to see which tests notice."
+scale: "1,000 accounts, 5,048 invoices and 913,388 events over a year; a dbt project with 11 models, 46 data tests and 3 unit tests; an Airflow 3 DAG backfilled four ways over 30 days; DuckDB"
+problem: "Most dbt and Airflow portfolios show code that runs. Whether it is right is a different question, and the usual checks (keys, totals, green task runs) cannot answer it: a join to the wrong version of a dimension, or a load that skips a day, is complete, correctly keyed and green."
+decision: "Generate the data so the correct answer is known, build each project the way production would see the data, check every result against that answer, and break things on purpose to see which tests and runs notice."
 repo: "https://github.com/technobasant/data-stack-lab"
 flow: data-stack-lab
 cover:
@@ -25,9 +25,9 @@ cover:
   alt: "Revenue by plan for 5,048 invoices, billed versus attributed by each account's current plan, beside three results: Type 2 got every invoice right, Type 1 moved 15.1%, monthly snapshots saw 533 of 570 changes"
   caption: "Summed by the plan each invoice billed, and by the plan the account is on today. Totals match; the plans do not."
   link: "/writing/type-1-dimension-revenue-wrong-plan/"
-metrics: [dsl_type1_misattributed, dsl_type2_correct, dsl_snapshot_coverage, dsl_mutants]
-stack: ["dbt Core 1.12", "dbt v2", DuckDB, "dbt snapshots", "dbt unit tests", "model contracts", Python, NumPy, PyArrow, "GitHub Actions"]
-tags: [data-modeling, data-quality]
+metrics: [dsl_type1_misattributed, dsl_type2_correct, dsl_mutants, dsl_backwards_loss, dsl_default_daily_loaded]
+stack: ["dbt Core 1.12", "dbt v2", "Apache Airflow 3.3", DuckDB, "dbt snapshots", "dbt unit tests", "model contracts", Python, NumPy, PyArrow, "GitHub Actions"]
+tags: [data-modeling, orchestration, data-quality]
 image: /assets/og/og-lakehouse.png
 image_alt: "Data modelling and dbt — Basant Bhattarai"
 sitemap:
@@ -37,9 +37,9 @@ sitemap:
 
 ## Context
 
-Data modelling is in about two of every five data-engineering job descriptions I have collected, and it is the skill a portfolio shows worst. A dbt project that runs proves the SQL compiles. It does not prove the model answers the question it is named for, and the usual tests (unique keys, not-null columns, accepted values) are checks on shape, not on meaning.
+Data modelling and Airflow are each in about two of every five data-engineering job descriptions I have collected, and they are the skills a portfolio shows worst. A dbt project that runs proves the SQL compiles; a DAG that runs green proves the tasks finished. Neither proves the numbers are right, and the usual checks (unique keys, not-null columns, successful runs) are checks on shape, not on meaning.
 
-[data-stack-lab](https://github.com/technobasant/data-stack-lab) is a repository I am building one module at a time: a single fictional SaaS business, modelled and run on the tools data teams use, starting with dbt and moving on to orchestration, data quality and the warehouse and lakehouse platforms. Every module runs on the same seeded dataset, and the generator keeps what really happened, so each module can be scored instead of merely run. This first module is the dimensional model. It asks a narrow question with a dollar answer: what does keeping a dimension's history buy, and what does it miss?
+[data-stack-lab](https://github.com/technobasant/data-stack-lab) is a set of hands-on data engineering projects, one per tool, all on the same synthetic SaaS data. Each runs with one command and has its results checked in CI. Because the data is generated, the correct answer is known, so each project can prove its result instead of just running. This case covers the first two. The dbt project asks what keeping a dimension's history is worth in dollars. The Airflow project asks which way of loading "only what is new" survives re-runs, backfills and an upgrade to Airflow 3.
 
 ## Constraints
 
@@ -53,6 +53,7 @@ The warehouse is DuckDB, so the module runs anywhere with no server, and CI rebu
 - **Load and snapshot.** A script replaces `raw.accounts` with each month's extract in turn and runs `dbt snapshot` after each, 13 times, so the history in the warehouse is exactly what the extracts showed.
 - **Model.** Staging views normalise types and e-mail addresses and drop redelivered events. The marts are a Kimball star: `dim_account` (Type 2), `dim_plan`, `dim_date` and `dim_user` (Type 1, with personal data left in staging), and two facts, `fct_invoices` and `fct_daily_usage`, each joined to the account version in effect when it happened. A `revenue_by_plan` model carries both attributions side by side.
 - **Tests.** Enforced contracts on the dimension and both facts; 46 data tests including three generic ones written for this (validity windows that neither overlap nor leave gaps, and a composite grain) and two reconciliations; 3 unit tests on hand-written rows.
+- **Airflow.** One DAG, two tasks: `land` replaces a day's partition of event files in the warehouse, and `transform` runs three dbt incremental models that differ only in the filter that picks the batch (newer than the newest event time, newer than the newest arrival, or inside the run's data interval). A harness backfills September four ways through `dag.test()`; the in-order backfill was also run once on `airflow standalone` with `airflow backfill create`.
 - **Scoring.** A measurement script compares the warehouse with the truth files. A mutation script breaks the models four ways and records which tests fail, per dbt engine. CI runs everything on dbt Core 1.12 and on dbt v2, and fails if a single published number or mutant result changes.
 
 ## In the code
@@ -100,6 +101,10 @@ Both lines are pinned by a unit test, and the mutation script deletes each in tu
 
 **Tests that fail when they should.** {{ site.data.metrics.dsl_mutants.value }} deliberate breaks failed the build. The one that matters most, joining invoices to the current version, passed all 46 data tests (keys valid, every invoice present, revenue reconciled to the cent) and was caught only by a unit test that names the version each invoice must get. The full table and the per-engine record are in the [write-up](/writing/type-1-dimension-revenue-wrong-plan/) and the repository's [MEASUREMENTS.md](https://github.com/technobasant/data-stack-lab/blob/main/MEASUREMENTS.md).
 
+**High-water marks skip what runs out of order.** Backfilled in order, the event-time model lost 2,034 of 2,291 late events and the other two lost nothing. When the file for 10 September landed two days late and the day was re-run, the arrival-time model loaded nothing for it. Backfilled newest day first, both watermark models lost {{ site.data.metrics.dsl_backwards_loss.value }} of the month with every run green. The data-interval model lost nothing in any of those orders. Details in [the Airflow write-up](/writing/airflow-3-daily-no-data-interval/).
+
+**Airflow 3's @daily has no interval.** On the default schedule, a `CronTriggerTimetable` in Airflow 3, each run's data interval starts and ends at the same instant. The data-interval model loaded {{ site.data.metrics.dsl_default_daily_loaded.value }} events in 30 successful runs. `saas_daily` names `CronDataIntervalTimetable` explicitly, and a test pins both schedules. The real-scheduler backfill produced tables identical to the harness's.
+
 **Two engines, one result.** dbt v2 (the Apache-2.0 `dbt-oss` 2.0.8 distribution) built the same 11 models, passed the same tests and produced byte-identical measurements after one change to the YAML. End to end, 13 snapshot runs and a build took 83 s on dbt Core and 24 s on v2 on the same host.
 
 ## What went wrong
@@ -108,14 +113,18 @@ Both lines are pinned by a unit test, and the mutation script deletes each in tu
 
 **v2 rejected a source property dbt Core accepts.** `loaded_at_field` at the table level of a source is an error on v2, which wants it under `config:`. One line, but a project that runs on Core is not automatically a v2 project.
 
+**My first backfill covered the wrong days.** The date passed to `dag.test()` is treated as the moment the run fires, so on a data-interval schedule it covers the day before; the scheduler's own backfill labels the same run by the start of its window. Passing each day as the date covered 31 August to 29 September and reported 30 September's 3,076 events as lost by the two strategies that were complete. Checking the harness against a scheduler run is what made the difference visible.
+
 **My first mutation run reported every break as surviving.** The harness read the failing node's name from the wrong segment of dbt's unique id, which puts a unit test's name last. All four breaks had in fact been caught. A harness that reports on tests needs its own known failure to check against before its output means anything.
 
 ## What I'd do differently
 
 **Score the cadence, not just the model.** The snapshot's blind spot is set by how often the source is extracted. The next step is to rebuild the dimension from daily extracts and from a change-data-capture log of the same history and put the three side by side, which is a sharper argument for CDC than any diagram.
 
-**Add the platforms early.** The model is portable by construction but proven only on DuckDB. Running the same project on Snowflake and Databricks is the next module, and type mapping in the contracts is where I expect the first surprises.
+**Add the platforms early.** The model is portable by construction but proven only on DuckDB. Running the same dbt project on Snowflake and Databricks comes next, and type mapping in the contracts is where I expect the first surprises.
+
+**Run the other orders on the scheduler too.** Only the in-order backfill ran on a real scheduler. The backwards and late-file cases ran through `dag.test()`; `airflow backfill create --run-backwards` and a cleared-and-re-run day on the scheduler would close that gap.
 
 **Lint the SQL.** Formatting is consistent by hand. A SQL linter in CI would keep it that way once the project has more than one author.
 
-The code, the truth files' generator, and every measurement and mutant record are in [data-stack-lab](https://github.com/technobasant/data-stack-lab).
+The code, the data generator, and every measurement, backfill and mutant record are in [data-stack-lab](https://github.com/technobasant/data-stack-lab).

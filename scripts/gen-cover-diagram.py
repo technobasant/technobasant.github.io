@@ -1732,6 +1732,37 @@ def data_stack_lab() -> str:
     return "".join(body)
 
 
+def airflow_backfill() -> str:
+    """One month backfilled four ways; which incremental load lost what."""
+    # From data-stack-lab's results/airflow-backfill.json; 89,508 events arrived in September.
+    rows = [
+        ("in order", "2.27%", "0", "0"),
+        ("a day re-run late", "5.41%", "3.23%", "0"),
+        ("newest day first", "96.56%", "96.56%", "0"),
+        ("Airflow 3 @daily", "5.50%", "3.35%", "100%"),
+    ]
+    body = _head("AIRFLOW 3 · 30 DAILY RUNS · 89,508 EVENTS",
+                 "Every backfill ended green.",
+                 "Most of the tables lost data.")
+    cols = ((1080, "EVENT-TIME MARK"), (1500, "ARRIVAL MARK"), (1920, "DATA INTERVAL"))
+    body += [_t(150, 490, "BACKFILL", MUTED, 24, tracking=3)]
+    body += [_t(x, 490, label, MUTED, 24, "end", tracking=3) for x, label in cols]
+    body += [f'<line x1="150" y1="512" x2="{W - 150}" y2="512" stroke="{LINE}" stroke-width="2"/>']
+    for i, (scenario, a, b, c) in enumerate(rows):
+        y = 590 + i * 110
+        body.append(_t(150, y, scenario, INK, 34))
+        for (x, _), value in zip(cols, (a, b, c)):
+            lost = value != "0"
+            body.append(_t(x, y, "lost " + value if lost else "nothing lost", ACCENT if lost else MUTED,
+                           34 if lost else 28, "end"))
+        if i < len(rows) - 1:
+            body.append(f'<line x1="150" y1="{y + 45}" x2="{W - 150}" y2="{y + 45}" '
+                        f'stroke="{LINE}" stroke-width="1"/>')
+    body += _foot("high-water marks skip what runs out of order · @daily has a zero-length interval",
+                  "data-stack-lab")
+    return "".join(body)
+
+
 DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patroni,
             "lakehouse-spine": lakehouse_spine,
             "lakehouse-medallion": lakehouse_medallion,
@@ -1770,7 +1801,8 @@ DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patro
             "rustdesk-relay": rustdesk_relay,
             "amd64-vagrant": amd64_vagrant,
             "data-platform-ai": data_platform_ai,
-            "data-stack-lab": data_stack_lab}
+            "data-stack-lab": data_stack_lab,
+            "airflow-backfill": airflow_backfill}
 
 def svg_for(name: str) -> str:
     return (

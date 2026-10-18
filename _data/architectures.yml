@@ -253,26 +253,26 @@ dataset-registry:
       note: "A breach is noticed half an interval late at p50: 7.5 s at the 15 s default."
 
 data-stack-lab:
-  label: "dbt dimensional model — from monthly extracts to a scored star schema"
+  label: "data-stack-lab — one synthetic business, each project checked against the known answer"
   stages:
     - name: "Generate"
       tech: ["NumPy", "PyArrow"]
-      note: "One seeded SaaS business; the generator also keeps the truth the warehouse never sees."
-    - name: "Load"
-      tech: ["DuckDB"]
-      note: "13 monthly extracts of the accounts table, loaded one at a time."
-    - name: "Snapshot"
-      tech: ["dbt snapshot"]
-      note: "Versions dated by the app's own change time; 533 of 570 changes seen."
+      note: "One seeded SaaS business; the generator also keeps the answers the warehouse never sees."
+    - name: "Land"
+      tech: ["Airflow 3", "DuckDB"]
+      note: "A daily DAG lands each day's files; monthly extracts feed the snapshots."
     - name: "Model"
       tech: ["dbt Core", "dbt v2"]
-      note: "A Type 2 account dimension, invoice and usage facts, enforced contracts."
+      note: "A Type 2 star schema and three incremental strategies, in one project."
     - name: "Test"
       tech: ["unit tests", "mutants"]
       note: "4 of 4 breaks caught; the wrong-version join only by a unit test."
-    - name: "Score"
+    - name: "Backfill"
+      tech: ["dag.test", "scheduler"]
+      note: "September four ways; a real backfill matched the harness exactly."
+    - name: "Check"
       tech: ["truth files"]
-      note: "Type 2: every invoice right. Type 1: 15.1% of revenue misplaced."
+      note: "Type 1: 15.1% misplaced. Newest-first watermarks: 96.56% lost."
 
 platform-deployments:
   label: "GitOps canary platform — the path a release takes to every pod"
