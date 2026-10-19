@@ -55,19 +55,19 @@ repos:
 - name: ai-platform-architecture
   url: https://github.com/technobasant/ai-platform-architecture
   pillar: ai-systems
-  what: 'A reference architecture for AI features on governed data: 13 decision records backed by results
-    measured in the labs, an evaluation gate, an OWASP LLM Top 10 threat model and a cost model per answer.'
-  finding: 'Three of its quality targets are not met in the labs yet, and it says so: 3 of 37 auto-published
-    answers were wrong.'
+  what: 'The AI architecture for a fictional SaaS company''s usage assistant: text-to-SQL over governed data,
+    with accuracy, tenant isolation and cost measured on Qwen3, Llama 3.3, gpt-oss and Databricks Genie.'
+  finding: 'Told to stay in one customer''s data, the models leaked another account''s on 23 of 120 requests;
+    run as the customer''s database role, on none.'
   case: /work/ai-platform-architecture/
-  post: /writing/ai-answer-cost-and-self-hosting/
+  post: /writing/prompt-is-not-tenant-isolation/
   languages:
   - Python
   license: Apache-2.0
   release:
-    tag: v0.1.0
-    date: '2026-10-18'
-    url: https://github.com/technobasant/ai-platform-architecture/releases/tag/v0.1.0
+    tag: v0.2.0
+    date: '2026-10-19'
+    url: https://github.com/technobasant/ai-platform-architecture/releases/tag/v0.2.0
   ci:
     conclusion: success
     url: https://github.com/technobasant/ai-platform-architecture/actions/workflows/ci.yml

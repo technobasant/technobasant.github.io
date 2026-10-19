@@ -638,22 +638,40 @@ dpa_break_even:
 
 # ── ai-platform-architecture (2026) ─────────────────────────────────────────
 aipa_decisions_backed:
-  value: "12 of 13"
-  label: "AI architecture decisions backed by results measured in public labs"
-  method: "each decision record cites figures from evidence/evidence.yml, generated into the record by scripts/build.py; CI fails if a figure drifts or a source link breaks"
+  value: "12 of 14"
+  label: "decisions for the usage assistant backed by measured results; the other two wait on the platform choice and a retention drill"
+  method: "each decision record cites figures from evidence/evidence.yml, generated into the record by scripts/build.py; CI fails if a figure drifts, a section of the template is missing, or a source link breaks"
   scope: "independent"
   source: "ai-platform-architecture (2026)"
   window: "Oct 2026"
-  context: "The thirteenth, a cost per answer for every feature, is Proposed: modelled from list prices and assumed token counts. Three quality targets are not met in the labs, and the repository lists them."
+  context: "Proposed: how a customer's identity reaches the chosen platform's row filters, and 30-day retention of conversations."
+
+aipa_prompt_isolation:
+  value: "23 of 120"
+  label: "requests for another account's data that leaked when isolation was left to the prompt; 0 of 120 as the customer's own database role"
+  method: "20 prompts that only another account's data, or every account's, can answer, each from two customers, to Qwen3 8B, Llama 3.3 70B and gpt-oss-120b told to answer only about the customer's account; each generated query run with access to every account and as the customer's role (Postgres row-level security), a leak being any difference"
+  scope: "independent"
+  source: "ai-platform-architecture (2026)"
+  window: "measured Oct 2026"
+  context: "Llama 3.3 70B, the most accurate model on ordinary questions, leaked with 12 of the 12 queries it wrote for these requests. Each customer's role sees 1 of 200 accounts."
+
+aipa_semantic_layer:
+  value: "55 → 70 of 70"
+  label: "customers' usage questions Llama 3.3 70B answered correctly, from the table definitions alone and with a semantic layer of the business's definitions"
+  method: "70 answerable questions with reference answers computed by SQL on a seeded usage mart; one generated query per question, run as the customer's role; the reference value must be in the first row"
+  scope: "independent"
+  source: "ai-platform-architecture (2026)"
+  window: "measured Oct 2026"
+  context: "Qwen3 8B went from 43 to 64; gpt-oss-120b from 63 to 70, and declined all 20 unanswerable questions. Databricks AI/BI Genie, given the same definitions, answered 69 of 70 at 14.5 s median."
 
 aipa_self_host_break_even:
   value: "196 vs 3,918"
   label: "answers per hour a single-L40S instance must serve to cost less than Claude Sonnet 5, and than GPT-6 Luna"
   method: "g6e.xlarge on-demand price in us-east-1 divided by the API price of a help-centre answer of 3,500 input and 250 output tokens; list prices retrieved 2026-10-18"
   scope: "independent"
-  source: "ai-platform-architecture (2026)"
+  source: "ai-platform-architecture v0.1.0 (2026)"
   window: "list prices, Oct 2026"
-  context: "Arithmetic on prices, not a benchmark: whether one instance can serve that rate with a model that passes the feature's evaluation gate is not measured."
+  context: "Arithmetic on prices, not a benchmark: whether one instance can serve that rate with a model that passes the feature's evaluation gate is not measured. From the repository's first version; v0.2.0 prices the usage assistant from measured tokens instead."
 
 dsl_quality_block:
   value: "0 of 3,198"

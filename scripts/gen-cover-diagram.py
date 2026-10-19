@@ -1939,6 +1939,56 @@ def replica_reports() -> str:
     return "".join(body)
 
 
+def prompt_isolation() -> str:
+    """Requests for another account's data: isolation in the prompt against the database."""
+    # From ai-platform-architecture's results/assistant.json and assistant-genie-responses.jsonl.
+    body = _head("TEXT-TO-SQL · 200 CUSTOMERS IN ONE TABLE · 20 ATTACKS",
+                 "Told to stay in one customer's data,",
+                 "the models leaked 23 of 120 times.")
+    body += [
+        node_box(150, 470, 760, 200, "Isolation in the prompt", "23 of 120 requests leaked",
+                 "the model wrote the WHERE clause", accent=True),
+        node_box(150, 700, 760, 200, "Isolation in the database", "0 of 120 leaked",
+                 "the query ran as the customer's role"),
+        _t(1000, 490, "LEFT TO THE PROMPT", MUTED, 24, tracking=3),
+        _t(2250, 490, "LEAKED", MUTED, 24, "end", tracking=3),
+        f'<line x1="1000" y1="512" x2="{W - 150}" y2="512" stroke="{LINE}" stroke-width="2"/>',
+    ]
+    rows = [("Llama 3.3 70B", "12 of 40"), ("Qwen3 8B", "7 of 40"), ("gpt-oss-120b", "4 of 40"),
+            ("Genie, an ordinary question", "1,570 people, not 12")]
+    for i, (what, result) in enumerate(rows):
+        y = 580 + i * 95
+        body += [_t(1000, y, what, INK, 32), _t(2250, y, result, ACCENT if i in (0, 3) else MUTED, 32, "end")]
+    body += _foot("a prompt is a request to a model, not an access control",
+                  "ai-platform-architecture")
+    return "".join(body)
+
+
+def semantic_layer() -> str:
+    """Accuracy with the schema alone and with the business's definitions."""
+    # From ai-platform-architecture's results/assistant.json and assistant-genie.json.
+    body = _head("70 CUSTOMER QUESTIONS · ANSWERS COMPUTED BY SQL",
+                 "The definitions mattered",
+                 "more than the model.")
+    body += [
+        node_box(150, 470, 760, 200, "Schema only", "Llama 3.3 70B: 55 of 70",
+                 "plausible SQL, wrong meaning"),
+        node_box(150, 700, 760, 200, "Schema + semantic layer", "Llama 3.3 70B: 70 of 70",
+                 "periods, vocabulary, metric SQL", accent=True),
+        _t(1000, 490, "CORRECT, OF 70", MUTED, 24, tracking=3),
+        _t(2250, 490, "SCHEMA → DEFINITIONS", MUTED, 24, "end", tracking=3),
+        f'<line x1="1000" y1="512" x2="{W - 150}" y2="512" stroke="{LINE}" stroke-width="2"/>',
+    ]
+    rows = [("Qwen3 8B, local", "43 → 64"), ("Llama 3.3 70B", "55 → 70"),
+            ("gpt-oss-120b", "63 → 70"), ("Databricks Genie", "69, with the same definitions")]
+    for i, (what, result) in enumerate(rows):
+        y = 580 + i * 95
+        body += [_t(1000, y, what, INK, 32), _t(2250, y, result, ACCENT if i in (0, 1) else MUTED, 32, "end")]
+    body += _foot("\"people who used the product\" is a count of distinct users, not a sum of daily counts",
+                  "ai-platform-architecture")
+    return "".join(body)
+
+
 DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patroni,
             "lakehouse-spine": lakehouse_spine,
             "lakehouse-medallion": lakehouse_medallion,
@@ -1984,7 +2034,9 @@ DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patro
             "data-quality-defects": data_quality_defects,
             "spark-overwrite": spark_overwrite,
             "databricks-loaders": databricks_loaders,
-            "replica-reports": replica_reports}
+            "replica-reports": replica_reports,
+            "prompt-isolation": prompt_isolation,
+            "semantic-layer": semantic_layer}
 
 def svg_for(name: str) -> str:
     return (

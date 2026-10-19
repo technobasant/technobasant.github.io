@@ -297,26 +297,26 @@ data-platform-architecture:
       note: "Databricks or Snowflake, by criteria fixed before the proof of concept (0005)."
 
 ai-platform-architecture:
-  label: "AI on governed data — the path an answer takes, and the decision behind each step"
+  label: "The usage assistant: the path a customer's question takes, and the decision behind each step"
   stages:
     - name: "Ask"
-      tech: ["Feature API", "agent graph"]
-      note: "The caller's tenant and permissions travel with every call (0001)."
-    - name: "Reach data"
-      tech: ["MCP tools", "SQL guard"]
-      note: "Typed tools only; 0 of 5 planted instructions led to an action (0001)."
-    - name: "Call models"
-      tech: ["gateway"]
-      note: "Budgets, cache and replay: 54 of 54 cases reproduced without a model (0011)."
-    - name: "Check"
-      tech: ["schema", "grounding"]
-      note: "3 of 37 wrong answers still passed every check: the gap to close (0002)."
+      tech: ["product session"]
+      note: "The account comes from the signed-in session, never from the question."
+    - name: "Write SQL"
+      tech: ["gpt-oss-120b", "semantic layer"]
+      note: "Definitions in the prompt: Llama 3.3 70B went from 55 to 70 of 70 (0003)."
+    - name: "Guard"
+      tech: ["one SELECT"]
+      note: "One read-only statement, a timeout and a row limit, or nothing (0012)."
+    - name: "Scope"
+      tech: ["row-level security"]
+      note: "The customer's identity, not the prompt: 23 of 120 leaked vs 0 of 120 (0002)."
     - name: "Gate"
-      tech: ["paired eval", "budgets"]
-      note: "Significance, not deltas; latency and cost with their own exit codes (0004)."
+      tech: ["paired eval", "replay"]
+      note: "750 recorded answers re-scored in CI with no model called (0006, 0008)."
     - name: "Price"
-      tech: ["cost model"]
-      note: "On price, a GPU beats Sonnet 5 above 196 answers/h, GPT-6 Luna above 3,918 (0013)."
+      tech: ["measured tokens"]
+      note: "$0.00028 an answer; a GPU pays only above 6,600 answers/h (0014)."
 
 platform-deployments:
   label: "GitOps canary platform — the path a release takes to every pod"
