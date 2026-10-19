@@ -3,7 +3,7 @@ title: "On Airflow 3's @daily, an incremental load ran green 30 times and loaded
 seo_title: "Airflow 3 @daily data interval and incremental loads: backfills, measured"
 description: "Airflow 3's @daily has a zero-length data interval, so a window-based load ran green for 30 days and loaded nothing. Backfilled backwards, watermarks lost 97%."
 date: 2026-10-18 15:00:00 +0545
-last_modified_at: 2026-10-18
+last_modified_at: 2026-10-19
 type: essay
 pillar: data-platforms
 series: data-stack-lab
@@ -39,7 +39,7 @@ faq:
   - q: "Does Airflow 3's @daily schedule still have a data interval?"
     a: "No. In Airflow 3, a cron schedule such as @daily becomes a CronTriggerTimetable by default ([scheduler] create_cron_data_intervals is False), and each run's data interval starts and ends at the moment the run fires. A task that loads rows between data_interval_start and data_interval_end gets an empty window. In this test it loaded 0 of 89,508 events over 30 runs, all of which succeeded. Ask for CronDataIntervalTimetable explicitly to get a one-day window."
   - q: "What is the safest way to write an incremental load in Airflow?"
-    a: "Load exactly the rows that arrived inside the run's data interval, and make the write replace rather than append, so a re-run of any day reloads that day and nothing else. Across four backfills of the same month, in order, with a late file re-run, newest day first, that design lost nothing. High-water marks (max event time or max arrival time already loaded) lost up to 96.56%."
+    a: "Load exactly the rows that arrived inside the run's data interval, and make the write replace rather than append, so a re-run of any day reloads that day and nothing else. Across three backfills of the same month (in order, with a late file re-run, and newest day first) that design lost nothing, once the schedule had a real interval; on Airflow 3's default `@daily`, whose interval is empty, it loaded nothing. High-water marks (max event time or max arrival time already loaded) lost up to 96.56%."
   - q: "Why does a high-water-mark incremental model lose data in a backfill?"
     a: "A high-water mark records how far the table has got, not which days it has seen. Any day processed after a later one falls below the mark and is skipped without an error. Backfilled newest day first, both watermark models kept only the first day they processed, 3,076 of 89,508 events."
   - q: "Is dag.test() a fair stand-in for the Airflow scheduler?"
@@ -144,7 +144,7 @@ No. In Airflow 3, a cron schedule such as @daily becomes a CronTriggerTimetable 
 
 ### What is the safest way to write an incremental load in Airflow?
 
-Load exactly the rows that arrived inside the run's data interval, and make the write replace rather than append, so a re-run of any day reloads that day and nothing else. Across four backfills of the same month, in order, with a late file re-run, newest day first, that design lost nothing. High-water marks (max event time or max arrival time already loaded) lost up to 96.56%.
+Load exactly the rows that arrived inside the run's data interval, and make the write replace rather than append, so a re-run of any day reloads that day and nothing else. Across three backfills of the same month (in order, with a late file re-run, and newest day first) that design lost nothing, once the schedule had a real interval; on Airflow 3's default `@daily`, whose interval is empty, it loaded nothing. High-water marks (max event time or max arrival time already loaded) lost up to 96.56%.
 
 ### Why does a high-water-mark incremental model lose data in a backfill?
 

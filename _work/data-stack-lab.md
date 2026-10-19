@@ -4,7 +4,7 @@ seo_title: "Hands-on dbt, Airflow, data quality, PySpark and Databricks projects
 hook: "One project per tool on one synthetic SaaS dataset, each with a result the data can prove"
 description: "Hands-on data engineering projects on one synthetic SaaS dataset: dbt, Airflow 3, data quality, PySpark and Databricks, each with measured results."
 date: 2026-10-18
-last_modified_at: 2026-10-18
+last_modified_at: 2026-10-19
 kind: lab
 pillar: data-platforms
 related: [dataset-registry, data-platform-practice, streaming-platform]
@@ -45,7 +45,7 @@ Data modelling and Airflow are each in about two of every five data-engineering 
 
 Everything is synthetic, and the business is deliberately small: four plans at one price each, no seats, proration, discounts or refunds. The rates at which accounts upgrade, downgrade, trial a plan and churn are assumptions, so the percentages describe this business rather than any real one.
 
-The warehouse is DuckDB, so every project runs anywhere with no server, and CI rebuilds it on every commit. Spark runs in local mode on four cores, so there is no network shuffle and no object store, where small files cost more. The Databricks project ran once on Free Edition and cannot run in CI; CI checks its prediction from the documented semantics, and that the recorded run matched it. That rules out claims about Snowflake, Databricks or BigQuery behaviour. The SQL is written to be portable (dbt's cross-database macros, no `QUALIFY`), and those platforms get their own projects running this same dbt project. Timings came from one host, an Apple M5 with 24 GB, and are observations only; every other figure is a count over seeded data that CI reproduces byte for byte on Linux.
+The warehouse is DuckDB, so the dbt, Airflow, data quality and Spark projects run anywhere with no server, and CI rebuilds it on every commit. Spark runs in local mode on four cores, so there is no network shuffle and no object store, where small files cost more. The Databricks project ran once on Free Edition and cannot run in CI; CI checks its prediction from the documented semantics, and that the recorded run matched it. The same dbt project, written to be portable (dbt's cross-database macros, no `QUALIFY`), also built on Databricks with one change; nothing here is claimed about Snowflake or BigQuery. Timings came from one host, an Apple M5 with 24 GB, and are observations only; every other figure is a count over seeded data that CI reproduces byte for byte on Linux.
 
 ## Architecture
 
@@ -55,7 +55,7 @@ The warehouse is DuckDB, so every project runs anywhere with no server, and CI r
 - **Tests.** Enforced contracts on the dimension and both facts; 46 data tests including three generic ones written for this (validity windows that neither overlap nor leave gaps, and a composite grain) and two reconciliations; 3 unit tests on hand-written rows.
 - **Airflow.** One DAG, two tasks: `land` replaces a day's partition of event files in the warehouse, and `transform` runs three dbt incremental models that differ only in the filter that picks the batch (newer than the newest event time, newer than the newest arrival, or inside the run's data interval). A harness backfills September four ways through `dag.test()`; the in-order backfill was also run once on `airflow standalone` with `airflow backfill create`.
 - **Data quality.** September is delivered daily with one injected defect every three days and checked in dbt: an enforced contract, row tests, batch tests against the last seven accepted days, and control totals against the producer's manifest. Every delivered row is labelled good or bad, and two policies (block the day, or quarantine failing rows) are scored on what they let through and what they hold back.
-- **Spark.** A PySpark 4.2 rollup written as Parquet partitioned by day, used for three experiments: re-running one day under each partition overwrite mode, writing the rollup four ways and counting files, and counting the files a one-day query has to read.
+- **Spark.** A PySpark 4.2 rollup written as Parquet partitioned by day, used for three experiments: re-running one day under each partition overwrite mode, writing the rollup four ways and counting files, and counting the files that hold one day's rows.
 - **Databricks.** Ten days of event files delivered into a Unity Catalog volume with four incidents (a duplicate file under another name, a truncated upload corrected under the same name, a late file, a repeated run) and loaded six ways from a serverless SQL warehouse and a Lakeflow pipeline; then one day of the Spark rollup re-run on a Delta table five ways.
 - **Scoring.** A measurement script compares the warehouse with the truth files. A mutation script breaks the models four ways and records which tests fail, per dbt engine. CI runs everything on dbt Core 1.12 and on dbt v2, and fails if a single published number or mutant result changes.
 
@@ -136,7 +136,7 @@ Both lines are pinned by a unit test, and the mutation script deletes each in tu
 
 **Score the cadence, not just the model.** The snapshot's blind spot is set by how often the source is extracted. The next step is to rebuild the dimension from daily extracts and from a change-data-capture log of the same history and put the three side by side, which is a sharper argument for CDC than any diagram.
 
-**Add Snowflake.** The dbt project now builds on Databricks with one change and gives the published figures exactly. The prediction was right about where the surprise would be: the model contracts declared `varchar`, which Databricks refuses without a length; `string` works on every engine. Snowflake is next.
+**Add Snowflake.** The dbt project now builds on Databricks with one change and gives the published figures exactly: the model contracts declared `varchar`, which Databricks refuses without a length; `string` works on every engine. Snowflake is next.
 
 **Run the other orders on the scheduler too.** Only the in-order backfill ran on a real scheduler. The backwards and late-file cases ran through `dag.test()`; `airflow backfill create --run-backwards` and a cleared-and-re-run day on the scheduler would close that gap.
 

@@ -3,7 +3,7 @@ title: "Wrong data and missing data are caught by different checks"
 seo_title: "Data quality checks in dbt: nine defects, block vs quarantine, measured"
 description: "A month of deliveries with nine defects. Row tests caught wrong values; only control totals, volume and platform share saw rows that never arrived."
 date: 2026-10-18 18:45:00 +0545
-last_modified_at: 2026-10-18
+last_modified_at: 2026-10-19
 type: essay
 pillar: data-platforms
 series: data-stack-lab
@@ -43,7 +43,7 @@ faq:
     a: "Because event delivery is at least once. On an ordinary day 0.8% of events arrived twice, some across midnight. Deduplicate first, in the model, and test uniqueness on what is left; a test that fails every day is soon ignored."
 key_takeaways:
   - "Row tests find wrong values in rows that arrived; rows that never arrived need control totals, volume and per-group shares."
-  - "A platform going silent moved total volume 19%, inside a 30% band, and moved its own share from about 18% to zero."
+  - "A platform going silent left the day 11.7% below the median of the last seven accepted days, inside a 30% band, and moved its own share from about 18% to zero."
   - "A fixed volume band is a coin toss at its edge: the same late third was caught in one run and missed by 12 rows in the other."
   - "Blocking let 0 of 3,198 bad rows through and held 19,545 good ones; quarantine let 87 through and held 12,865."
   - "Rule checks cannot tell a defect from a product change: a legitimate new event type held a day or set aside 92 good rows."
@@ -89,7 +89,7 @@ The truncated upload delivered 1,145 perfectly valid rows. The silent platform d
 Three batch checks saw them, each for a different reason:
 
 - **The manifest.** The producer declared how many rows each file held. The truncated file held 40% of them. This is the only check that knows what *should* have arrived, and it costs one number per file.
-- **Per-platform share.** iOS stopping cut the day's volume by 19%, inside the 30% band. It moved iOS's own share from about 18% to zero. A total hides a loss in one group that the group's share shows.
+- **Per-platform share.** iOS stopping removed 613 events, 19% of what the day should have had, yet the day was only 11.7% below the median of the last seven accepted days (2,613 against 2,958), inside the 30% band. It moved iOS's own share from about 18% to zero. A total hides a loss in one group that the group's share shows.
 - **Volume.** It caught the truncated upload easily. The late third was harder: 29.6% below one policy's baseline and 30.2% below the other's, because the two policies had accepted different earlier days. The band missed it by 12 rows in one run and caught it in the other.
 
 That last result is the honest summary of fixed thresholds. Whatever band you pick, some real loss sits just inside it. A manifest from the producer, where one can be had, removes the guesswork.
