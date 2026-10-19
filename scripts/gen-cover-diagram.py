@@ -1913,6 +1913,32 @@ def databricks_loaders() -> str:
     return "".join(body)
 
 
+def replica_reports() -> str:
+    """The client's current state: reports on the primary, and on the replica."""
+    # From data-platform-architecture's results/baseline.json (Postgres 17, lab copy).
+    body = _head("POSTGRES 17 · THE PRODUCT AND ITS REPORTS · ONE DATABASE",
+                 "The replica was meant to take the reports.",
+                 "3 of 412 finished.")
+    body += [
+        node_box(150, 470, 760, 200, "Reports on the replica", "3 of 412 long runs finished",
+                 "409 cancelled: conflict with recovery", accent=True),
+        node_box(150, 700, 760, 200, "Reports on the primary", "the product's p95: 93 → 794 ms",
+                 "23% of requests over 100 ms"),
+        _t(1000, 490, "WHERE THE REPORTS RAN", MUTED, 24, tracking=3),
+        _t(2250, 490, "OUTCOME", MUTED, 24, "end", tracking=3),
+        f'<line x1="1000" y1="512" x2="{W - 150}" y2="512" stroke="{LINE}" stroke-width="2"/>',
+    ]
+    rows = [("primary", "product 8.5x slower at p95"), ("replica, defaults", "3 of 412 finished"),
+            ("replica, 30 s behind", "even 0.1 s queries cancelled"),
+            ("replica, hot_standby_feedback", "20 of 20, cleanup held back")]
+    for i, (what, result) in enumerate(rows):
+        y = 580 + i * 95
+        body += [_t(1000, y, what, INK, 32), _t(2250, y, result, ACCENT if i in (1, 2) else MUTED, 32, "end")]
+    body += _foot("max_standby_streaming_delay is a budget for the replica, not a limit per query",
+                  "data-platform-architecture")
+    return "".join(body)
+
+
 DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patroni,
             "lakehouse-spine": lakehouse_spine,
             "lakehouse-medallion": lakehouse_medallion,
@@ -1957,7 +1983,8 @@ DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patro
             "ai-platform-architecture": ai_platform_architecture,
             "data-quality-defects": data_quality_defects,
             "spark-overwrite": spark_overwrite,
-            "databricks-loaders": databricks_loaders}
+            "databricks-loaders": databricks_loaders,
+            "replica-reports": replica_reports}
 
 def svg_for(name: str) -> str:
     return (

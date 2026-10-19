@@ -100,7 +100,7 @@ Trino on EC2 has the lowest hourly price in the table, $2.12 for four workers. T
 1. **Bytes scanned for a month.** On Snowflake, sum `BYTES_SCANNED` from `SNOWFLAKE.ACCOUNT_USAGE.QUERY_HISTORY`. On BigQuery, sum `total_bytes_billed` from `INFORMATION_SCHEMA.JOBS` in the region. On Databricks, the query history system table records what each query read.
 2. **Compute hours for the same month.** On Snowflake, credits from `WAREHOUSE_METERING_HISTORY` divided by the warehouse's credits per hour. On BigQuery, `total_slot_ms` gives slot time, which is what the editions bill. On Databricks, DBUs from `system.billing.usage`.
 3. **Divide** to get terabytes scanned per engine-hour, and compare it with the table.
-4. **Put your own volumes** into the model's [`workloads.yml`](https://github.com/technobasant/data-platform-architecture/blob/main/cost/workloads.yml) and run it.
+4. **Put your own volumes** into the model's [`workloads.yml`](https://github.com/technobasant/data-platform-architecture/blob/v0.1.0/cost/workloads.yml) (the tiers this post uses are in version 0.1.0) and run it.
 5. **Run a week of real queries** on the shortlist before committing. A break-even narrows the choice; only running the workload settles it.
 
 <div class="callout callout--note" markdown="1">
