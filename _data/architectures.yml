@@ -259,8 +259,8 @@ data-stack-lab:
       tech: ["NumPy", "PyArrow"]
       note: "One seeded SaaS business; the generator also keeps the answers the warehouse never sees."
     - name: "Land"
-      tech: ["Airflow 3", "DuckDB"]
-      note: "A daily DAG lands each day's files; monthly extracts feed the snapshots."
+      tech: ["Airflow 3", "Auto Loader", "DuckDB"]
+      note: "A daily DAG lands each day's files; Databricks loads them six ways."
     - name: "Model"
       tech: ["dbt Core", "dbt v2", "PySpark"]
       note: "A Type 2 star schema and three incremental strategies in dbt; a daily rollup in Spark."

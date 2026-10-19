@@ -655,6 +655,15 @@ dsl_spark_static_overwrite:
   window: "measured Oct 2026"
   context: "No error was raised. The same project counted 5,970 files for a month written with AQE off, 1,460 for a year with AQE on, and 365 when repartitioned by the partition column."
 
+dsl_databricks_corrected_missed:
+  value: "1,638"
+  label: "events never loaded by COPY INTO and Auto Loader after a truncated file was corrected under the same name"
+  method: "Databricks Free Edition (Databricks SQL 2026.39): ten days of event files (29,095 events) delivered into a Unity Catalog volume and loaded six ways after each delivery; the counts matched a prediction made from the documented semantics"
+  scope: "independent"
+  source: "data-stack-lab (2026)"
+  window: "measured Oct 2026"
+  context: "Only Auto Loader with cloudFiles.allowOverwrites followed by a MERGE on the event key ended with exactly the 29,095 events sent. On Delta, INSERT OVERWRITE of one day left 1 of 365 days even with a PARTITION clause; RESTORE brought them back."
+
 # ── platform-deployments (open source, 2026) ────────────────────────────────
 deploy_bad_release_aborted:
   value: "6 of 6"

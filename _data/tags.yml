@@ -75,6 +75,12 @@
   og: og-lakehouse.png
   featured: true
 
+- slug: databricks
+  name: "Databricks"
+  blurb: "Databricks measured rather than demonstrated: what COPY INTO, Auto Loader and MERGE do with files that change, and how Delta re-runs and restores a day, on a real workspace."
+  og: og-lakehouse.png
+  featured: true
+
 - slug: orchestration
   name: "Airflow & orchestration"
   blurb: "Scheduling that survives re-runs and backfills: data intervals, idempotent loads, incremental models, and the defaults that change between Airflow versions, measured on real DAG runs."

@@ -1,8 +1,8 @@
 ---
-title: "data-stack-lab: dbt, Airflow, data-quality and Spark projects, checked against known answers"
-seo_title: "Hands-on dbt, Airflow, data quality and PySpark projects, each measured"
+title: "data-stack-lab: dbt, Airflow, data-quality, Spark and Databricks projects, checked against known answers"
+seo_title: "Hands-on dbt, Airflow, data quality, PySpark and Databricks projects, each measured"
 hook: "One project per tool on one synthetic SaaS dataset, each with a result the data can prove"
-description: "Hands-on data engineering projects on one synthetic SaaS dataset: dbt, Airflow 3, data quality and PySpark, each with measured results checked in CI."
+description: "Hands-on data engineering projects on one synthetic SaaS dataset: dbt, Airflow 3, data quality, PySpark and Databricks, each with measured results."
 date: 2026-10-18
 last_modified_at: 2026-10-18
 kind: lab
@@ -13,7 +13,7 @@ role: "Author"
 org: "Open source"
 period: "2026"
 team: "One person"
-scale: "1,000 accounts, 5,048 invoices and 913,388 events over a year; a dbt project with 11 models, 46 data tests and 3 unit tests; an Airflow 3 DAG backfilled four ways; a month of deliveries with nine injected defects; a PySpark 4.2 rollup over 365 daily partitions; DuckDB"
+scale: "1,000 accounts, 5,048 invoices and 913,388 events over a year; a dbt project with 11 models, 46 data tests and 3 unit tests; an Airflow 3 DAG backfilled four ways; a month of deliveries with nine injected defects; a PySpark 4.2 rollup over 365 daily partitions; ten days of files loaded six ways on Databricks; DuckDB"
 problem: "Most dbt and Airflow portfolios show code that runs. Whether it is right is a different question, and the usual checks (keys, totals, green task runs) cannot answer it: a join to the wrong version of a dimension, or a load that skips a day, is complete, correctly keyed and green."
 decision: "Generate the data so the correct answer is known, build each project the way production would see the data, check every result against that answer, and break things on purpose to see which tests and runs notice."
 repo: "https://github.com/technobasant/data-stack-lab"
@@ -25,9 +25,9 @@ cover:
   alt: "Revenue by plan for 5,048 invoices, billed versus attributed by each account's current plan, beside three results: Type 2 got every invoice right, Type 1 moved 15.1%, monthly snapshots saw 533 of 570 changes"
   caption: "Summed by the plan each invoice billed, and by the plan the account is on today. Totals match; the plans do not."
   link: "/writing/type-1-dimension-revenue-wrong-plan/"
-metrics: [dsl_type1_misattributed, dsl_backwards_loss, dsl_default_daily_loaded, dsl_quality_block, dsl_spark_static_overwrite]
-stack: ["dbt Core 1.12", "dbt v2", "Apache Airflow 3.3", "PySpark 4.2", DuckDB, Parquet, "dbt snapshots", "dbt unit tests", "model contracts", Python, NumPy, PyArrow, "GitHub Actions"]
-tags: [data-modeling, orchestration, data-quality, spark]
+metrics: [dsl_type1_misattributed, dsl_backwards_loss, dsl_quality_block, dsl_spark_static_overwrite, dsl_databricks_corrected_missed]
+stack: ["dbt Core 1.12", "dbt v2", "Apache Airflow 3.3", "PySpark 4.2", Databricks, "Delta Lake", "Unity Catalog", "Auto Loader", DuckDB, Parquet, "dbt snapshots", "dbt unit tests", "model contracts", Python, NumPy, PyArrow, "GitHub Actions"]
+tags: [data-modeling, orchestration, data-quality, spark, databricks]
 image: /assets/og/og-lakehouse.png
 image_alt: "Data modelling and dbt — Basant Bhattarai"
 sitemap:
@@ -39,13 +39,13 @@ sitemap:
 
 Data modelling and Airflow are each in about two of every five data-engineering job descriptions I have collected, and they are the skills a portfolio shows worst. A dbt project that runs proves the SQL compiles; a DAG that runs green proves the tasks finished. Neither proves the numbers are right, and the usual checks (unique keys, not-null columns, successful runs) are checks on shape, not on meaning.
 
-[data-stack-lab](https://github.com/technobasant/data-stack-lab) is a set of hands-on data engineering projects, one per tool, all on the same synthetic SaaS data. Each runs with one command and has its results checked in CI. Because the data is generated, the correct answer is known, so each project can prove its result instead of just running. This case covers the first four. The dbt project asks what keeping a dimension's history is worth in dollars. The Airflow project asks which way of loading "only what is new" survives re-runs, backfills and an upgrade to Airflow 3. The data-quality project asks which checks catch which defects, and what blocking or quarantining lets through. The Spark project asks what a partitioned PySpark job's defaults do on a re-run and to the files it writes.
+[data-stack-lab](https://github.com/technobasant/data-stack-lab) is a set of hands-on data engineering projects, one per tool, all on the same synthetic SaaS data. Each runs with one command and has its results checked in CI. Because the data is generated, the correct answer is known, so each project can prove its result instead of just running. This case covers the first five. The dbt project asks what keeping a dimension's history is worth in dollars. The Airflow project asks which way of loading "only what is new" survives re-runs, backfills and an upgrade to Airflow 3. The data-quality project asks which checks catch which defects, and what blocking or quarantining lets through. The Spark project asks what a partitioned PySpark job's defaults do on a re-run and to the files it writes. The Databricks project asks which way of loading files survives the incidents real deliveries have, and how Delta re-runs a day.
 
 ## Constraints
 
 Everything is synthetic, and the business is deliberately small: four plans at one price each, no seats, proration, discounts or refunds. The rates at which accounts upgrade, downgrade, trial a plan and churn are assumptions, so the percentages describe this business rather than any real one.
 
-The warehouse is DuckDB, so every project runs anywhere with no server, and CI rebuilds it on every commit. Spark runs in local mode on four cores, so there is no network shuffle and no object store, where small files cost more. That rules out claims about Snowflake, Databricks or BigQuery behaviour. The SQL is written to be portable (dbt's cross-database macros, no `QUALIFY`), and those platforms get their own projects running this same dbt project. Timings came from one host, an Apple M5 with 24 GB, and are observations only; every other figure is a count over seeded data that CI reproduces byte for byte on Linux.
+The warehouse is DuckDB, so every project runs anywhere with no server, and CI rebuilds it on every commit. Spark runs in local mode on four cores, so there is no network shuffle and no object store, where small files cost more. The Databricks project ran once on Free Edition and cannot run in CI; CI checks its prediction from the documented semantics, and that the recorded run matched it. That rules out claims about Snowflake, Databricks or BigQuery behaviour. The SQL is written to be portable (dbt's cross-database macros, no `QUALIFY`), and those platforms get their own projects running this same dbt project. Timings came from one host, an Apple M5 with 24 GB, and are observations only; every other figure is a count over seeded data that CI reproduces byte for byte on Linux.
 
 ## Architecture
 
@@ -56,6 +56,7 @@ The warehouse is DuckDB, so every project runs anywhere with no server, and CI r
 - **Airflow.** One DAG, two tasks: `land` replaces a day's partition of event files in the warehouse, and `transform` runs three dbt incremental models that differ only in the filter that picks the batch (newer than the newest event time, newer than the newest arrival, or inside the run's data interval). A harness backfills September four ways through `dag.test()`; the in-order backfill was also run once on `airflow standalone` with `airflow backfill create`.
 - **Data quality.** September is delivered daily with one injected defect every three days and checked in dbt: an enforced contract, row tests, batch tests against the last seven accepted days, and control totals against the producer's manifest. Every delivered row is labelled good or bad, and two policies (block the day, or quarantine failing rows) are scored on what they let through and what they hold back.
 - **Spark.** A PySpark 4.2 rollup written as Parquet partitioned by day, used for three experiments: re-running one day under each partition overwrite mode, writing the rollup four ways and counting files, and counting the files a one-day query has to read.
+- **Databricks.** Ten days of event files delivered into a Unity Catalog volume with four incidents (a duplicate file under another name, a truncated upload corrected under the same name, a late file, a repeated run) and loaded six ways from a serverless SQL warehouse and a Lakeflow pipeline; then one day of the Spark rollup re-run on a Delta table five ways.
 - **Scoring.** A measurement script compares the warehouse with the truth files. A mutation script breaks the models four ways and records which tests fail, per dbt engine. CI runs everything on dbt Core 1.12 and on dbt v2, and fails if a single published number or mutant result changes.
 
 ## In the code
@@ -111,6 +112,8 @@ Both lines are pinned by a unit test, and the mutation script deletes each in tu
 
 **Spark's defaults delete and fragment.** Re-running one day with `mode("overwrite")` under the default static partition overwrite mode left {{ site.data.metrics.dsl_spark_static_overwrite.value }} daily partitions; dynamic kept all 365. A partitioned write made 5,970 files for a month with adaptive execution off and 1,460 for a year with it on; repartitioning by the partition column made one file a day. Details in [the Spark write-up](/writing/spark-rerun-one-day-deleted-the-rest/).
 
+**A correction under the same name is never read.** `COPY INTO` and Auto Loader track files by path, so when a truncated upload was re-sent complete under the same name, both skipped it and {{ site.data.metrics.dsl_databricks_corrected_missed.value }} of 29,095 events never arrived. Only Auto Loader with `allowOverwrites` followed by a `MERGE` on the event key was exact. On Delta, `INSERT OVERWRITE` of one day left 1 of 365 days even with a `PARTITION` clause, and `RESTORE` brought them back. Details in [the Databricks write-up](/writing/copy-into-never-read-the-corrected-file/).
+
 **Two engines, one result.** dbt v2 (the Apache-2.0 `dbt-oss` 2.0.8 distribution) built the same 11 models, passed the same tests and produced byte-identical measurements after one change to the YAML. End to end, 13 snapshot runs and a build took 83 s on dbt Core and 24 s on v2 on the same host.
 
 ## What went wrong
@@ -118,6 +121,8 @@ Both lines are pinned by a unit test, and the mutation script deletes each in tu
 **dbt v2 passed two unit tests it should have failed.** The mutation script showed that on v2, deleting the first-version stretch or the far-future end left the dimension's unit test green. A wrong expected timestamp, even 1999, passes on v2, while a wrong string, integer or boolean fails. The SQL v2 compiles for the test returns both values, so the gap is in how it compares the rows it fetches. It is [dbt-labs/dbt#15894](https://github.com/dbt-labs/dbt/issues/15894), open since August, and I reproduced it on 2.0.8 with DuckDB. The data tests caught both breaks, which is the argument for having both layers; the repository now records the per-engine result, so CI fails when the behaviour changes.
 
 **v2 rejected a source property dbt Core accepts.** `loaded_at_field` at the table level of a source is an error on v2, which wants it under `config:`. One line, but a project that runs on Core is not automatically a v2 project.
+
+**Two streaming tables blocked each other.** Free Edition allows one active pipeline per type, and each `CREATE STREAMING TABLE` is a pipeline of its own, so refreshing the two Auto Loader tables in turn was refused for minutes at a time. Both now live in one Lakeflow pipeline, updated once per run, which is also how they would run in production.
 
 **The first Spark file experiment would have taken most of an hour.** With adaptive execution off, a year of rollup is written as about 73,000 files. The AQE-off variant now runs on one month, and a separate variant runs the year with AQE on, which turned out to be the more useful result: four files a day without any tuning.
 

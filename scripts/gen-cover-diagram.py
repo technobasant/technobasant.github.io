@@ -1887,6 +1887,32 @@ def spark_overwrite() -> str:
     return "".join(body)
 
 
+def databricks_loaders() -> str:
+    """Six loaders over ten days of deliveries; the corrected file under the same name."""
+    # From data-stack-lab's results/databricks.json (Databricks Free Edition, SQL 2026.39).
+    body = _head("DATABRICKS · TEN DAYS OF FILES · SIX LOADERS",
+                 "The fixed file was re-sent.",
+                 "COPY INTO never read it.")
+    body += [
+        node_box(150, 470, 760, 200, "COPY INTO · Auto Loader", "1,638 events never loaded",
+                 "the fix had the name already loaded", accent=True),
+        node_box(150, 700, 760, 200, "allowOverwrites + MERGE", "29,095 of 29,095",
+                 "exactly the events sent"),
+        _t(1000, 490, "LOADER", MUTED, 24, tracking=3),
+        _t(2250, 490, "AFTER TEN DAYS", MUTED, 24, "end", tracking=3),
+        f'<line x1="1000" y1="512" x2="{W - 150}" y2="512" stroke="{LINE}" stroke-width="2"/>',
+    ]
+    rows = [("INSERT by file name", "2,625 missing"), ("COPY INTO", "1,638 missing"),
+            ("Auto Loader", "1,638 missing"), ("allowOverwrites", "3,995 duplicates"),
+            ("allowOverwrites + MERGE", "exact")]
+    for i, (what, result) in enumerate(rows):
+        y = 580 + i * 80
+        body += [_t(1000, y, what, INK, 32), _t(2250, y, result, ACCENT if i in (1, 2) else MUTED, 32, "end")]
+    body += _foot("COPY INTO and Auto Loader track files by path · send a correction under a new name",
+                  "data-stack-lab")
+    return "".join(body)
+
+
 DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patroni,
             "lakehouse-spine": lakehouse_spine,
             "lakehouse-medallion": lakehouse_medallion,
@@ -1930,7 +1956,8 @@ DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patro
             "data-platform-architecture": data_platform_architecture,
             "ai-platform-architecture": ai_platform_architecture,
             "data-quality-defects": data_quality_defects,
-            "spark-overwrite": spark_overwrite}
+            "spark-overwrite": spark_overwrite,
+            "databricks-loaders": databricks_loaders}
 
 def svg_for(name: str) -> str:
     return (
