@@ -2067,6 +2067,31 @@ def erasure_model() -> str:
     return "".join(body)
 
 
+def store_choice() -> str:
+    """Where a workload's data lives, and when to move it."""
+    body = _head("POSTGRES · CITUS · TIMESCALEDB · CLICKHOUSE · TRINO · ICEBERG · PGVECTOR",
+                 "Choose by how the data is used.",
+                 "Move only when a test fails.")
+    body += [
+        node_box(150, 470, 760, 200, "Start", "one managed Postgres",
+                 "RDS: the same cost, HA included", accent=True),
+        node_box(150, 700, 760, 200, "Move when", "a measured limit is hit",
+                 "disk, memory, CPU, latency, freshness"),
+        _t(1000, 490, "THE WORKLOAD", MUTED, 24, tracking=3),
+        _t(2250, 490, "WHERE IT LIVES", MUTED, 24, "end", tracking=3),
+        f'<line x1="1000" y1="512" x2="{W - 150}" y2="512" stroke="{LINE}" stroke-width="2"/>',
+    ]
+    rows = [("outgrows one server", "Citus"), ("analytics at scale", "ClickHouse"),
+            ("queries across stores", "Trino"), ("history in scans", "Iceberg, not lookups"),
+            ("vectors, growing", "pgvector on Citus")]
+    for i, (what, result) in enumerate(rows):
+        y = 575 + i * 78
+        body += [_t(1000, y, what, INK, 30), _t(2250, y, result, ACCENT if i in (0, 3) else MUTED, 30, "end")]
+    body += _foot("every store adds access reviews, backups and audit evidence: count them first",
+                  "decision guide")
+    return "".join(body)
+
+
 DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patroni,
             "lakehouse-spine": lakehouse_spine,
             "lakehouse-medallion": lakehouse_medallion,
@@ -2117,7 +2142,8 @@ DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patro
             "semantic-layer": semantic_layer,
             "delta-erasure": delta_erasure,
             "warehouse-idle": warehouse_idle,
-            "erasure-model": erasure_model}
+            "erasure-model": erasure_model,
+            "store-choice": store_choice}
 
 def svg_for(name: str) -> str:
     return (

@@ -312,7 +312,8 @@ def build_story(
         f"Own reliability and governance for a platform handling {metric(metrics, 'professional_platform_scale')} "
         f"and {metric(metrics, 'professional_event_volume')} events daily: freshness and latency objectives per "
         f"dataset, {metric(metrics, 'professional_uptime')} uptime, incident-ready runbooks, reviewable data "
-        "contracts, and a named owner for every published table.",
+        "contracts, a named owner for every published table, and the SOC 2 criteria met for the platform and "
+        "its infrastructure through every audit.",
         f"Design and operate the production agent workflows — LangGraph and Google ADK orchestration, MCP tool "
         f"servers, retrieval and evaluation — against the existing platform, so model output lands as typed, "
         f"provenanced rows rather than a transcript: analytics delivery "
