@@ -193,19 +193,20 @@ repos:
 - name: data-platform-architecture
   url: https://github.com/technobasant/data-platform-architecture
   pillar: data-platforms
-  what: 'A reference architecture for a SaaS data platform: 13 decision records, each citing results measured
-    in the labs, with quality targets, governance, runbooks and a platform cost model.'
-  finding: 'Per-scan billing beats a Medium Snowflake or Databricks warehouse until an hour of compute scans
-    1.4–3.4 TB (list prices, October 2026).'
+  what: 'An architecture engagement for a fictional SaaS company leaving Postgres: the current state measured
+    on a lab copy of its database, options, a staged target, data contracts, governance, migration and 15
+    decision records.'
+  finding: 'With reports on the product''s primary, its p95 latency went from 93 to 794 ms; on the read replica,
+    3 of 412 long report runs finished.'
   case: /work/data-platform-architecture/
-  post: /writing/warehouse-bill-per-scan-or-per-hour/
+  post: /writing/read-replica-cancelled-the-reports/
   languages:
   - Python
   license: Apache-2.0
   release:
-    tag: v0.1.0
-    date: '2026-10-18'
-    url: https://github.com/technobasant/data-platform-architecture/releases/tag/v0.1.0
+    tag: v0.2.0
+    date: '2026-10-19'
+    url: https://github.com/technobasant/data-platform-architecture/releases/tag/v0.2.0
   ci:
     conclusion: success
     url: https://github.com/technobasant/data-platform-architecture/actions/workflows/ci.yml
