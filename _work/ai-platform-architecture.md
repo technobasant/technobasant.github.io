@@ -85,6 +85,8 @@ If the model kept to the customer's account, the two results are identical. If i
 
 **Genie was as accurate, and showed the same lesson.** With the same definitions it answered 69 of 70, at 14.5 s median. Its one miss was a missing pair of parentheses that counted every account's Android users, 1,570 instead of 12: a leak with no attack, in a space that could read every account.
 
+**On the platform, the tool scopes the query.** Databricks cannot key a row filter on a per-request value: a filter function that reads a session variable fails to compile. The assistant's tool parses each generated query, refuses any table but the three it may read, and prepends per-account versions of them; the rewritten queries matched row-level security on all 464 recorded queries, including the 23 that leaked through the prompt.
+
 **Cost is not the constraint.** From measured tokens, $0.00028 an answer on gpt-oss-120b at list price: about $17 a month at launch volume. {{ site.data.metrics.aipa_decisions_backed.value }} decisions cite measured results; the release gate's evidence comes from [evalproof](/work/evalproof/), where a 4.8-point drop with {{ site.data.metrics.evalproof_noise_gate.value }} was correctly not failed.
 
 ## What went wrong
@@ -99,7 +101,7 @@ If the model kept to the customer's account, the two results are identical. If i
 
 **Test injection through the data.** The attacks are all in the question. Instructions planted in a text column, an account name or a report title, are the next part of the suite.
 
-**Run the isolation suite on the platform.** The lab's per-account roles are not how a managed platform would do it; a row filter on a per-request value, or a query rewrite onto per-account views, has to pass the same suite before the assistant launches.
+**Run the rewrite in the platform's own dialect.** On Databricks a row filter cannot read a per-request value, so the tool scopes each query by rewriting it onto per-account tables: on every recorded query (28 written for the attacks, 436 for ordinary questions) it returned exactly what row-level security returned. That was measured on Postgres with the lab's recordings; the same suite should run against the chosen platform's SQL before launch.
 
 **Add boundary questions.** Answerable questions that sound unanswerable would catch an assistant that declines too eagerly, which this set cannot.
 

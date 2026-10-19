@@ -700,6 +700,24 @@ dsl_databricks_corrected_missed:
   window: "measured Oct 2026"
   context: "Only Auto Loader with cloudFiles.allowOverwrites followed by a MERGE on the event key ended with exactly the 29,095 events sent. On Delta, INSERT OVERWRITE of one day left 1 of 365 days even with a PARTITION clause; RESTORE brought them back."
 
+dsl_dbt_databricks:
+  value: "11, 46, 3"
+  label: "models, data tests and unit tests passing when the dbt project was built on Databricks after one change; revenue figures identical to DuckDB's"
+  method: "dbt-databricks 1.12.7 on Databricks SQL 2026.39 (Free Edition): the 13 monthly extracts replayed through dbt snapshot, then dbt build; the revenue questions asked of the Databricks marts with the same SQL as on DuckDB"
+  scope: "independent"
+  source: "data-stack-lab (2026)"
+  window: "measured Oct 2026"
+  context: "The one change: contract types varchar became string, because Databricks refuses VARCHAR without a length; the DuckDB and dbt v2 results were unchanged by it."
+
+dpa_erasure_time_travel:
+  value: "100 of 100"
+  label: "an erased user's rows still returned by Delta time travel after DELETE, after REORG APPLY (PURGE) and after VACUUM at the default retention"
+  method: "Databricks SQL 2026.39 on Free Edition: a Delta table with deletion vectors; DELETE wrote 8 deletion vectors and rewrote 0 files; time travel refused only after the table's deleted-file retention had passed and VACUUM ran"
+  scope: "independent"
+  source: "data-platform-architecture (2026)"
+  window: "measured Oct 2026"
+  context: "VACUUM RETAIN 0 HOURS was refused. At the default 7-day retention a weekly delete, purge and vacuum job makes a request unrecoverable within about 14 days."
+
 # ── platform-deployments (open source, 2026) ────────────────────────────────
 deploy_bad_release_aborted:
   value: "6 of 6"

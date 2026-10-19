@@ -1989,6 +1989,31 @@ def semantic_layer() -> str:
     return "".join(body)
 
 
+def delta_erasure() -> str:
+    """One user's rows deleted from a Delta table, followed to unrecoverable."""
+    # From data-platform-architecture's results/poc-databricks.json (Databricks SQL 2026.39).
+    body = _head("DELTA LAKE · DELETION VECTORS · TIME TRAVEL",
+                 "Deleted from the table,",
+                 "reachable for at least 7 days.")
+    body += [
+        node_box(150, 470, 760, 200, "After DELETE", "100 of 100 rows by time travel",
+                 "8 deletion vectors, 0 files rewritten", accent=True),
+        node_box(150, 700, 760, 200, "After retention + VACUUM", "time travel refused",
+                 "the only point the rows are gone"),
+        _t(1000, 490, "STEP", MUTED, 24, tracking=3),
+        _t(2250, 490, "ROWS BY TIME TRAVEL", MUTED, 24, "end", tracking=3),
+        f'<line x1="1000" y1="512" x2="{W - 150}" y2="512" stroke="{LINE}" stroke-width="2"/>',
+    ]
+    rows = [("DELETE", "100 of 100"), ("REORG ... APPLY (PURGE)", "100 of 100"),
+            ("VACUUM, default retention", "100 of 100"), ("VACUUM past the retention", "refused")]
+    for i, (what, result) in enumerate(rows):
+        y = 580 + i * 95
+        body += [_t(1000, y, what, INK, 32), _t(2250, y, result, ACCENT if i < 3 else MUTED, 32, "end")]
+    body += _foot("an erasure is done when the old versions are gone, not when the row is",
+                  "data-platform-architecture")
+    return "".join(body)
+
+
 DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patroni,
             "lakehouse-spine": lakehouse_spine,
             "lakehouse-medallion": lakehouse_medallion,
@@ -2036,7 +2061,8 @@ DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patro
             "databricks-loaders": databricks_loaders,
             "replica-reports": replica_reports,
             "prompt-isolation": prompt_isolation,
-            "semantic-layer": semantic_layer}
+            "semantic-layer": semantic_layer,
+            "delta-erasure": delta_erasure}
 
 def svg_for(name: str) -> str:
     return (

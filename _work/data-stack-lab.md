@@ -112,7 +112,7 @@ Both lines are pinned by a unit test, and the mutation script deletes each in tu
 
 **Spark's defaults delete and fragment.** Re-running one day with `mode("overwrite")` under the default static partition overwrite mode left {{ site.data.metrics.dsl_spark_static_overwrite.value }} daily partitions; dynamic kept all 365. A partitioned write made 5,970 files for a month with adaptive execution off and 1,460 for a year with it on; repartitioning by the partition column made one file a day. Details in [the Spark write-up](/writing/spark-rerun-one-day-deleted-the-rest/).
 
-**A correction under the same name is never read.** `COPY INTO` and Auto Loader track files by path, so when a truncated upload was re-sent complete under the same name, both skipped it and {{ site.data.metrics.dsl_databricks_corrected_missed.value }} of 29,095 events never arrived. Only Auto Loader with `allowOverwrites` followed by a `MERGE` on the event key was exact. On Delta, `INSERT OVERWRITE` of one day left 1 of 365 days even with a `PARTITION` clause, and `RESTORE` brought them back. Details in [the Databricks write-up](/writing/copy-into-never-read-the-corrected-file/).
+**A correction under the same name is never read.** `COPY INTO` and Auto Loader track files by path, so when a truncated upload was re-sent complete under the same name, both skipped it and {{ site.data.metrics.dsl_databricks_corrected_missed.value }} of 29,095 events never arrived. Only Auto Loader with `allowOverwrites` followed by a `MERGE` on the event key was exact. On Delta, `INSERT OVERWRITE` of one day left 1 of 365 days even with a `PARTITION` clause, and `RESTORE` brought them back. The dbt project itself built on Databricks with {{ site.data.metrics.dsl_dbt_databricks.value }} models, data tests and unit tests passing after one change to its contract types, and gave the published revenue figures exactly. Details in [the Databricks write-up](/writing/copy-into-never-read-the-corrected-file/).
 
 **Two engines, one result.** dbt v2 (the Apache-2.0 `dbt-oss` 2.0.8 distribution) built the same 11 models, passed the same tests and produced byte-identical measurements after one change to the YAML. End to end, 13 snapshot runs and a build took 83 s on dbt Core and 24 s on v2 on the same host.
 
@@ -136,7 +136,7 @@ Both lines are pinned by a unit test, and the mutation script deletes each in tu
 
 **Score the cadence, not just the model.** The snapshot's blind spot is set by how often the source is extracted. The next step is to rebuild the dimension from daily extracts and from a change-data-capture log of the same history and put the three side by side, which is a sharper argument for CDC than any diagram.
 
-**Add the platforms early.** The model is portable by construction but proven only on DuckDB. Running the same dbt project on Snowflake and Databricks comes next, and type mapping in the contracts is where I expect the first surprises.
+**Add Snowflake.** The dbt project now builds on Databricks with one change and gives the published figures exactly. The prediction was right about where the surprise would be: the model contracts declared `varchar`, which Databricks refuses without a length; `string` works on every engine. Snowflake is next.
 
 **Run the other orders on the scheduler too.** Only the in-order backfill ran on a real scheduler. The backwards and late-file cases ran through `dag.test()`; `airflow backfill create --run-backwards` and a cleared-and-re-run day on the scheduler would close that gap.
 

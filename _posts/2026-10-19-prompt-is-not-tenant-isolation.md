@@ -102,8 +102,8 @@ WHERE account_id = 132 AND platform ILIKE '%ios%' OR platform ILIKE '%android%' 
 
 The lab gives each account a database role. A managed platform will not hold a service principal for each of 12,000 customers, and customers are not platform users. The options that keep the model out of it:
 
-- **A row filter or row access policy on a per-request value** the assistant's tool sets before the query, where the platform guarantees the query cannot change it.
-- **A query rewrite by the tool:** parse the generated SQL, reject any table but views the tool defines for the account, and run it. This puts a SQL parser in the trust path, so it needs its own tests.
+- **A row filter or row access policy on a per-request value** the assistant's tool sets before the query, where the platform guarantees the query cannot change it. On Databricks this does not exist: a row filter function that reads a session variable fails to compile (`UNRESOLVED_COLUMN`), so a filter can be keyed only to the platform's own user.
+- **A query rewrite by the tool:** parse the generated SQL, refuse any table but the ones the assistant may read, and put per-account versions of them in front of the query as common table expressions with the same names. I ran it on every recorded query: for all 28 queries the models wrote for these attacks, including the 23 that leaked, and all 436 they wrote for ordinary questions, the rewritten query run with access to every account returned exactly what row-level security returned. It puts a SQL parser in the trust path, so its refusals (a schema-qualified table, another table, a redefined name, a file-reading table function, two statements, a write) are tested in CI.
 
 Either way the scope is set by code from the authenticated session, and tested in CI with exactly this kind of suite: requests for other tenants' data, against the identity, on every change.
 

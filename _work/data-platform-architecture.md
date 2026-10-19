@@ -25,7 +25,7 @@ cover:
   alt: "Where the client's reports ran and what happened: on the primary the product's p95 latency went from 93 to 794 ms; on the read replica 3 of 412 long report runs finished; once the replica was 30 seconds behind even 0.1-second queries were cancelled; with hot_standby_feedback on, 20 of 20 finished"
   caption: "Measured on a lab copy of the client's database before anything was recommended."
   link: "/writing/read-replica-cancelled-the-reports/"
-metrics: [dpa_bi_on_primary, dpa_replica_reports, dsl_type1_misattributed, dpa_decisions_backed, dpa_break_even]
+metrics: [dpa_bi_on_primary, dpa_replica_reports, dpa_erasure_time_travel, dsl_dbt_databricks, dpa_decisions_backed]
 stack: ["Architecture decision records", "Open Data Contract Standard", "C4 model", Mermaid, "PostgreSQL 17", pgbench, Docker, Databricks, Snowflake, dbt, Python, "GitHub Actions"]
 tags: [postgres, data-modeling, cost-finops]
 image: /assets/og/og-lakehouse.png
@@ -95,6 +95,8 @@ A unit test keeps the fixture honest: it may differ from the real contract by th
 
 **The rest of the case rests on measurements made elsewhere.** {{ site.data.metrics.dpa_decisions_backed.value }} decisions cite measured results, among them the {{ site.data.metrics.dsl_type1_misattributed.value }} of revenue a Type 1 dimension misplaces, the 1,638 events `COPY INTO` never loaded from a corrected file, and a Delta table restored after an overwrite left 1 day of 365. The four waiting on measurement say so in their status.
 
+**The Databricks half of the proof of concept is in.** The client's dbt project built on Databricks with {{ site.data.metrics.dsl_dbt_databricks.value }} models, data tests and unit tests passing after one change (contract types `varchar` to `string`), and gave the published revenue figures exactly. One policy on a governed classification tag masked every personal column, including one on a table created after the policy. And an erased user's rows were still returned by time travel, {{ site.data.metrics.dpa_erasure_time_travel.value }}, after `DELETE`, after a purge and after `VACUUM`, until the table's retention had passed: the subject of [the erasure write-up](/writing/delta-delete-is-not-erasure/).
+
 **The bill does not decide the platform.** At the client's scale every managed option costs a few hundred to about three thousand dollars a month at list price; a self-run lakehouse is cheap on the bill and the most expensive once the engineer it needs is counted. Per scan or per hour turns on {{ site.data.metrics.dpa_break_even.value }} scanned per engine-hour ([the cost write-up](/writing/warehouse-bill-per-scan-or-per-hour/)).
 
 ## What went wrong
@@ -109,7 +111,7 @@ A unit test keeps the fixture honest: it may differ from the real contract by th
 
 ## What I'd do differently
 
-**Run the proof of concept.** The criteria and weights are written; the next step is the same dbt project, the same delivery incidents and the same isolation and erasure tests on Databricks and Snowflake, with the bill read from each platform's billing tables.
+**Run the Snowflake half of the proof of concept.** The Databricks half is done; the same dbt project, masking policy, erasure timeline and bill from the billing tables on Snowflake would let decision 0005 be accepted on measurements rather than on one platform's.
 
 **Build the reconciliation suite against the lab database.** The migration plan's parallel run is designed; running it against the lab copy would show the explained-difference report finance has to trust.
 
