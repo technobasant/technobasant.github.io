@@ -1,10 +1,10 @@
 ---
 title: "data-platform-architecture: an architecture engagement for a SaaS company leaving Postgres"
-seo_title: "Data architecture case study: Postgres to Databricks or Snowflake, measured current state, 15 decisions"
+seo_title: "Data architecture case study: Postgres to Databricks or Snowflake, data model, governance, SOC 2, 18 decisions"
 hook: "A fictional client, its real problems measured on a copy of its database, and a staged architecture with every decision tied to evidence"
-description: "A data architecture engagement for a fictional SaaS company: current state measured, five options, a staged target, data contracts and 15 decisions."
+description: "A data architecture engagement for a fictional SaaS company: current state measured, options, data model, governance, SOC 2 readiness and 18 decisions."
 date: 2026-10-18
-last_modified_at: 2026-10-19
+last_modified_at: 2026-10-20
 kind: open-source
 pillar: data-platforms
 related: [data-stack-lab, ai-platform-architecture, dataset-registry]
@@ -13,7 +13,7 @@ role: "Author, in the architect's role"
 org: "Open source"
 period: "2026"
 team: "One person"
-scale: "A client with 6,000 accounts and 350,000 events a day; a lab copy of its Postgres with 31.5 million events; 11 documents and a risk register, 15 decision records, 3 data contracts, a cost model at three points of the client's growth, and a proof of concept on Databricks"
+scale: "A client with 6,000 accounts and 350,000 events a day; a lab copy of its Postgres with 31.5 million events; 13 documents and a risk register, 18 decision records, 3 data contracts, a cost model at three points of the client's growth, and a proof of concept on Databricks"
 problem: "A B2B SaaS company runs every report on its product's Postgres. The product slows down at month end, reports on the replica fail, revenue by plan disagrees with billing, history stops at 90 days, and two enterprise prospects want SOC 2 and provable erasure."
 decision: "Measure the current state on a copy of the client's database before recommending anything; move analytics to a managed platform in stages; and choose between Databricks and Snowflake by a proof of concept on criteria and weights fixed in advance."
 repo: "https://github.com/technobasant/data-platform-architecture"
@@ -53,9 +53,10 @@ The brief sets the constraints every decision answers to: two data people growin
 - **Requirements.** Fifteen quality targets written as testable scenarios, each with today's value where it could be measured, and a ranking for when they conflict.
 - **Options.** Scaling Postgres, AWS-native, Databricks, Snowflake and a self-run lakehouse, scored against the requirements, with the vendor bill and the bill plus the people to run each.
 - **Target, in stages.** Stage 0 moves every report off the primary now; stage 1 is a managed platform fed by change data capture, with a Type 2 star schema and governance; stage 2 serves customers' usage from a stream-fed store; stage 3 is the assistant. C4 context and container views, zones, deployment, and how each part fails.
-- **Data model and contracts.** A conceptual model, the marts with their grain, a bus matrix, keys and history; three contracts in the Open Data Contract Standard.
-- **Security, migration, operations, roadmap.** Classification, roles and row filters, erasure, a SOC 2 and GDPR controls table; an inventory of every reader with a disposition, migration waves with a parallel run and rollback; runbooks; the first 90 days and the year; a risk register.
-- **Fifteen decision records**, each with drivers, an options table, consequences, how reversible it is, when to revisit it, and evidence generated from measured results.
+- **Data model and contracts.** Four domains with owners and data products; a conceptual and logical model with a glossary shared with the assistant's semantic layer; layers from raw to serving; the marts, bus matrix and a history policy per attribute; physical design per engine (lakehouse marts, a ClickHouse serving store, Citus as the product database's growth path); modelling standards; three contracts in the Open Data Contract Standard, with CI failing on an unclassified column or a personal column in a published table.
+- **Governance and compliance.** An operating model with a responsibility matrix, handling rules per classification, an access lifecycle with time-boxed grants, a retention schedule, data-quality management, policy as code, and the access audit; SOC 2 readiness with a 21-control matrix and the evidence each control produces; every quality attribute with its measured figure, and disaster-recovery targets by component.
+- **Security, migration, operations, roadmap.** Roles and row filters, erasure; an inventory of every reader with a disposition, migration waves with a parallel run and rollback; runbooks; the first 90 days and the year; a risk register.
+- **Eighteen decision records**, each with drivers, an options table, consequences, how reversible it is, when to revisit it, and evidence generated from measured results.
 
 ## In the code
 
@@ -96,6 +97,8 @@ A unit test keeps the fixture honest: it may differ from the real contract by th
 **The rest of the case rests on measurements made elsewhere.** {{ site.data.metrics.dpa_decisions_backed.value }} decisions cite measured results, among them the {{ site.data.metrics.dsl_type1_misattributed.value }} of revenue a Type 1 dimension misplaces, the 1,638 events `COPY INTO` never loaded from a corrected file, and a Delta table restored after an overwrite left 1 day of 365. The four waiting on measurement say so in their status.
 
 **The Databricks half of the proof of concept is in.** The client's dbt project built on Databricks with {{ site.data.metrics.dsl_dbt_databricks.value }} models, data tests and unit tests passing after one change (contract types `varchar` to `string`), and gave the published revenue figures exactly. One policy on a governed classification tag masked every personal column, including one on a table created after the policy. And an erased user's rows were still returned by time travel, {{ site.data.metrics.dpa_erasure_time_travel.value }}, after `DELETE`, after a purge and after `VACUUM`, until the table's retention had passed: the subject of [the erasure write-up](/writing/delta-delete-is-not-erasure/). On UniForm, the format the design chose, deletion vectors are refused, so the delete rewrote all 8 files holding the user's rows, with the same timeline. The BI reports that take a minute or more on the product's database ran in {{ site.data.metrics.dpa_bi_speed.value }} at the slowest on the smallest warehouse with eight analysts at once, and nothing queued. Terraform owned {{ site.data.metrics.dpa_terraform_coverage.value }} kinds of governance object and planned clean after applying; the mask function the policy calls has no resource and needs a SQL step between two applies. And a day's build and reports took 38 seconds, while the billing table charged {{ site.data.metrics.dpa_day_bill.value }} for 11 minutes awake, 95% of it waiting for auto-stop: the hours awake set the bill, not the work ([the cost write-up](/writing/warehouse-billed-for-waiting-to-stop/)).
+
+**Where the model keeps personal data decides what erasure costs.** On the chosen table format a row-level change rewrites every file it touches, so the model keeps e-mail and name in one identity table per source and gives facts keys. Measured: erasing one person rewrote {{ site.data.metrics.dpa_erasure_model.value }} when the e-mail was copied into every event row, and 59,999 when it lived in one table ([the write-up](/writing/erasure-cost-is-a-modelling-decision/)). The auditor's question, who read personal data, is one query over the catalog's tags and the platform's lineage: {{ site.data.metrics.dpa_audit_query.value }} personal columns found with every read, in 4.7 s.
 
 **The bill does not decide the platform.** In the client's EU region, at the editions its requirements need, the managed options cost about $710 to $1,000 a month today and $2,900 to $4,000 at 36 months at list price, against a $15,000 budget; a self-run lakehouse is cheap on the bill and the most expensive once the engineer it needs is counted. Per scan or per hour turns on how much an engine-hour scans: 3.1–4.4 TB against Athena at these prices ([the cost write-up](/writing/warehouse-bill-per-scan-or-per-hour/) worked it out on the first version's US prices).
 

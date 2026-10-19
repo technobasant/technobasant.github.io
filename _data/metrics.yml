@@ -745,6 +745,24 @@ dpa_day_bill:
   window: "measured Oct 2026"
   context: "95% of the bill came after the last statement, waiting for auto-stop; billed DBUs matched uptime at 4 DBU an hour in every hour checked. At $0.91 a DBU in the client's EU region the month costs $21 woken once a day and $961 awake through working hours."
 
+dpa_erasure_model:
+  value: "31,849,449 rows"
+  label: "rewritten to erase one person (551 events) when the model copies e-mail and name into every event row; 59,999 when they live only in a 60,000-row user table"
+  method: "Databricks SQL 2026.39 on Free Edition, Delta tables with UniForm (no deletion vectors) built from 31.85 million events: one user's e-mail and name set to NULL; the wide table's 3 files were all rewritten in 7.6 s, the user table's 1 file in 1.1 s"
+  scope: "independent"
+  source: "data-platform-architecture (2026)"
+  window: "measured Oct 2026"
+  context: "On plain Delta with deletion vectors the update rewrote nothing, and the purge erasure needs then rewrote all 3 files. The model keeps identities in one table per source; CI fails if a published table carries a personal column."
+
+dpa_audit_query:
+  value: "5 of 5"
+  label: "columns tagged personal whose every read in 90 days one query found, by reader, column and time"
+  method: "Databricks SQL 2026.39 on Free Edition: the catalog's column tags (class = personal) joined to the platform's column lineage; readers pseudonymised in the result"
+  scope: "independent"
+  source: "data-platform-architecture (2026)"
+  window: "measured Oct 2026"
+  context: "Answered in 4.7 s: the SOC 2 access-monitoring evidence comes from the platform's own records, not a spreadsheet. Lineage records a read even when the reader saw masked values."
+
 dpa_erasure_time_travel:
   value: "100 of 100"
   label: "an erased user's rows still returned by Delta time travel after DELETE, after REORG APPLY (PURGE) and after VACUUM at the default retention"

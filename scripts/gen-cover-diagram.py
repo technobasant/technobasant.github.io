@@ -2041,6 +2041,32 @@ def warehouse_idle() -> str:
     return "".join(body)
 
 
+def erasure_model() -> str:
+    """What erasing one person rewrote, by where the model kept their identity."""
+    # From data-platform-architecture's results/poc-databricks-governance.json (Databricks
+    # SQL 2026.39, Delta with UniForm, 31.85 million events, one user with 551 of them).
+    body = _head("DELTA LAKE · UNIFORM · ERASING ONE PERSON",
+                 "31.8 million rows rewritten.",
+                 "Or 60,000.")
+    body += [
+        node_box(150, 470, 760, 200, "E-mail in every event", "31,849,449 rows rewritten",
+                 "3 of 3 files, to change 551 rows", accent=True),
+        node_box(150, 700, 760, 200, "E-mail in one user table", "59,999 rows rewritten",
+                 "1 file, the events untouched"),
+        _t(1000, 490, "WHERE THE IDENTITY LIVED", MUTED, 24, tracking=3),
+        _t(2250, 490, "TIME", MUTED, 24, "end", tracking=3),
+        f'<line x1="1000" y1="512" x2="{W - 150}" y2="512" stroke="{LINE}" stroke-width="2"/>',
+    ]
+    rows = [("every event row", "7.6 s"), ("every row, deletion vectors", "3.8 s + purge"),
+            ("one user table", "1.1 s"), ("UniForm with deletion vectors", "refused")]
+    for i, (what, result) in enumerate(rows):
+        y = 580 + i * 95
+        body += [_t(1000, y, what, INK, 32), _t(2250, y, result, ACCENT if i in (0, 1) else MUTED, 32, "end")]
+    body += _foot("the delete statement was the same; the model decided what it cost",
+                  "data-platform-architecture")
+    return "".join(body)
+
+
 DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patroni,
             "lakehouse-spine": lakehouse_spine,
             "lakehouse-medallion": lakehouse_medallion,
@@ -2090,7 +2116,8 @@ DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patro
             "prompt-isolation": prompt_isolation,
             "semantic-layer": semantic_layer,
             "delta-erasure": delta_erasure,
-            "warehouse-idle": warehouse_idle}
+            "warehouse-idle": warehouse_idle,
+            "erasure-model": erasure_model}
 
 def svg_for(name: str) -> str:
     return (
