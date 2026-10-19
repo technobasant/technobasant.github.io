@@ -279,7 +279,7 @@ data-platform-architecture:
   stages:
     - name: "Today"
       tech: ["Postgres", "replica"]
-      note: "Reports slow the product or are cancelled: 3 of 412 finished on the replica (0001)."
+      note: "Reports slow the product or are cancelled: 3 of 35 finished on the replica; a reports-only replica with a long delay is the stopgap (0001)."
     - name: "Capture"
       tech: ["CDC", "S3 files"]
       note: "Every change from the log (0002); files immutable, loads by key (0003)."
@@ -291,10 +291,10 @@ data-platform-architecture:
       note: "A Type 2 star reconciled to Stripe (0007); contracts in producers' CI (0013)."
     - name: "Govern"
       tech: ["tags", "row filters"]
-      note: "Masking by classification, rows by account; erasure inside 30 days (0011, 0012)."
+      note: "Masking follows the classification tag, owned by Terraform; erasure within 15 days (0011, 0012)."
     - name: "Choose"
       tech: ["PoC", "cost model"]
-      note: "Databricks or Snowflake, by criteria fixed before the proof of concept (0005)."
+      note: "Databricks or Snowflake, by criteria fixed before the proof of concept; the Databricks half is measured (0005)."
 
 ai-platform-architecture:
   label: "The usage assistant: the path a customer's question takes, and the decision behind each step"
@@ -309,14 +309,14 @@ ai-platform-architecture:
       tech: ["one SELECT"]
       note: "One read-only statement, a timeout and a row limit, or nothing (0012)."
     - name: "Scope"
-      tech: ["row-level security"]
-      note: "The customer's identity, not the prompt: 23 of 120 leaked vs 0 of 120 (0002)."
+      tech: ["query rewrite", "row-level security"]
+      note: "Outside the model: 23 of 120 leaked through the prompt; the tool's rewrite matched row-level security and refuses 44 of 44 escapes (0002, 0011)."
     - name: "Gate"
       tech: ["paired eval", "replay"]
       note: "750 recorded answers re-scored in CI with no model called (0006, 0008)."
     - name: "Price"
       tech: ["measured tokens"]
-      note: "$0.00028 an answer; a GPU pays only above 6,600 answers/h (0014)."
+      note: "$0.00032 an answer; a warehouse kept awake for the queries would cost more than the $1,500 ceiling, so they go to the stage-2 store (0014)."
 
 platform-deployments:
   label: "GitOps canary platform — the path a release takes to every pod"

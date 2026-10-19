@@ -1915,25 +1915,26 @@ def databricks_loaders() -> str:
 
 def replica_reports() -> str:
     """The client's current state: reports on the primary, and on the replica."""
-    # From data-platform-architecture's results/baseline.json (Postgres 17, lab copy).
+    # From data-platform-architecture's results/baseline-brief-rate.json (Postgres 17, lab
+    # copy, the product at its peak rate of 12 requests a second).
     body = _head("POSTGRES 17 · THE PRODUCT AND ITS REPORTS · ONE DATABASE",
                  "The replica was meant to take the reports.",
-                 "3 of 412 finished.")
+                 "3 of 35 finished.")
     body += [
-        node_box(150, 470, 760, 200, "Reports on the replica", "3 of 412 long runs finished",
-                 "409 cancelled: conflict with recovery", accent=True),
-        node_box(150, 700, 760, 200, "Reports on the primary", "the product's p95: 93 → 794 ms",
-                 "23% of requests over 100 ms"),
+        node_box(150, 470, 760, 200, "Reports on the replica", "3 of 35 long runs finished",
+                 "32 cancelled: conflict with recovery", accent=True),
+        node_box(150, 700, 760, 200, "Reports on the primary", "the product's p95: 40 → 525 ms",
+                 "24% of requests over 100 ms"),
         _t(1000, 490, "WHERE THE REPORTS RAN", MUTED, 24, tracking=3),
         _t(2250, 490, "OUTCOME", MUTED, 24, "end", tracking=3),
         f'<line x1="1000" y1="512" x2="{W - 150}" y2="512" stroke="{LINE}" stroke-width="2"/>',
     ]
-    rows = [("primary", "product 8.5x slower at p95"), ("replica, defaults", "3 of 412 finished"),
-            ("replica, 30 s behind", "even 0.1 s queries cancelled"),
-            ("replica, hot_standby_feedback", "20 of 20, cleanup held back")]
+    rows = [("primary", "product 13x slower at p95"), ("replica, defaults", "3 of 35 finished"),
+            ("replica, hot_standby_feedback", "11 of 11, cleanup held back"),
+            ("replica for reports, 15 min delay", "7 of 7, 4.7 min behind")]
     for i, (what, result) in enumerate(rows):
         y = 580 + i * 95
-        body += [_t(1000, y, what, INK, 32), _t(2250, y, result, ACCENT if i in (1, 2) else MUTED, 32, "end")]
+        body += [_t(1000, y, what, INK, 32), _t(2250, y, result, ACCENT if i in (1, 3) else MUTED, 32, "end")]
     body += _foot("max_standby_streaming_delay is a budget for the replica, not a limit per query",
                   "data-platform-architecture")
     return "".join(body)
@@ -1979,8 +1980,8 @@ def semantic_layer() -> str:
         _t(2250, 490, "SCHEMA → DEFINITIONS", MUTED, 24, "end", tracking=3),
         f'<line x1="1000" y1="512" x2="{W - 150}" y2="512" stroke="{LINE}" stroke-width="2"/>',
     ]
-    rows = [("Qwen3 8B, local", "43 → 64"), ("Llama 3.3 70B", "55 → 70"),
-            ("gpt-oss-120b", "63 → 70"), ("Databricks Genie", "69, with the same definitions")]
+    rows = [("Qwen3 8B, local", "46 → 64"), ("Llama 3.3 70B", "55 → 70"),
+            ("gpt-oss-120b", "65 → 70"), ("Databricks Genie", "69, with the same definitions")]
     for i, (what, result) in enumerate(rows):
         y = 580 + i * 95
         body += [_t(1000, y, what, INK, 32), _t(2250, y, result, ACCENT if i in (0, 1) else MUTED, 32, "end")]
@@ -2010,6 +2011,32 @@ def delta_erasure() -> str:
         y = 580 + i * 95
         body += [_t(1000, y, what, INK, 32), _t(2250, y, result, ACCENT if i < 3 else MUTED, 32, "end")]
     body += _foot("an erasure is done when the old versions are gone, not when the row is",
+                  "data-platform-architecture")
+    return "".join(body)
+
+
+def warehouse_idle() -> str:
+    """One day's build and reports on the smallest warehouse, against what was billed."""
+    # From data-platform-architecture's results/poc-databricks-workload.json (Databricks SQL
+    # 2026.39, a 2X-Small serverless warehouse, auto-stop 10 minutes).
+    body = _head("DATABRICKS SQL · ONE DAY'S BUILD AND REPORTS · THE SMALLEST WAREHOUSE",
+                 "38 seconds of work.",
+                 "11 minutes on the bill.")
+    body += [
+        node_box(150, 470, 760, 200, "The bill", "0.743 DBU: 11 min 9 s awake",
+                 "95% of it waiting to stop", accent=True),
+        node_box(150, 700, 760, 200, "The work", "38 s, first statement to last",
+                 "the daily build, then the reports"),
+        _t(1000, 490, "WHERE THE MINUTES WENT", MUTED, 24, tracking=3),
+        _t(2250, 490, "TIME", MUTED, 24, "end", tracking=3),
+        f'<line x1="1000" y1="512" x2="{W - 150}" y2="512" stroke="{LINE}" stroke-width="2"/>',
+    ]
+    rows = [("the daily build", "24 s"), ("two analysts' reports", "8 s"),
+            ("idle, until auto-stop", "10 min"), ("billed at 4 DBU an hour", "0.743 DBU")]
+    for i, (what, result) in enumerate(rows):
+        y = 580 + i * 95
+        body += [_t(1000, y, what, INK, 32), _t(2250, y, result, ACCENT if i in (2, 3) else MUTED, 32, "end")]
+    body += _foot("a warehouse is billed for the minutes it is awake, not for the queries",
                   "data-platform-architecture")
     return "".join(body)
 
@@ -2062,7 +2089,8 @@ DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patro
             "replica-reports": replica_reports,
             "prompt-isolation": prompt_isolation,
             "semantic-layer": semantic_layer,
-            "delta-erasure": delta_erasure}
+            "delta-erasure": delta_erasure,
+            "warehouse-idle": warehouse_idle}
 
 def svg_for(name: str) -> str:
     return (

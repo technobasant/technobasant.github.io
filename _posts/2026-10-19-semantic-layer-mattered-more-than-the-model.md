@@ -31,17 +31,17 @@ cover:
   fallback_width: "1600"
   width: 1600
   height: 900
-  alt: "Correct answers out of 70, with the schema only and with a semantic layer: Qwen3 8B 43 to 64, Llama 3.3 70B 55 to 70, gpt-oss-120b 63 to 70; Databricks Genie 69 with the same definitions"
+  alt: "Correct answers out of 70, with the schema only and with a semantic layer: Qwen3 8B 46 to 64, Llama 3.3 70B 55 to 70, gpt-oss-120b 65 to 70; Databricks Genie 69 with the same definitions"
   caption: "With the schema alone, most wrong answers were queries that ran and answered a different question."
 faq:
   - q: "Does a semantic layer improve text-to-SQL accuracy?"
-    a: "In this test it did, more than changing the model. On 70 customer questions with answers computed by SQL, adding a semantic layer of definitions to the schema moved Llama 3.3 70B from 55 to 70 correct, Qwen3 8B from 43 to 64 and gpt-oss-120b from 63 to 70. Unanswerable questions declined went up too."
+    a: "In this test it did, more than changing the model. On 70 customer questions with answers computed by SQL, adding a semantic layer of definitions to the schema moved Llama 3.3 70B from 55 to 70 correct, Qwen3 8B from 46 to 64 and gpt-oss-120b from 65 to 70. Unanswerable questions declined went up too."
   - q: "What goes in a semantic layer for an LLM?"
     a: "What the business means and the schema does not say: periods ('last week' starts on Monday), vocabulary ('people who used the product' is distinct users; 'mobile' is iOS and Android), metric SQL (an average over days counts days with no activity), rules (one row; UNANSWERABLE when the tables cannot answer), and a few worked examples. Here it was about 700 extra tokens per question."
   - q: "How does Databricks Genie compare with a custom text-to-SQL prompt?"
     a: "Given the same definitions as instructions and the same examples, Genie answered 69 of 70 questions correctly, against 70 of 70 for gpt-oss-120b and Llama 3.3 70B with the definitions in the prompt. Its median answer took 14.5 seconds against 2 to 3, and its one wrong answer counted every account's Android users because of missing parentheses."
 key_takeaways:
-  - "With the schema alone, three models answered 43, 55 and 63 of 70 customer questions correctly; with a semantic layer, 64, 70 and 70."
+  - "With the schema alone, three models answered 46, 55 and 65 of 70 customer questions correctly; with a semantic layer, 64, 70 and 70."
   - "Most schema-only mistakes were queries that ran and answered a different question: summing events for 'how many people', the last seven days for 'last week'."
   - "Unanswerable questions declined rose with the definitions: gpt-oss-120b declined all 20."
   - "Genie, given the same definitions, answered 69 of 70, slower, at 14.5 seconds median."
@@ -64,13 +64,13 @@ Each model writes one PostgreSQL query; it runs as the customer's own role; the 
 
 | Correct, of 70 | Schema only | With the semantic layer | Unanswerable declined, of 20 |
 |---|---:|---:|---|
-| Qwen3 8B, local | 43 | 64 | 12 → 18 |
+| Qwen3 8B, local | 46 | 64 | 12 → 18 |
 | Llama 3.3 70B, hosted | 55 | **70** | 17 → 19 |
-| gpt-oss-120b, hosted | 63 | **70** | 18 → **20** |
+| gpt-oss-120b, hosted | 65 | **70** | 18 → **20** |
 | Databricks Genie, the semantic layer as instructions | | 69 | 19 |
 {: aria-label="Correct answers with the schema only and with the semantic layer, by model" }
 
-The semantic layer added 15 correct answers to Llama 3.3 70B and 21 to an 8-billion-parameter local model. The gap between the smallest and the largest model with the definitions (64 against 70) was smaller than the gap the definitions made to either.
+The semantic layer added 15 correct answers to Llama 3.3 70B and 18 to an 8-billion-parameter local model. The gap between the smallest and the largest model with the definitions (64 against 70) was smaller than the gap the definitions made to either.
 
 ## What the schema-only mistakes were
 
@@ -93,14 +93,16 @@ About 700 tokens, sent with every question ([`semantic.yml`](https://github.com/
 - **Rules:** one row; the item first for a "which" question; UNANSWERABLE when the tables cannot answer.
 - **Three worked examples.** One of them shows the daily-average metric for August, and the questions ask it for September; the gain was not only that question.
 
-At Databricks' list price, the extra tokens cost gpt-oss-120b about a hundredth of a cent per answer; it answered for $0.00028 on average.
+At Databricks' list price, the extra tokens cost gpt-oss-120b about a hundredth of a cent per answer; it answered for $0.00032 on average at the list price in the client's EU region.
 
 ## Genie, with the same definitions
 
-Genie got the same definitions as its instructions and the same examples, and answered 69 of 70. Its median answer took 14.5 seconds, against 2 to 3 for the hosted models called directly. Its one wrong answer had a missing pair of parentheses around `OR`, which counted every account's Android users; that is the subject of [the isolation write-up](/writing/prompt-is-not-tenant-isolation/). That a platform's own assistant and two general models all reached 69 or 70 with the same definitions is the strongest evidence here that the definitions did the work.
+Genie got the same definitions as its instructions and the same examples, and answered 69 of 70. Its median answer took 14.5 seconds, against 2 to 3 for the hosted models called directly. Its one wrong answer had a missing pair of parentheses around `OR`, which counted every account's Android users; that is the subject of [the isolation write-up](/writing/prompt-is-not-tenant-isolation/). Genie had no run without the definitions, so it shows that a platform's own assistant reached the same level with them, not that they caused it; that evidence is the three models' before and after.
 
 <div class="callout callout--note" markdown="1">
-**Boundary.** One synthetic mart, 90 questions, temperature 0, one run per condition. Enough to separate 55 from 70 correct; not enough to rank two models that both answered 70. The hosted models ran on Databricks Free Edition's model serving and the local one on a laptop, so latencies are indicative. Every response is recorded and re-scored in CI against a freshly built mart.
+**Boundary.** One synthetic mart, 70 answerable questions from 24 templates and 20 unanswerable ones, temperature 0, one run per condition; answers cluster by template, so the independent evidence is closer to 24 cases than 70. Enough to separate 55 from 70 correct; not enough to rank two models that both answered 70. The semantic layer was written with these templates in view (its periods and metric definitions map onto them), so the gain is an upper bound for questions like these; a held-out set written after it was frozen is the next test. The hosted models ran on Databricks Free Edition's model serving and the local one with Ollama on one host, so latencies are indicative. Every response is recorded and re-scored in CI against a freshly built mart.
+
+*Updated 19 October 2026:* six recorded queries asked the database for today's date instead of using the date in the prompt, and were scored against the real clock. They now get the prompt's date, which raised two schema-only scores: Qwen3 8B from 43 to 46 and gpt-oss-120b from 63 to 65.
 </div>
 
 ## Before choosing a model for text-to-SQL
@@ -115,7 +117,7 @@ Genie got the same definitions as its instructions and the same examples, and an
 
 ### Does a semantic layer improve text-to-SQL accuracy?
 
-In this test it did, more than changing the model. On 70 customer questions with answers computed by SQL, adding a semantic layer of definitions to the schema moved Llama 3.3 70B from 55 to 70 correct, Qwen3 8B from 43 to 64 and gpt-oss-120b from 63 to 70. Unanswerable questions declined went up too.
+In this test it did, more than changing the model. On 70 customer questions with answers computed by SQL, adding a semantic layer of definitions to the schema moved Llama 3.3 70B from 55 to 70 correct, Qwen3 8B from 46 to 64 and gpt-oss-120b from 65 to 70. Unanswerable questions declined went up too.
 
 ### What goes in a semantic layer for an LLM?
 

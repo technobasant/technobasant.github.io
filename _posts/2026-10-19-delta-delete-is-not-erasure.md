@@ -39,13 +39,13 @@ faq:
   - q: "Why does VACUUM not remove deleted data immediately?"
     a: "VACUUM removes only files older than the table's deleted-file retention, 7 days by default, so that readers and time travel inside that window keep working. VACUUM ... RETAIN 0 HOURS was refused with DELTA_VACUUM_RETENTION_PERIOD_TOO_SHORT. Shortening the table's delta.deletedFileRetentionDuration is the supported way to make erasure faster, at the cost of a shorter restore window."
   - q: "How long does right-to-erasure take on Databricks?"
-    a: "With the default 7-day retention and a weekly job that deletes, purges with REORG ... APPLY (PURGE) and vacuums, a person's rows are unrecoverable within about 14 days, inside a 30-day commitment. Raw files, exports and other copies need their own deletion."
+    a: "With the default 7-day retention, a weekly job that deletes and purges with REORG ... APPLY (PURGE), and VACUUM every day, a person's rows are unrecoverable within 15 days, inside a 30-day commitment. Raw files, exports and other copies need their own deletion."
 key_takeaways:
   - "A DELETE on a Delta table with deletion vectors rewrote 0 data files; time travel still returned all 100 of the erased user's rows."
   - "REORG ... APPLY (PURGE) rewrote the files without the rows; time travel still returned them from the old files."
   - "VACUUM at the default 7-day retention removed nothing that time travel needed, and VACUUM RETAIN 0 HOURS was refused."
   - "Only once the table's retention had passed and VACUUM ran did Databricks refuse time travel to the version before the delete."
-  - "Erasure on Delta is a timeline: delete, purge, wait out the retention, vacuum; a weekly job at the default retention finishes inside 14 days."
+  - "Erasure on Delta is a timeline: delete, purge, wait out the retention, vacuum; a weekly purge with a daily VACUUM at the default retention finishes inside 15 days."
 ---
 
 A data processing agreement that promises erasure within 30 days is easy to sign and easy to believe you meet. The person's rows are deleted, a query for them returns nothing, the ticket is closed. On a table format that keeps its history, that query only asks the current version.
@@ -83,13 +83,13 @@ A Delta table of 5,000 events for 50 users, with deletion vectors, on a Databric
 ## An erasure job that finishes
 
 - **Weekly:** delete every pending request by key in every table that holds personal data, then `REORG TABLE … APPLY (PURGE)` each of those tables.
-- **Next week's run:** `VACUUM`, which by then removes the files the previous purge left, since they are past the 7-day retention.
+- **Daily:** `VACUUM`, which removes the files a purge left as soon as they are past the 7-day retention. Run weekly, it would meet them at exactly seven days, and might leave them another week.
 - **Proof:** a time-travel query to the version before each delete, which must be refused, stored with the request.
 
-At the default retention that finishes within 14 days of a request, inside a 30-day commitment, and keeps the 7-day restore window that recovering from a bad write needs. The retention is the lever between the two: shorten it and erasure is faster, but the window in which a mistaken overwrite can be undone shrinks with it. Raw files in volumes, exports and anything copied out of the table need their own deletion; the table's history is only the copy people forget.
+At the default retention that finishes within 15 days of a request (up to 7 to the weekly run, 7 of retention, 1 to the next daily `VACUUM`), inside a 30-day commitment, and keeps the 7-day restore window that recovering from a bad write needs. The retention is the lever between the two: shorten it and erasure is faster, but the window in which a mistaken overwrite can be undone shrinks with it. Raw files in volumes, exports and anything copied out of the table need their own deletion; the table's history is only the copy people forget.
 
 <div class="callout callout--note" markdown="1">
-**Boundary.** One table, one user, Databricks SQL 2026.39 on Free Edition, a 1-hour retention set only to see the last step inside a day. Without deletion vectors a `DELETE` rewrites files, but the earlier versions still point at the old ones, so the timeline is the same from the purge on. Snowflake, where permanent tables add 7 days of Fail-safe after Time Travel, is the other half of the proof of concept and not measured yet.
+**Boundary.** One table, one user, Databricks SQL 2026.39 on Free Edition, a 1-hour retention set only to see the last step inside a day. Without deletion vectors a `DELETE` rewrites files, but the earlier versions still point at the old ones, so the timeline is the same. *Measured since:* on a UniForm table, the format the client's design chose so other engines read it as Iceberg, Databricks refused deletion vectors outright; deleting the user's rows rewrote all 8 files that held them, and time travel still returned all 100 until the retention passed and `VACUUM` ran. Snowflake, where permanent tables add 7 days of Fail-safe after Time Travel, is the other half of the proof of concept and not measured yet.
 </div>
 
 ## Checks for a right-to-erasure process on a lakehouse
@@ -112,6 +112,6 @@ No. On Databricks, a `DELETE` on a table with deletion vectors rewrote none of t
 
 ### How long does right-to-erasure take on Databricks?
 
-With the default 7-day retention and a weekly job that deletes, purges with `REORG … APPLY (PURGE)` and vacuums, a person's rows are unrecoverable within about 14 days, inside a 30-day commitment. Raw files, exports and other copies need their own deletion.
+With the default 7-day retention, a weekly job that deletes and purges with `REORG … APPLY (PURGE)`, and `VACUUM` every day, a person's rows are unrecoverable within 15 days, inside a 30-day commitment. Raw files, exports and other copies need their own deletion.
 
 The runner and its results are in [data-platform-architecture](https://github.com/technobasant/data-platform-architecture/tree/main/poc/databricks), with the rest of the proof of concept in its [proof-of-concept document](https://github.com/technobasant/data-platform-architecture/blob/main/docs/11-proof-of-concept.md). More on [Databricks](/writing/tags/databricks/).

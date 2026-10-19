@@ -602,58 +602,58 @@ dsl_default_daily_loaded:
 # ── data-platform-architecture (2026) ───────────────────────────────────────
 dpa_decisions_backed:
   value: "11 of 15"
-  label: "architecture decisions for the client backed by measured results; the other four wait on the proof of concept or their stage"
-  method: "each decision record cites figures from evidence/evidence.yml, generated into the record by scripts/build.py; CI fails if a figure drifts, a section of the template is missing, or a source link breaks"
+  label: "architecture decisions for the client accepted, each citing its evidence, marked direct or indirect; the other four wait on the proof of concept or their stage"
+  method: "each decision record cites figures from evidence/evidence.yml, generated into the record by scripts/build.py; figures from the repository's own results are re-derived from the results files in CI, a missing template section or a broken source link fails the build, and evidence that does not test its decision directly is labelled indirect"
   scope: "independent"
   source: "data-platform-architecture (2026)"
   window: "Oct 2026"
   context: "Proposed until measured: Databricks or Snowflake (a two-week proof of concept on criteria fixed in advance), tag-driven masking and row filters, erasure inside 30 days, and the stage-2 usage store."
 
 dpa_bi_on_primary:
-  value: "93 → 794 ms"
+  value: "40 → 525 ms"
   label: "the product's p95 request latency, without and with the BI tool's reports running on the primary"
-  method: "a lab copy of the client's database (Postgres 17, 2 vCPU and 4 GB, 31.5 million events); the product's request at 100 a second from pgbench; two analysts running four BI queries in turn; five-minute scenarios after a checkpoint"
+  method: "a lab copy of the client's database (Postgres 17, 2 vCPU and 4 GB, 31.5 million events); the product's request at 12 a second from pgbench, its weekday peak (each request records one event; 350,000 a day average 4 a second); two analysts running four BI queries in turn; five-minute scenarios after a checkpoint"
   scope: "independent"
   source: "data-platform-architecture (2026)"
   window: "measured Oct 2026"
-  context: "Requests over 100 ms went from 4.8% to 23.0%. Docker on a laptop: the comparison is the result, not the absolute latency."
+  context: "Requests over 100 ms went from 2.2% to 24.0%. A first run at a stress rate of 100 a second gave 93 → 794 ms. Docker on one host: the comparison is the result, not the absolute latency."
 
 dpa_replica_reports:
-  value: "3 of 412"
-  label: "runs of the long BI reports that finished on a Postgres read replica in five minutes; 409 were cancelled by recovery conflicts"
-  method: "the same lab; reports on a streaming replica with the default max_standby_streaming_delay (30 s) and hot_standby_feedback off, while the product updated rows at 100 requests a second; analysts retried at once"
+  value: "3 of 35"
+  label: "runs of the long BI reports that finished on a Postgres read replica in five minutes; 32 were cancelled by recovery conflicts"
+  method: "the same lab at the product's peak rate; reports on a streaming replica with the default max_standby_streaming_delay (30 s) and hot_standby_feedback off; analysts retried at once"
   scope: "independent"
   source: "data-platform-architecture (2026)"
   window: "measured Oct 2026"
-  context: "Once the replica was 30 s behind, it cancelled conflicting queries at once: the median cancelled run lasted 0.1 s. With hot_standby_feedback on, 20 of 20 finished, at the price of holding back cleanup on the primary for as long as the longest report runs."
+  context: "With hot_standby_feedback on, 11 of 11 finished, holding back cleanup on the primary. On a replica for reports alone with a 15-minute replay delay, 7 of 7 finished and it fell up to 4.7 minutes behind: the stopgap. At a stress rate of 100 requests a second it was 3 of 412."
 
 dpa_break_even:
   value: "1.4–3.4 TB"
   label: "scanned per engine-hour before per-scan billing costs more than a managed warehouse"
   method: "hourly list price of a Medium Snowflake (Standard, Enterprise) or Databricks SQL Serverless warehouse divided by the price per TB on BigQuery on-demand and Athena; AWS us-east-1, BigQuery US, retrieved 2026-10-18"
   scope: "independent"
-  source: "data-platform-architecture (2026)"
+  source: "data-platform-architecture v0.1.0 (2026)"
   window: "list prices, Oct 2026"
-  context: "Arithmetic on list prices, not a measurement. Against self-run Trino on four r7i.2xlarge workers the line is 0.37–0.42 TB, before the cost of operating it."
+  context: "Arithmetic on list prices, not a measurement. Against self-run Trino on four r7i.2xlarge workers the line is 0.37–0.42 TB, before the cost of operating it. From the repository's first version; v0.3.0 prices the client's EU region at the editions its requirements need, where the line against Athena is 3.1–4.4 TB."
 
 # ── ai-platform-architecture (2026) ─────────────────────────────────────────
 aipa_decisions_backed:
-  value: "12 of 14"
-  label: "decisions for the usage assistant backed by measured results; the other two wait on the platform choice and a retention drill"
+  value: "13 of 14"
+  label: "decisions for the usage assistant accepted on measured results; the other waits on a retention drill"
   method: "each decision record cites figures from evidence/evidence.yml, generated into the record by scripts/build.py; CI fails if a figure drifts, a section of the template is missing, or a source link breaks"
   scope: "independent"
   source: "ai-platform-architecture (2026)"
   window: "Oct 2026"
-  context: "Proposed: how a customer's identity reaches the chosen platform's row filters, and 30-day retention of conversations."
+  context: "Proposed: 30-day retention of conversations. Accepted with a launch gate: the tool's query rewrite, which must pass its escape corpus and isolation suite in the chosen platform's SQL dialect."
 
 aipa_prompt_isolation:
   value: "23 of 120"
-  label: "requests for another account's data that leaked when isolation was left to the prompt; 0 of 120 as the customer's own database role"
+  label: "requests for another account's data that leaked when isolation was left to the prompt; none of the 28 queries that reached the database leaked as the customer's own role"
   method: "20 prompts that only another account's data, or every account's, can answer, each from two customers, to Qwen3 8B, Llama 3.3 70B and gpt-oss-120b told to answer only about the customer's account; each generated query run with access to every account and as the customer's role (Postgres row-level security), a leak being any difference"
   scope: "independent"
   source: "ai-platform-architecture (2026)"
   window: "measured Oct 2026"
-  context: "Llama 3.3 70B, the most accurate model on ordinary questions, leaked with 12 of the 12 queries it wrote for these requests. Each customer's role sees 1 of 200 accounts."
+  context: "Two equally accurate models complied very differently: Llama 3.3 70B leaked with 12 of the 12 queries it wrote for these requests, gpt-oss-120b with 4 of 7. Each customer's role sees 1 of 200 accounts."
 
 aipa_semantic_layer:
   value: "55 → 70 of 70"
@@ -662,7 +662,16 @@ aipa_semantic_layer:
   scope: "independent"
   source: "ai-platform-architecture (2026)"
   window: "measured Oct 2026"
-  context: "Qwen3 8B went from 43 to 64; gpt-oss-120b from 63 to 70, and declined all 20 unanswerable questions. Databricks AI/BI Genie, given the same definitions, answered 69 of 70 at 14.5 s median."
+  context: "Qwen3 8B went from 46 to 64; gpt-oss-120b from 65 to 70, and declined all 20 unanswerable questions. The definitions were written with the 24 question templates in view, so the gain is an upper bound. Databricks AI/BI Genie, given the same definitions, answered 69 of 70 at 14.5 s median."
+
+aipa_rewrite_escapes:
+  value: "44 of 44"
+  label: "hand-written escapes refused by the assistant's query rewrite; the first version let 23 of them through"
+  method: "lab/escapes.yml: functions that run SQL of their own (query_to_xml, ts_stat), names defined in a nested query, catalog tables, writes inside a CTE, quoting tricks; each must be refused by the parser's default-deny rules, and 13 ordinary shapes must be scoped and match row-level security; checked in CI"
+  scope: "independent"
+  source: "ai-platform-architecture (2026)"
+  window: "measured Oct 2026"
+  context: "Row-level security alone let a customer's role, which counted 14 users, read every account's 1,935 from pg_class; the rewrite refuses that query. The 464 recorded model queries were unchanged by the hardening."
 
 aipa_self_host_break_even:
   value: "196 vs 3,918"
@@ -709,6 +718,33 @@ dsl_dbt_databricks:
   window: "measured Oct 2026"
   context: "The one change: contract types varchar became string, because Databricks refuses VARCHAR without a length; the DuckDB and dbt v2 results were unchanged by it."
 
+dpa_bi_speed:
+  value: "2.82 s"
+  label: "the slowest BI report's median on the smallest Databricks SQL warehouse with eight analysts at once; 62 s on the product's Postgres"
+  method: "the four queries the BI tool runs today, on the client's data at today's scale (31.5 million events); a 2X-Small serverless warehouse with one cluster on Databricks Free Edition, result cache off, timings from system.query.history; Postgres: the same queries on the primary at the product's peak rate"
+  scope: "independent"
+  source: "data-platform-architecture (2026)"
+  window: "measured Oct 2026"
+  context: "No query waited for capacity: one cluster ran eight at once, each about twice as slowly as with two analysts. Not like for like on hardware; the order of magnitude is the result."
+
+dpa_terraform_coverage:
+  value: "6 of 7"
+  label: "kinds of Databricks governance object Terraform owned, with a clean plan after applying"
+  method: "OpenTofu 1.13.1 and the Databricks provider 1.138.0 from an empty state: the governed tag (adopted with an import block), schema, table, column tags, the tag-matching mask policy and grants; a row read back masked"
+  scope: "independent"
+  source: "data-platform-architecture (2026)"
+  window: "measured Oct 2026"
+  context: "The seventh, the mask function the policy calls, has no Terraform resource: the deployment is two applies with a SQL step between them."
+
+dpa_day_bill:
+  value: "0.743 DBU"
+  label: "billed for one day's build and reports on the smallest Databricks SQL warehouse: 38 seconds of work, 11 minutes 9 seconds awake"
+  method: "Databricks SQL 2026.39 on Free Edition, a 2X-Small serverless warehouse with the default 10-minute auto-stop, started from stopped at the top of an hour with nothing else on it; system.billing.usage for that hour against uptime from system.compute.warehouse_events and statements from system.query.history"
+  scope: "independent"
+  source: "data-platform-architecture (2026)"
+  window: "measured Oct 2026"
+  context: "95% of the bill came after the last statement, waiting for auto-stop; billed DBUs matched uptime at 4 DBU an hour in every hour checked. At $0.91 a DBU in the client's EU region the month costs $21 woken once a day and $961 awake through working hours."
+
 dpa_erasure_time_travel:
   value: "100 of 100"
   label: "an erased user's rows still returned by Delta time travel after DELETE, after REORG APPLY (PURGE) and after VACUUM at the default retention"
@@ -716,7 +752,7 @@ dpa_erasure_time_travel:
   scope: "independent"
   source: "data-platform-architecture (2026)"
   window: "measured Oct 2026"
-  context: "VACUUM RETAIN 0 HOURS was refused. At the default 7-day retention a weekly delete, purge and vacuum job makes a request unrecoverable within about 14 days."
+  context: "VACUUM RETAIN 0 HOURS was refused. At the default 7-day retention, a weekly delete and purge with a daily VACUUM makes a request unrecoverable within 15 days."
 
 # ── platform-deployments (open source, 2026) ────────────────────────────────
 deploy_bad_release_aborted:

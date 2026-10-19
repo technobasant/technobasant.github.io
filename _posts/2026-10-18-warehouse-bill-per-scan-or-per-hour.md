@@ -3,7 +3,7 @@ title: "Per scan or per hour: the number that decides an analytics bill"
 seo_title: "Snowflake vs Databricks vs BigQuery vs Athena cost: the per-scan break-even"
 description: "Per-scan billing beats per-hour warehouses until an hour of compute scans about 1.4 to 3.4 TB. The break-even from list prices, and how to find your own number."
 date: 2026-10-18 18:00:00 +0545
-last_modified_at: 2026-10-18
+last_modified_at: 2026-10-19
 type: essay
 pillar: data-platforms
 tags:
@@ -57,7 +57,9 @@ Put on one axis, the comparison comes down to a single number: how many terabyte
 
 **Operating rule.** Before comparing platforms on cost, measure your workload's terabytes scanned per engine-hour, and compare it with the break-even. Do not rank platforms on total cost unless that ratio is stated next to the ranking.
 
-This comes from the cost model in [data-platform-architecture](https://github.com/technobasant/data-platform-architecture), a reference architecture for a SaaS data platform whose other decisions are each backed by measurements in public labs. The cost model is not one of those measurements. It is arithmetic on on-demand list prices, retrieved from each vendor's own pricing page on 18 October 2026, for AWS us-east-1 (BigQuery: US multi-region). Every price, its source and the quoted line are in [`cost/prices.yml`](https://github.com/technobasant/data-platform-architecture/blob/main/cost/prices.yml).
+This comes from the cost model in [data-platform-architecture v0.1.0](https://github.com/technobasant/data-platform-architecture/tree/v0.1.0), a reference architecture for a SaaS data platform whose other decisions are each backed by measurements in public labs. The cost model is not one of those measurements. It is arithmetic on on-demand list prices, retrieved from each vendor's own pricing page on 18 October 2026, for AWS us-east-1 (BigQuery: US multi-region). Every price, its source and the quoted line are in [`cost/prices.yml`](https://github.com/technobasant/data-platform-architecture/blob/v0.1.0/cost/prices.yml).
+
+*Updated 19 October 2026:* the repository has since become an engagement for one client, whose data must stay in one EU region and whose requirements need Snowflake Enterprise. Re-priced for AWS EU (Ireland) at those editions, a medium engine-hour costs $15.60 to $21.84 and the line against Athena moves to 3.1–4.4 TB; the arithmetic below, on the first version's US prices, is unchanged as arithmetic.
 
 ## The break-even
 
@@ -134,4 +136,4 @@ Because the worst query sets the bill. At a large workload tier with about 18 TB
 
 On the bill, often: four r7i.2xlarge workers cost $2.12 an hour at list price. The bill leaves out the catalog service, table maintenance, upgrades and the engineers who do them, which for a small team usually costs more than the difference.
 
-The model, the prices with their sources, and the architecture it belongs to are in [data-platform-architecture](https://github.com/technobasant/data-platform-architecture), with the design in [the case study](/work/data-platform-architecture/). More on [cost](/writing/tags/cost-finops/) and [the lakehouse](/writing/tags/iceberg-lakehouse/).
+The model as this post used it is in [data-platform-architecture v0.1.0](https://github.com/technobasant/data-platform-architecture/tree/v0.1.0), and the current, re-priced one in [the main branch](https://github.com/technobasant/data-platform-architecture), with the design in [the case study](/work/data-platform-architecture/). More on [cost](/writing/tags/cost-finops/) and [the lakehouse](/writing/tags/iceberg-lakehouse/).

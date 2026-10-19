@@ -58,16 +58,17 @@ repos:
   what: 'The AI architecture for a fictional SaaS company''s usage assistant: text-to-SQL over governed data,
     with accuracy, tenant isolation and cost measured on Qwen3, Llama 3.3, gpt-oss and Databricks Genie.'
   finding: 'Told to stay in one customer''s data, the models leaked another account''s on 23 of 120 requests;
-    run as the customer''s database role, on none.'
+    the tool''s default-deny query rewrite matched row-level security on every one and refuses 44 of 44
+    hand-written escapes.'
   case: /work/ai-platform-architecture/
   post: /writing/prompt-is-not-tenant-isolation/
   languages:
   - Python
   license: Apache-2.0
   release:
-    tag: v0.2.0
+    tag: v0.3.0
     date: '2026-10-19'
-    url: https://github.com/technobasant/ai-platform-architecture/releases/tag/v0.2.0
+    url: https://github.com/technobasant/ai-platform-architecture/releases/tag/v0.3.0
   ci:
     conclusion: success
     url: https://github.com/technobasant/ai-platform-architecture/actions/workflows/ci.yml
@@ -194,19 +195,20 @@ repos:
   url: https://github.com/technobasant/data-platform-architecture
   pillar: data-platforms
   what: 'An architecture engagement for a fictional SaaS company leaving Postgres: the current state measured
-    on a lab copy of its database, options, a staged target, data contracts, governance, migration and 15
-    decision records.'
-  finding: 'With reports on the product''s primary, its p95 latency went from 93 to 794 ms; on the read replica,
-    3 of 412 long report runs finished.'
+    on a lab copy of its database, options priced in its EU region, a staged target, data contracts, governance,
+    migration, 15 decision records and a Databricks proof of concept.'
+  finding: 'With reports on the product''s primary, its p95 latency went from 40 to 525 ms; on the read replica,
+    3 of 35 long report runs finished. On Databricks, a day''s build and reports took 38 s and were billed for 11
+    minutes awake.'
   case: /work/data-platform-architecture/
   post: /writing/read-replica-cancelled-the-reports/
   languages:
   - Python
   license: Apache-2.0
   release:
-    tag: v0.2.0
+    tag: v0.3.0
     date: '2026-10-19'
-    url: https://github.com/technobasant/data-platform-architecture/releases/tag/v0.2.0
+    url: https://github.com/technobasant/data-platform-architecture/releases/tag/v0.3.0
   ci:
     conclusion: success
     url: https://github.com/technobasant/data-platform-architecture/actions/workflows/ci.yml
