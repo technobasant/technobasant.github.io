@@ -1,14 +1,14 @@
 ---
 title: Résumé
 last_modified_at: 2026-10-20
-seo_title: "Basant Bhattarai — Senior Data Engineer · Data Platform & AI Architect résumé"
+seo_title: "Basant Bhattarai — Senior Data Engineer · Data & AI Architect résumé"
 eyebrow: Career
-headline: "Senior Data Engineer · Data Platform & AI Architect — nine years in software, six on production data platforms."
+headline: "Senior Data Engineer · Data & AI Architect — nine years in software, six on production data platforms."
 hero_code: "CAREER / LOG"
 lede: "Roles, measured outcomes, open-source work, and the stack behind each: platform architecture, databases, governance and SOC 2, and AI systems in production."
 page_class: page-resume
 permalink: /resume/
-description: "Senior Data Engineer and data platform and AI architect: nine years in software, six on production data platforms. Roles, measured outcomes, and the stack behind each."
+description: "Senior Data Engineer and data and AI architect: nine years in software, six on production data platforms. Roles, measured outcomes, and the stack behind each."
 redirect_from:
   - /experience/
   - /skills/

@@ -21,7 +21,7 @@ Companion files: {{ '/ai.txt' | absolute_url }} (discovery) ·
 
 ## Summary
 
-{{ site.author.name }} works as a data platform and AI architect and holds the
+{{ site.author.name }} works as a data and AI architect and holds the
 title {{ site.author.job_title }} at UXCam. {{ site.data.metrics.experience.value }}
 {{ site.data.metrics.experience.label }} ({{ site.data.metrics.experience.method }}),
 six of them on production data platforms. The practice covers four problems:

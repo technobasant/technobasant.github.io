@@ -4,7 +4,7 @@ seo_title: "Governed AI Delivery — LangGraph, Google ADK, MCP Case Study"
 hook: "A governed analytics workflow with typed state, provenance, evaluation, review, and an honest fallback path."
 description: "Governed AI delivery case study: a production agentic analytics workflow on LangGraph, Google ADK, and MCP, with typed state, provenance, evaluation, and an honest fallback path."
 date: 2024-02-01
-last_modified_at: 2026-10-14
+last_modified_at: 2026-10-20
 kind: practice
 pillar: ai-systems
 related: [governed-agent, evalproof, consulting-short-text-and-alerting]

@@ -1,17 +1,17 @@
 ---
 title: About
 last_modified_at: 2026-10-20
-seo_title: "About Basant Bhattarai — Data Platform & AI Architect · Senior Data Engineer"
+seo_title: "About Basant Bhattarai — Data & AI Architect · Senior Data Engineer"
 eyebrow: Profile
 headline: "I design data platforms, the governance around them and the AI on them, then build them."
 hero_code: "OPERATE / OWN"
 page_class: page-about
 permalink: /about/
-description: "About Basant Bhattarai: data platform and AI architect, Senior Data Engineer at UXCam. Platform architecture, databases, governance and SOC 2 readiness, and AI on governed data."
+description: "About Basant Bhattarai: data and AI architect, Senior Data Engineer at UXCam. Platform architecture, databases, governance and SOC 2 readiness, and AI on governed data."
 lede: "Nine years that started with backend services and PostgreSQL schemas, and ended up owning the platforms, the databases underneath them, and the agents that write into both."
 ---
 
-I work as a data platform and AI architect, and I still build what I design. My title is Senior Data Engineer at UXCam, where I own the reliability and governance of the data platform, operate the databases under it, design the production agent workflows, and am responsible for meeting the SOC 2 criteria for the platform and its infrastructure. I also take consulting engagements: [an analytics lakehouse](/work/contact-centre-lakehouse/) delivered configured and running, [two Postgres databases moved to Citus](/work/postgres-scale-out-citus/), [a managed-or-self-run decision and an RDS fleet](/work/postgres-on-rds/), and [a classifier redesigned](/work/consulting-short-text-and-alerting/) for a client's Databricks lakehouse. The architecture work I can show in full is [a sample engagement](/work/data-platform-architecture/) for a SaaS company leaving Postgres: the current state measured, 18 decisions, a data model, SOC 2 readiness and a proof of concept on Databricks.
+I work as a data and AI architect, and I still build what I design. My title is Senior Data Engineer at UXCam, where I own the reliability and governance of the data platform, operate the databases under it, design the production agent workflows, and am responsible for meeting the SOC 2 criteria for the platform and its infrastructure. I also take consulting engagements: [an analytics lakehouse](/work/contact-centre-lakehouse/) delivered configured and running, [two Postgres databases moved to Citus](/work/postgres-scale-out-citus/), [a managed-or-self-run decision and an RDS fleet](/work/postgres-on-rds/), and [a classifier redesigned](/work/consulting-short-text-and-alerting/) for a client's Databricks lakehouse. The architecture work I can show in full is [a sample engagement](/work/data-platform-architecture/) for a SaaS company leaving Postgres: the current state measured, 18 decisions, a data model, SOC 2 readiness and a proof of concept on Databricks.
 
 The job arrived in a particular order. First Python services and PostgreSQL schemas; then the databases those services leaned on, which is where I learned that most outages are a storage decision made two years earlier; then the platform around them — Kafka ingestion, Spark processing, Airflow orchestration, lakehouse modeling, analytical serving.
 

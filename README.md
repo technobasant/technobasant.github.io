@@ -1,6 +1,6 @@
 # Basant Bhattarai — Personal site
 
-Portfolio of a data platform and AI architect, Senior Data Engineer by title.  
+Portfolio of a data and AI architect, Senior Data Engineer by title.  
 Live: [basantbhattarai.com.np](https://basantbhattarai.com.np)
 
 ## Principles

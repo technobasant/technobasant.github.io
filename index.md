@@ -3,8 +3,8 @@ layout: home
 permalink: /
 title: Basant Bhattarai
 last_modified_at: 2026-10-20
-seo_title: "Basant Bhattarai — Data Platform & AI Architect · Senior Data Engineer"
-description: "Data platform and AI architecture, hands-on: architecture reviews, platform selection, migrations off Postgres, governance and SOC 2 readiness, and AI on governed data."
+seo_title: "Basant Bhattarai — Data & AI Architect · Senior Data Engineer"
+description: "Data and AI architecture, hands-on: architecture reviews, platform selection, migrations off Postgres, governance and SOC 2 readiness, and AI on governed data."
 sitemap:
   changefreq: weekly
   priority: 1.0
@@ -13,7 +13,7 @@ hero:
   # The practice and the title held, together and in that order. The title
   # alone undersold the architecture work; the practice alone would claim a
   # title not held. JSON-LD states only the title held (author.job_title).
-  eyebrow: "Data Platform & AI Architect · Senior Data Engineer"
+  eyebrow: "Data & AI Architect · Senior Data Engineer"
   # Design first, because that is what is hired; "then build them" because the
   # designs are hands-on, which the proof strip below backs. e2e-hero re-run.
   h1: "I design data platforms and the AI on them, then build them."

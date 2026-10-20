@@ -1,10 +1,10 @@
 # ── Identity ──────────────────────────────────────────────────────────────
 title: "Basant Bhattarai"
-subtitle: "Data Platform & AI Architect · Senior Data Engineer"
+subtitle: "Data & AI Architect · Senior Data Engineer"
 tagline: "I design data platforms and the AI on them, then build them."
 email: contact@basantbhattarai.com.np
 description: >-
-  Basant Bhattarai — Data Platform & AI Architect, Senior Data Engineer.
+  Basant Bhattarai — Data & AI Architect, Senior Data Engineer.
   Nine years in software, six on production data platforms: architecture
   reviews, platform selection, migrations off Postgres, governance and SOC 2
   readiness, and AI on governed data.
@@ -21,7 +21,7 @@ author:
   name: "Basant Bhattarai"
   # The practice and the employment title, always together. `job_title` is the
   # title held, and the only one structured data states as a fact.
-  role: "Data Platform & AI Architect · Senior Data Engineer"
+  role: "Data & AI Architect · Senior Data Engineer"
   job_title: "Senior Data Engineer"
   location: "Kathmandu, Nepal"
   avatar: "/assets/images/hero-portrait-v2-840.jpg"
@@ -29,7 +29,7 @@ author:
   linkedin: "https://www.linkedin.com/in/technobasant"
   github: "https://github.com/technobasant"
   bio: >-
-    Data platform and AI architect, and Senior Data Engineer at UXCam. I
+    Data and AI architect, and Senior Data Engineer at UXCam. I
     design data platforms, the governance around them and the AI on them, then
     build them.
 

@@ -276,7 +276,7 @@ def build_story(
     story: list = [
         Spacer(1, 2),
         Paragraph("BASANT BHATTARAI", s["name"]),
-        Paragraph("SENIOR DATA ENGINEER  /  DATA PLATFORM &amp; AI ARCHITECT", s["role"]),
+        Paragraph("SENIOR DATA ENGINEER  /  DATA &amp; AI ARCHITECT", s["role"]),
         Paragraph(
             # Site first among the links. Location is not in the header: the
             # public pages lead with the work, not the city.
@@ -290,7 +290,7 @@ def build_story(
 
     story += section("Profile", s)
     story.append(Paragraph(
-        f"Senior data engineer and data platform and AI architect with {metric(metrics, 'experience')} in software engineering, six of them owning production data platforms. Designs platforms, their data models and the governance and SOC 2 controls around them, then builds them. Open-source first — Kafka, Spark, Iceberg, Trino, dbt and Airflow on Kubernetes — plus the databases underneath: modeling, replication, backup and recovery, upgrades. Designs and runs the agent workflows on that same stack (LangGraph, Google ADK, MCP), so model output lands as typed, reviewable rows. Track record: {metric(metrics, 'professional_cost_reduction')} lower infrastructure cost, {metric(metrics, 'professional_processing_improvement')} faster processing, {metric(metrics, 'professional_analytics_delivery')} faster analytics delivery.",
+        f"Senior data engineer and data and AI architect with {metric(metrics, 'experience')} in software engineering, six of them owning production data platforms. Designs platforms, their data models and the governance and SOC 2 controls around them, then builds them. Open-source first — Kafka, Spark, Iceberg, Trino, dbt and Airflow on Kubernetes — plus the databases underneath: modeling, replication, backup and recovery, upgrades. Designs and runs the agent workflows on that same stack (LangGraph, Google ADK, MCP), so model output lands as typed, reviewable rows. Track record: {metric(metrics, 'professional_cost_reduction')} lower infrastructure cost, {metric(metrics, 'professional_processing_improvement')} faster processing, {metric(metrics, 'professional_analytics_delivery')} faster analytics delivery.",
         s["body"],
     ))
 
@@ -478,9 +478,9 @@ def generate(output: Path) -> None:
         leftMargin=0.68 * inch,
         topMargin=0.62 * inch,
         bottomMargin=0.58 * inch,
-        title="Basant Bhattarai - Senior Data Engineer, Data Platform and AI Architect",
+        title="Basant Bhattarai - Senior Data Engineer, Data and AI Architect",
         author="Basant Bhattarai",
-        subject="Senior Data Engineer · Data Platform & AI Architect",
+        subject="Senior Data Engineer · Data & AI Architect",
     )
     frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height, id="resume")
     # `onPageEnd`, not `onPage`. reportlab runs onPage *before* the frame draws,

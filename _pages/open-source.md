@@ -1,6 +1,6 @@
 ---
 title: Open source
-last_modified_at: 2026-10-14
+last_modified_at: 2026-10-20
 seo_title: "Open Source — Data, AI and Database Systems, Measured — Basant Bhattarai"
 eyebrow: Open source
 headline: "Code you can run, with the numbers it produced."

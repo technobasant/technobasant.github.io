@@ -1,7 +1,7 @@
 ---
 title: Writing
 last_modified_at: 2026-10-20
-seo_title: "Data Platform & AI Architecture Writing — Basant Bhattarai"
+seo_title: "Data & AI Architecture Writing — Basant Bhattarai"
 eyebrow: Field notes
 headline: "Notes from systems that had to keep working."
 layout: writing-index
