@@ -38,7 +38,7 @@ sitemap:
 
 ## Context
 
-This is stage 3 of the engagement in [data-platform-architecture](/work/data-platform-architecture/): the same B2B SaaS company, now with governed usage marts. Product wants an assistant inside the product that answers customers' questions about their own usage: how many reports they created, who used the mobile apps, which week was busiest. Support answers these by hand today.
+This is stage 3 of the reference architecture in [data-platform-architecture](/work/data-platform-architecture/): the same B2B SaaS company, now with governed usage marts. Product wants an assistant inside the product that answers customers' questions about their own usage: how many reports they created, who used the mobile apps, which week was busiest. Support answers these by hand today.
 
 The first version of [ai-platform-architecture](https://github.com/technobasant/ai-platform-architecture) was a reference architecture for five AI features, each decision citing a lab. Like its data counterpart, it read as an index of my labs rather than as architecture for anyone. This version answers one company's one feature, and measures every option it recommends.
 

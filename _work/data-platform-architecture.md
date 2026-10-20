@@ -44,7 +44,7 @@ Architecture work is judged on deliverables: a current state someone measured, a
 
 ## Constraints
 
-Data: generated to the scenario's shape by [data-stack-lab](/work/data-stack-lab/), which also rebuilds it in CI. The company's current state is measured on a lab copy of its database in Docker on one host, so comparisons between scenarios are the result and absolute latencies are not. The managed platforms are compared from documentation and list prices in the company's EU region, and the choice between them is made by a proof of concept with criteria fixed in advance; its Databricks half has run, and Snowflake's waits for a trial account.
+Data: generated to the scenario's shape from a fixed seed, the same business [data-stack-lab](/work/data-stack-lab/) builds, so every figure can be re-run. The company's current state is measured on a lab copy of its database in Docker on one host, so comparisons between scenarios are the result and absolute latencies are not. The managed platforms are compared from documentation and list prices in the company's EU region, and the choice between them is made by a proof of concept with criteria fixed in advance; its Databricks half has run, and Snowflake's waits for a trial account.
 
 The brief sets the constraints every decision answers to: two data people growing to four, no one on call for a data platform, under $15,000 a month to run, the product's database not to be changed, a SOC 2 Type II window in month three, and erasure within 30 days everywhere a person's data is held.
 
@@ -105,7 +105,7 @@ A unit test keeps the fixture honest: it may differ from the real contract by th
 
 ## What went wrong
 
-**The first version had no company.** It was thirteen decisions about a generic platform, each citing a lab. Reviewed against what architecture roles and practitioners actually publish, it read as a list of things I had built. The rework starts from one company's brief and keeps only the evidence that company's decisions need; the first version stays in the repository's v0.1.0 tag.
+**The first version had no scenario.** It was thirteen decisions about a generic platform, each citing a lab. Reviewed against what architecture roles and practitioners actually publish, it read as a list of things I had built. The rework starts from one company's brief and keeps only the evidence that company's decisions need; the first version stays in the repository's v0.1.0 tag.
 
 **My first lab copy of the database was unrealistic.** I generated events in random time order, so the last week's rows were spread across all 5 GB and never in memory, and the product looked slow with nothing else running. A real table is appended in time order. Regenerated that way, the product's median request took 5 ms.
 
