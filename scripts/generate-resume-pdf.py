@@ -276,7 +276,7 @@ def build_story(
     story: list = [
         Spacer(1, 2),
         Paragraph("BASANT BHATTARAI", s["name"]),
-        Paragraph("SENIOR DATA &amp; AI ENGINEER  /  PLATFORMS, DATABASES &amp; AGENTIC SYSTEMS", s["role"]),
+        Paragraph("SENIOR DATA ENGINEER  /  DATA PLATFORM &amp; AI ARCHITECT", s["role"]),
         Paragraph(
             # Site first among the links. Location is not in the header: the
             # public pages lead with the work, not the city.
@@ -290,7 +290,7 @@ def build_story(
 
     story += section("Profile", s)
     story.append(Paragraph(
-        f"Senior data and AI engineer with {metric(metrics, 'experience')} in software engineering, six of them owning production data platforms. Open-source first — Kafka, Spark, Iceberg, Trino, dbt and Airflow on Kubernetes — across ingestion, transformation and analytical serving, plus the databases underneath: modeling, replication, backup and recovery, upgrades. Designs and runs the agent workflows on that same stack — LangGraph, Google ADK and MCP tool servers — so model output lands as typed, reviewable rows rather than a transcript. Track record: {metric(metrics, 'professional_cost_reduction')} lower infrastructure cost, {metric(metrics, 'professional_processing_improvement')} faster processing, {metric(metrics, 'professional_analytics_delivery')} faster analytics delivery.",
+        f"Senior data engineer and data platform and AI architect with {metric(metrics, 'experience')} in software engineering, six of them owning production data platforms. Designs platforms, their data models and the governance and SOC 2 controls around them, then builds them. Open-source first — Kafka, Spark, Iceberg, Trino, dbt and Airflow on Kubernetes — plus the databases underneath: modeling, replication, backup and recovery, upgrades. Designs and runs the agent workflows on that same stack (LangGraph, Google ADK, MCP), so model output lands as typed, reviewable rows. Track record: {metric(metrics, 'professional_cost_reduction')} lower infrastructure cost, {metric(metrics, 'professional_processing_improvement')} faster processing, {metric(metrics, 'professional_analytics_delivery')} faster analytics delivery.",
         s["body"],
     ))
 
@@ -319,10 +319,8 @@ def build_story(
         f"provenanced rows rather than a transcript: analytics delivery "
         f"{metric(metrics, 'professional_analytics_delivery')} faster with "
         f"{metric(metrics, 'professional_manual_effort')} less analyst effort, review and fallback paths kept.",
-        "Lead architecture and operational review across ingestion, transformation, storage, analytical serving, "
-        "observability and recovery, without treating any single tool as the architecture.",
-        "Run capacity and cost work as a design input rather than a monthly report, using storage layout, "
-        "partitioning and compaction cadence as the primary levers.",
+        "Lead architecture and operational review across ingestion, storage, serving, observability and recovery.",
+        "Treat capacity and cost as design inputs, with storage layout, partitioning and compaction as the levers.",
         f"Mentor {metric(metrics, 'professional_mentoring')} engineers through pairing, code review and written "
         f"design feedback; team delivery time down {metric(metrics, 'professional_team_delivery')}, with the "
         "emphasis on making system ownership transferable.",
@@ -344,7 +342,6 @@ def build_story(
         f"Led the Kubernetes migration of the data infrastructure: "
         f"{metric(metrics, 'professional_cost_reduction')} lower infrastructure cost, "
         f"{metric(metrics, 'professional_uptime')} uptime, and autoscaling that held under peak load.",
-        "Worked across European and US time zones to turn product questions into maintainable datasets.",
     ], s)
     story.append(Spacer(1, 4))
     # KeepTogether on the short roles. The two-bullet SV Technology block was
@@ -377,15 +374,16 @@ def build_story(
     # the case studies carry the detail.
     story += section("Selected open source", s)
     story += bullets([
+        "<b>data-platform-architecture</b> and <b>ai-platform-architecture</b> (sample architecture engagements): "
+        "a SaaS company leaving Postgres, measured: 18 decision records, a Kimball model, SOC 2 readiness, a cost "
+        "model and a Databricks proof of concept; then its usage assistant on governed data.",
         "<b>spark-sql-kinesis</b> (maintainer): Kinesis source and sink for Spark 4.2 on AWS SDK v2, on Maven "
         "Central; an idle shard costs one GetRecords call, not a multi-second floor per batch.",
         "<b>evalproof</b>: LLM evaluation with judge calibration and CI gates that fail only on drops that are "
         "both large and significant.",
-        "<b>governed-agent</b>: a LangGraph and MCP agent whose answers become state only after schema, policy, "
-        "grounding and review.",
         "<b>distributed-db-lab</b>: Citus sharding, online rebalance and tenant isolation, measured against "
-        "TimescaleDB and replicated ClickHouse. Also streaming, real-time ML, retrieval, data contracts and "
-        "GitOps delivery. github.com/technobasant",
+        "TimescaleDB and replicated ClickHouse. Also data-stack-lab, a governed agent, streaming, real-time ML, "
+        "retrieval, data contracts and GitOps delivery. github.com/technobasant",
     ], s)
 
     # No forced page break here any more. It existed to give the Independent work
@@ -396,24 +394,28 @@ def build_story(
             "Platform ownership",
             "Python, SQL and Scala; Kafka and Kinesis ingestion (maintainer of an open-source Spark 4 Kinesis "
             "connector); Spark/PySpark processing, including the Spark 4 migration; Airflow orchestration; Iceberg, "
-            "Hive Metastore, dbt and lakehouse modeling; Kubernetes, Docker and Terraform delivery; contracts, "
-            "lineage, cost and recovery.",
+            "Hive Metastore, dbt and lakehouse modeling; Databricks with Unity Catalog; Kubernetes, Docker and "
+            "Terraform delivery; contracts, lineage, cost and recovery.",
+        ),
+        (
+            "Data and system architecture",
+            "Conceptual to physical modelling, Kimball and Type 2 history, lakehouse, ClickHouse and Citus "
+            "layouts, contracts in CI, decision records, SOC 2 and erasure by design, cost models.",
         ),
         (
             "Database lifecycle",
-            "PostgreSQL, ClickHouse, Trino, Citus, TimescaleDB, Redis and MongoDB; transactional and analytical "
-            "modeling, partitioning, replication, backup, restore, high availability and query performance.",
+            "PostgreSQL, ClickHouse, Trino, Citus, TimescaleDB, Redis and MongoDB; partitioning, replication, "
+            "restore and high availability.",
         ),
         (
             "Agentic systems",
             "LangGraph, LangChain, Google ADK, MCP servers, Pydantic, Milvus and MLflow; bounded tools, retrieval, "
-            "evaluation before rollout, typed output, provenance, human review and honest fallback paths; applied-ML "
-            "evaluation of OCR and short-text classification against a fixed scorer.",
+            "evaluation before rollout, provenance, human review and honest fallback paths.",
         ),
         (
             "Technical leadership",
-            "Architecture and operational review, mentoring, incident-ready runbooks, service and freshness "
-            "objectives, observability with Prometheus and Grafana, and distributed delivery across time zones.",
+            "Architecture and operational review, mentoring, runbooks, service and freshness objectives, "
+            "Prometheus and Grafana.",
         ),
     ]
     # Cloud belongs in the document. It was absent entirely — no AWS, GCP or
@@ -432,6 +434,7 @@ def build_story(
     # sense of the second.
     blurbs = {
         "Platform ownership": "Consumer-facing reliability, governance, recovery and operational readiness.",
+        "Data and system architecture": "Platforms chosen on evidence, with every decision written down.",
         "Database lifecycle": "Modeling, replication, failover, backup and PITR, upgrades and query performance.",
         "Agentic systems": "Model output that lands as typed, reviewable rows rather than a transcript.",
         "Technical leadership": "Design review, mentoring, runbooks, and making system ownership transferable.",
@@ -475,9 +478,9 @@ def generate(output: Path) -> None:
         leftMargin=0.68 * inch,
         topMargin=0.62 * inch,
         bottomMargin=0.58 * inch,
-        title="Basant Bhattarai - Senior Data and AI Engineer",
+        title="Basant Bhattarai - Senior Data Engineer, Data Platform and AI Architect",
         author="Basant Bhattarai",
-        subject="Senior Data & AI Engineer",
+        subject="Senior Data Engineer · Data Platform & AI Architect",
     )
     frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height, id="resume")
     # `onPageEnd`, not `onPage`. reportlab runs onPage *before* the frame draws,

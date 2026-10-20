@@ -1,59 +1,44 @@
-# The homepage findings ledger: one measured result per line, the number first.
-# Every value and claim is quoted from the linked write-up, where the method,
-# sample and limits are stated. `post` is a slug; a slug that does not resolve
-# renders nothing, so check the build after renaming a post.
+# The homepage findings ledger: one measured result per line, the number first,
+# chosen for the decisions a team brings: where reports run, what a platform
+# bills, what erasure costs, whether a prompt isolates customers. Every value
+# and claim is quoted from the linked write-up, where the method, sample and
+# limits are stated. `post` is a slug; a slug that does not resolve renders
+# nothing, so check the build after renaming a post. `source` says where the
+# figure was measured: "Sample engagement" is the public architecture
+# engagement for a fictional client, on a lab copy of its database.
 
-- value: "p = 0.39"
-  claim: "A 4.8-point eval drop that 12 changed answers out of 83 could not separate from noise"
-  post: eval-score-drop-twelve-answers
-  pillar: ai-systems
+- value: "40 → 525 ms"
+  claim: "the product's p95 latency once two analysts' reports ran on its Postgres primary; moved to a read replica, 3 of 35 long reports finished"
+  post: read-replica-cancelled-the-reports
+  pillar: database-lifecycle
+  source: "Sample engagement"
 
-- value: "3 of 37"
-  claim: "auto-published agent answers were wrong, and no check in the pipeline could see them"
-  post: agent-measured-by-what-it-publishes
-  pillar: ai-systems
-
-- value: "0.746 → 0.363"
-  claim: "AUC-PR of the leaky fraud model: on validation, then on the next two weeks"
-  post: realtime-ml-point-in-time-leakage
-  pillar: ai-systems
-
-- value: "3.9 of 10"
-  claim: "rows returned by post-filtered vector search at a 10% filter, with no error raised"
-  post: filtered-vector-search-four-rows-not-ten
-  pillar: ai-systems
-
-- value: "0 of 89,508"
-  claim: "events loaded by a data-interval load on Airflow 3's default @daily, in 30 successful runs"
-  post: airflow-3-daily-no-data-interval
+- value: "11 min"
+  claim: "billed for a day's build and reports that took 38 seconds on Databricks' smallest SQL warehouse; 95% of it was waiting to stop"
+  post: warehouse-billed-for-waiting-to-stop
   pillar: data-platforms
+  source: "Sample engagement"
+
+- value: "31,849,449"
+  claim: "rows rewritten to erase one person whose e-mail was copied into every event row; with it kept in one user table, 59,999"
+  post: erasure-cost-is-a-modelling-decision
+  pillar: system-architecture
+  source: "Sample engagement"
 
 - value: "15.1%"
   claim: "of a year's revenue landed on the wrong plan when invoices were joined to today's account attributes"
   post: type-1-dimension-revenue-wrong-plan
   pillar: data-platforms
+  source: "Lab"
 
-- value: "59.8%"
-  claim: "of on-time events counted by 10-second windows in the worst broker kill, while every record stayed exact"
-  post: exactly-once-records-not-window-counts
-  pillar: data-platforms
-
-- value: "33 retries"
-  claim: "of one Citus shard move, blocked by cleanup records for a node that no longer existed"
-  post: citus-remove-node-orphaned-cleanup-records
-  pillar: database-lifecycle
-
-- value: "6 of 6"
-  claim: "bad releases aborted by canary analysis, once it judged against stable and refused empty windows"
-  post: canary-analysis-aborted-good-promoted-bad
-  pillar: system-architecture
-
-- value: "0"
-  claim: "breaking schema changes the contract checker passed as safe, across 51 labelled changes"
-  post: json-schema-compatibility-data-contracts
-  pillar: data-platforms
-
-- value: "63%"
-  claim: "of a real trend recovered by counting a 95%-accurate classifier's labels"
-  post: count-prevalence-not-classifications
+- value: "23 of 120"
+  claim: "requests for another customer's data leaked when isolation was left to the prompt; run as the customer's database role, none did"
+  post: prompt-is-not-tenant-isolation
   pillar: ai-systems
+  source: "Sample engagement"
+
+- value: "p = 0.39"
+  claim: "A 4.8-point eval drop that 12 changed answers out of 83 could not separate from noise"
+  post: eval-score-drop-twelve-answers
+  pillar: ai-systems
+  source: "Open source"

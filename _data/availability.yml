@@ -9,15 +9,52 @@ detail: "I agree a fixed overlap window in UTC for each engagement so daylight-s
 response: "I reply within two business days. If I can't take it, I'll say so in the first reply."
 updated: 2026-10-03
 
+# Each engagement says who it is for, what is handed over, and where a public
+# sample of that deliverable can be read. `samples` are site paths or full URLs.
 engagements:
   - title: "Architecture review"
-    blurb: "A read of the application, database, platform, and agent layers against failure modes I have actually hit, with written recommendations you can act on without me."
-  - title: "Platform and database work"
-    blurb: "Ingestion, processing, and serving on Kubernetes, plus HA, backup, upgrades, and the operating model so your team owns the stores when I leave."
-  - title: "Agentic systems"
-    blurb: "An agent that has to touch production data: which tools it may call, what validates the output, how you evaluate a change before rollout, and where the result is persisted. LangGraph, Google ADK, LangChain, MCP."
-  - title: "Fractional data lead"
-    blurb: "Design review, hiring input and mentoring for a team that needs senior judgement more than another pair of hands."
+    for: "A CTO or head of data with a decision coming, or an incident that keeps coming back."
+    blurb: "The current state measured, not described: a risk register, findings ranked by what they cost, a target sketch and written recommendations you can act on without me, presented to whoever decides."
+    samples:
+      - label: "The sample engagement's current state and risk register"
+        url: "https://github.com/technobasant/data-platform-architecture/blob/main/docs/02-current-state.md"
+      - label: "Managed or self-run PostgreSQL"
+        url: "/work/postgres-on-rds/"
+  - title: "Platform selection"
+    for: "Teams pitched by two vendors, or choosing between a warehouse, a lakehouse and the database they already run."
+    blurb: "Requirements written as scenarios you can test; options scored on weights fixed in advance; cost including the people who run it; a proof of concept on your data; decision records your team can revisit."
+    samples:
+      - label: "The decision guide"
+        url: "/writing/choosing-where-the-data-lives/"
+      - label: "A warehouse billed for waiting to stop"
+        url: "/writing/warehouse-billed-for-waiting-to-stop/"
+  - title: "Off Postgres without stopping the product"
+    for: "SaaS teams whose reports, growth or vectors have outgrown one Postgres server."
+    blurb: "Every reader of the database inventoried with what happens to it; a stopgap that stops the damage now; the target and its data model; the move in waves, each with a parallel run and a way back; runbooks."
+    samples:
+      - label: "Two Postgres servers moved to Citus"
+        url: "/work/postgres-scale-out-citus/"
+      - label: "The read replica that cancelled the reports"
+        url: "/writing/read-replica-cancelled-the-reports/"
+  - title: "Governance and SOC 2 readiness"
+    for: "Companies whose prospects ask for SOC 2 and for erasure they can prove."
+    blurb: "Classification and handling rules; the access lifecycle; data contracts checked in CI; masking driven by tags; retention; a control matrix with the evidence each control produces; erasure designed with its cost measured."
+    samples:
+      - label: "SOC 2 readiness for a data platform"
+        url: "https://github.com/technobasant/data-platform-architecture/blob/main/docs/12-soc2-readiness.md"
+      - label: "Erasure cost is a modelling decision"
+        url: "/writing/erasure-cost-is-a-modelling-decision/"
+  - title: "AI on governed data"
+    for: "Product teams shipping a first AI feature over customer data."
+    blurb: "A brief with success measures; an evaluation set and a release gate; isolation enforced outside the model and tested; the business's definitions in a semantic layer; the cost of an answer. LangGraph, Google ADK, MCP where they fit."
+    samples:
+      - label: "A usage assistant on governed data"
+        url: "/work/ai-platform-architecture/"
+      - label: "Turning model output into product state"
+        url: "/work/governed-ai-delivery/"
+  - title: "Architecture advisory"
+    for: "Teams that need senior design judgement more than another pair of hands."
+    blurb: "Review of designs and decision records as they are written, a second opinion before the expensive choices, and input on hiring."
 
 not_doing:
   - "Dashboard-only work. If the problem is the pipeline, a nicer chart will not fix it."

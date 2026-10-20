@@ -14,6 +14,15 @@ layout: default
   {%- when "practice" -%}{%- assign _kind_label = "Professional practice" -%}
   {%- else -%}{%- assign _kind_label = "Independent product" -%}
 {%- endcase -%}
+{%- if page.kind_label -%}{%- assign _kind_label = page.kind_label -%}{%- endif -%}
+{%- comment -%}
+  Engagement-shaped cases (consulting, professional practice, the sample
+  engagements) end with the briefing first: a reader who got this far on one of
+  them is more likely facing the decision than hiring for a role. Labs and
+  open-source tools keep the career record first.
+{%- endcomment -%}
+{%- assign _engagement = false -%}
+{%- if _kind == "consulting" or _kind == "practice" or page.kind_label -%}{%- assign _engagement = true -%}{%- endif -%}
 {%- assign _lede = page.hook | default: page.description -%}
 
 <header class="interior-hero interior-hero--case" data-code="SYSTEM / RECORD">
@@ -155,12 +164,22 @@ layout: default
   <section class="strip reveal" aria-labelledby="case-cta">
     <div class="wrap strip-grid">
       <div>
+        {%- if _engagement %}
+        <h2 class="section-label" id="case-cta">Facing the same decision?</h2>
+        <p>Send a short briefing: what breaks today, or what you need to decide.</p>
+        {%- else %}
         <h2 class="section-label" id="case-cta">Continue the conversation</h2>
         <p>See the full career record, or get in touch about a senior data, platform, or AI engineering role.</p>
+        {%- endif %}
       </div>
       <p class="strip-links">
+        {%- if _engagement %}
+        <a class="btn btn--primary" href="{{ '/hire/#hire-form' | relative_url }}">Send a briefing {% include icon.html name="arrow-right" size=14 %}</a>
+        <a class="btn btn--ghost" href="{{ '/resume/' | relative_url }}">Hiring? Read the résumé</a>
+        {%- else %}
         <a class="btn btn--primary" href="{{ '/resume/' | relative_url }}">View résumé {% include icon.html name="arrow-right" size=14 %}</a>
         <a class="btn btn--ghost" href="{{ '/hire/#hire-form' | relative_url }}">Send a briefing</a>
+        {%- endif %}
         <a class="btn btn--ghost" href="{{ '/work/' | relative_url }}">All case studies</a>
       </p>
     </div>

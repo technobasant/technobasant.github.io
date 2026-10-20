@@ -28,7 +28,7 @@ cover:
 metrics: [registry_false_negatives, registry_false_alarms, registry_ingest]
 stack: [Go, "PostgreSQL 18", sqlc, OpenLineage, "JSON Schema", Next.js, "React Flow", Prometheus, Playwright, "Docker Compose"]
 tags: [data-quality, postgres]
-image: /assets/og/og-default-v3.png
+image: /assets/og/og-default-v4.png
 image_alt: "Basant Bhattarai — Reliable data. Accountable AI."
 sitemap:
   changefreq: monthly

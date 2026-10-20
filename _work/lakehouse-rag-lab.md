@@ -27,7 +27,7 @@ cover:
 stack: [Trino, "Apache Iceberg", "Apache Polaris", StarRocks, "Apache Spark", "Delta Lake", dbt, Airflow, Chroma, Ollama, MinIO]
 metrics: [lakehouse_partition_prune, lakehouse_rollback, rag_refusal]
 tags: [iceberg-lakehouse, rag, distributed-databases]
-image: /assets/og/og-default-v3.png
+image: /assets/og/og-default-v4.png
 image_alt: "Basant Bhattarai — Reliable data. Accountable AI."
 ---
 

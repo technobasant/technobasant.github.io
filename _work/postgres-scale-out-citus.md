@@ -16,7 +16,7 @@ problem: "A single PostgreSQL server per client had run out of headroom: one cou
 decision: "Move both to Citus, keeping PostgreSQL and its extensions: distribute by the key the queries filter on, co-locate what joins, make the coordinator highly available, and choose columnar or heap storage per table by its workload."
 stack: [PostgreSQL, Citus, pgvector, HNSW, repmgr, HAProxy, ClickHouse, "Apache Pinot", StarRocks, Trino]
 tags: [distributed-databases, postgres, rag]
-image: /assets/og/og-default-v3.png
+image: /assets/og/og-postgres.png
 image_alt: "Consulting case study: PostgreSQL and pgvector moved to Citus — Basant Bhattarai"
 sitemap:
   changefreq: monthly

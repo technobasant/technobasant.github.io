@@ -25,7 +25,7 @@ cover:
 stack: [Python, FastAPI, PostgreSQL, ClickHouse, RESO, Next.js, Docker]
 metrics: [clickhomes_migrations]
 tags: [postgres, data-quality, ai-agents]
-image: /assets/og/og-default-v3.png
+image: /assets/og/og-default-v4.png
 image_alt: "Basant Bhattarai — Reliable data. Accountable AI."
 live_url: "https://clickhomes.ai"
 ---

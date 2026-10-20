@@ -11,10 +11,11 @@ layout: default
   the hero already names; each hero entry links to its group and says how many
   cases it holds, and every case declares its `pillar`.
 
-  Inside a group the order is practice, consulting, open source, independent
-  product, then lab: the broadest body of work first.
+  Inside a group the order is practice, consulting, open source (the sample
+  architecture engagements first, by `order`), lab, then independent product:
+  the work closest to what a client or employer would hire for first.
 {%- endcomment -%}
-{%- assign _kinds = "practice,consulting,open-source,production,lab" | split: "," -%}
+{%- assign _kinds = "practice,consulting,open-source,lab,production" | split: "," -%}
 
 {% include interior-hero.html variant="index" code="SYSTEM / RECORD" stacked=true %}
 <div class="page page--index">

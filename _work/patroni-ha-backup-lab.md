@@ -27,7 +27,7 @@ cover:
 stack: [PostgreSQL, Patroni, etcd, pgBackRest, Ansible, Rocky Linux, QEMU, Vagrant, TLS]
 metrics: [lab_patroni_promotion, lab_replica_rebuild, lab_pitr_recovery]
 tags: [postgres, distributed-databases, self-hosted]
-image: /assets/og/og-default-v3.png
+image: /assets/og/og-default-v4.png
 image_alt: "Basant Bhattarai — Reliable data. Accountable AI."
 ---
 

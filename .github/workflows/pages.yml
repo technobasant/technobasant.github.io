@@ -152,6 +152,9 @@ jobs:
         uses: actions/upload-pages-artifact@v5
         with:
           path: ./_site
+          # /.well-known/llms.txt is a dot-directory; without this the artifact
+          # drops it and the URL 404s on the live site.
+          include-hidden-files: true
 
   # A pull request builds and gets checked, but never touches the live site.
   # workflow_dispatch is allowed so a broken publish can be rebuilt without

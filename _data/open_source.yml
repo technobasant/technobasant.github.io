@@ -5,7 +5,7 @@
 # write-up's staging measurements. Re-verify before changing the date.
 # `demo` is a live app on Streamlit Community Cloud that runs the repository's code;
 # `package` is where the published library is installed from.
-as_of: '2026-10-18'
+as_of: '2026-10-20'
 repos:
 - name: spark-sql-kinesis
   url: https://github.com/technobasant/spark-sql-kinesis
@@ -194,9 +194,9 @@ repos:
 - name: data-platform-architecture
   url: https://github.com/technobasant/data-platform-architecture
   pillar: data-platforms
-  what: 'An architecture engagement for a fictional SaaS company leaving Postgres: the current state measured
-    on a lab copy of its database, options priced in its EU region, a staged target, data contracts, governance,
-    migration, data model, governance and SOC 2 readiness, 18 decision records and a Databricks proof of
+  what: 'A sample architecture engagement for a fictional SaaS company leaving Postgres: the current state
+    measured on a lab copy of its database, options priced in its EU region, a staged target, data contracts,
+    migration, a data model, governance and SOC 2 readiness, 18 decision records and a Databricks proof of
     concept.'
   finding: 'With reports on the product''s primary, its p95 latency went from 40 to 525 ms; on the read replica,
     3 of 35 long report runs finished. On Databricks, a day''s build and reports took 38 s and were billed for 11

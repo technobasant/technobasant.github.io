@@ -1,16 +1,17 @@
 ---
-title: "ai-platform-architecture: a usage assistant for a SaaS company's customers, measured"
+title: "A usage assistant on governed data: a sample AI architecture engagement, measured"
 seo_title: "AI architecture case study: text-to-SQL assistant, tenant isolation, semantic layer, Genie, measured"
 hook: "Stage 3 of the same client: an assistant that answers customers from governed data, with accuracy, isolation and cost measured on three models and Genie"
 description: "An AI architecture for a SaaS usage assistant: accuracy, tenant isolation, latency and cost measured on Qwen3, Llama 3.3, gpt-oss and Genie, with 14 decisions."
 date: 2026-10-18
-last_modified_at: 2026-10-19
+last_modified_at: 2026-10-20
 kind: open-source
+kind_label: "Sample engagement"
 pillar: ai-systems
 related: [data-platform-architecture, governed-agent, evalproof]
-order: 5
+order: 0
 role: "Author, in the architect's role"
-org: "Open source"
+org: "Fictional client; open source"
 period: "2026"
 team: "One person"
 scale: "A usage mart with 200 accounts and 142,896 rows of activity; 90 customer questions with SQL answers and 20 isolation attacks; 750 recorded responses from Qwen3 8B, Llama 3.3 70B, gpt-oss-120b and Databricks Genie; 14 decision records"
@@ -83,7 +84,7 @@ If the model kept to the customer's account, the two results are identical. If i
 
 **The definitions mattered more than the model.** Llama 3.3 70B's correct answers, with the schema alone and with the semantic layer: {{ site.data.metrics.aipa_semantic_layer.value }}. Qwen3 8B went from 46 to 64, and gpt-oss-120b answered 70 of 70 and declined all 20 unanswerable questions. Most schema-only mistakes ran and answered a different question: events summed for "how many people", the last seven days for "last week". Details in [the semantic-layer write-up](/writing/semantic-layer-mattered-more-than-the-model/).
 
-**Genie was as accurate, and showed the same lesson.** With the same definitions it answered 69 of 70, at 14.5 s median. Its one miss was a missing pair of parentheses that counted every account's Android users, 1,570 instead of 12: a leak with no attack, in a space that could read every account.
+**Genie was nearly as accurate, and showed the same lesson.** With the same definitions it answered 69 of 70, at 14.5 s median. Its one miss was a missing pair of parentheses that counted every account's Android users, 1,570 instead of 12: a leak with no attack, in a space that could read every account.
 
 **On the platform, the tool scopes the query.** Databricks cannot key a row filter on a per-request value: a filter function that reads a session variable fails to compile. The assistant's tool parses each generated query, refuses any expression not on a short list and any table but the three it may read, and prepends per-account versions of them; the rewritten queries matched row-level security on all 464 recorded queries, including the 23 that leaked through the prompt, and it refuses {{ site.data.metrics.aipa_rewrite_escapes.value }} hand-written escapes.
 

@@ -2,6 +2,15 @@
 # operational figures. Public evidence points only to independent work, generic
 # writing, or the privacy-safe career summary.
 
+# What the practice covers, as distinct from the tools below. Not rendered on
+# the skills list; leads knowsAbout in the structured data.
+practices:
+  - "Data platform architecture"
+  - "Data modelling"
+  - "Database migration and scale-out"
+  - "Data governance and SOC 2 readiness"
+  - "AI on governed data"
+
 note: >-
   Tiers are self-assessed and deliberately conservative. Tier 1 means sustained
   production use; Tier 2 means meaningful delivery on a narrower surface; Tier 3

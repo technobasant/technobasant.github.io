@@ -3,7 +3,7 @@ title: "What an AI answer costs, and when a GPU of your own pays for itself"
 seo_title: "LLM cost per answer and self-hosting break-even, from October 2026 list prices"
 description: "One help-centre answer costs $0.0005 to $0.05 depending on the model. A GPU of your own beats Claude Sonnet 5 at about 196 answers an hour, but GPT-6 Luna at 3,918."
 date: 2026-10-18 18:30:00 +0545
-last_modified_at: 2026-10-18
+last_modified_at: 2026-10-20
 type: essay
 pillar: ai-systems
 tags:
@@ -51,6 +51,10 @@ key_takeaways:
 An AI feature's cost is four numbers multiplied: tokens per call, calls per answer, answers per month and price per token. Each varies by an order of magnitude between designs: the same analyst feature, at the same volume, costs $33 a month on one model and $3,300 on another. Teams usually find out which one they built from the invoice.
 
 The [ai-platform-architecture](https://github.com/technobasant/ai-platform-architecture) reference design makes the cost of each feature a number before launch: a cost model that prices each feature on nine current models, with every list price read from the vendor's own page on 18 October 2026 and quoted in [`cost/prices.yml`](https://github.com/technobasant/ai-platform-architecture/blob/v0.1.0/cost/prices.yml). The rest of that architecture is backed by measurements in public labs. The cost model is not. It is arithmetic on list prices and on token counts I assumed, and it says so.
+
+<div class="callout callout--note" markdown="1">
+*Update, 20 October 2026:* the tokens have since been measured. Over the architecture's 90 evaluation questions, the usage assistant averaged 1,094 input and 198 output tokens an answer, reasoning included: [$0.00032 an answer](https://github.com/technobasant/ai-platform-architecture/blob/main/decisions/0014-cost-per-answer.md) on gpt-oss-120b at Databricks' pay-per-token price in AWS EU (Ireland). The break-even table below is still price arithmetic only. An L4 (24 GB) or L40S (48 GB) is far too small to hold a 120-billion-parameter model at all, so for that model the comparison is with hardware that can, such as eight H100s, where self-hosting pays only above about 174,600 answers an hour.
+</div>
 
 **Operating rule.** Choose the cheapest model that passes the feature's evaluation gate, price the feature on it and on the next model up, and consider a GPU of your own only above the break-even request rate, after measuring that one instance can serve it.
 

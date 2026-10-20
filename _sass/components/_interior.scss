@@ -958,6 +958,26 @@
   color: var(--ink-2);
 }
 
+.engagement-card p.engagement-card__for {
+  margin-block-end: var(--sp-3);
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--ink-1);
+}
+
+.engagement-card__samples {
+  margin: var(--sp-4) 0 0;
+  padding: var(--sp-3) 0 0;
+  list-style: none;
+  border-block-start: 1px solid var(--line);
+  font-size: var(--step--1);
+  line-height: 1.45;
+}
+
+.engagement-card__samples li + li {
+  margin-block-start: var(--sp-1);
+}
+
 .decline-list,
 .briefing-list {
   padding: 0;

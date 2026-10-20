@@ -30,10 +30,9 @@ LINE = "#232830"
 
 SITE = "basantbhattarai.com.np"
 NAME = "Basant Bhattarai"
-# Shorter than site.author.role on purpose: it shares a 1040px baseline with
-# NAME, and the full "· Data Platforms, AI Systems & Architecture" string ran
-# into the name at 26px. Same three pillars, fewer characters.
-ROLE = "Senior Data & AI Engineer · Data, AI & Architecture"
+# site.author.role. It shares a 1040px baseline with NAME, so keep it to about
+# 51 characters at 26px; a longer role string ran into the name.
+ROLE = "Data Platform & AI Architect · Senior Data Engineer"
 
 # The brass B, as a path so no font is involved in the mark itself.
 B_PATH = (
@@ -48,6 +47,10 @@ B_PATH = (
 CARDS: dict[str, list[str]] = {
     "og-default.png": ["Data platforms, AI", "& system architecture"],
     "og-default-v3.png": ["Data platforms, AI", "& system architecture"],
+    # v4 is the current fallback. A new filename, because LinkedIn caches a card
+    # by URL and would keep showing v3's role line.
+    "og-default-v4.png": ["Data platform", "& AI architecture"],
+    "og-postgres.png": ["Outgrowing", "one Postgres"],
     "og-spark.png": ["Apache Spark"],
     "og-streaming.png": ["Kafka & streaming"],
     "og-lakehouse.png": ["Iceberg &", "the lakehouse"],

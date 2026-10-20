@@ -26,7 +26,7 @@ cover:
 metrics: [professional_processing_improvement, professional_cost_reduction, professional_uptime, professional_query_latency]
 stack: [Python, SQL, "Apache Spark", "Apache Kafka", "Apache Airflow", dbt, "Apache Iceberg", PostgreSQL, ClickHouse, Trino, Kubernetes, Prometheus, Grafana]
 tags: [data-quality, observability-slo, iceberg-lakehouse]
-image: /assets/og/og-default-v3.png
+image: /assets/og/og-default-v4.png
 image_alt: "Basant Bhattarai — Reliable data. Accountable AI."
 ---
 

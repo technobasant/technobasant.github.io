@@ -332,6 +332,17 @@
   box-shadow: var(--shadow-2);
 }
 
+.portfolio-hero__visual figcaption a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.portfolio-hero__visual figcaption a:hover {
+  color: var(--ink-1);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
 .portfolio-hero__visual figcaption span {
   width: 0.5rem;
   height: 0.5rem;
@@ -1982,6 +1993,12 @@
   font-size: var(--step--2);
   line-height: 1.4;
   color: var(--ink-3);
+}
+
+.findings__source b {
+  display: block;
+  font-weight: 600;
+  color: var(--ink-2);
 }
 
 @media (max-width: 48rem) {

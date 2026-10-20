@@ -1,16 +1,17 @@
 ---
-title: "data-platform-architecture: an architecture engagement for a SaaS company leaving Postgres"
+title: "Leaving Postgres for a managed platform: a sample architecture engagement, measured"
 seo_title: "Data architecture case study: Postgres to Databricks or Snowflake, data model, governance, SOC 2, 18 decisions"
 hook: "A fictional client, its real problems measured on a copy of its database, and a staged architecture with every decision tied to evidence"
 description: "A data architecture engagement for a fictional SaaS company: current state measured, options, data model, governance, SOC 2 readiness and 18 decisions."
 date: 2026-10-18
 last_modified_at: 2026-10-20
 kind: open-source
+kind_label: "Sample engagement"
 pillar: data-platforms
 related: [data-stack-lab, ai-platform-architecture, dataset-registry]
-order: 8
+order: 0
 role: "Author, in the architect's role"
-org: "Open source"
+org: "Fictional client; open source"
 period: "2026"
 team: "One person"
 scale: "A client with 6,000 accounts and 350,000 events a day; a lab copy of its Postgres with 31.5 million events; 13 documents and a risk register, 18 decision records, 3 data contracts, a cost model at three points of the client's growth, and a proof of concept on Databricks"

@@ -27,7 +27,7 @@ cover:
 stack: [MongoDB, ScyllaDB, SolrCloud, MariaDB, Galera, Redis, PostgreSQL, Docker, Prometheus, Grafana]
 metrics: [lab_scenarios, lab_pg_replay_lag, lab_redis_promotion]
 tags: [distributed-databases, postgres, observability-slo]
-image: /assets/og/og-default-v3.png
+image: /assets/og/og-default-v4.png
 image_alt: "Basant Bhattarai — Reliable data. Accountable AI."
 ---
 

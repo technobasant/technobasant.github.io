@@ -77,32 +77,32 @@
 
 - slug: databricks
   name: "Databricks"
-  blurb: "Databricks measured rather than demonstrated: what COPY INTO, Auto Loader and MERGE do with files that change, and how Delta re-runs and restores a day, on a real workspace."
+  blurb: "Databricks measured rather than demonstrated: what COPY INTO, Auto Loader and MERGE do with files that change, how Delta restores a day, what an erasure rewrites, and what a SQL warehouse bills, on a real workspace."
   og: og-lakehouse.png
   featured: true
 
 - slug: orchestration
   name: "Airflow & orchestration"
   blurb: "Scheduling that survives re-runs and backfills: data intervals, idempotent loads, incremental models, and the defaults that change between Airflow versions, measured on real DAG runs."
-  og: og-default-v3.png
+  og: og-default-v4.png
   featured: true
 
 - slug: cost-finops
   name: "Cost & FinOps"
-  blurb: "Where the money actually goes in a data platform, and the levers that move it: storage layout, compaction, instance shape, and retention nobody wanted to own."
-  og: og-default-v3.png
+  blurb: "Where the money actually goes in a data platform, and the levers that move it: per-scan or per-hour billing, a warehouse waiting to stop, the cost of an AI answer, storage layout and retention nobody wanted to own."
+  og: og-default-v4.png
   featured: false
 
 - slug: career
   name: "Career & craft"
   blurb: "Notes on ownership, mentoring, review culture, and the difference between contributing to a system and being on call for it."
-  og: og-default-v3.png
+  og: og-default-v4.png
   featured: false
 
 - slug: self-hosted
   name: "Self-hosted ops"
   blurb: "Free, fully OSS setups you can run yourself: a WireGuard VPN, a RustDesk remote desktop, a Stalwart mailbox for your own domain, and amd64 lab VMs on Apple Silicon."
-  og: og-default-v3.png
+  og: og-default-v4.png
   featured: true
 
 - slug: applied-ml

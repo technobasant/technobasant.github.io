@@ -1,12 +1,13 @@
 # ── Identity ──────────────────────────────────────────────────────────────
 title: "Basant Bhattarai"
-subtitle: "Senior Data & AI Engineer · Data Platforms, AI Systems & Architecture"
-tagline: "I design data platforms and the databases under them, AI systems that write into them, and the architecture that keeps both recoverable."
+subtitle: "Data Platform & AI Architect · Senior Data Engineer"
+tagline: "I design data platforms and the AI on them, then build them."
 email: contact@basantbhattarai.com.np
 description: >-
-  Basant Bhattarai — Senior Data & AI Engineer. Nine years across data
-  platforms and their databases, AI systems in production, and the system
-  architecture that connects them. Working US and EU hours.
+  Basant Bhattarai — Data Platform & AI Architect, Senior Data Engineer.
+  Nine years in software, six on production data platforms: architecture
+  reviews, platform selection, migrations off Postgres, governance and SOC 2
+  readiness, and AI on governed data.
 url: "https://basantbhattarai.com.np"
 baseurl: ""
 repository: "technobasant/technobasant.github.io"
@@ -14,19 +15,23 @@ lang: en
 
 # Site-wide social-card fallback (1200×630 PNG — never AVIF/WebP, LinkedIn and
 # Slack will not render those as og:image).
-og_image: "/assets/og/og-default-v3.png"
+og_image: "/assets/og/og-default-v4.png"
 
 author:
   name: "Basant Bhattarai"
-  role: "Senior Data & AI Engineer · Data Platforms, AI Systems & Architecture"
+  # The practice and the employment title, always together. `job_title` is the
+  # title held, and the only one structured data states as a fact.
+  role: "Data Platform & AI Architect · Senior Data Engineer"
+  job_title: "Senior Data Engineer"
   location: "Kathmandu, Nepal"
   avatar: "/assets/images/hero-portrait-v2-840.jpg"
   email: "contact@basantbhattarai.com.np"
   linkedin: "https://www.linkedin.com/in/technobasant"
   github: "https://github.com/technobasant"
   bio: >-
-    Senior Data & AI Engineer. I build data platforms, operate the databases
-    they depend on, and ship agents that write into both.
+    Data platform and AI architect, and Senior Data Engineer at UXCam. I
+    design data platforms, the governance around them and the AI on them, then
+    build them.
 
 # ── Build ─────────────────────────────────────────────────────────────────
 markdown: kramdown

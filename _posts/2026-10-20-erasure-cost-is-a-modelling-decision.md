@@ -56,7 +56,7 @@ I measured it for the data model of a fictional SaaS client in [data-platform-ar
 
 ## The test
 
-The client's product events at today's scale, 31.85 million rows for 60,000 users, on Databricks SQL 2026.39, built three ways:
+The client's product events at today's scale, 31.85 million rows for 60,000 users (the lab copy's 31.5 million plus the day the cost test appended), on Databricks SQL 2026.39, built three ways:
 
 - **Identity in every event.** The events with each user's e-mail and name copied into every row, as a convenient wide table would have them. Delta with UniForm, which allows no deletion vectors.
 - **The same on plain Delta**, with deletion vectors on.

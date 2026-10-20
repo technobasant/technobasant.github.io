@@ -1,50 +1,49 @@
-# The homepage's "what I'm hired for" rows: one per capability, in the same
-# order and with the same ids as the groups on /work/ and /writing/. Each row
-# carries its own evidence — a case study, a write-up and the code — because a
+# The homepage's "what I'm hired for" rows: one per problem a team brings, each
+# carrying its own evidence — a case study, a write-up and the code — because a
 # capability claim with nothing behind it would be the one unearned thing on
-# the page. `case` and `post` are slugs (checked at build: an unknown slug
-# renders nothing), `repo` is a public repository under github.com/technobasant.
+# the page. `id` is a capability group on /work/ and sets the row's colour.
+# `case` and `post` are slugs (checked at build: an unknown slug renders
+# nothing), `repo` is a public repository under github.com/technobasant.
+
+- id: database-lifecycle
+  title: "Moving analytics off the product's Postgres"
+  blurb: >-
+    Reports that slow the product and replicas that cancel them: measure first,
+    stop the damage now, then scale out or migrate in stages with a way back.
+  case: postgres-scale-out-citus
+  post: read-replica-cancelled-the-reports
+  repo: data-platform-architecture
+  repo_blurb: "A sample engagement: current state measured, 18 decisions"
 
 - id: data-platforms
-  title: "Data platforms that keep working at the next scale"
+  title: "Platforms chosen on evidence and run at scale"
   blurb: >-
-    Ingestion, processing and serving that worked at one scale and stopped at
-    the next: streams that stay exact through failure, lakehouse tables you can
-    roll back, and contracts that wait for the consumers they would break.
+    A platform picked by a proof of concept with criteria fixed in advance, then
+    ingestion, lakehouse and serving that stay correct, recoverable and
+    affordable as volume grows.
   case: data-platform-practice
-  post: exactly-once-records-not-window-counts
+  post: choosing-where-the-data-lives
   repo: spark-sql-kinesis
   repo_blurb: "Kinesis source and sink for Spark 4, on Maven Central"
 
-- id: ai-systems
-  title: "AI systems that have to touch production data"
-  blurb: >-
-    Agents with typed output, provenance and a review path, and the evaluation
-    under them: a gate that can tell a regression from noise, and a defined
-    answer for when the model cannot decide.
-  case: governed-ai-delivery
-  post: eval-score-drop-twelve-answers
-  repo: evalproof
-  repo_blurb: "LLM evaluation as measurement, gated in CI"
-
-- id: database-lifecycle
-  title: "Databases that scale out and survive failure"
-  blurb: >-
-    Sharding and rebalancing, failover, backup and point-in-time recovery, and
-    the upgrades in between, measured on real clusters before anyone depends
-    on them.
-  case: distributed-db-lab
-  post: citus-remove-node-orphaned-cleanup-records
-  repo: db-failover-lab
-  repo_blurb: "Six engines, eight failover scenarios, measured"
-
 - id: system-architecture
-  title: "System architecture with the recovery path designed first"
+  title: "Governance an auditor can check"
   blurb: >-
-    Where state lives, what is idempotent, what a second delivery does, and how
-    a release stops itself when it is bad — decided before the incident and
-    written down as decisions you can revisit.
-  case: clickhomes
-  post: canary-analysis-aborted-good-promoted-bad
-  repo: platform-deployments
-  repo_blurb: "GitOps with a canary that aborts bad releases"
+    Classification, masking, contracts and access review designed into the data
+    model; SOC 2 controls with the evidence each produces; erasure measured,
+    not assumed.
+  case: data-platform-architecture
+  post: erasure-cost-is-a-modelling-decision
+  repo: dataset-registry
+  repo_blurb: "Data contracts that wait for the consumers they break"
+
+- id: ai-systems
+  title: "AI on governed data, measured before launch"
+  blurb: >-
+    Assistants and agents over customer data: isolation enforced outside the
+    model, the business's definitions in a semantic layer, a release gate that
+    tells regression from noise.
+  case: governed-ai-delivery
+  post: prompt-is-not-tenant-isolation
+  repo: ai-platform-architecture
+  repo_blurb: "A sample AI engagement: isolation, accuracy and cost measured"

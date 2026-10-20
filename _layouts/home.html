@@ -4,11 +4,13 @@ layout: default
 {%- assign _hero = page.hero -%}
 {%- comment -%}
   Evidence first. The hero keeps the headline and portrait and ends in a proof
-  strip whose every figure is counted from the site itself and links to where
-  it can be checked. Below it: four capability rows, each with a case study, a
+  strip of the track record: the professional figures from _data/metrics.yml,
+  the consulting cases counted from the site, and the upstream work, each
+  linking to where it can be checked. Labels stay one line at 1280px: a second
+  line pushes the strip across the fold (scripts/e2e-hero.mjs). The years are
+  in the lede. Below it: four capability rows, each with a case study, a
   write-up and the code; then a ledger of measured findings, number first.
 {%- endcomment -%}
-{%- assign _repos = site.data.open_source.repos | default: empty -%}
 
 <section class="portfolio-hero">
   <div class="wrap wrap--shell portfolio-hero__inner">
@@ -38,15 +40,17 @@ layout: default
             alt=_hero.portrait.alt
             fetchpriority="high" -%}
       </div>
-      <figcaption><span aria-hidden="true"></span>{{ site.data.availability.headline }}</figcaption>
+      <figcaption><span aria-hidden="true"></span><a href="{{ '/hire/' | relative_url }}">{{ site.data.availability.headline }}</a></figcaption>
     </figure>
     {%- endif -%}
-    <ul class="portfolio-proof portfolio-proof--strip" aria-label="Evidence on this site">
-      <li><a href="{{ '/work/' | relative_url }}"><strong>{{ site.work.size }}</strong> <span>case studies</span></a></li>
-      {%- if _repos.size > 0 %}
-      <li><a href="{{ '/open-source/' | relative_url }}"><strong>{{ _repos.size }}</strong> <span>public repositories</span></a></li>
+    {%- assign _m = site.data.metrics -%}
+    {%- assign _consulting = site.work | where: "kind", "consulting" -%}
+    <ul class="portfolio-proof portfolio-proof--strip" aria-label="Track record">
+      <li><a href="{{ '/work/data-platform-practice/' | relative_url }}"><strong>{{ _m.professional_event_volume.value }}</strong> <span>events a day</span></a></li>
+      <li><a href="{{ '/work/data-platform-practice/' | relative_url }}"><strong>{{ _m.professional_uptime.value }}</strong> <span>platform uptime</span></a></li>
+      {%- if _consulting.size > 0 %}
+      <li><a href="{{ '/work/' | relative_url }}"><strong>{{ _consulting.size }}</strong> <span>consulting case studies</span></a></li>
       {%- endif %}
-      <li><a href="{{ '/writing/' | relative_url }}"><strong>{{ site.posts.size }}</strong> <span>write-ups</span></a></li>
       <li><a href="{{ '/open-source/#upstream' | relative_url }}"><strong>Upstream</strong> <span>Citus · awslabs</span></a></li>
     </ul>
   </div>
@@ -106,9 +110,10 @@ layout: default
       <a class="section-more" href="{{ page.findings.more_url | relative_url }}">{{ page.findings.more }} {% include icon.html name="arrow-right" size=14 %}</a>
     </div>
     {%- comment -%}
-      Number first, then what it measured, then where the method is. Every value
-      is quoted from the linked write-up (_data/findings.yml); a slug that no
-      longer resolves drops its row rather than linking nowhere.
+      Number first, then what it measured, then where it was measured and the
+      write-up that holds the method. Every value is quoted from the linked
+      write-up (_data/findings.yml); a slug that no longer resolves drops its row
+      rather than linking nowhere.
     {%- endcomment -%}
     <ol class="findings">
       {%- for _f in site.data.findings -%}
@@ -118,7 +123,7 @@ layout: default
         <a href="{{ _fp.url | relative_url }}">
           <strong class="findings__value">{{ _f.value }}</strong>
           <span class="findings__claim">{{ _f.claim }}</span>
-          <span class="findings__source">{{ _fp.title }}</span>
+          <span class="findings__source">{%- if _f.source %}<b>{{ _f.source }}</b> {% endif %}{{ _fp.title }}</span>
         </a>
       </li>
       {%- endif -%}

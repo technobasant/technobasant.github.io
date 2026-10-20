@@ -1,14 +1,14 @@
 ---
 title: Résumé
-last_modified_at: 2026-10-14
-seo_title: "Basant Bhattarai — Senior Data & AI Engineer résumé"
+last_modified_at: 2026-10-20
+seo_title: "Basant Bhattarai — Senior Data Engineer · Data Platform & AI Architect résumé"
 eyebrow: Career
-headline: "Nine years across data platforms, databases, and production agentic systems."
+headline: "Senior Data Engineer · Data Platform & AI Architect — nine years in software, six on production data platforms."
 hero_code: "CAREER / LOG"
-lede: "Roles, measured outcomes, open-source work, and the stack behind each: data platforms, database lifecycle, system architecture, and AI systems in production."
+lede: "Roles, measured outcomes, open-source work, and the stack behind each: platform architecture, databases, governance and SOC 2, and AI systems in production."
 page_class: page-resume
 permalink: /resume/
-description: "Nine years across data platforms, database lifecycle operations, system architecture, and agentic systems in production. Roles, measured outcomes, and the stack behind each."
+description: "Senior Data Engineer and data platform and AI architect: nine years in software, six on production data platforms. Roles, measured outcomes, and the stack behind each."
 redirect_from:
   - /experience/
   - /skills/
@@ -31,7 +31,7 @@ redirect_from:
 
 | Role | Period | Scope |
 |---|---|---|
-| Senior Data Engineer, UXCam | 2024 – present | Owns platform reliability and governance, the database layer beneath it, and the production agent workflows; architecture review and mentoring |
+| Senior Data Engineer, UXCam | 2024 – present | Platform architecture, reliability, governance and SOC 2; the database layer beneath it; the production agent workflows; architecture review and mentoring |
 | Data Engineer, UXCam | 2020 – 2024 | Built the batch and streaming processing, the lakehouse models, and the multi-engine serving layer |
 | Project Leader, SVCET | 2019 – 2020 | Planning and delivery of an NLP dialogue-system project with a small team |
 | Software Developer, SV Technology | 2017 – 2019 | Python backend services, PostgreSQL schema work, reporting, and CI |
@@ -57,6 +57,8 @@ redirect_from:
 
 ## Selected open source
 
+- **Sample architecture engagements**, published in full: [data-platform-architecture](/work/data-platform-architecture/), a SaaS company leaving Postgres — the current state measured, 18 decision records, a Kimball data model, governance and SOC 2 readiness, a cost model and a proof of concept on Databricks; and [ai-platform-architecture](/work/ai-platform-architecture/), its usage assistant, with tenant isolation, accuracy and cost measured on three models and Genie.
+- **[data-stack-lab](/work/data-stack-lab/)** — dbt, Airflow, data quality, Spark and Databricks projects on one fictional business, each scored against the data's ground truth.
 - **[spark-sql-kinesis](https://github.com/technobasant/spark-sql-kinesis)** — maintainer of a Kinesis source and sink for Spark 4.2 on AWS SDK v2, published to Maven Central; an idle shard costs one `GetRecords` call instead of a multi-second floor per batch.
 - **[evalproof](/work/evalproof/)** — LLM evaluation as measurement: judge calibration, and CI gates that fail only on drops that are both large and significant (paired McNemar and bootstrap).
 - **[governed-agent](/work/governed-agent/)** — a LangGraph and MCP agent whose answers become state only after schema, policy, grounding and, where required, a person.
@@ -70,7 +72,7 @@ redirect_from:
 <ol class="principle-list capability-map is-wide">
   <li>
     <h3>Data platforms</h3>
-    <p>Batch and streaming ingestion, Spark/PySpark processing, Airflow orchestration, Iceberg and dbt modeling, Kubernetes capacity, contracts, lineage, and cost. Evidence: <a href="/work/data-platform-practice/">production platform case study</a>; <a href="/work/streaming-platform/">exactly-once streaming, measured</a>.</p>
+    <p>Batch and streaming ingestion, Spark/PySpark processing, Airflow orchestration, Iceberg and dbt modeling, Kubernetes capacity, contracts, lineage, and cost. Databricks: a consulting client's lakehouse, a proof of concept on Unity Catalog under OpenTofu, and AI/BI Genie evaluated against three models. Evidence: <a href="/work/data-platform-practice/">production platform case study</a>; <a href="/work/streaming-platform/">exactly-once streaming, measured</a>.</p>
   </li>
   <li>
     <h3>Database lifecycle</h3>
@@ -81,8 +83,8 @@ redirect_from:
     <p>Production agents on LangGraph, LangChain, Google ADK and MCP tool servers: bounded tools, retrieval, evaluation before rollout, typed output, and a fallback path that fails honestly. Built against the platform already running. Evidence: <a href="/work/governed-ai-delivery/">governed AI case study</a>; <a href="/work/governed-agent/">governed-agent</a> and <a href="/work/evalproof/">evalproof</a>, measured in public.</p>
   </li>
   <li>
-    <h3>System architecture</h3>
-    <p>Application boundaries, schema design, dual OLTP/OLAP stores, typed contracts, and recovery paths a product can actually replay. FastAPI, PostgreSQL, ClickHouse, and the service layers between them. Evidence: <a href="/work/clickhomes/">independent product case study</a>; <a href="/work/platform-deployments/">GitOps canary platform</a>.</p>
+    <h3>Data &amp; system architecture</h3>
+    <p>Conceptual to physical data modelling; Kimball stars with Type 2 history; Iceberg and Delta, ClickHouse and Citus layouts; open data contracts checked in CI; C4 diagrams and decision records; SOC 2 controls and GDPR erasure designed into the model; cost models over 36 months. Evidence: <a href="/work/data-platform-architecture/">a sample architecture engagement</a>; <a href="/writing/choosing-where-the-data-lives/">the decision guide</a>.</p>
   </li>
 </ol>
 

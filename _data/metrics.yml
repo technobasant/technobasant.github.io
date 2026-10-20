@@ -601,7 +601,7 @@ dsl_default_daily_loaded:
 
 # ── data-platform-architecture (2026) ───────────────────────────────────────
 dpa_decisions_backed:
-  value: "11 of 15"
+  value: "14 of 18"
   label: "architecture decisions for the client accepted, each citing its evidence, marked direct or indirect; the other four wait on the proof of concept or their stage"
   method: "each decision record cites figures from evidence/evidence.yml, generated into the record by scripts/build.py; figures from the repository's own results are re-derived from the results files in CI, a missing template section or a broken source link fails the build, and evidence that does not test its decision directly is labelled indirect"
   scope: "independent"

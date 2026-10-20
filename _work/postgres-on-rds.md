@@ -16,7 +16,7 @@ problem: "One client had to plan PostgreSQL 16's capacity and decide whether to 
 decision: "Default to managed PostgreSQL for ordinary applications, since it costs about the same as running it yourself and brings HA, configuration and monitoring; run it yourself only for extensions the service lacks or superuser access; and test failover rather than assume it."
 stack: [PostgreSQL, "Amazon RDS", "Amazon Aurora", PgBouncer, AWS]
 tags: [postgres, observability-slo]
-image: /assets/og/og-default-v3.png
+image: /assets/og/og-postgres.png
 image_alt: "Consulting case study: PostgreSQL capacity planning and an RDS fleet — Basant Bhattarai"
 sitemap:
   changefreq: monthly

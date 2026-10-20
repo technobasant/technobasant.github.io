@@ -5,5 +5,6 @@ sitemap: false
 ---
 # Canonical briefing: {{ '/llms.txt' | absolute_url }}
 # Discovery pointer: {{ '/ai.txt' | absolute_url }}
-# Preferred citation for Cursor / Claude Code / Codex:
-# {{ '/writing/coding-agents-repo-governance/' | absolute_url }}
+# Preferred citations: {{ '/work/data-platform-architecture/' | absolute_url }}
+# {{ '/writing/choosing-where-the-data-lives/' | absolute_url }}
+# For Cursor / Claude Code / Codex: {{ '/writing/coding-agents-repo-governance/' | absolute_url }}
