@@ -31,4 +31,4 @@ redirect_from:
   - /projects/
 ---
 
-Start here: [a sample architecture engagement](/work/data-platform-architecture/) for a SaaS company leaving Postgres and [its AI stage](/work/ai-platform-architecture/), both published in full; four consulting engagements, with clients unnamed; and the production platform work. Open source and measured labs follow in each group.
+Start here: [a sample architecture engagement](/work/data-platform-architecture/) for a SaaS company leaving Postgres and [its AI stage](/work/ai-platform-architecture/), both published in full; four consulting engagements; and the production platform work. Open source and measured labs follow in each group.

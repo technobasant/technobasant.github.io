@@ -9,7 +9,7 @@ kind: consulting
 pillar: database-lifecycle
 order: 1
 role: "Consultant — database architecture and migration"
-org: "Two consulting clients (confidential)"
+org: "Two consulting clients"
 team: "Remote, with each client's engineering team"
 scale: "Single-server PostgreSQL databases at the limit of their hardware, one relational and one of vector embeddings"
 problem: "A single PostgreSQL server per client had run out of headroom: one could not keep up with its tables and queries, the other with inserting, reading and indexing vector embeddings."
@@ -33,7 +33,7 @@ Two clients came with the same problem in different clothes.
 
 ## My role
 
-On both engagements I designed the move and carried it out with the client's team: the distribution model, the cluster and the migration. On the first I also made the coordinator highly available and evaluated analytical engines for the reporting that was outgrowing the database. The clients, their data and their code stay private; this page describes the problems and the decisions.
+On both engagements I designed the move and carried it out with the client's team: the distribution model, the cluster and the migration. On the first I also made the coordinator highly available and evaluated analytical engines for the reporting that was outgrowing the database.
 
 ## Why Citus for both
 
@@ -53,7 +53,7 @@ Both workloads were PostgreSQL, used its extensions and its tools, and had a key
 
 ## Measured behind the decisions
 
-The client systems' figures stay with the clients. The behaviours the decisions rely on are measured in labs anyone can re-run:
+The behaviours the decisions rely on are measured in labs anyone can re-run:
 
 - In [distributed-db-lab](/work/distributed-db-lab/), a co-located join ran {{ site.data.metrics.ddb_colocation_join.value }} faster than one that had to repartition, a worker joined and 7 shard groups moved under load with {{ site.data.metrics.ddb_rebalance_errors.value }}, and the spread between the largest and smallest worker narrowed, {{ site.data.metrics.ddb_skew_spread.value }}.
 - In [retrieval-bench](/work/retrieval-bench/), pgvector matched exact search as closely as Qdrant and OpenSearch, and the trap that matters for any vector store showed up clearly: a post-filtered HNSW search at 10% selectivity returned {{ site.data.metrics.retrieval_filter_rows.value }} rows until pgvector's iterative scan restored recall to {{ site.data.metrics.retrieval_iterative_scan.value }}.

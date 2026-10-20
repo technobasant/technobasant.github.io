@@ -56,7 +56,7 @@ key_takeaways:
 
 Most data-store decisions are made by trend: the team that read about a lakehouse builds one, and the team that runs Postgres runs everything on it. Both work until a workload meets the store that does not suit it, and by then the data has a shape that is expensive to move.
 
-This guide is how I choose, from production projects and from labs where I measured the behaviour that decides the choice. When a section says "on one of our previous projects", it describes real work for a client or employer that stays unnamed; every figure comes from a lab anyone can re-run, linked where it appears.
+This guide is how I choose, from production projects and from labs where I measured the behaviour that decides the choice. When a section says "on one of our previous projects", it describes real production work; every figure comes from a lab anyone can re-run, linked where it appears.
 
 **Operating rule.** Start with one managed Postgres. Choose a store by how the data is read and written (point reads and writes in milliseconds, scans over history, time series, similarity search) and move a workload only when it fails a test you can measure: storage, memory, CPU, latency, freshness, or cost. Each new store brings its own access control, backups and audit trail, so count those before you count features.
 

@@ -95,7 +95,7 @@ The rest of the per-shard read, including the shard commit on task completion, i
 
 `1.3.0_spark-4.2.0` is on Maven Central for Spark 4.2, Scala 2.13 and Java 17, with no `com.amazonaws` artifact left in the dependency tree. Production moved to it in place against existing checkpoints. The claim that nothing was lost rests on the unchanged offset format and resumed sequence numbers, not on a separate record-level reconciliation.
 
-The choice of read model was validated against internal production traffic; those figures stay internal. The public evidence is on staging, a sixteen-shard test stream: the awslabs connector at its defaults took 174 s per micro-batch, almost all of it the idle floor paid in serial waves, and 47 s after giving it one task slot per shard and the lowest legal floor. Its remaining cost against the synchronous model is structural, not a tuning gap.
+The choice of read model was validated against production traffic. The evidence here is from staging, a sixteen-shard test stream: the awslabs connector at its defaults took 174 s per micro-batch, almost all of it the idle floor paid in serial waves, and 47 s after giving it one task slot per shard and the lowest legal floor. Its remaining cost against the synchronous model is structural, not a tuning gap.
 
 The port also surfaced three defects that no test had reached. A credentials builder stored session credentials and never read them. Shard listing sent `streamName` together with `nextToken`, which the API rejects on paginated calls. And the first test of the new decoder showed the protobuf version was too old for the KPL's generated code — a `NoClassDefFoundError` that only appears at runtime, when a record is decoded.
 

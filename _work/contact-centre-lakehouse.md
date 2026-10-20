@@ -9,7 +9,7 @@ kind: consulting
 pillar: data-platforms
 order: 1
 role: "Consultant — data platform architecture and delivery"
-org: "Consulting client (confidential)"
+org: "Consulting client"
 team: "Remote, with the client's engineering lead"
 scale: "Contact-centre interaction data, reported in the fixed intervals contact centres run on"
 problem: "The client needed analytics on its contact-centre data and wanted the whole platform delivered working and configured, not as a design to implement later."
@@ -29,7 +29,7 @@ Contact centres are managed in intervals: fixed windows of the day in which the 
 
 ## My role
 
-I designed the platform and delivered it configured: storage, the query engine, orchestration, the table catalog and the API that served results, with the security, access control, high availability and disaster recovery around them. The client, its data and its code stay private; this page describes the problem and the decisions.
+I designed the platform and delivered it configured: storage, the query engine, orchestration, the table catalog and the API that served results, with the security, access control, high availability and disaster recovery around them.
 
 ## Architecture
 

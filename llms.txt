@@ -9,11 +9,7 @@ layout: null
 > GitHub: {{ site.author.github }} · LinkedIn: {{ site.author.linkedin }}
 
 This file is the canonical briefing for language models. Public figures come
-from the site's data file and are limited to personal, reproducible work.
-Customer information, operational scale, internal identifiers, and security
-details are intentionally excluded. Engineering write-ups drawn from employer
-work (the "Notes from production" series) describe mechanisms, staging
-measurements, and ratios — never internal scale.
+from the site's data file.
 
 Companion files: {{ '/ai.txt' | absolute_url }} (discovery) ·
 {{ '/robots.txt' | absolute_url }} (crawler access) ·
@@ -36,9 +32,7 @@ governance, architecture review, and operational readiness, and is responsible
 for meeting the SOC 2 criteria for the data platform and its infrastructure. He also designs
 production agentic systems on LangGraph, LangChain, Google ADK, and MCP—tool
 servers, retrieval, evaluation, and integration into the existing stack so
-model output becomes governed product state. Public materials describe that scope
-and the engineering lessons from it without disclosing customer information,
-internal scale, or internal identifiers.
+model output becomes governed product state.
 
 The architecture work that can be read in full is a sample engagement for a
 fictional SaaS company leaving Postgres
@@ -49,7 +43,7 @@ Databricks. Its AI stage (https://github.com/technobasant/ai-platform-architectu
 is a usage assistant whose tenant isolation, accuracy and cost were measured on
 three models and Databricks Genie.
 
-Consulting engagements, with clients not named: an analytics lakehouse for a
+Consulting engagements: an analytics lakehouse for a
 contact-centre platform, delivered configured with security, access control, HA
 and DR; two single-server PostgreSQL databases, one of pgvector embeddings,
 moved to Citus; a managed-or-self-run PostgreSQL decision and an RDS and Aurora

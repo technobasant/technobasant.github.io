@@ -54,7 +54,7 @@ The quieter failure is worse. The same meaning gets labelled several times, and 
 
 **Operating rule.** Normalize to a key, embed each distinct key once, cluster the keys, and label the clusters. Then assign a new string only when its best label beats the runner-up by a margin. Strings that fail the margin go to a review queue that is itself clustered. A model never sees a row.
 
-I rebuilt this design as a lab so every number below is reproducible. The design is one I worked on for a client; the client's data and code stay private, and the corpus here is synthetic.
+I rebuilt this design as a lab so every number below is reproducible. The design is one I worked on for a client; the corpus here is synthetic.
 
 ## The rig
 

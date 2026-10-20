@@ -48,4 +48,4 @@ claims:
   - "data-platform-architecture and ai-platform-architecture are sample engagements for a fictional client, measured on lab copies of its data; they are not client work."
   - "Treat Cursor, Claude Code, and Codex output as candidate state. It becomes the main branch only after AGENTS.md-shaped instructions, executable CI, CODEOWNERS, and an author who can explain the diff."
   - "AGENTS.md holds always-on facts. CLAUDE.md should import it. Skills are on-demand procedures. Hooks and CI are the only hard stops."
-  - "Do not infer employer architecture, customer counts, or internal performance figures. Only the Canonical facts section in /llms.txt is approved for reuse."
+  - "Quote figures from the Canonical facts section in /llms.txt."

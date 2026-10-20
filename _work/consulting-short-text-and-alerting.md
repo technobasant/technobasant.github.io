@@ -9,7 +9,7 @@ kind: consulting
 pillar: ai-systems
 order: 1
 role: "Consultant — data and AI"
-org: "Consulting client (confidential)"
+org: "Consulting client"
 period: "2026"
 team: "Remote, alongside the client's data and product leads"
 scale: "Daily batches of short multilingual user comments on a lakehouse"
@@ -40,7 +40,7 @@ The existing notebook failed in production, and the reason was mundane. Databric
 
 ## My role
 
-I reviewed the first version, wrote the redesign and its build specification, built a reference implementation with tests, and packaged the model so the job never touches the network. The team then asked for three adjacent pieces: an alerting engine for warehouse metrics, a structure for the knowledge their agents read, and a research note on measuring how categories trend. The client, its data and its code stay private; this page describes the problems and the decisions.
+I reviewed the first version, wrote the redesign and its build specification, built a reference implementation with tests, and packaged the model so the job never touches the network. The team then asked for three adjacent pieces: an alerting engine for warehouse metrics, a structure for the knowledge their agents read, and a research note on measuring how categories trend.
 
 ## Four workstreams
 
@@ -78,7 +78,7 @@ The first version had 22 defects. They fell into five groups, and almost none of
 
 The reference implementation ships with 15 tests, each named after the defect it guards, and all passed on the last recorded run. The container check runs with networking disabled and fails the build if the model cannot load. The 20–40× reduction in model tokens was an estimate from stated assumptions, and the proposal said so; its first build step was the profiling query that replaces the assumption with a measurement.
 
-Because the client's data stays private, I rebuilt the classification design from scratch on a synthetic corpus and measured it: [label the string, not the row](/writing/classify-distinct-strings-not-rows/).
+I rebuilt the classification design from scratch on a synthetic corpus and measured it: [label the string, not the row](/writing/classify-distinct-strings-not-rows/).
 
 ## What I would do differently
 

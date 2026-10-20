@@ -9,7 +9,7 @@ kind: consulting
 pillar: database-lifecycle
 order: 2
 role: "Consultant — PostgreSQL capacity, operations and platform choice"
-org: "Two consulting clients (confidential)"
+org: "Two consulting clients"
 team: "Remote, with each client's engineering team"
 scale: "Application databases for web products and services, one PostgreSQL 16 system and a fleet of RDS and Aurora instances"
 problem: "One client had to plan PostgreSQL 16's capacity and decide whether to run it as a managed service or on its own servers; another ran a fleet of RDS and Aurora databases that needed tuning and proof that failover worked."
@@ -33,7 +33,7 @@ Two engagements asked the question most PostgreSQL decisions start with, from op
 
 ## My role
 
-I planned capacity, found the root cause and set out the managed-or-self-run decision on the first engagement; on the second I ran the optimisation programme, the PgBouncer benchmarks and the failover tests with the client's team. The clients, their data and their code stay private; this page describes the problems and the decisions.
+I planned capacity, found the root cause and set out the managed-or-self-run decision on the first engagement; on the second I ran the optimisation programme, the PgBouncer benchmarks and the failover tests with the client's team.
 
 ## The rule both came down to
 
@@ -52,7 +52,7 @@ So the rule: **managed by default; self-run only when an extension the service d
 
 ## Measured behind the decisions
 
-The client systems' figures stay with the clients. What self-running high availability involves is measured in labs:
+What self-running high availability involves is measured in labs:
 
 - In [postgres-ha-lab](/work/patroni-ha-backup-lab/), a Patroni cluster with etcd and pgBackRest over mutual TLS promoted a new leader {{ site.data.metrics.lab_patroni_promotion.value }} after the old one was killed, rebuilt a replica from backup in {{ site.data.metrics.lab_replica_rebuild.value }}, and recovered {{ site.data.metrics.lab_pitr_recovery.value }} rows by point-in-time restore: the machinery a managed service already includes.
 - In [the multi-engine HA lab](/work/multi-engine-ha-lab/), {{ site.data.metrics.lab_scenarios.value }} failover scenarios passed across six engines, because each one was rehearsed, which is the point of failover tests on a managed fleet too.

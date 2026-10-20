@@ -50,7 +50,7 @@
   title: "Notes from production"
   register: analysis
   register_label: "Observed in production"
-  blurb: "Failures and decisions from running a streaming analytics platform: a Spark 4 upgrade that wrote nothing, and a Hive Metastore 4 upgrade that validation called a success. Ratios and mechanisms, never internal scale."
+  blurb: "Failures and decisions from running a streaming analytics platform: a Spark 4 upgrade that wrote nothing, and a Hive Metastore 4 upgrade that validation called a success."
   status: in-progress
 
 - slug: reference-systems
