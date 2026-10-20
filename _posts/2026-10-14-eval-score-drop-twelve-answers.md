@@ -40,7 +40,7 @@ faq:
   - q: "How does the exact McNemar test work for LLM evaluations?"
     a: "Ignore every case that passed or failed in both runs. Count the discordant cases, those that got worse and those that got better. If the change made no difference, each discordant case is equally likely to fall either way, so the p-value is a two-sided binomial test with probability one half. On 83 cases no drop smaller than six net cases, 7.2 points, can reach p below 0.05, whatever the split."
   - q: "How many eval cases do you need to detect a five-point regression?"
-    a: "It depends on how many cases change verdict, not only on the size of the drop. Taking this run's rates as the truth (8 of 83 worse, 4 better), a seeded simulation of the gate caught the regression 13% of the time at 83 cases and needed about 520 cases for an 80% chance."
+    a: "It depends on how many cases change verdict, not only on the size of the drop. Taking this run's rates as the truth (8 of 83 worse, 4 better), a Monte Carlo simulation with a fixed seed of the gate caught the regression 13% of the time at 83 cases and needed about 520 cases for an 80% chance."
   - q: "Is pairwise LLM judging more reliable than pointwise scoring?"
     a: "Not in this measurement. With the two answers shown in both orders, 35 of 83 verdicts (42.2%) flipped with the order. Of the consistent verdicts the 8B judge preferred the lower-scoring prompt 42 to 6, mostly where both answers were correct and the preferred one was about five times longer. Pairwise preference is a useful diagnostic and a poor gate."
 key_takeaways:
@@ -57,7 +57,7 @@ Most release gates I have seen for LLM features compare those two numbers agains
 
 **Operating rule.** An eval gate compares two runs over the same cases, so test the paired difference, not the gap between two pass rates. Fail only when a drop is both larger than the tolerance and statistically distinguishable from noise. When it is large but not distinguishable, say so and say how many cases it would take. Gate latency and cost separately, because they are often the regression the data can actually see.
 
-The tool is [evalproof](https://github.com/technobasant/evalproof), a small open-source measurement layer for LLM evaluation that I wrote to work through this. Everything below comes from runs committed to that repository, made with local models through Ollama: `qwen3:1.7b` answers, `qwen3:8b` judges, on 83 questions about a fictional product, 9 of which the facts do not answer. A script in the repo recomputes every table from the committed run files, and [MEASUREMENTS.md](https://github.com/technobasant/evalproof/blob/main/MEASUREMENTS.md) holds them all.
+The tool is [evalproof](https://github.com/technobasant/evalproof), a small open-source measurement layer for LLM evaluation that I wrote to work through this. Everything below comes from runs committed to that repository, made with local models through Ollama: `qwen3:1.7b` answers, `qwen3:8b` judges, on 83 questions about a product, 9 of which the facts do not answer. A script in the repo recomputes every table from the committed run files, and [MEASUREMENTS.md](https://github.com/technobasant/evalproof/blob/main/MEASUREMENTS.md) holds them all.
 
 <div class="callout callout--tip" markdown="1">
 **Try it.** [evalproof.streamlit.app](https://evalproof.streamlit.app) runs the same comparison and gate code in the browser. Start from this run's eight-worse, four-better split, change the counts and watch the verdict, or open the recorded run and read the twelve changed answers side by side. After a quiet spell it takes about half a minute to wake.
@@ -128,7 +128,7 @@ Every model call is cached by content, and every run records the dataset hash, s
 Reproducibility also caught a bug of mine. CI on x86_64 Linux failed a known-value test that passed on arm64 macOS: the Wilson interval's lower bound at zero passes came out as 2.8e-17 instead of 0.0. The bound is computed by subtracting two quantities that are exactly equal at that point, and the rounding differed by platform. Version 0.1.1 pins the boundaries at exactly 0 and 1. It is a small bug, but a statistics library that prints 2.8e-17 for "no passes" on one machine invites a question nobody should have to answer. Known-value tests on the platform CI actually runs on are cheap.
 
 <div class="callout callout--note" markdown="1">
-**Boundary.** One Apple M5 with 24 GB of RAM, two small local models, one fictional domain, 83 cases. The answer key is a stand-in for human review, and the post shows where it is wrong. Determinism was checked on 20 cases on one backend, and the judge ran with thinking disabled; a reasoning judge was not measured. The McNemar thresholds in the split table are exact arithmetic on the same test, not further measurements. The detection rates come from a seeded simulation that assumes this run's rates are the true ones. The numbers describe this setup. What transfers is the method: pair the cases, test the discordant ones, and audit the gold as hard as the judge.
+**Boundary.** One Apple M5 with 24 GB of RAM, two small local models, one product domain, 83 cases. The answer key is a stand-in for human review, and the post shows where it is wrong. Determinism was checked on 20 cases on one backend, and the judge ran with thinking disabled; a reasoning judge was not measured. The McNemar thresholds in the split table are exact arithmetic on the same test, not further measurements. The detection rates come from a Monte Carlo simulation with a fixed seed that assumes this run's rates are the true ones. The numbers describe this setup. What transfers is the method: pair the cases, test the discordant ones, and audit the gold as hard as the judge.
 </div>
 
 ## What goes in an eval release gate
@@ -155,7 +155,7 @@ Ignore every case that passed or failed in both runs. Count the discordant cases
 
 ### How many eval cases do you need to detect a five-point regression?
 
-It depends on how many cases change verdict, not only on the size of the drop. Taking this run's rates as the truth (8 of 83 worse, 4 better), a seeded simulation of the gate caught the regression 13% of the time at 83 cases and needed about 520 cases for an 80% chance.
+It depends on how many cases change verdict, not only on the size of the drop. Taking this run's rates as the truth (8 of 83 worse, 4 better), a Monte Carlo simulation with a fixed seed of the gate caught the regression 13% of the time at 83 cases and needed about 520 cases for an 80% chance.
 
 ### Is pairwise LLM judging more reliable than pointwise scoring?
 

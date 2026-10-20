@@ -59,7 +59,7 @@ Put on one axis, the comparison comes down to a single number: how many terabyte
 
 This comes from the cost model in [data-platform-architecture v0.1.0](https://github.com/technobasant/data-platform-architecture/tree/v0.1.0), a reference architecture for a SaaS data platform whose other decisions are each backed by measurements in public labs. The cost model is not one of those measurements. It is arithmetic on on-demand list prices, retrieved from each vendor's own pricing page on 18 October 2026, for AWS us-east-1 (BigQuery: US multi-region). Every price, its source and the quoted line are in [`cost/prices.yml`](https://github.com/technobasant/data-platform-architecture/blob/v0.1.0/cost/prices.yml).
 
-*Updated 19 October 2026:* the repository has since become an engagement for one client, whose data must stay in one EU region and whose requirements need Snowflake Enterprise. Re-priced for AWS EU (Ireland) at those editions, a medium engine-hour costs $15.60 to $21.84 and the line against Athena moves to 3.1–4.4 TB; the arithmetic below, on the first version's US prices, is unchanged as arithmetic.
+*Updated 19 October 2026:* the repository has since become a reference architecture for one company, whose data must stay in one EU region and whose requirements need Snowflake Enterprise. Re-priced for AWS EU (Ireland) at those editions, a medium engine-hour costs $15.60 to $21.84 and the line against Athena moves to 3.1–4.4 TB; the arithmetic below, on the first version's US prices, is unchanged as arithmetic.
 
 ## The break-even
 

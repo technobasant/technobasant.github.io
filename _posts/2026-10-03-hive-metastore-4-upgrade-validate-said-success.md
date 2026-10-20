@@ -92,7 +92,7 @@ Two consequences follow. First, there is no configuration in which the old and n
 
 ## What the clone found
 
-The first rehearsal was synthetic. I created a 3.1.0 schema with the production image itself, seeded a table shaped like the real ones, and migrated it with the new image. Six scripts, `Completed` each, data intact, server serving. That rehearsal proved the image and the scripts. It proved nothing about the database.
+The first rehearsal used generated data. I created a 3.1.0 schema with the production image itself, filled a table shaped like the real ones, and migrated it with the new image. Six scripts, `Completed` each, data intact, server serving. That rehearsal proved the image and the scripts. It proved nothing about the database.
 
 The second rehearsal ran on a snapshot of the live staging metastore, restored into a new instance. The source was checked before and after and never touched. Before migrating anything I compared it with a freshly initialised schema at the same version:
 

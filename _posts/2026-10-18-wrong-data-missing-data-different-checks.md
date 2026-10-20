@@ -55,7 +55,7 @@ I delivered a month of daily event files with one realistic defect every three d
 
 **Operating rule.** Test rows for wrong values, and test the day for missing ones: control totals against the producer's manifest, volume against recent accepted days, and the share of each group that can go silent on its own. Deduplicate before testing uniqueness, and decide per check whether a failure blocks the day or quarantines rows.
 
-The code is the data-quality project in [data-stack-lab](https://github.com/technobasant/data-stack-lab/tree/main/quality), on the same synthetic SaaS data as the [dbt](/writing/type-1-dimension-revenue-wrong-plan/) and [Airflow](/writing/airflow-3-daily-no-data-interval/) projects. Every figure is in its [MEASUREMENTS.md](https://github.com/technobasant/data-stack-lab/blob/main/MEASUREMENTS.md#data-quality-nine-defects-two-policies), and CI re-runs the month and fails if one number moves.
+The code is the data-quality project in [data-stack-lab](https://github.com/technobasant/data-stack-lab/tree/main/quality), on the same generated SaaS data as the [dbt](/writing/type-1-dimension-revenue-wrong-plan/) and [Airflow](/writing/airflow-3-daily-no-data-interval/) projects. Every figure is in its [MEASUREMENTS.md](https://github.com/technobasant/data-stack-lab/blob/main/MEASUREMENTS.md#data-quality-nine-defects-two-policies), and CI re-runs the month and fails if one number moves.
 
 ## Nine defects, three layers
 
@@ -110,7 +110,7 @@ Quarantine kept 6,680 more good rows flowing and let 87 bad ones through. Those 
 Neither policy handled the new event type well. It was a legitimate product change. Blocking held a good day; quarantine set aside the 92 good rows of the new type. A rule check cannot tell a defect from a change. The fix is a contract process, so the new value is announced and added before it ships, not a looser check.
 
 <div class="callout callout--note" markdown="1">
-**Boundary.** Synthetic events with no weekly or seasonal pattern, so the volume and share bands see a flatter baseline than real traffic would, and the zero false alarms on clean days is optimistic. One defect per day, applied whole. A held day is never repaired and re-released in the harness; in real operation a person would do that. DuckDB and dbt Core on one machine.
+**Boundary.** Generated events with no weekly or seasonal pattern, so the volume and share bands see a flatter baseline than real traffic would, and the zero false alarms on clean days is optimistic. One defect per day, applied whole. A held day is never repaired and re-released in the harness; in real operation a person would do that. DuckDB and dbt Core on one machine.
 </div>
 
 ## Checks for a daily delivery

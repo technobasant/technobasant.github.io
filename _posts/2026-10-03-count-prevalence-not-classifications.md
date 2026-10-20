@@ -54,7 +54,7 @@ It is not the trend. It is the trend multiplied by a number smaller than one, pl
 
 **Operating rule.** How fast a category is growing is a quantification problem, not a classification problem. Never report the count of predicted labels as prevalence. Correct it with the classifier's error rates, or with a small random sample of human labels from the same period. Then treat every change of model, prompt or taxonomy as a break in the measurement, not as news.
 
-This came out of a research note I wrote for a team that wanted category trends from model-labelled fraud and scam reports. Every number below comes from a seeded simulation I wrote for this post, which anyone can rerun: it is public as [prevalence-shift](https://github.com/technobasant/prevalence-shift), and its CI fails if the published figures stop reproducing.
+This came out of a research note I wrote for a team that wanted category trends from model-labelled fraud and scam reports. Every number below comes from a Monte Carlo simulation with a fixed seed I wrote for this post, which anyone can rerun: it is public as [prevalence-shift](https://github.com/technobasant/prevalence-shift), and its CI fails if the published figures stop reproducing.
 
 <div class="callout callout--tip" markdown="1">
 **Try it.** [prevalence-shift.streamlit.app](https://prevalence-shift.streamlit.app) reruns this simulation in the browser. Move the classifier and the trend, try a weaker model or a rarer category, or [open the model upgrade](https://prevalence-shift.streamlit.app/?view=upgrade). At the published settings it reproduces every figure below and says so. After a quiet spell it takes about half a minute to wake.
@@ -78,7 +78,7 @@ The fix has existed for nearly two decades. George Forman's [adjusted classify-a
 
 ## The rig
 
-Everything is synthetic and seeded. Each of 12 periods draws 5,000 reports. The true share of one category rises linearly from 10% to 25%. The classifier's scores are Gaussian, separated so that it is 95.0% accurate at the training prior of 10%, with a true-positive rate of 0.645 and a false-positive rate of 0.0166. Its posteriors are the exact Bayes posteriors at that prior, so it is perfectly calibrated where it was trained — the most favourable case for anything that uses probabilities.
+Everything is generated, with a fixed seed. Each of 12 periods draws 5,000 reports. The true share of one category rises linearly from 10% to 25%. The classifier's scores are Gaussian, separated so that it is 95.0% accurate at the training prior of 10%, with a true-positive rate of 0.645 and a false-positive rate of 0.0166. Its posteriors are the exact Bayes posteriors at that prior, so it is perfectly calibrated where it was trained — the most favourable case for anything that uses probabilities.
 
 Six estimators run on every period:
 

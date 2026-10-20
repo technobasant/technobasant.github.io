@@ -16,7 +16,7 @@ engagements:
     for: "A CTO or head of data with a decision coming, or an incident that keeps coming back."
     blurb: "The current state measured, not described: a risk register, findings ranked by what they cost, a target sketch and written recommendations you can act on without me, presented to whoever decides."
     samples:
-      - label: "The sample engagement's current state and risk register"
+      - label: "The reference architecture's current state and risk register"
         url: "https://github.com/technobasant/data-platform-architecture/blob/main/docs/02-current-state.md"
       - label: "Managed or self-run PostgreSQL"
         url: "/work/postgres-on-rds/"

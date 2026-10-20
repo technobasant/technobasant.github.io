@@ -345,7 +345,7 @@ evalproof_pairwise_flips:
 agent_answer_match:
   value: "48/54"
   label: "answers matched an answer key computed by SQL"
-  method: "one live run of a 54-question golden set against qwen3:8b under Ollama, temperature 0, thinking off, over a seeded synthetic warehouse; 95% CI 78–95%"
+  method: "one live run of a 54-question golden set against qwen3:8b under Ollama, temperature 0, thinking off, over a reproducible generated warehouse; 95% CI 78–95%"
   scope: "independent"
   source: "governed-agent (2026)"
   window: "Oct 2026, one recorded run"
@@ -419,10 +419,10 @@ retrieval_engine_quality:
 rtml_leakage:
   value: "0.363 vs 0.941"
   label: "future AUC-PR, naive join against point-in-time join"
-  method: "same rows, labels, model and hyperparameters; only the training join differs. Scored on the two weeks after training with point-in-time features and true labels, on seeded synthetic payments (874,446 transactions, 0.80% fraud)"
+  method: "same rows, labels, model and hyperparameters; only the training join differs. Scored on the two weeks after training with point-in-time features and true labels, on reproducible generated payments (874,446 transactions, 0.80% fraud)"
   scope: "independent"
   source: "realtime-ml (2026)"
-  window: "measured 2026-10 · seeded synthetic data"
+  window: "measured 2026-10 · reproducible generated data"
   context: "On validation, with the labels known on the training day, the naive join scored higher: 0.746 against 0.681. 100% of its training rows took customer features from after the transaction."
 
 rtml_cost_saved:
@@ -431,7 +431,7 @@ rtml_cost_saved:
   method: "a $5 review per flag plus the amount of every missed fraud, against approving everything; threshold chosen on the validation window, true labels. A hand-written rule saved 20.7%"
   scope: "independent"
   source: "realtime-ml (2026)"
-  window: "measured 2026-10 · seeded synthetic data"
+  window: "measured 2026-10 · reproducible generated data"
   context: "AUC-PR 0.941, recall 0.954 at precision 0.668, flagging 1.2% of payments. The absolute figures describe the generator; the comparisons are the finding."
 
 rtml_parity:
@@ -449,7 +449,7 @@ rtml_drift_psi:
   method: "five seeded runs with a fraud-tactics drift and five without, monitors replayed every 6 hours over the trailing 24; calendar-trending features excluded, threshold 0.2 or 0.1"
   scope: "independent"
   source: "realtime-ml (2026)"
-  window: "measured 2026-10 · seeded synthetic data"
+  window: "measured 2026-10 · reproducible generated data"
   context: "The drift cost 3 to 9 points of recall. Flag rate at |z| > 4 caught 5 of 5 in a median 48 h with 17.2% false alarms; recall on arrived chargebacks caught 3 of 5, about 300 h late."
 
 rtml_serve_p99:
@@ -548,7 +548,7 @@ registry_breach_delay:
 dsl_type1_misattributed:
   value: "15.1%"
   label: "of a year's revenue on the wrong plan with a Type 1 account dimension"
-  method: "5,048 synthetic invoices (seed 7, Oct 2025 – Sep 2026) attributed by each account's current plan and compared with the plan the generator billed; $152,227 of $1,010,202"
+  method: "5,048 generated invoices (seed 7, Oct 2025 – Sep 2026) attributed by each account's current plan and compared with the plan the generator billed; $152,227 of $1,010,202"
   scope: "independent"
   source: "data-stack-lab (2026)"
   window: "measured Oct 2026"
@@ -658,7 +658,7 @@ aipa_prompt_isolation:
 aipa_semantic_layer:
   value: "55 → 70 of 70"
   label: "customers' usage questions Llama 3.3 70B answered correctly, from the table definitions alone and with a semantic layer of the business's definitions"
-  method: "70 answerable questions with reference answers computed by SQL on a seeded usage mart; one generated query per question, run as the customer's role; the reference value must be in the first row"
+  method: "70 answerable questions with reference answers computed by SQL on a reproducible generated usage mart; one generated query per question, run as the customer's role; the reference value must be in the first row"
   scope: "independent"
   source: "ai-platform-architecture (2026)"
   window: "measured Oct 2026"

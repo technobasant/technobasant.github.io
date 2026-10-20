@@ -41,7 +41,7 @@ A familiar kind of data incident starts like this. Someone changes a table or a 
 
 Both failures have the same root. Nothing in the system knows who depends on what, so there is nobody to ask when a change is genuinely breaking and still the right change.
 
-[dataset-registry](https://github.com/technobasant/dataset-registry) is the control plane I built to test a different arrangement. Every dataset has an owning team and a named person, a freshness SLO, a versioned JSON Schema contract, lineage from OpenLineage, and a list of the teams that consume it. A breaking change is neither blocked nor shipped quietly. It waits until every one of those teams has acknowledged it. The demo data belongs to a fictional retailer, the same one used in [governed-agent](https://github.com/technobasant/governed-agent), [streaming-platform](https://github.com/technobasant/streaming-platform) and [realtime-ml](https://github.com/technobasant/realtime-ml).
+[dataset-registry](https://github.com/technobasant/dataset-registry) is the control plane I built to test a different arrangement. Every dataset has an owning team and a named person, a freshness SLO, a versioned JSON Schema contract, lineage from OpenLineage, and a list of the teams that consume it. A breaking change is neither blocked nor shipped quietly. It waits until every one of those teams has acknowledged it. The demo data belongs to an online retailer, a standard e-commerce scenario, the same one used in [governed-agent](https://github.com/technobasant/governed-agent), [streaming-platform](https://github.com/technobasant/streaming-platform) and [realtime-ml](https://github.com/technobasant/realtime-ml).
 
 ## Constraints
 

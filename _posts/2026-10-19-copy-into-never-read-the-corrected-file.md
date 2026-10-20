@@ -57,7 +57,7 @@ I delivered ten days of event files with four ordinary incidents and loaded them
 
 **Operating rule.** Agree with every producer that a corrected file is a new file with a new name, and load into a table keyed by the event's id. Where that agreement cannot be had, set Auto Loader's `cloudFiles.allowOverwrites` and `MERGE` on the key after it.
 
-The code is the Databricks project in [data-stack-lab](https://github.com/technobasant/data-stack-lab/tree/main/databricks), on the same synthetic SaaS events as the [Airflow](/writing/airflow-3-daily-no-data-interval/), [data-quality](/writing/wrong-data-missing-data-different-checks/) and [Spark](/writing/spark-rerun-one-day-deleted-the-rest/) projects. It ran on Databricks Free Edition: a serverless SQL warehouse, Unity Catalog, and a Lakeflow pipeline for Auto Loader.
+The code is the Databricks project in [data-stack-lab](https://github.com/technobasant/data-stack-lab/tree/main/databricks), on the same generated SaaS events as the [Airflow](/writing/airflow-3-daily-no-data-interval/), [data-quality](/writing/wrong-data-missing-data-different-checks/) and [Spark](/writing/spark-rerun-one-day-deleted-the-rest/) projects. It ran on Databricks Free Edition: a serverless SQL warehouse, Unity Catalog, and a Lakeflow pipeline for Auto Loader.
 
 ## Ten days of files
 

@@ -78,8 +78,8 @@ The first version had 22 defects. They fell into five groups, and almost none of
 
 The reference implementation ships with 15 tests, each named after the defect it guards, and all passed on the last recorded run. The container check runs with networking disabled and fails the build if the model cannot load. The 20–40× reduction in model tokens was an estimate from stated assumptions, and the proposal said so; its first build step was the profiling query that replaces the assumption with a measurement.
 
-I rebuilt the classification design from scratch on a synthetic corpus and measured it: [label the string, not the row](/writing/classify-distinct-strings-not-rows/).
+I rebuilt the classification design from scratch on a generated corpus and measured it: [label the string, not the row](/writing/classify-distinct-strings-not-rows/).
 
 ## What I would do differently
 
-I would put the distribution profile in the first paragraph of the proposal, not in the first step of the build. Every cost figure depended on how heavy the head of distinct strings was, and the document had to carry that as an assumption. I would also push earlier for a few hundred labelled real comments: the margin and category-count defaults were tuned on synthetic data, and both are flagged for recalibration before anyone trusts them.
+I would put the distribution profile in the first paragraph of the proposal, not in the first step of the build. Every cost figure depended on how heavy the head of distinct strings was, and the document had to carry that as an assumption. I would also push earlier for a few hundred labelled real comments: the margin and category-count defaults were tuned on generated data, and both are flagged for recalibration before anyone trusts them.

@@ -50,7 +50,7 @@ key_takeaways:
 
 A data processing agreement that promises erasure within 30 days is easy to sign and easy to believe you meet. The person's rows are deleted, a query for them returns nothing, the ticket is closed. On a table format that keeps its history, that query only asks the current version.
 
-I followed one user's rows through a Delta table on Databricks, step by step, to the point where no version of the table could return them. It is the erasure criterion of a platform proof of concept for a fictional SaaS client, in [data-platform-architecture](/work/data-platform-architecture/).
+I followed one user's rows through a Delta table on Databricks, step by step, to the point where no version of the table could return them. It is the erasure criterion of a platform proof of concept for a B2B SaaS company, a scenario common across the industry, in [data-platform-architecture](/work/data-platform-architecture/).
 
 **Operating rule.** An erasure on a Delta table is a timeline, not a statement: `DELETE` by key, `REORG TABLE … APPLY (PURGE)`, then `VACUUM` once the table's deleted-file retention has passed. Schedule it as a job, prove it with a time-travel query that is refused, and set the retention from both the erasure commitment and the restore window you need.
 
@@ -89,7 +89,7 @@ A Delta table of 5,000 events for 50 users, with deletion vectors, on a Databric
 At the default retention that finishes within 15 days of a request (up to 7 to the weekly run, 7 of retention, 1 to the next daily `VACUUM`), inside a 30-day commitment, and keeps the 7-day restore window that recovering from a bad write needs. The retention is the lever between the two: shorten it and erasure is faster, but the window in which a mistaken overwrite can be undone shrinks with it. Raw files in volumes, exports and anything copied out of the table need their own deletion; the table's history is only the copy people forget.
 
 <div class="callout callout--note" markdown="1">
-**Boundary.** One table, one user, Databricks SQL 2026.39 on Free Edition, a 1-hour retention set only to see the last step inside a day. Without deletion vectors a `DELETE` rewrites files, but the earlier versions still point at the old ones, so the timeline is the same. *Measured since:* on a UniForm table, the format the client's design chose so other engines read it as Iceberg, Databricks refused deletion vectors outright; deleting the user's rows rewrote all 8 files that held them, and time travel still returned all 100 until the retention passed and `VACUUM` ran. Snowflake, where permanent tables add 7 days of Fail-safe after Time Travel, is the other half of the proof of concept and not measured yet.
+**Boundary.** One table, one user, Databricks SQL 2026.39 on Free Edition, a 1-hour retention set only to see the last step inside a day. Without deletion vectors a `DELETE` rewrites files, but the earlier versions still point at the old ones, so the timeline is the same. *Measured since:* on a UniForm table, the format the company's design chose so other engines read it as Iceberg, Databricks refused deletion vectors outright; deleting the user's rows rewrote all 8 files that held them, and time travel still returned all 100 until the retention passed and `VACUUM` ran. Snowflake, where permanent tables add 7 days of Fail-safe after Time Travel, is the other half of the proof of concept and not measured yet.
 </div>
 
 ## Checks for a right-to-erasure process on a lakehouse

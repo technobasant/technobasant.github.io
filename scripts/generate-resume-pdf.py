@@ -374,7 +374,7 @@ def build_story(
     # the case studies carry the detail.
     story += section("Selected open source", s)
     story += bullets([
-        "<b>data-platform-architecture</b> and <b>ai-platform-architecture</b> (sample architecture engagements): "
+        "<b>data-platform-architecture</b> and <b>ai-platform-architecture</b> (reference architectures): "
         "a SaaS company leaving Postgres, measured: 18 decision records, a Kimball model, SOC 2 readiness, a cost "
         "model and a Databricks proof of concept; then its usage assistant on governed data.",
         "<b>spark-sql-kinesis</b> (maintainer): Kinesis source and sink for Spark 4.2 on AWS SDK v2, on Maven "

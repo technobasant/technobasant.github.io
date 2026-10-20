@@ -49,7 +49,7 @@ The engines run on one host, each in its own container capped at 4 CPUs and 5 Gi
 
 ## Architecture
 
-A small Python harness, `rbench`, downloads the BEIR datasets, embeds each corpus once with `bge-small-en-v1.5` at a pinned revision, and computes exact nearest neighbours in numpy — with any filter applied — as ground truth. Each engine is one adapter class behind a common protocol: build from scratch, search with an `ef_search` or `probes` setting and an optional filter, insert, report sizes. The same runner drives quality runs against human relevance judgements, recall–latency sweeps, filtered search, concurrency from 1 to 16 client processes, and inserts while querying. `make smoke` pushes synthetic data through every adapter in CI.
+A small Python harness, `rbench`, downloads the BEIR datasets, embeds each corpus once with `bge-small-en-v1.5` at a pinned revision, and computes exact nearest neighbours in numpy — with any filter applied — as ground truth. Each engine is one adapter class behind a common protocol: build from scratch, search with an `ef_search` or `probes` setting and an optional filter, insert, report sizes. The same runner drives quality runs against human relevance judgements, recall–latency sweeps, filtered search, concurrency from 1 to 16 client processes, and inserts while querying. `make smoke` pushes generated data through every adapter in CI.
 
 ## In the code
 

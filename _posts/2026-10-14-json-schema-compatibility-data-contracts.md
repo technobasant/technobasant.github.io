@@ -57,7 +57,7 @@ The reverse change looks just as harmless. Add an optional `channel` field to an
 
 **Operating rule.** Define schema compatibility on the set of documents each version accepts, decide which direction your consumers need, and make the checker conservative: it may call a safe change breaking, and it must never call a breaking change safe. Then make a false alarm cheap, by turning it into a question for the teams it affects rather than a blocked deploy, and know who those teams are before you check anything.
 
-I built this into [dataset-registry](https://github.com/technobasant/dataset-registry), a data-ownership registry with a Go API, PostgreSQL 18 and a Next.js UI, populated with a fictional retailer's orders, payments and dbt models. Its compatibility checker was measured against 51 hand-labelled schema changes. Every figure below is in the repository's [MEASUREMENTS.md](https://github.com/technobasant/dataset-registry/blob/main/MEASUREMENTS.md), and the system around the checker is described in [the case study](/work/dataset-registry/).
+I built this into [dataset-registry](https://github.com/technobasant/dataset-registry), a data-ownership registry with a Go API, PostgreSQL 18 and a Next.js UI, populated with an online retailer's orders, payments and dbt models, a standard e-commerce scenario. Its compatibility checker was measured against 51 hand-labelled schema changes. Every figure below is in the repository's [MEASUREMENTS.md](https://github.com/technobasant/dataset-registry/blob/main/MEASUREMENTS.md), and the system around the checker is described in [the case study](/work/dataset-registry/).
 
 ## Compatible with what?
 

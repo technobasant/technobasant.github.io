@@ -16,7 +16,7 @@ period: "2026"
 team: "One person"
 scale: "Citus 14.2 coordinator + 3 workers, TimescaleDB 2.30, ClickHouse 25.8 at 2 shards × 2 replicas; one container per node; 6M to 20.7M rows per part"
 problem: "Sharding Postgres is usually explained as a topology diagram. What decides whether it works is which key every table carries, which constraints change before the first table can move, what a rebalance does to live writes, and what to do with the tenant that dwarfs the rest."
-decision: "Rebuild the patterns on synthetic data: generate the migration from the catalog, distribute and co-locate everything by tenant, measure the rebalance under load, then put one dataset into four engines and compare rather than crown one."
+decision: "Rebuild the patterns on generated data: generate the migration from the catalog, distribute and co-locate everything by tenant, measure the rebalance under load, then put one dataset into four engines and compare rather than crown one."
 repo: "https://github.com/technobasant/distributed-db-lab"
 flow: distributed-db-lab
 cover:
@@ -40,13 +40,13 @@ sitemap:
 
 Horizontal scale for Postgres is usually sold as a diagram: add nodes, the data spreads, queries get faster. What decides whether it works is less photogenic. Every table has to carry the distribution key. Primary keys, unique constraints and foreign keys have to be reshaped before the first table can be distributed. A rebalance has to run while writes keep arriving. And there is always one customer whose data is several times anyone else's.
 
-Citus has been part of my work since 2021; [citusdata/citus#4776](https://github.com/citusdata/citus/issues/4776) is a report of mine from then, about adding an unnamed constraint to a distributed table, which Citus's maintainers fixed by adding that support in January 2023. This lab rebuilds, from scratch and on synthetic data, the patterns I worked through on consulting engagements: a schema migrated table by table onto Citus, and an audit of a TimescaleDB hypertable whose index outweighed its data. Then it loads one dataset into four engines to see where each earns its place. No client code, schema or figures are in it. Every number is in the repository's [MEASUREMENTS.md](https://github.com/technobasant/distributed-db-lab/blob/main/MEASUREMENTS.md), next to the file it came from.
+Citus has been part of my work since 2021; [citusdata/citus#4776](https://github.com/citusdata/citus/issues/4776) is a report of mine from then, about adding an unnamed constraint to a distributed table, which Citus's maintainers fixed by adding that support in January 2023. This lab rebuilds, from scratch and on generated data, the patterns I worked through on consulting engagements: a schema migrated table by table onto Citus, and an audit of a TimescaleDB hypertable whose index outweighed its data. Then it loads one dataset into four engines to see where each earns its place. No client code, schema or figures are in it. Every number is in the repository's [MEASUREMENTS.md](https://github.com/technobasant/distributed-db-lab/blob/main/MEASUREMENTS.md), next to the file it came from.
 
 ## Constraints
 
 Every node is its own container, and all of them run on one host — an Apple M5 with a Docker VM of 8 CPUs and 11.67 GiB — so node-to-node latency is local and there are no network partitions to test. The host was not quiet either: load average sat between 10 and 44 during the runs, partly from a network filter on the host. Medians are the figures to trust; p99s carry that noise.
 
-The data is seeded: 2,000 tenants with Zipf-shaped sizes, one tenant pinned to 15% of events, and 0.5% of events with no tenant at all. The published Citus images are amd64-only, and timing an emulated database would have been meaningless, so Citus 14.2.0 is built from its source tag; CI runs the official image at small scale. Each part runs alone and is torn down before the next.
+The data is generated (fixed seed): 2,000 tenants with Zipf-shaped sizes, one tenant pinned to 15% of events, and 0.5% of events with no tenant at all. The published Citus images are amd64-only, and timing an emulated database would have been meaningless, so Citus 14.2.0 is built from its source tag; CI runs the official image at small scale. Each part runs alone and is torn down before the next.
 
 ## Architecture
 

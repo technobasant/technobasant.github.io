@@ -6,7 +6,7 @@ eyebrow: Case studies
 headline: "Data platforms, AI systems, and the architecture that keeps them running."
 layout: work-index
 permalink: /work/
-description: "Data and AI architecture case studies: a sample architecture engagement, consulting engagements, production platform work, open source and measured labs."
+description: "Data and AI architecture case studies: reference architectures, consulting engagements, production platform work, open source and measured labs."
 # `detail` used to be a row of tool names per capability — four boxes of logos,
 # which is the pattern a concrete result statement beats every time. Each line
 # now says what the capability actually covers. The tools are on the résumé and
@@ -31,4 +31,4 @@ redirect_from:
   - /projects/
 ---
 
-Start here: [a sample architecture engagement](/work/data-platform-architecture/) for a SaaS company leaving Postgres and [its AI stage](/work/ai-platform-architecture/), both published in full; four consulting engagements; and the production platform work. Open source and measured labs follow in each group.
+Start here: [a reference architecture](/work/data-platform-architecture/) for a SaaS company leaving Postgres and [its AI stage](/work/ai-platform-architecture/), both published in full; four consulting engagements; and the production platform work. Open source and measured labs follow in each group.

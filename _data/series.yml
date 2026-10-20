@@ -64,5 +64,5 @@
   title: "The data stack lab"
   register: measurement
   register_label: "Measured on my own hardware"
-  blurb: "One synthetic SaaS business, built tool by tool on what data teams hire for: dbt, orchestration, data quality, the warehouse and lakehouse platforms. Each module is small and runnable, and its headline figure is scored against the data's ground truth."
+  blurb: "One generated SaaS business, built tool by tool on what data teams hire for: dbt, orchestration, data quality, the warehouse and lakehouse platforms. Each module is small and runnable, and its headline figure is scored against the data's ground truth."
   status: in-progress

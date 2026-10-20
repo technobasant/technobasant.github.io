@@ -44,7 +44,7 @@ faq:
   - q: "Can restoring a Flink SQL job from a checkpoint drop late events?"
     a: "It did here. Window operators restore their watermark, but the source's CURRENT_WATERMARK starts empty, so a late-event filter based on it routes nothing until the first new watermark while the windows already drop late records. Two TaskManager restores lost 241 and 95 late events from both outputs; they stayed in the raw table and the lake."
   - q: "How do you verify exactly-once end to end?"
-    a: "Count it. A seeded generator records every event and every injected fault in a ledger; after each run a reconciler compares the set of sequence numbers at every layer with the ledger, reading Kafka both read_committed and read_uncommitted. A layer is exact when nothing is missing, nothing appears twice, and no poison leaked."
+    a: "Count it. A fixed-seed generator records every event and every injected fault in a ledger; after each run a reconciler compares the set of sequence numbers at every layer with the ledger, reading Kafka both read_committed and read_uncommitted. A layer is exact when nothing is missing, nothing appears twice, and no poison leaked."
 key_takeaways:
   - "Every event layer — Kafka, ClickHouse, Iceberg, the dead-letter topic — was exact through three broker kills, three TaskManager kills and three stalls."
   - "The 10-second window counts were not: failures moved up to 40% of one run's on-time events into the late side output."
@@ -59,13 +59,13 @@ In the worst of those runs, the 10-second window counts held 118,229 of 197,749 
 
 **Operating rule.** Exactly-once is a property of records. A windowed aggregate is records combined with a clock, the watermark, and the clock has no transactional guarantee. Reconcile the two separately, and treat window tables as approximate during and after an incident until the late output has been applied.
 
-The system is [streaming-platform](https://github.com/technobasant/streaming-platform), a from-scratch clickstream platform for a fictional retailer. Every figure below is from its [MEASUREMENTS.md](https://github.com/technobasant/streaming-platform/blob/main/MEASUREMENTS.md), and the raw reconciliation reports are in the repository's `results/` directory.
+The system is [streaming-platform](https://github.com/technobasant/streaming-platform), a from-scratch clickstream platform for an online retailer, a standard e-commerce scenario. Every figure below is from its [MEASUREMENTS.md](https://github.com/technobasant/streaming-platform/blob/main/MEASUREMENTS.md), and the raw reconciliation reports are in the repository's `results/` directory.
 
 ## What was counted, and against what
 
 The pipeline is Kafka 4.3 on three KRaft nodes, every topic replicated three times with `min.insync.replicas=2`; a transactional gatekeeper that validates Avro against the schema registry; two Flink 1.20 SQL jobs on a JobManager and two TaskManagers, checkpointing every 5 seconds; ClickHouse reading every topic `read_committed`; and an Iceberg table on S3. The `clean` job deduplicates on `event_id` and writes `events.clean` and the Iceberg table. The `windows` job reads `events.clean` and computes 10-second tumbling counts, 30-second sessions, and a side output of late events. Each node is its own container, and all of them share one Docker VM with 8 vCPU and 11.7 GiB.
 
-A seeded generator plays 200 concurrent shopper sessions and injects faults on top, per event:
+A fixed-seed generator plays 200 concurrent shopper sessions and injects faults on top, per event:
 
 | Fault | Rate | What it is |
 |---|---|---|
@@ -182,6 +182,6 @@ It did here. Window operators restore their watermark, but the source's `CURRENT
 
 ### How do you verify exactly-once end to end?
 
-Count it. A seeded generator records every event and every injected fault in a ledger; after each run a reconciler compares the set of sequence numbers at every layer with the ledger, reading Kafka both `read_committed` and `read_uncommitted`. A layer is exact when nothing is missing, nothing appears twice, and no poison leaked.
+Count it. A fixed-seed generator records every event and every injected fault in a ledger; after each run a reconciler compares the set of sequence numbers at every layer with the ledger, reading Kafka both `read_committed` and `read_uncommitted`. A layer is exact when nothing is missing, nothing appears twice, and no poison leaked.
 
 The architecture, the decisions behind each sink, and the rest of the measurements, including freshness and the burn-rate alert, are in [the streaming-platform case study](/work/streaming-platform/). More on [Kafka and streaming](/writing/tags/kafka-streaming/) and [data quality](/writing/tags/data-quality/).

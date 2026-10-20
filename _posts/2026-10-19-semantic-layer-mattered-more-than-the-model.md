@@ -50,13 +50,13 @@ key_takeaways:
 
 Text-to-SQL is usually evaluated as a model comparison: which model writes the best SQL over a schema. For an assistant that answers a business's own questions, I found the model mattered less than whether it was told what the business means.
 
-I measured it for a fictional SaaS client's [usage assistant](/work/ai-platform-architecture/): customers asking about their own product usage, answered by SQL over a usage mart. Three models, each with the schema alone and with a semantic layer, and Databricks AI/BI Genie with the same definitions as its instructions.
+I measured it for a B2B SaaS company's [usage assistant](/work/ai-platform-architecture/), a scenario common across the industry: customers asking about their own product usage, answered by SQL over a usage mart. Three models, each with the schema alone and with a semantic layer, and Databricks AI/BI Genie with the same definitions as its instructions.
 
 **Operating rule.** Before comparing models for text-to-SQL, write down the business's definitions (periods, vocabulary, metric SQL, what to decline) and give them to every model. Fix wrong answers by fixing a definition and adding the question to the evaluation set, not by swapping models.
 
 ## The questions
 
-A seeded copy of the mart: 200 accounts, 1,935 users and 142,896 rows of daily activity from July to September 2026. 24 question templates, each asked for different accounts, 70 in all: "How many people used the mobile apps in September?", "How many events did we have last week?", "Which week of the last quarter had the most events?", "What was our average number of daily active users in September?". Each has a reference answer computed by SQL. Ten more questions cannot be answered from the mart at all (what they paid, which user will cancel, session length), and the right reply is "UNANSWERABLE".
+A reproducible generated copy of the mart: 200 accounts, 1,935 users and 142,896 rows of daily activity from July to September 2026. 24 question templates, each asked for different accounts, 70 in all: "How many people used the mobile apps in September?", "How many events did we have last week?", "Which week of the last quarter had the most events?", "What was our average number of daily active users in September?". Each has a reference answer computed by SQL. Ten more questions cannot be answered from the mart at all (what they paid, which user will cancel, session length), and the right reply is "UNANSWERABLE".
 
 Each model writes one PostgreSQL query; it runs as the customer's own role; the answer counts if the reference value is in the first row of the result.
 
@@ -93,14 +93,14 @@ About 700 tokens, sent with every question ([`semantic.yml`](https://github.com/
 - **Rules:** one row; the item first for a "which" question; UNANSWERABLE when the tables cannot answer.
 - **Three worked examples.** One of them shows the daily-average metric for August, and the questions ask it for September; the gain was not only that question.
 
-At Databricks' list price, the extra tokens cost gpt-oss-120b about a hundredth of a cent per answer; it answered for $0.00032 on average at the list price in the client's EU region.
+At Databricks' list price, the extra tokens cost gpt-oss-120b about a hundredth of a cent per answer; it answered for $0.00032 on average at the list price in the company's EU region.
 
 ## Genie, with the same definitions
 
 Genie got the same definitions as its instructions and the same examples, and answered 69 of 70. Its median answer took 14.5 seconds, against 2 to 3 for the hosted models called directly. Its one wrong answer had a missing pair of parentheses around `OR`, which counted every account's Android users; that is the subject of [the isolation write-up](/writing/prompt-is-not-tenant-isolation/). Genie had no run without the definitions, so it shows that a platform's own assistant reached the same level with them, not that they caused it; that evidence is the three models' before and after.
 
 <div class="callout callout--note" markdown="1">
-**Boundary.** One synthetic mart, 70 answerable questions from 24 templates and 20 unanswerable ones, temperature 0, one run per condition; answers cluster by template, so the independent evidence is closer to 24 cases than 70. Enough to separate 55 from 70 correct; not enough to rank two models that both answered 70. The semantic layer was written with these templates in view (its periods and metric definitions map onto them), so the gain is an upper bound for questions like these; a held-out set written after it was frozen is the next test. The hosted models ran on Databricks Free Edition's model serving and the local one with Ollama on one host, so latencies are indicative. Every response is recorded and re-scored in CI against a freshly built mart.
+**Boundary.** One generated mart, 70 answerable questions from 24 templates and 20 unanswerable ones, temperature 0, one run per condition; answers cluster by template, so the independent evidence is closer to 24 cases than 70. Enough to separate 55 from 70 correct; not enough to rank two models that both answered 70. The semantic layer was written with these templates in view (its periods and metric definitions map onto them), so the gain is an upper bound for questions like these; a held-out set written after it was frozen is the next test. The hosted models ran on Databricks Free Edition's model serving and the local one with Ollama on one host, so latencies are indicative. Every response is recorded and re-scored in CI against a freshly built mart.
 
 *Updated 19 October 2026:* six recorded queries asked the database for today's date instead of using the date in the prompt, and were scored against the real clock. They now get the prompt's date, which raised two schema-only scores: Qwen3 8B from 43 to 46 and gpt-oss-120b from 63 to 65.
 </div>

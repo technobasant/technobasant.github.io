@@ -624,7 +624,7 @@ def short_text_triage() -> str:
     body = [
         f'<rect width="{W}" height="{H}" fill="{PAPER}"/>',
         f'<text x="150" y="190" font-family="{MONO}" font-size="30" letter-spacing="6" '
-        f'fill="{ACCENT}">SHORT-TEXT TRIAGE · SYNTHETIC LAB</text>',
+        f'fill="{ACCENT}">SHORT-TEXT TRIAGE · LAB</text>',
         f'<text x="150" y="300" font-family="{SERIF}" font-size="86" font-weight="600" '
         f'fill="{INK}">Label the string, not the row.</text>',
         f'<text x="150" y="382" font-family="{SERIF}" font-size="86" font-weight="600" '
@@ -653,7 +653,7 @@ def short_text_triage() -> str:
         f'<text x="960" y="1045" font-family="{MONO}" font-size="26" fill="{MUTED}">review + outliers are re-clustered weekly</text>',
         f'<line x1="150" y1="1120" x2="{W - 150}" y2="1120" stroke="{LINE}" stroke-width="2"/>',
         f'<text x="150" y="1195" font-family="{MONO}" font-size="30" fill="{MUTED}">'
-        f'synthetic corpus · 5 languages · multilingual-e5-small on CPU</text>',
+        f'generated corpus · 5 languages · multilingual-e5-small on CPU</text>',
         f'<text x="{W - 150}" y="1195" font-family="{MONO}" font-size="30" fill="{ACCENT}" '
         f'text-anchor="end">one LLM call per cluster</text>',
     ]
@@ -850,7 +850,7 @@ def prevalence_shift() -> str:
     body = [
         f'<rect width="{W}" height="{H}" fill="{PAPER}"/>',
         f'<text x="150" y="190" font-family="{MONO}" font-size="30" letter-spacing="6" '
-        f'fill="{ACCENT}">QUANTIFICATION · SEEDED SIMULATION</text>',
+        f'fill="{ACCENT}">QUANTIFICATION · MONTE CARLO</text>',
         f'<text x="150" y="300" font-family="{SERIF}" font-size="86" font-weight="600" '
         f'fill="{INK}">Counted labels flatten a trend.</text>',
         f'<text x="150" y="382" font-family="{SERIF}" font-size="86" font-weight="600" '
@@ -1109,7 +1109,7 @@ def realtime_ml() -> str:
                  "fraud is 0.8% of traffic"),
         f'<line x1="150" y1="1120" x2="{W - 150}" y2="1120" stroke="{LINE}" stroke-width="2"/>',
         f'<text x="150" y="1195" font-family="{MONO}" font-size="30" fill="{MUTED}">'
-        f'seeded payments · 874,446 transactions · 0.80% fraud</text>',
+        f'generated payments · 874,446 transactions · 0.80% fraud</text>',
         f'<text x="{W - 150}" y="1195" font-family="{MONO}" font-size="30" fill="{ACCENT}" '
         f'text-anchor="end">only the join differs</text>',
     ]
@@ -1914,7 +1914,7 @@ def databricks_loaders() -> str:
 
 
 def replica_reports() -> str:
-    """The client's current state: reports on the primary, and on the replica."""
+    """The company's current state: reports on the primary, and on the replica."""
     # From data-platform-architecture's results/baseline-brief-rate.json (Postgres 17, lab
     # copy, the product at its peak rate of 12 requests a second).
     body = _head("POSTGRES 17 · THE PRODUCT AND ITS REPORTS · ONE DATABASE",

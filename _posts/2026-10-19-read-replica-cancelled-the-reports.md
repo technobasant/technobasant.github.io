@@ -100,9 +100,9 @@ One long report held replay back until the budget was spent. From then on, queri
 
 None of them makes a replica a reporting database. They choose which part of the system absorbs the conflict between a busy product and long reads of the same data.
 
-## What the client did
+## What the company did
 
-For the engagement's client, the recommendation was the third, for at most three months: the replica serves reports and nothing else, with the delay raised to 15 minutes, because the product reads only the primary and reports need yesterday's data, not this minute's. Then a separate analytical platform fed by change data capture, where reports read their own copy and the product's database only serves a replication slot. The [case study](/work/data-platform-architecture/) has the rest: the options, the staged target and the decision records.
+For the company in the reference architecture, the recommendation was the third, for at most three months: the replica serves reports and nothing else, with the delay raised to 15 minutes, because the product reads only the primary and reports need yesterday's data, not this minute's. Then a separate analytical platform fed by change data capture, where reports read their own copy and the product's database only serves a replication slot. The [case study](/work/data-platform-architecture/) has the rest: the options, the staged target and the decision records.
 
 <div class="callout callout--note" markdown="1">
 **Boundary.** Postgres 17.11 in Docker on one host, not RDS, with 2 vCPU and 4 GB per server. The primary and the replica share the host's disk, so in the replica scenarios the product's latency also rose, and reports ran slower on the delayed replica while it caught up; on separate machines neither would happen, and those figures are not used. Absolute latencies include the virtual disk's flush times. The counts of finished and cancelled reports, and the comparison on the primary, are the results. One run per scenario, five minutes each, at the peak hour's rate; the nightly purge of old events, which adds its own cleanup, was not part of it.

@@ -41,7 +41,7 @@ One host, 8 CPU and ~12.5 GB of RAM, which is why each cluster came up, got exer
 
 ## Architecture
 
-Nine Docker Compose stacks: `mongo-ha`, `mongo-shard`, `scylla-ha`, `solr-ha`, `galera-ha`, `redis-cluster`, `redis-sentinel`, `pg-replication`, `observability`. Each stands up a real multi-node cluster, gets seeded, gets broken deliberately, and gets checked for what survived.
+Nine Docker Compose stacks: `mongo-ha`, `mongo-shard`, `scylla-ha`, `solr-ha`, `galera-ha`, `redis-cluster`, `redis-sentinel`, `pg-replication`, `observability`. Each stands up a real multi-node cluster, gets loaded with data, gets broken deliberately, and gets checked for what survived.
 
 ## Decisions and trade-offs
 

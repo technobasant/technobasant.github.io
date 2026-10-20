@@ -64,7 +64,7 @@ So the question a deployment has to answer is not how often the model is right. 
 
 ## Where the 54 answers went
 
-The run is one pass of a 54-question golden set against `qwen3:8b` under Ollama, at temperature 0 with thinking off, on an Apple M5 with 24 GB. The warehouse is synthetic and seeded: 9,000 orders, 1,500 customers, 910 refunds. The questions cover counts, lookups, questions the data cannot answer, requests for personal data, and instructions planted in product descriptions and refund notes. Method and every figure are in the repository's [MEASUREMENTS.md](https://github.com/technobasant/governed-agent/blob/main/MEASUREMENTS.md).
+The run is one pass of a 54-question golden set against `qwen3:8b` under Ollama, at temperature 0 with thinking off, on an Apple M5 with 24 GB. The warehouse is generated, with a fixed seed: 9,000 orders, 1,500 customers, 910 refunds. The questions cover counts, lookups, questions the data cannot answer, requests for personal data, and instructions planted in product descriptions and refund notes. Method and every figure are in the repository's [MEASUREMENTS.md](https://github.com/technobasant/governed-agent/blob/main/MEASUREMENTS.md).
 
 | Route | Findings | Right | Wrong |
 |---|---:|---:|---:|
@@ -143,7 +143,7 @@ make measure   # run against the live model and re-record the cassette
 A one-line change to the system prompt makes every case a cassette miss, and the gate exits 1 with outcome falling from 88.9% to 0.0%. That is deliberate. CI cannot tell whether a new prompt is better, so it refuses to guess until someone re-records against the live model and the comparison is real.
 
 <div class="callout callout--note" markdown="1">
-**Boundary.** One model (`qwen3:8b`, Q4_K_M, thinking off), one recorded run of 54 questions, on an Apple M5 with 24 GB under Ollama 0.23.2. Synthetic, seeded data with the shapes of a real warehouse but not its mess. Latency was p50 23.7 s and p95 46.1 s per question for the agent alone; the API, database and UI were not timed, and an earlier run with identical outputs measured p50 19.7 s, so treat differences of that size as noise. Not measured: other models, thinking on, load, and a human reviewer's accuracy at the queue. The reviewer's identity is a request header, the audit log is append-only by trigger but not hash-chained, and the schema is created at startup rather than migrated; all three are on [the roadmap](https://github.com/technobasant/governed-agent#roadmap).
+**Boundary.** One model (`qwen3:8b`, Q4_K_M, thinking off), one recorded run of 54 questions, on an Apple M5 with 24 GB under Ollama 0.23.2. Generated data, reproducible, with the shapes of a real warehouse but not its mess. Latency was p50 23.7 s and p95 46.1 s per question for the agent alone; the API, database and UI were not timed, and an earlier run with identical outputs measured p50 19.7 s, so treat differences of that size as noise. Not measured: other models, thinking on, load, and a human reviewer's accuracy at the queue. The reviewer's identity is a request header, the audit log is append-only by trigger but not hash-chained, and the schema is created at startup rather than migrated; all three are on [the roadmap](https://github.com/technobasant/governed-agent#roadmap).
 </div>
 
 ## Frequently asked questions

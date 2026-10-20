@@ -36,7 +36,7 @@ cover:
   caption: "The same invoices summed two ways. Totals match; the plans do not."
 faq:
   - q: "What is the difference between a Type 1 and a Type 2 slowly changing dimension?"
-    a: "A Type 1 dimension overwrites an attribute in place, so every fact, past and present, sees today's value. A Type 2 dimension adds a new row per change with a validity window, and each fact joins to the version that was in effect when it happened. On a year of synthetic SaaS invoices, Type 1 put 15.1% of revenue on a plan the invoice did not bill; Type 2 got all 5,048 invoices right."
+    a: "A Type 1 dimension overwrites an attribute in place, so every fact, past and present, sees today's value. A Type 2 dimension adds a new row per change with a validity window, and each fact joins to the version that was in effect when it happened. On a year of generated SaaS invoices, Type 1 put 15.1% of revenue on a plan the invoice did not bill; Type 2 got all 5,048 invoices right."
   - q: "Do dbt snapshots capture every change to a table?"
     a: "No. A snapshot records the state of the source each time it runs, so a change that is made and replaced between two runs is never seen. With monthly extracts, 37 of 570 account changes in a year were missed, 26 of them short trial upgrades. For facts dated at the extract that cost nothing; for daily usage it put 0.08% of events on the wrong plan."
   - q: "How do you test a Type 2 join in dbt?"
@@ -53,11 +53,11 @@ key_takeaways:
 
 A finance analyst asks a simple question: how much revenue did each plan earn last year? The warehouse has invoices and an accounts table, and each account has a plan. Join one to the other, group by plan, and the report is done in ten minutes. It also puts about one dollar in seven on the wrong plan. The accounts table says which plan each customer is on *today*, and a year is long enough for customers to upgrade, downgrade and leave.
 
-I built the model both ways on a year of synthetic data and scored each against what really happened. Attributing invoices by the current plan, which is what a Type 1 dimension does, put **$152,227 of $1,010,202 (15.1%)** on a plan the invoice did not bill. It credited the free plan with $10,700. A Type 2 dimension, built from dbt snapshots, put all 5,048 invoices on the right plan.
+I built the model both ways on a year of generated data and scored each against what really happened. Attributing invoices by the current plan, which is what a Type 1 dimension does, put **$152,227 of $1,010,202 (15.1%)** on a plan the invoice did not bill. It credited the free plan with $10,700. A Type 2 dimension, built from dbt snapshots, put all 5,048 invoices on the right plan.
 
 **Operating rule.** If a fact must be read against an attribute that changes, keep the attribute's history and join each fact to the version in effect when it happened. Test that join with rows written by hand, because data tests on real data cannot see it go wrong.
 
-The code is [data-stack-lab](https://github.com/technobasant/data-stack-lab), the first project of a repository that builds one fictional SaaS business on the tools data teams use, and scores each project against the data's ground truth. Nothing in it is real. Every figure below is in its [MEASUREMENTS.md](https://github.com/technobasant/data-stack-lab/blob/main/MEASUREMENTS.md), and CI regenerates the data, rebuilds the warehouse and fails if a single number moves.
+The code is [data-stack-lab](https://github.com/technobasant/data-stack-lab), the first project of a repository that builds one SaaS business scenario on the tools data teams use, and scores each project against the data's ground truth. Nothing in it is real. Every figure below is in its [MEASUREMENTS.md](https://github.com/technobasant/data-stack-lab/blob/main/MEASUREMENTS.md), and CI regenerates the data, rebuilds the warehouse and fails if a single number moves.
 
 ## The same invoices, two answers
 
@@ -164,7 +164,7 @@ The project runs on dbt Core 1.12 and on dbt v2, the Rust engine (the Apache-2.0
 The mutation script found the one difference. On v2, the unit test that pins the first version to signup kept passing when the stretch was deleted: the model returned 2025-06-10 where the test expected 2025-03-01. Changing an expected timestamp in another unit test to 1999 also passed, while a wrong string, integer or boolean failed as it should. The SQL v2 compiles for the test returns both values, so the gap is in how v2 compares the fetched rows. It is [dbt-labs/dbt#15894](https://github.com/dbt-labs/dbt/issues/15894), reported in August and open; I reproduced it on 2.0.8 with DuckDB. The data tests caught both breaks anyway, which is the case for keeping both layers. The repository records which tests catch which break on each engine, so CI will notice when the fix lands.
 
 <div class="callout callout--note" markdown="1">
-**Boundary.** Synthetic data from one seeded generator, one year, one price per plan, no seats, discounts or refunds. The 15.1% is what this business's rates of change produce, not a constant: more plan changes, more error. Invoices fall on the extract instant by design, which is why snapshot gaps cost invoices nothing here; a billing cycle out of step with the extracts would inherit the same gaps as usage. Everything ran on DuckDB. The project is written with dbt's cross-database macros so other engines can run it. *Update, 19 October 2026:* it has since built on Databricks with one change (contract types `varchar` became `string`) and gave these figures exactly; Snowflake and BigQuery are not claimed.
+**Boundary.** Generated data from one fixed-seed generator, one year, one price per plan, no seats, discounts or refunds. The 15.1% is what this business's rates of change produce, not a constant: more plan changes, more error. Invoices fall on the extract instant by design, which is why snapshot gaps cost invoices nothing here; a billing cycle out of step with the extracts would inherit the same gaps as usage. Everything ran on DuckDB. The project is written with dbt's cross-database macros so other engines can run it. *Update, 19 October 2026:* it has since built on Databricks with one change (contract types `varchar` became `string`) and gave these figures exactly; Snowflake and BigQuery are not claimed.
 </div>
 
 ## What goes in a Type 2 dimension
@@ -180,7 +180,7 @@ The mutation script found the one difference. On v2, the unit test that pins the
 
 ### What is the difference between a Type 1 and a Type 2 slowly changing dimension?
 
-A Type 1 dimension overwrites an attribute in place, so every fact, past and present, sees today's value. A Type 2 dimension adds a new row per change with a validity window, and each fact joins to the version that was in effect when it happened. On a year of synthetic SaaS invoices, Type 1 put 15.1% of revenue on a plan the invoice did not bill; Type 2 got all 5,048 invoices right.
+A Type 1 dimension overwrites an attribute in place, so every fact, past and present, sees today's value. A Type 2 dimension adds a new row per change with a validity window, and each fact joins to the version that was in effect when it happened. On a year of generated SaaS invoices, Type 1 put 15.1% of revenue on a plan the invoice did not bill; Type 2 got all 5,048 invoices right.
 
 ### Do dbt snapshots capture every change to a table?
 

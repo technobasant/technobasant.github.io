@@ -50,7 +50,7 @@ key_takeaways:
 
 A daily batch job is re-run all the time: a bug is fixed, a late file lands, a day's numbers look wrong. The usual way to re-run one day of a Spark job that writes a partitioned table is to compute that day and write it back with `mode("overwrite")`. With Spark's defaults, that write replaces the entire table with the one day.
 
-I measured it, along with the other default a partitioned Spark write gets wrong: how many files it produces. Both use PySpark 4.2.0 on the same synthetic SaaS events as the rest of [data-stack-lab](https://github.com/technobasant/data-stack-lab/tree/main/spark), and CI re-runs every count.
+I measured it, along with the other default a partitioned Spark write gets wrong: how many files it produces. Both use PySpark 4.2.0 on the same generated SaaS events as the rest of [data-stack-lab](https://github.com/technobasant/data-stack-lab/tree/main/spark), and CI re-runs every count.
 
 **Operating rule.** Any job that writes a partitioned table with `mode("overwrite")` sets `spark.sql.sources.partitionOverwriteMode` to `dynamic` in its own configuration, and repartitions by the partition column before writing. Then re-running a day replaces that day, and a day is one file.
 

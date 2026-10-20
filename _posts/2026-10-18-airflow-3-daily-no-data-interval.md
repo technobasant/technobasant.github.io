@@ -58,7 +58,7 @@ I built all three as dbt incremental models behind one Airflow 3.3 DAG and backf
 
 **Operating rule.** Load by the run's data interval, write so that a re-run replaces its own day, and do not trust the schedule to supply the interval: ask for `CronDataIntervalTimetable` by name and test that a run's window is one day long.
 
-The code is the Airflow project in [data-stack-lab](https://github.com/technobasant/data-stack-lab), on the same synthetic SaaS data as the [dbt project](/writing/type-1-dimension-revenue-wrong-plan/). The data is generated, so the right answer is known: every table below is compared with every event that actually arrived. All figures are in its [MEASUREMENTS.md](https://github.com/technobasant/data-stack-lab/blob/main/MEASUREMENTS.md#airflow-incremental-loads-and-backfills), and CI re-runs the backfills and fails if one number moves.
+The code is the Airflow project in [data-stack-lab](https://github.com/technobasant/data-stack-lab), on the same generated SaaS data as the [dbt project](/writing/type-1-dimension-revenue-wrong-plan/). The data is generated, so the right answer is known: every table below is compared with every event that actually arrived. All figures are in its [MEASUREMENTS.md](https://github.com/technobasant/data-stack-lab/blob/main/MEASUREMENTS.md#airflow-incremental-loads-and-backfills), and CI re-runs the backfills and fails if one number moves.
 
 ## One DAG, three ways to decide what is new
 
@@ -124,7 +124,7 @@ The backfills above run each day through `dag.test()`, which executes the real t
 Writing the harness exposed one difference worth knowing. The date passed to `dag.test()` is treated as the moment the run fires, so on a data-interval schedule `dag.test(logical_date=1 September)` covers 31 August. The scheduler's backfill gives the run covering 1 September the logical date 1 September. My first harness passed each day as the date, covered the wrong days, and reported 30 September's 3,076 events as lost by both of the strategies that were in fact complete. A harness needs its own known answer before its output means anything.
 
 <div class="callout callout--note" markdown="1">
-**Boundary.** Synthetic events, one month, one file per day, and a file is either complete or absent: no partial files, no in-flight writes. Lateness follows the generator's rates (2.2% of events late by 1–72 hours, 0.3% by 3–10 days), so the event-time losses scale with them. The backwards and late-file backfills ran through `dag.test()`; on the real scheduler only the in-order backfill was run. Airflow 3.3.2 with SQLite and DuckDB on one machine; no timing here is a performance claim.
+**Boundary.** Generated events, one month, one file per day, and a file is either complete or absent: no partial files, no in-flight writes. Lateness follows the generator's rates (2.2% of events late by 1–72 hours, 0.3% by 3–10 days), so the event-time losses scale with them. The backwards and late-file backfills ran through `dag.test()`; on the real scheduler only the in-order backfill was run. Airflow 3.3.2 with SQLite and DuckDB on one machine; no timing here is a performance claim.
 </div>
 
 ## What an incremental DAG needs

@@ -253,11 +253,11 @@ dataset-registry:
       note: "A breach is noticed half an interval late at p50: 7.5 s at the 15 s default."
 
 data-stack-lab:
-  label: "data-stack-lab — one synthetic business, each project checked against the known answer"
+  label: "data-stack-lab — one generated business, each project checked against the known answer"
   stages:
     - name: "Generate"
       tech: ["NumPy", "PyArrow"]
-      note: "One seeded SaaS business; the generator also keeps the answers the warehouse never sees."
+      note: "One generated SaaS business (fixed seed); the generator also keeps the answers the warehouse never sees."
     - name: "Land"
       tech: ["Airflow 3", "Auto Loader", "DuckDB"]
       note: "A daily DAG lands each day's files; Databricks loads them six ways."

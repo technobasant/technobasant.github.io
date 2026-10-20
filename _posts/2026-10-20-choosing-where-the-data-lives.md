@@ -142,7 +142,7 @@ The feature list is the easy part. Each store you add brings questions an audito
 On every project where I have run data platforms I have been responsible for meeting the SOC 2 criteria for them and their infrastructure, and the pattern holds: each store adds access reviews, backups to test, changes to control and logs to keep. A design with four stores has four of each. That is a reason to prefer fewer stores, not a reason to avoid the right one.
 
 <div class="callout callout--note" markdown="1">
-**Boundary.** The project experience here is described without the clients' or employers' names, data or figures; every number is from a lab on synthetic data, on one host or a small cluster, and links to its method. TimescaleDB is lab experience only. The evaluation of ClickHouse, Pinot, StarRocks and Trino is mentioned for what it covered, not for a winner, because the right one depended on that client's queries.
+**Boundary.** The project experience here is described without the clients' or employers' names, data or figures; every number is from a lab on generated data, on one host or a small cluster, and links to its method. TimescaleDB is lab experience only. The evaluation of ClickHouse, Pinot, StarRocks and Trino is mentioned for what it covered, not for a winner, because the right one depended on that client's queries.
 </div>
 
 ## Checks before adding a store

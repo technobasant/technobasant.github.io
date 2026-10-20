@@ -1,7 +1,7 @@
 ---
 title: "The day's work took 38 seconds. The warehouse was billed for 11 minutes."
 seo_title: "Databricks SQL serverless cost: auto-stop, idle time and DBUs, measured from the billing tables"
-description: "A client's daily build and reports took 38 seconds on Databricks' smallest SQL warehouse. The billing table charged 11 minutes: 95% of it was waiting to stop."
+description: "A SaaS company's daily build and reports took 38 seconds on Databricks' smallest SQL warehouse. The billing table charged 11 minutes: 95% of it was waiting to stop."
 date: 2026-10-19 20:45:00 +0545
 last_modified_at: 2026-10-19
 type: essay
@@ -40,22 +40,22 @@ faq:
   - q: "How should a Databricks SQL warehouse's cost be estimated?"
     a: "By the hours it will be awake, not by the queries. Count how often it wakes and how long each wake lasts with the auto-stop tail, multiply by the size's DBU rate and the region's price per DBU, and check the estimate monthly against system.billing.usage and system.compute.warehouse_events."
 key_takeaways:
-  - "The client's daily build and one round of reports took 38 seconds on a 2X-Small warehouse; the billing table charged 11 minutes 9 seconds of uptime."
+  - "The company's daily build and one round of reports took 38 seconds on a 2X-Small warehouse; the billing table charged 11 minutes 9 seconds of uptime."
   - "Billed DBUs matched uptime at exactly 4 DBU an hour for a 2X-Small, in every hour checked against the warehouse's start and stop events."
   - "95% of the day's bill was the 10-minute auto-stop wait after the last query."
-  - "At list price in the client's EU region the same work costs $21 a month woken once a day, and $961 kept awake through working hours."
+  - "At list price in the company's EU region the same work costs $21 a month woken once a day, and $961 kept awake through working hours."
   - "Anything that must answer at any hour, like a customer-facing assistant, should not keep the warehouse awake: that alone is $2,657 a month."
 ---
 
 A warehouse that bills by the second sounds as if it bills for work. It bills for being awake. For a small, bursty workload the difference is most of the bill, and it is set by one setting most teams never change.
 
-I measured it for the cost criterion of a platform proof of concept for a fictional SaaS client, in [data-platform-architecture](/work/data-platform-architecture/): what the platform's own billing table charges for one day of the client's work.
+I measured it for the cost criterion of a platform proof of concept for a B2B SaaS company, a scenario common across the industry, in [data-platform-architecture](/work/data-platform-architecture/): what the platform's own billing table charges for one day of the company's work.
 
 **Operating rule.** Estimate a SQL warehouse by the hours it will be awake, not by its queries. Set auto-stop on purpose, wake it as few times a day as the work allows, keep anything that must answer at any hour off it, and check the estimate every month against the billing table and the warehouse's start and stop events.
 
 ## The test
 
-The client's data at today's scale: 6,000 accounts, 60,000 users and 90 days of product events, 31.5 million rows, in Databricks SQL 2026.39 on the smallest serverless SQL warehouse, 2X-Small, with the default 10-minute auto-stop. The day's work, as the client's design has it:
+The company's data at today's scale: 6,000 accounts, 60,000 users and 90 days of product events, 31.5 million rows, in Databricks SQL 2026.39 on the smallest serverless SQL warehouse, 2X-Small, with the default 10-minute auto-stop. The day's work, as the company's design has it:
 
 - **The daily build.** Load yesterday's 350,000 events with `INSERT … REPLACE WHERE`, replace the last three days of the usage mart, and run the mart contract's quality check.
 - **The reports.** Two analysts run the BI tool's four reports once each.
@@ -80,7 +80,7 @@ The rate is the size's, and it is exact. In three earlier hours the same warehou
 
 ## The bill is set by how often the warehouse wakes
 
-At list price in the client's region, AWS EU (Ireland), a DBU of serverless SQL is $0.91, so an hour of the smallest warehouse is $3.64. The day above cost about $0.68. What the month costs depends on how the warehouse is used, not on the work:
+At list price in the company's region, AWS EU (Ireland), a DBU of serverless SQL is $0.91, so an hour of the smallest warehouse is $3.64. The day above cost about $0.68. What the month costs depends on how the warehouse is used, not on the work:
 
 | How the warehouse is used | Hours awake a month | List price a month |
 |---|---:|---:|
@@ -90,12 +90,12 @@ At list price in the client's region, AWS EU (Ireland), a DBU of serverless SQL 
 | Awake all month | 730 | $2,657 |
 {: aria-label="Monthly cost of the smallest Databricks SQL warehouse by how often it is awake" }
 
-Each separate session costs at least the auto-stop period: an analyst who opens one dashboard at 10:00 and another at 10:30 pays for two ten-minute tails. A dashboard that refreshes every five minutes keeps the warehouse awake forever. The client's cost model had assumed 1.5 hours a day of a Medium warehouse, about $996 a month in this region; the measurement says the smallest size does today's work in seconds, and the same money buys a 2X-Small awake through every working hour.
+Each separate session costs at least the auto-stop period: an analyst who opens one dashboard at 10:00 and another at 10:30 pays for two ten-minute tails. A dashboard that refreshes every five minutes keeps the warehouse awake forever. The company's cost model had assumed 1.5 hours a day of a Medium warehouse, about $996 a month in this region; the measurement says the smallest size does today's work in seconds, and the same money buys a 2X-Small awake through every working hour.
 
-The last row is the one that changed the design. The client's stage-3 assistant answers customers, who ask at any hour, so a warehouse serving it never stops: $2,657 a month at the smallest size, more than the assistant's whole $1,500 ceiling, before a single model token, which costs the same assistant about $19 a month. Its queries go to the usage store the product already keeps awake, as the [AI architecture](/work/ai-platform-architecture/) now records.
+The last row is the one that changed the design. The company's stage-3 assistant answers customers, who ask at any hour, so a warehouse serving it never stops: $2,657 a month at the smallest size, more than the assistant's whole $1,500 ceiling, before a single model token, which costs the same assistant about $19 a month. Its queries go to the usage store the product already keeps awake, as the [AI architecture](/work/ai-platform-architecture/) now records.
 
 <div class="callout callout--note" markdown="1">
-**Boundary.** One day, one warehouse of the smallest size, on Databricks Free Edition, whose warehouse is in US East: the billing table's DBUs are measured, the dollars are list price for the client's EU region and include no discount. Serverless start-up was about 2 seconds here; a larger size or a cold region may take longer. Auto-stop was the default 10 minutes; a shorter one shortens every tail and wakes the warehouse more often. At 36 months the client's data is about 14 times larger, and keeping the reports to seconds will need a bigger size, whose rate scales the same arithmetic.
+**Boundary.** One day, one warehouse of the smallest size, on Databricks Free Edition, whose warehouse is in US East: the billing table's DBUs are measured, the dollars are list price for the company's EU region and include no discount. Serverless start-up was about 2 seconds here; a larger size or a cold region may take longer. Auto-stop was the default 10 minutes; a shorter one shortens every tail and wakes the warehouse more often. At 36 months the company's data is about 14 times larger, and keeping the reports to seconds will need a bigger size, whose rate scales the same arithmetic.
 </div>
 
 ## Checks before trusting a warehouse estimate

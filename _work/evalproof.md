@@ -105,7 +105,7 @@ The full function, including the checks that refuse to gate with exit 4, is in [
 
 ## Results
 
-The worked example is a support assistant for a fictional product: 83 questions, 9 of them unanswerable from its facts. The change under test swaps a grounded system prompt for one that always gives "a complete answer".
+The worked example is a support assistant for a product: 83 questions, 9 of them unanswerable from its facts. The change under test swaps a grounded system prompt for one that always gives "a complete answer".
 
 **The quality drop was not distinguishable from noise.** The judge's pass rate fell 4.8 points, from 8 answers getting worse and 4 getting better while 71 kept their verdict. Exact McNemar gives {{ site.data.metrics.evalproof_noise_gate.value }}, so the gate passed the change with a warning naming the sample size. A delta-only gate with a three-point tolerance would have failed it. The arithmetic of the same test shows why: on 83 cases, no drop smaller than six net cases can reach significance.
 
@@ -123,9 +123,9 @@ The analysis behind the gate's design is in [The eval score fell 4.8 points. Twe
 
 **That calibration helps at this size.** Over 200 random gold samples of 30 labels, both corrections removed the judge's 3.6–4.8-point offset on average, but their intervals were far wider than the raw rate's, which already covered the truth every time. Calibration earns its keep on large suites, where the raw interval is narrow and the bias dominates.
 
-**That the gate can see a 4.8-point regression.** Taking this run's rates as the truth, a seeded simulation caught it 13% of the time at 83 cases and needed about 520 cases for an 80% chance. The gate is honest about that rather than sensitive.
+**That the gate can see a 4.8-point regression.** Taking this run's rates as the truth, a Monte Carlo simulation with a fixed seed caught it 13% of the time at 83 cases and needed about 520 cases for an 80% chance. The gate is honest about that rather than sensitive.
 
-**Anything about other models or domains.** One machine, two small local models, one fictional domain, 83 cases, and a judge with thinking disabled. The numbers describe this setup; the method is what transfers.
+**Anything about other models or domains.** One machine, two small local models, one product domain, 83 cases, and a judge with thinking disabled. The numbers describe this setup; the method is what transfers.
 
 The first CI runs also caught one of my own bugs: the Wilson interval's lower bound at zero passes came out as 2.8e-17 on x86_64 Linux and 0.0 on arm64 macOS, a subtraction of two equal quantities rounding differently by platform. Version 0.1.1 pins the boundaries exactly. Building the [browser app](https://evalproof.streamlit.app) caught another: the exact McNemar test summed binomial terms in floating point, and past about 1,030 changed verdicts, a size a large suite can reach, `comb(n, i)` no longer fits in a float and the comparison raised OverflowError. Version 0.1.2 sums the tail as integers and divides once.
 

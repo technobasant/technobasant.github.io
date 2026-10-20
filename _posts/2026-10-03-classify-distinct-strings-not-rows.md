@@ -1,7 +1,7 @@
 ---
 title: "Label the string, not the row: a short-text triage lab"
 seo_title: "Short-text classification: dedupe, cluster, then assign with a margin"
-description: "A synthetic 20,000-row multilingual lab: normalize to distinct keys, cluster them for one LLM call each, and why a cosine threshold needs a margin."
+description: "A generated 20,000-row multilingual lab: normalize to distinct keys, cluster them for one LLM call each, and why a cosine threshold needs a margin."
 date: 2026-10-03 09:20:00 +0545
 last_modified_at: 2026-10-14
 type: essay
@@ -54,11 +54,11 @@ The quieter failure is worse. The same meaning gets labelled several times, and 
 
 **Operating rule.** Normalize to a key, embed each distinct key once, cluster the keys, and label the clusters. Then assign a new string only when its best label beats the runner-up by a margin. Strings that fail the margin go to a review queue that is itself clustered. A model never sees a row.
 
-I rebuilt this design as a lab so every number below is reproducible. The design is one I worked on for a client; the corpus here is synthetic.
+I rebuilt this design as a lab so every number below is reproducible. The design is one I worked on for a client; the corpus here is generated.
 
 ## The rig
 
-Everything is synthetic and seeded. I wrote 240 base phrasings by hand: eight intents a consumer app's support inbox would see (double charge, missing refund, login failure, app crash, late delivery, account takeover, unwanted marketing, cancellation), in English, Spanish, German, French and Portuguese, six wordings each. A generator damages them the way free-text fields get damaged, then samples them so a few wordings dominate, as they do in real inboxes.
+Everything is generated, with a fixed seed. I wrote 240 base phrasings by hand: eight intents a consumer app's support inbox would see (double charge, missing refund, login failure, app crash, late delivery, account takeover, unwanted marketing, cancellation), in English, Spanish, German, French and Portuguese, six wordings each. A generator damages them the way free-text fields get damaged, then samples them so a few wordings dominate, as they do in real inboxes.
 
 | Corpus | Day 1 | Day 2 |
 |---|---:|---:|
@@ -204,7 +204,7 @@ Sending 4,554 rows to review sounds like a staffing problem. It is not, because 
 Assigned rows cost nothing on day 2. The calls go to the clusters a person has to look at anyway.
 
 <div class="callout callout--note" markdown="1">
-**Boundary.** The corpus is synthetic: 240 hand-written wordings in five Latin-script languages, damaged by a seeded generator. Real traffic has longer tails, mixed scripts, sarcasm and code-switching, so the cluster counts and precision figures will move. What should transfer is the shape: per-row and per-key costs differ by the rows-per-key ratio; exact duplicates break density clustering; short-text cosine scores crowd into a narrow band; and a margin outperforms an absolute threshold when lexical overlap and meaning disagree. Two claims I expected to confirm did not reproduce here: UMAP was not needed for purity at this size, and omitting the e5 prefix did not hurt precision. Timings come from one shared machine under load; compare CPU seconds, not wall-clock. No LLM was called; call counts are what each unit of work would cost.
+**Boundary.** The corpus is generated: 240 hand-written wordings in five Latin-script languages, damaged by a fixed-seed generator. Real traffic has longer tails, mixed scripts, sarcasm and code-switching, so the cluster counts and precision figures will move. What should transfer is the shape: per-row and per-key costs differ by the rows-per-key ratio; exact duplicates break density clustering; short-text cosine scores crowd into a narrow band; and a margin outperforms an absolute threshold when lexical overlap and meaning disagree. Two claims I expected to confirm did not reproduce here: UMAP was not needed for purity at this size, and omitting the e5 prefix did not hurt precision. Timings come from one shared machine under load; compare CPU seconds, not wall-clock. No LLM was called; call counts are what each unit of work would cost.
 </div>
 
 ## What I would carry into a production pipeline

@@ -13,7 +13,7 @@ role: "Author"
 org: "Open source"
 period: "2026"
 team: "One person"
-scale: "A 54-question golden set over a seeded warehouse of 9,000 orders; one local model, recorded and replayed in CI"
+scale: "A 54-question golden set over a reproducible generated warehouse of 9,000 orders; one local model, recorded and replayed in CI"
 problem: "An analytics agent that can query data and propose refunds will be fluently wrong some of the time, and telling the model to behave does not stop a wrong answer or an injected instruction from becoming state."
 decision: "Treat every model output as a candidate. It becomes state only after a typed schema, a policy, a deterministic grounding check and, for anything that would change something, a named reviewer; approved actions run once through an outbox."
 repo: "https://github.com/technobasant/governed-agent"
@@ -39,13 +39,13 @@ sitemap:
 
 [Governed AI delivery](/work/governed-ai-delivery/) describes the operating model I use for AI features: generation is a candidate, and policy decides what becomes product state. That page has to stay at the level of principles, because the system it comes from is not mine to publish. This repository is the same idea built from scratch and in the open, small enough to read in an afternoon and complete enough to measure.
 
-The agent answers questions about the warehouse of a fictional homewares retailer: orders, customers, products, refunds, inventory. It can also propose three actions: a refund, a supplier quality case, or a change to a metric's definition. It cannot perform any of them. The question the repository answers is not "can a model write SQL?" but "what reaches state without a person, and how often is it wrong?"
+The agent answers questions about the warehouse of an online homewares retailer, a standard e-commerce scenario: orders, customers, products, refunds, inventory. It can also propose three actions: a refund, a supplier quality case, or a change to a metric's definition. It cannot perform any of them. The question the repository answers is not "can a model write SQL?" but "what reaches state without a person, and how often is it wrong?"
 
 ## Constraints
 
 - **The model is the least trusted component.** Every guarantee below has to hold when it misbehaves, including when it reads instructions planted in the data.
 - **A local model, so anyone can reproduce the run.** `qwen3:8b` under Ollama, temperature 0, seed 0, thinking off, on an Apple M5 with 24 GB. A hosted model is optional, not required.
-- **Synthetic data, seeded.** 9,000 orders, 1,500 customers, 910 refunds, generated from a fixed seed so the golden set's answer keys can be computed by SQL, not written by a model.
+- **Generated data, reproducible.** 9,000 orders, 1,500 customers, 910 refunds, generated from a fixed seed so the golden set's answer keys can be computed by SQL, not written by a model.
 - **CI cannot call a model.** It has to be deterministic and free, and it still has to fail when the model would see something new.
 
 ## Architecture

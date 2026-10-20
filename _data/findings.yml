@@ -4,26 +4,26 @@
 # and claim is quoted from the linked write-up, where the method, sample and
 # limits are stated. `post` is a slug; a slug that does not resolve renders
 # nothing, so check the build after renaming a post. `source` says where the
-# figure was measured: "Sample engagement" is the public architecture
-# engagement for a fictional client, on a lab copy of its database.
+# figure was measured: "Reference architecture" is the public reference
+# architecture for a B2B SaaS company, on a lab copy of its database.
 
 - value: "40 → 525 ms"
   claim: "the product's p95 latency once two analysts' reports ran on its Postgres primary; moved to a read replica, 3 of 35 long reports finished"
   post: read-replica-cancelled-the-reports
   pillar: database-lifecycle
-  source: "Sample engagement"
+  source: "Reference architecture"
 
 - value: "11 min"
   claim: "billed for a day's build and reports that took 38 seconds on Databricks' smallest SQL warehouse; 95% of it was waiting to stop"
   post: warehouse-billed-for-waiting-to-stop
   pillar: data-platforms
-  source: "Sample engagement"
+  source: "Reference architecture"
 
 - value: "31,849,449"
   claim: "rows rewritten to erase one person whose e-mail was copied into every event row; with it kept in one user table, 59,999"
   post: erasure-cost-is-a-modelling-decision
   pillar: system-architecture
-  source: "Sample engagement"
+  source: "Reference architecture"
 
 - value: "15.1%"
   claim: "of a year's revenue landed on the wrong plan when invoices were joined to today's account attributes"
@@ -35,7 +35,7 @@
   claim: "requests for another customer's data leaked when isolation was left to the prompt; run as the customer's database role, none did"
   post: prompt-is-not-tenant-isolation
   pillar: ai-systems
-  source: "Sample engagement"
+  source: "Reference architecture"
 
 - value: "p = 0.39"
   claim: "A 4.8-point eval drop that 12 changed answers out of 83 could not separate from noise"

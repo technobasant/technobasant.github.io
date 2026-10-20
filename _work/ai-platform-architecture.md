@@ -1,17 +1,17 @@
 ---
-title: "A usage assistant on governed data: a sample AI architecture engagement, measured"
+title: "A usage assistant on governed data: a reference AI architecture, measured"
 seo_title: "AI architecture case study: text-to-SQL assistant, tenant isolation, semantic layer, Genie, measured"
-hook: "Stage 3 of the same client: an assistant that answers customers from governed data, with accuracy, isolation and cost measured on three models and Genie"
+hook: "Stage 3 of the same company: an assistant that answers customers from governed data, with accuracy, isolation and cost measured on three models and Genie"
 description: "An AI architecture for a SaaS usage assistant: accuracy, tenant isolation, latency and cost measured on Qwen3, Llama 3.3, gpt-oss and Genie, with 14 decisions."
 date: 2026-10-18
 last_modified_at: 2026-10-20
 kind: open-source
-kind_label: "Sample engagement"
+kind_label: "Reference architecture"
 pillar: ai-systems
 related: [data-platform-architecture, governed-agent, evalproof]
 order: 0
 role: "Author, in the architect's role"
-org: "Fictional client; open source"
+org: "Reference architecture · open source"
 period: "2026"
 team: "One person"
 scale: "A usage mart with 200 accounts and 142,896 rows of activity; 90 customer questions with SQL answers and 20 isolation attacks; 750 recorded responses from Qwen3 8B, Llama 3.3 70B, gpt-oss-120b and Databricks Genie; 14 decision records"
@@ -38,13 +38,13 @@ sitemap:
 
 ## Context
 
-This is stage 3 of the engagement in [data-platform-architecture](/work/data-platform-architecture/): the same fictional B2B SaaS company, now with governed usage marts. Product wants an assistant inside the product that answers customers' questions about their own usage: how many reports they created, who used the mobile apps, which week was busiest. Support answers these by hand today.
+This is stage 3 of the engagement in [data-platform-architecture](/work/data-platform-architecture/): the same B2B SaaS company, now with governed usage marts. Product wants an assistant inside the product that answers customers' questions about their own usage: how many reports they created, who used the mobile apps, which week was busiest. Support answers these by hand today.
 
-The first version of [ai-platform-architecture](https://github.com/technobasant/ai-platform-architecture) was a reference architecture for five AI features, each decision citing a lab. Like its data counterpart, it read as an index of my labs rather than as architecture for anyone. This version answers one client's one feature, and measures every option it recommends.
+The first version of [ai-platform-architecture](https://github.com/technobasant/ai-platform-architecture) was a reference architecture for five AI features, each decision citing a lab. Like its data counterpart, it read as an index of my labs rather than as architecture for anyone. This version answers one company's one feature, and measures every option it recommends.
 
 ## Constraints
 
-The client and its data are fictional; the mart is seeded and rebuilt identically in CI. The hosted models ran on Databricks Free Edition's model serving and the local model on a laptop, so latencies are indicative. One run per condition, at temperature 0; 90 questions are enough to separate 55 from 70 correct, not to rank two models that both answered 70.
+Data: generated to the scenario's shape and rebuilt identically in CI, so every figure can be re-run. The hosted models ran on Databricks Free Edition's model serving and the local model on a laptop, so latencies are indicative. One run per condition, at temperature 0; 90 questions are enough to separate 55 from 70 correct, not to rank two models that both answered 70.
 
 The brief's constraints: the assistant reads only the platform's governed marts; customers sign in to the product, not the platform; at most $0.01 an answer and $1,500 a month at launch; an answer within 10 seconds, 95 times in 100; processing in the EU region; and no customer data used for training.
 
@@ -74,7 +74,7 @@ If the model kept to the customer's account, the two results are identical. If i
 |---|---|---|---|
 | Isolation outside the model: the tool scopes each query | The account in the prompt | 23 of 120 requests leaked through the prompt; none of the 28 queries that reached the data leaked through the rewrite or row-level security | A SQL parser in the trust path, reviewed like an access policy, with 44 escapes in CI |
 | A semantic layer in every prompt | Pick a stronger model | It moved Llama 3.3 70B from 55 to 70 and an 8B local model from 46 to 64 | About 700 tokens a question, and a file the data team owns |
-| The client's own small service | The platform's assistant (Genie) | As accurate with the same definitions, but 14.5 s median and built for platform users | A service to run; Genie stays for internal staff |
+| The company's own small service | The platform's assistant (Genie) | As accurate with the same definitions, but 14.5 s median and built for platform users | A service to run; Genie stays for internal staff |
 | gpt-oss-120b, Llama 3.3 70B as fallback | Self-hosting a model | $0.00032 an answer; hardware that can hold the model pays only above about 174,600 answers an hour | Dependence on the platform's model serving |
 | Record every response | Log final answers | CI re-scores 750 responses with no model call | Recordings are personal data for 30 days |
 
@@ -88,7 +88,7 @@ If the model kept to the customer's account, the two results are identical. If i
 
 **On the platform, the tool scopes the query.** Databricks cannot key a row filter on a per-request value: a filter function that reads a session variable fails to compile. The assistant's tool parses each generated query, refuses any expression not on a short list and any table but the three it may read, and prepends per-account versions of them; the rewritten queries matched row-level security on all 464 recorded queries, including the 23 that leaked through the prompt, and it refuses {{ site.data.metrics.aipa_rewrite_escapes.value }} hand-written escapes.
 
-**The model is cheap; a warehouse kept awake for it is not.** From measured tokens, $0.00032 an answer on gpt-oss-120b at list price in the client's EU region: about $19 a month at launch volume. The smallest SQL warehouse, measured at 4 DBU an hour in the data architecture's proof of concept, would cost $2,657 a month kept awake for customers who ask at any hour, more than the assistant's whole $1,500 ceiling, so its queries go to the stage-2 usage store that is awake anyway. {{ site.data.metrics.aipa_decisions_backed.value }} decisions cite measured results; the release gate's evidence comes from [evalproof](/work/evalproof/), where a 4.8-point drop with {{ site.data.metrics.evalproof_noise_gate.value }} was correctly not failed.
+**The model is cheap; a warehouse kept awake for it is not.** From measured tokens, $0.00032 an answer on gpt-oss-120b at list price in the company's EU region: about $19 a month at launch volume. The smallest SQL warehouse, measured at 4 DBU an hour in the data architecture's proof of concept, would cost $2,657 a month kept awake for customers who ask at any hour, more than the assistant's whole $1,500 ceiling, so its queries go to the stage-2 usage store that is awake anyway. {{ site.data.metrics.aipa_decisions_backed.value }} decisions cite measured results; the release gate's evidence comes from [evalproof](/work/evalproof/), where a 4.8-point drop with {{ site.data.metrics.evalproof_noise_gate.value }} was correctly not failed.
 
 ## What went wrong
 

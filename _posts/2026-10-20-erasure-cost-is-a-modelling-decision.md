@@ -50,13 +50,13 @@ key_takeaways:
 
 A right-to-erasure process is usually designed as a job: find the person, delete or null their data, prove it is gone. The job is the same however the data is modelled. What it costs is not, and the difference is decided long before the first request, by where the model copies an e-mail address.
 
-I measured it for the data model of a fictional SaaS client in [data-platform-architecture](/work/data-platform-architecture/), whose tables use Delta with UniForm so other engines can read them as Iceberg.
+I measured it for the data model of a B2B SaaS company in [data-platform-architecture](/work/data-platform-architecture/), a scenario common across the industry, whose tables use Delta with UniForm so other engines can read them as Iceberg.
 
 **Operating rule.** Keep personal columns in the raw layer, staging and one identity table per source. Facts and marts carry the person's key, never their identity, and a CI check fails the build if any mart column is classified personal. Anyone who needs a name next to a figure joins through one restricted view.
 
 ## The test
 
-The client's product events at today's scale, 31.85 million rows for 60,000 users (the lab copy's 31.5 million plus the day the cost test appended), on Databricks SQL 2026.39, built three ways:
+The company's product events at today's scale, 31.85 million rows for 60,000 users (the lab copy's 31.5 million plus the day the cost test appended), on Databricks SQL 2026.39, built three ways:
 
 - **Identity in every event.** The events with each user's e-mail and name copied into every row, as a convenient wide table would have them. Delta with UniForm, which allows no deletion vectors.
 - **The same on plain Delta**, with deletion vectors on.
@@ -81,7 +81,7 @@ The events are written in the order they happen, and any one user's events are s
 
 Deletion vectors do not change the arithmetic, only the timing. The update marked rows deleted and wrote the new versions, rewriting nothing. But an erasure is not done while the old values are still in the files (time travel returns them, as [the erasure write-up](/writing/delta-delete-is-not-erasure/) showed), so a purge has to follow, and the purge rewrote all three files. On UniForm the question does not arise: Databricks refused to create the table with deletion vectors.
 
-Today that is a few seconds a week. At 36 months the client's event table holds about 3.8 billion rows, and with identities in every row, every weekly erasure batch would rewrite all of it. With identities in one table, the cost stays the size of the user table.
+Today that is a few seconds a week. At 36 months the company's event table holds about 3.8 billion rows, and with identities in every row, every weekly erasure batch would rewrite all of it. With identities in one table, the cost stays the size of the user table.
 
 ## What it means for the model
 
@@ -93,7 +93,7 @@ Today that is a few seconds a week. At 36 months the client's event table holds 
 A tokenisation vault, which replaces identities with tokens at ingestion, isolates them further, at the price of a service that has to be available whenever data lands. For a team of two to four, one identity table per source gets most of the benefit.
 
 <div class="callout callout--note" markdown="1">
-**Boundary.** One table of 31.85 million rows in three large files, on Databricks Free Edition; one person at a time. A batch of erasures costs the same as one in the wide table, since every file is rewritten anyway. In a table clustered by user rather than by time, a person's rows would sit in fewer files, but the client's tables are clustered for the reads that matter, by date and account. The decision record is [0017 in the repository](https://github.com/technobasant/data-platform-architecture/blob/main/decisions/0017-personal-data-in-one-place.md).
+**Boundary.** One table of 31.85 million rows in three large files, on Databricks Free Edition; one person at a time. A batch of erasures costs the same as one in the wide table, since every file is rewritten anyway. In a table clustered by user rather than by time, a person's rows would sit in fewer files, but the company's tables are clustered for the reads that matter, by date and account. The decision record is [0017 in the repository](https://github.com/technobasant/data-platform-architecture/blob/main/decisions/0017-personal-data-in-one-place.md).
 </div>
 
 ## Checks for a model that has to support erasure

@@ -37,9 +37,9 @@ sitemap:
 
 ## Context
 
-[streaming-platform](https://github.com/technobasant/streaming-platform) is a real-time data platform for the storefront clickstream of a fictional homewares retailer. Shoppers browse, add to cart, check out and pay, and the events arrive the way real ones do: some twice, some out of order, some minutes late, a few not even valid. Contracts sit at the front door, Kafka and Flink process everything exactly once, ClickHouse answers queries a few seconds old, Iceberg keeps the record, and a freshness SLO pages when the pipeline stalls.
+[streaming-platform](https://github.com/technobasant/streaming-platform) is a real-time data platform for the storefront clickstream of an online homewares retailer, a standard e-commerce scenario. Shoppers browse, add to cart, check out and pay, and the events arrive the way real ones do: some twice, some out of order, some minutes late, a few not even valid. Contracts sit at the front door, Kafka and Flink process everything exactly once, ClickHouse answers queries a few seconds old, Iceberg keeps the record, and a freshness SLO pages when the pipeline stalls.
 
-It is a from-scratch reference system, not a production deployment. What makes it worth reading is the reconciler. A seeded generator writes a ledger of every event and every fault it injected; after each run, the reconciler counts the run at every layer — Kafka, Flink's output, ClickHouse, the Iceberg table, the dead-letter topic, the window aggregates — by sequence number. A layer is *exact* only when nothing is missing, nothing is there twice, and no poison leaked.
+It is a from-scratch reference system, not a production deployment. What makes it worth reading is the reconciler. A fixed-seed generator writes a ledger of every event and every fault it injected; after each run, the reconciler counts the run at every layer — Kafka, Flink's output, ClickHouse, the Iceberg table, the dead-letter topic, the window aggregates — by sequence number. A layer is *exact* only when nothing is missing, nothing is there twice, and no poison leaked.
 
 ## Constraints
 

@@ -60,7 +60,7 @@ On the two weeks that followed, scored with the features the online store would 
 
 **Operating rule.** A training row may only see what the scoring service could have seen at the moment of the decision. Check that as a timestamp comparison on every row, in a test, rather than as a review comment. And never let a validation score settle a question about the join: a validation set built by the same pipeline inherits the same leak, and it will vote for it.
 
-This comes from [realtime-ml](https://github.com/technobasant/realtime-ml), a real-time fraud-scoring system I built to measure the failures that usually only get avoided: leakage, training–serving skew, late labels and drift. Payments flow through Kafka into a stream processor that keeps window features in Feast's online store; an API scores each payment with a champion model and a challenger in shadow. The data is seeded and synthetic — 874,446 payments over 90 days for a fictional retailer, 0.80% of them fraud, with card-testing bursts, account takeovers and chargebacks that arrive weeks late. That makes the absolute scores a property of the generator. The comparisons are the point: same data, same model, one thing changed. Every figure below is in the repository's [MEASUREMENTS.md](https://github.com/technobasant/realtime-ml/blob/main/MEASUREMENTS.md).
+This comes from [realtime-ml](https://github.com/technobasant/realtime-ml), a real-time fraud-scoring system I built to measure the failures that usually only get avoided: leakage, training–serving skew, late labels and drift. Payments flow through Kafka into a stream processor that keeps window features in Feast's online store; an API scores each payment with a champion model and a challenger in shadow. The data is generated, with a fixed seed — 874,446 payments over 90 days for an online homewares retailer, a standard e-commerce scenario, 0.80% of them fraud, with card-testing bursts, account takeovers and chargebacks that arrive weeks late. That makes the absolute scores a property of the generator. The comparisons are the point: same data, same model, one thing changed. Every figure below is in the repository's [MEASUREMENTS.md](https://github.com/technobasant/realtime-ml/blob/main/MEASUREMENTS.md).
 
 ## Two joins, one difference
 
@@ -144,7 +144,7 @@ read_future = (train["cust_last_txn_epoch"] > txn_epoch).mean()
 assert read_future == 0, f"{read_future:.0%} of training rows read the future"
 ```
 
-In this run, 100% of the naive training rows took their customer features from a row stamped after the transaction, and 98% their device features. A point-in-time join cannot produce a single such row. The repository's tests assert both directions: that the naive join reads the future on a small seeded dataset, and that the point-in-time features come from before the transaction. A third test checks Feast's historical retrieval against `pandas.merge_asof` on the same rows, so the point-in-time join is itself verified rather than trusted.
+In this run, 100% of the naive training rows took their customer features from a row stamped after the transaction, and 98% their device features. A point-in-time join cannot produce a single such row. The repository's tests assert both directions: that the naive join reads the future on a small reproducible generated dataset, and that the point-in-time features come from before the transaction. A third test checks Feast's historical retrieval against `pandas.merge_asof` on the same rows, so the point-in-time join is itself verified rather than trusted.
 
 A check like that belongs in CI beside the training code, not in a notebook someone runs when a model disappoints. It costs one comparison per row and gives a yes-or-no answer. A validation metric gives neither.
 
@@ -166,7 +166,7 @@ The numbers you can see lag the truth the same way. For one day of traffic, a we
 
 ## The drift monitor that never fired
 
-The last measurement is the one that disappointed me most, and it is the same lesson from the other side of deployment. Ten seeded datasets: five where, from day 70, fraudsters slow down and stay closer to normal — card testing spread over hours instead of minutes, takeovers mostly from the victim's home country — and every price rises 15%, and five with no drift at all. The drift cost the model 3 to 9 points of recall. Each monitor was replayed every six hours over the trailing day; a false alarm is an alert in a window with no drift in it, 650 such windows in all.
+The last measurement is the one that disappointed me most, and it is the same lesson from the other side of deployment. Ten generated datasets (fixed seed): five where, from day 70, fraudsters slow down and stay closer to normal — card testing spread over hours instead of minutes, takeovers mostly from the victim's home country — and every price rises 15%, and five with no drift at all. The drift cost the model 3 to 9 points of recall. Each monitor was replayed every six hours over the trailing day; a false alarm is an alert in a window with no drift in it, 650 such windows in all.
 
 | Monitor | Drifts detected | Median time to detect | False alarms, of 650 clean windows |
 |---|---:|---:|---:|
@@ -191,7 +191,7 @@ What does carry signal, and what each costs:
 None of these caught the tactics drift both quickly and quietly, and the repository reports that as a limit instead of tuning a threshold until a chart looks good. The next thing to measure is monitoring the slice the model flags rather than all traffic — the decisions, not the population.
 
 <div class="callout callout--note" markdown="1">
-**Boundary.** The data is a seeded simulation of payments, not real fraud, and the generator's patterns are simpler than real adversaries. Every absolute score — the 0.941 included — describes the generator. What transfers is the direction and the mechanism of each comparison: a join that reads the end of the window, a label set that is incomplete for recent rows, a population statistic watching a 0.8% class. The live stack runs every service as a container on one 8-CPU VM, so its latency and lag figures contain no network hops.
+**Boundary.** The data is a fixed-seed simulation of payments, not real fraud, and the generator's patterns are simpler than real adversaries. Every absolute score — the 0.941 included — describes the generator. What transfers is the direction and the mechanism of each comparison: a join that reads the end of the window, a label set that is incomplete for recent rows, a population statistic watching a 0.8% class. The live stack runs every service as a container on one 8-CPU VM, so its latency and lag figures contain no network hops.
 </div>
 
 ## What I check before trusting a real-time model

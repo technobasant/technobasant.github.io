@@ -13,7 +13,7 @@
   case: postgres-scale-out-citus
   post: read-replica-cancelled-the-reports
   repo: data-platform-architecture
-  repo_blurb: "A sample engagement: current state measured, 18 decisions"
+  repo_blurb: "A reference architecture: current state measured, 18 decisions"
 
 - id: data-platforms
   title: "Platforms chosen on evidence and run at scale"
@@ -46,4 +46,4 @@
   case: governed-ai-delivery
   post: prompt-is-not-tenant-isolation
   repo: ai-platform-architecture
-  repo_blurb: "A sample AI engagement: isolation, accuracy and cost measured"
+  repo_blurb: "A reference AI architecture: isolation, accuracy and cost measured"

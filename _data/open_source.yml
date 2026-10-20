@@ -55,8 +55,9 @@ repos:
 - name: ai-platform-architecture
   url: https://github.com/technobasant/ai-platform-architecture
   pillar: ai-systems
-  what: 'The AI architecture for a fictional SaaS company''s usage assistant: text-to-SQL over governed data,
-    with accuracy, tenant isolation and cost measured on Qwen3, Llama 3.3, gpt-oss and Databricks Genie.'
+  what: 'The reference AI architecture for a B2B SaaS company''s usage assistant, a scenario common across
+    the industry: text-to-SQL over governed data, with accuracy, tenant isolation and cost measured on Qwen3,
+    Llama 3.3, gpt-oss and Databricks Genie.'
   finding: 'Told to stay in one customer''s data, the models leaked another account''s on 23 of 120 requests;
     the tool''s default-deny query rewrite matched row-level security on every one and refuses 44 of 44
     hand-written escapes.'
@@ -194,10 +195,10 @@ repos:
 - name: data-platform-architecture
   url: https://github.com/technobasant/data-platform-architecture
   pillar: data-platforms
-  what: 'A sample architecture engagement for a fictional SaaS company leaving Postgres: the current state
-    measured on a lab copy of its database, options priced in its EU region, a staged target, data contracts,
-    migration, a data model, governance and SOC 2 readiness, 18 decision records and a Databricks proof of
-    concept.'
+  what: 'A reference architecture for a B2B SaaS company leaving Postgres, a scenario common across the
+    industry: the current state measured on a lab copy of its database, options priced in its EU region, a
+    staged target, data contracts, migration, a data model, governance and SOC 2 readiness, 18 decision
+    records and a Databricks proof of concept.'
   finding: 'With reports on the product''s primary, its p95 latency went from 40 to 525 ms; on the read replica,
     3 of 35 long report runs finished. On Databricks, a day''s build and reports took 38 s and were billed for 11
     minutes awake.'
@@ -216,7 +217,7 @@ repos:
 - name: data-stack-lab
   url: https://github.com/technobasant/data-stack-lab
   pillar: data-platforms
-  what: 'Hands-on data engineering projects, one per tool, on one synthetic SaaS dataset: a dbt star
+  what: 'Hands-on data engineering projects, one per tool, on one generated SaaS dataset: a dbt star
     schema with a Type 2 dimension, an Airflow 3 DAG comparing three incremental-load strategies,
     data-quality checks against nine injected defects, the overwrite and file defaults of a PySpark job,
     and six ways of loading changing files on Databricks.'
@@ -317,8 +318,8 @@ repos:
 - name: short-text-triage
   url: https://github.com/technobasant/short-text-triage
   pillar: ai-systems
-  what: 'Seeded multilingual short-text triage lab: normalize to a key, embed each distinct key once,
-    cluster with HDBSCAN, assign by margin.'
+  what: 'Multilingual short-text triage lab on a reproducible generated corpus: normalize to a key,
+    embed each distinct key once, cluster with HDBSCAN, assign by margin.'
   finding: A margin rule reached 95.2% precision against 66.2% for the best absolute threshold; labelling
     per cluster needed 125 LLM calls, not 20,000.
   post: /writing/classify-distinct-strings-not-rows/
@@ -336,8 +337,8 @@ repos:
 - name: prevalence-shift
   url: https://github.com/technobasant/prevalence-shift
   pillar: ai-systems
-  what: Seeded Monte Carlo showing why counting predicted labels flattens a trend, and how ACC, SLD and
-    prediction-powered inference report prevalence honestly.
+  what: Monte Carlo simulation with a fixed seed showing why counting predicted labels flattens a trend,
+    and how ACC, SLD and prediction-powered inference report prevalence honestly.
   finding: A 95%-accurate classifier counted a rise from 10% to 25% as 8% to 17%, a trend slope 0.628
     of the true one.
   post: /writing/count-prevalence-not-classifications/

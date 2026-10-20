@@ -13,9 +13,9 @@ role: "Author"
 org: "Open source"
 period: "2026"
 team: "One person"
-scale: "Seeded payments: 874,446 transactions over 90 days, 0.80% fraud; a live stack of Kafka, Redis, Postgres, MLflow and Prometheus, one container per service"
+scale: "Generated payments (fixed seed): 874,446 transactions over 90 days, 0.80% fraud; a live stack of Kafka, Redis, Postgres, MLflow and Prometheus, one container per service"
 problem: "A real-time model can pass every offline check and still fail: the training join reads the future, the backfill computes a feature differently from the stream, labels arrive weeks late, and the drift monitor fires on the calendar instead of the drift."
-decision: "Build each failure on purpose next to the correct version — naive and point-in-time joins, SQL and stream features, mature and immature labels, four drift monitors — on seeded data, and measure the difference instead of asserting it."
+decision: "Build each failure on purpose next to the correct version — naive and point-in-time joins, SQL and stream features, mature and immature labels, four drift monitors — on generated data (fixed seed), and measure the difference instead of asserting it."
 repo: "https://github.com/technobasant/realtime-ml"
 flow: realtime-ml
 cover:
@@ -37,13 +37,13 @@ sitemap:
 
 ## Context
 
-[realtime-ml](https://github.com/technobasant/realtime-ml) scores payments for a fictional homewares retailer as they happen. Payments flow through Kafka into a stream processor that keeps window features — card counts per device in the last hour, purchases per customer in the last day — in Feast's online store. A FastAPI service scores each payment with the champion model, runs the challenger in shadow, and logs both. A gate promotes the challenger only on a statistically significant, paired improvement, and a monitor exports drift signals to Prometheus.
+[realtime-ml](https://github.com/technobasant/realtime-ml) scores payments for an online homewares retailer, a standard e-commerce scenario, as they happen. Payments flow through Kafka into a stream processor that keeps window features — card counts per device in the last hour, purchases per customer in the last day — in Feast's online store. A FastAPI service scores each payment with the champion model, runs the challenger in shadow, and logs both. A gate promotes the challenger only on a statistically significant, paired improvement, and a monitor exports drift signals to Prometheus.
 
 None of that is unusual, and none of it was the point. The ways a model like this goes wrong mostly happen before it is served, and they are quiet: the offline numbers look fine. So each failure is built here on purpose, beside the correct version, and the difference between them is the measurement. The finding I did not expect is written up in [Validation picked the fraud model that had read the future](/writing/realtime-ml-point-in-time-leakage/).
 
 ## Constraints
 
-The data is synthetic, from a seeded generator: 8,000 customers, 90 days, card-testing bursts, account takeovers, lone anomalies, and chargebacks that arrive after a lognormal delay with a median of seven days — 15% of frauds are never reported at all. That makes every absolute score a property of the generator. The comparisons are the findings: the same rows, the same model, one thing changed.
+The data is generated, from a fixed-seed generator: 8,000 customers, 90 days, card-testing bursts, account takeovers, lone anomalies, and chargebacks that arrive after a lognormal delay with a median of seven days — 15% of frauds are never reported at all. That makes every absolute score a property of the generator. The comparisons are the findings: the same rows, the same model, one thing changed.
 
 The live stack is Kafka 4.3.1 in KRaft mode, Redis, Postgres, an MLflow server and Prometheus, each a container on one Docker VM of 8 CPUs and 11.7 GiB. All containers share one host, so latency figures contain no real network hops. Kafka runs one broker and one partition, because the log's guarantees are not what is under test.
 

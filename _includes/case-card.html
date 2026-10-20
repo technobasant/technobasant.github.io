@@ -15,7 +15,7 @@
 {%- when "practice" -%}{%- assign _kind_label = "Professional practice" -%}
 {%- else -%}{%- assign _kind_label = "Independent product" -%}
 {%- endcase -%}
-{%- comment -%} A case can name itself more precisely than its kind: the sample architecture engagements are open source, but a reader should know first that they are engagements. {%- endcomment -%}
+{%- comment -%} A case can name itself more precisely than its kind: the reference architectures are open source, but a reader should know first that they are reference architectures. {%- endcomment -%}
 {%- if _c.kind_label -%}{%- assign _kind_label = _c.kind_label -%}{%- endif -%}
 <article class="case-card{% if include.variant %} case-card--{{ include.variant }}{% endif %}" data-catalog-item data-id="{{ _c.url }}" data-kind="work" data-tags="{{ _c.tags | join: ' ' }}" data-search="{% include writing-search.html work=_c %}">
   <p class="post-card__meta">

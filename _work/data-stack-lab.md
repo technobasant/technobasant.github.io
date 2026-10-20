@@ -1,8 +1,8 @@
 ---
 title: "data-stack-lab: dbt, Airflow, data-quality, Spark and Databricks projects, checked against known answers"
 seo_title: "Hands-on dbt, Airflow, data quality, PySpark and Databricks projects, each measured"
-hook: "One project per tool on one synthetic SaaS dataset, each with a result the data can prove"
-description: "Hands-on data engineering projects on one synthetic SaaS dataset: dbt, Airflow 3, data quality, PySpark and Databricks, each with measured results."
+hook: "One project per tool on one generated SaaS dataset, each with a result the data can prove"
+description: "Hands-on data engineering projects on one generated SaaS dataset: dbt, Airflow 3, data quality, PySpark and Databricks, each with measured results."
 date: 2026-10-18
 last_modified_at: 2026-10-19
 kind: lab
@@ -39,17 +39,17 @@ sitemap:
 
 Data modelling and Airflow are each in about two of every five data-engineering job descriptions I have collected, and they are the skills a portfolio shows worst. A dbt project that runs proves the SQL compiles; a DAG that runs green proves the tasks finished. Neither proves the numbers are right, and the usual checks (unique keys, not-null columns, successful runs) are checks on shape, not on meaning.
 
-[data-stack-lab](https://github.com/technobasant/data-stack-lab) is a set of hands-on data engineering projects, one per tool, all on the same synthetic SaaS data. Each runs with one command and has its results checked in CI. Because the data is generated, the correct answer is known, so each project can prove its result instead of just running. This case covers the first five. The dbt project asks what keeping a dimension's history is worth in dollars. The Airflow project asks which way of loading "only what is new" survives re-runs, backfills and an upgrade to Airflow 3. The data-quality project asks which checks catch which defects, and what blocking or quarantining lets through. The Spark project asks what a partitioned PySpark job's defaults do on a re-run and to the files it writes. The Databricks project asks which way of loading files survives the incidents real deliveries have, and how Delta re-runs a day.
+[data-stack-lab](https://github.com/technobasant/data-stack-lab) is a set of hands-on data engineering projects, one per tool, all on the same generated SaaS data. Each runs with one command and has its results checked in CI. Because the data is generated, the correct answer is known, so each project can prove its result instead of just running. This case covers the first five. The dbt project asks what keeping a dimension's history is worth in dollars. The Airflow project asks which way of loading "only what is new" survives re-runs, backfills and an upgrade to Airflow 3. The data-quality project asks which checks catch which defects, and what blocking or quarantining lets through. The Spark project asks what a partitioned PySpark job's defaults do on a re-run and to the files it writes. The Databricks project asks which way of loading files survives the incidents real deliveries have, and how Delta re-runs a day.
 
 ## Constraints
 
-Everything is synthetic, and the business is deliberately small: four plans at one price each, no seats, proration, discounts or refunds. The rates at which accounts upgrade, downgrade, trial a plan and churn are assumptions, so the percentages describe this business rather than any real one.
+Everything is generated, and the business is deliberately small: four plans at one price each, no seats, proration, discounts or refunds. The rates at which accounts upgrade, downgrade, trial a plan and churn are assumptions, so the percentages describe this business rather than any real one.
 
-The warehouse is DuckDB, so the dbt, Airflow, data quality and Spark projects run anywhere with no server, and CI rebuilds it on every commit. Spark runs in local mode on four cores, so there is no network shuffle and no object store, where small files cost more. The Databricks project ran once on Free Edition and cannot run in CI; CI checks its prediction from the documented semantics, and that the recorded run matched it. The same dbt project, written to be portable (dbt's cross-database macros, no `QUALIFY`), also built on Databricks with one change; nothing here is claimed about Snowflake or BigQuery. Timings came from one host, an Apple M5 with 24 GB, and are observations only; every other figure is a count over seeded data that CI reproduces byte for byte on Linux.
+The warehouse is DuckDB, so the dbt, Airflow, data quality and Spark projects run anywhere with no server, and CI rebuilds it on every commit. Spark runs in local mode on four cores, so there is no network shuffle and no object store, where small files cost more. The Databricks project ran once on Free Edition and cannot run in CI; CI checks its prediction from the documented semantics, and that the recorded run matched it. The same dbt project, written to be portable (dbt's cross-database macros, no `QUALIFY`), also built on Databricks with one change; nothing here is claimed about Snowflake or BigQuery. Timings came from one host, an Apple M5 with 24 GB, and are observations only; every other figure is a count over generated data (fixed seed) that CI reproduces byte for byte on Linux.
 
 ## Architecture
 
-- **Generator.** One seeded Python module writes the sources as an application would deliver them: a full extract of the accounts table on the first of each month (current state only), users, a price list, a billing export carrying amounts but not plans, and 913,388 product events, 0.8% of them delivered twice. It also writes two truth files the warehouse never sees: every account change with its timestamp, and the plan each invoice billed.
+- **Generator.** One fixed-seed Python module writes the sources as an application would deliver them: a full extract of the accounts table on the first of each month (current state only), users, a price list, a billing export carrying amounts but not plans, and 913,388 product events, 0.8% of them delivered twice. It also writes two truth files the warehouse never sees: every account change with its timestamp, and the plan each invoice billed.
 - **Load and snapshot.** A script replaces `raw.accounts` with each month's extract in turn and runs `dbt snapshot` after each, 13 times, so the history in the warehouse is exactly what the extracts showed.
 - **Model.** Staging views normalise types and e-mail addresses and drop redelivered events. The marts are a Kimball star: `dim_account` (Type 2), `dim_plan`, `dim_date` and `dim_user` (Type 1, with personal data left in staging), and two facts, `fct_invoices` and `fct_daily_usage`, each joined to the account version in effect when it happened. A `revenue_by_plan` model carries both attributions side by side.
 - **Tests.** Enforced contracts on the dimension and both facts; 46 data tests including three generic ones written for this (validity windows that neither overlap nor leave gaps, and a composite grain) and two reconciliations; 3 unit tests on hand-written rows.
@@ -94,7 +94,7 @@ Both lines are pinned by a unit test, and the mutation script deletes each in tu
 | Stretch the first version back to signup | Leave a gap before the first extract | Without it, usage in the gap found no version at all | The gap's state is assumed; `version_number = 1` labels it |
 | Facts left-join the dimension, with `not_null` on the key | Inner join | An unmatched fact fails the build instead of disappearing | One more test per fact |
 | No dbt packages | dbt_utils for the generic tests | Runs offline and on dbt v2 unchanged | Three generic tests written by hand, under 50 lines |
-| Score against a truth file | Trust the tests | Tests check shape; only the truth says whether the number is right | The truth exists only because the data is synthetic |
+| Score against a truth file | Trust the tests | Tests check shape; only the truth says whether the number is right | The truth exists only because the data is generated |
 
 ## Results
 

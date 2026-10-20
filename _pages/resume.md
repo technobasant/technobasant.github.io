@@ -57,8 +57,8 @@ redirect_from:
 
 ## Selected open source
 
-- **Sample architecture engagements**, published in full: [data-platform-architecture](/work/data-platform-architecture/), a SaaS company leaving Postgres — the current state measured, 18 decision records, a Kimball data model, governance and SOC 2 readiness, a cost model and a proof of concept on Databricks; and [ai-platform-architecture](/work/ai-platform-architecture/), its usage assistant, with tenant isolation, accuracy and cost measured on three models and Genie.
-- **[data-stack-lab](/work/data-stack-lab/)** — dbt, Airflow, data quality, Spark and Databricks projects on one fictional business, each scored against the data's ground truth.
+- **Reference architectures**, published in full: [data-platform-architecture](/work/data-platform-architecture/), a SaaS company leaving Postgres — the current state measured, 18 decision records, a Kimball data model, governance and SOC 2 readiness, a cost model and a proof of concept on Databricks; and [ai-platform-architecture](/work/ai-platform-architecture/), its usage assistant, with tenant isolation, accuracy and cost measured on three models and Genie.
+- **[data-stack-lab](/work/data-stack-lab/)** — dbt, Airflow, data quality, Spark and Databricks projects on one generated SaaS business, each scored against the data's ground truth.
 - **[spark-sql-kinesis](https://github.com/technobasant/spark-sql-kinesis)** — maintainer of a Kinesis source and sink for Spark 4.2 on AWS SDK v2, published to Maven Central; an idle shard costs one `GetRecords` call instead of a multi-second floor per batch.
 - **[evalproof](/work/evalproof/)** — LLM evaluation as measurement: judge calibration, and CI gates that fail only on drops that are both large and significant (paired McNemar and bootstrap).
 - **[governed-agent](/work/governed-agent/)** — a LangGraph and MCP agent whose answers become state only after schema, policy, grounding and, where required, a person.
@@ -84,7 +84,7 @@ redirect_from:
   </li>
   <li>
     <h3>Data &amp; system architecture</h3>
-    <p>Conceptual to physical data modelling; Kimball stars with Type 2 history; Iceberg and Delta, ClickHouse and Citus layouts; open data contracts checked in CI; C4 diagrams and decision records; SOC 2 controls and GDPR erasure designed into the model; cost models over 36 months. Evidence: <a href="/work/data-platform-architecture/">a sample architecture engagement</a>; <a href="/writing/choosing-where-the-data-lives/">the decision guide</a>.</p>
+    <p>Conceptual to physical data modelling; Kimball stars with Type 2 history; Iceberg and Delta, ClickHouse and Citus layouts; open data contracts checked in CI; C4 diagrams and decision records; SOC 2 controls and GDPR erasure designed into the model; cost models over 36 months. Evidence: <a href="/work/data-platform-architecture/">a reference architecture</a>; <a href="/writing/choosing-where-the-data-lives/">the decision guide</a>.</p>
   </li>
 </ol>
 

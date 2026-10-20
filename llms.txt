@@ -34,8 +34,8 @@ production agentic systems on LangGraph, LangChain, Google ADK, and MCP—tool
 servers, retrieval, evaluation, and integration into the existing stack so
 model output becomes governed product state.
 
-The architecture work that can be read in full is a sample engagement for a
-fictional SaaS company leaving Postgres
+The architecture work that can be read in full is a reference architecture for
+a B2B SaaS company leaving Postgres, a scenario common across the industry
 (https://github.com/technobasant/data-platform-architecture): the current state
 measured on a lab copy of its database, 18 decision records, a Kimball data
 model, governance and SOC 2 readiness, a cost model, and a proof of concept on
