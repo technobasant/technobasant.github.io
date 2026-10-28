@@ -1,5 +1,6 @@
 ---
 title: "Bronze, silver, gold on Iceberg: the dbt config that is silently ignored"
+seo_title: "dbt-trino on Iceberg with Airflow 3: medallion layers and the partition spec dbt drops"
 description: "Build a medallion pipeline with dbt-trino on Iceberg, orchestrate it with Airflow 3, and find the partition spec dbt accepts and discards without a warning."
 date: 2026-08-16 11:00:00 +0545
 last_modified_at: 2026-10-14

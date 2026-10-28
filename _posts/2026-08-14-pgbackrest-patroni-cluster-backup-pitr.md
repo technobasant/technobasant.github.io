@@ -1,5 +1,6 @@
 ---
 title: "pgBackRest against a Patroni cluster: archive, rebuild, and restore"
+seo_title: "pgBackRest with Patroni: backups, replica rebuild and point-in-time restore, tested"
 description: "Wire pgBackRest into a running Patroni cluster over mutual TLS with Ansible, then prove it: full backup, replica rebuilt from the repo, and a point-in-time restore."
 date: 2026-08-14 16:30:00 +0545
 last_modified_at: 2026-10-14

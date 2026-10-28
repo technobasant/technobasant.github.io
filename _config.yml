@@ -19,6 +19,8 @@ og_image: "/assets/og/og-default-v4.png"
 
 author:
   name: "Basant Bhattarai"
+  # Spellings people search for; structured data only (Person.alternateName).
+  alternate_names: ["Basanta Bhattarai"]
   # The practice and the employment title, always together. `job_title` is the
   # title held, and the only one structured data states as a fact.
   role: "Data & AI Architect · Senior Data Engineer"

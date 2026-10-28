@@ -1,5 +1,6 @@
 ---
 title: "PostgreSQL 18 won't take a volume at /var/lib/postgresql/data"
+seo_title: "PostgreSQL 18 Docker volume: mount /var/lib/postgresql, PGDATA is 18/docker"
 description: "The mount point moved in the PG 18 image, so every compose file copied from a 12–17 guide breaks. The corrected file, then replication, promotion and PITR."
 date: 2026-08-11 09:00:00 +0545
 last_modified_at: 2026-10-13

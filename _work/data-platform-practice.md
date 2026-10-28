@@ -1,5 +1,6 @@
 ---
 title: "Rebuilding a production data platform for scale and recovery"
+seo_title: "Data platform case study: rebuilding production processing for scale and recovery"
 hook: "A six-year platform story: faster processing, lower cost, safer change, and recovery designed before the incident."
 description: "How I rebuilt core processing, led a Kubernetes migration, evolved the lakehouse boundary, and made recovery a designed path."
 date: 2020-02-01
