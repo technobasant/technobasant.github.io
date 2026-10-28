@@ -1,7 +1,7 @@
 ---
 title: "Orchestrated failover and a restore I actually performed"
 hook: "A production-shaped Postgres cluster on amd64 VMs: killed the primary, rebuilt the replica, recovered a dropped table"
-description: "A Rocky 8 VM cluster running Patroni, etcd and pgBackRest over mutual TLS, with the backup path wired by Ansible, where every failure and recovery claim was measured rather than assumed."
+description: "A Rocky 8 VM cluster running Patroni, etcd and pgBackRest over mutual TLS, backups wired by Ansible, and every failover and restore claim measured, not assumed."
 date: 2026-08-14
 last_modified_at: 2026-10-14
 kind: lab

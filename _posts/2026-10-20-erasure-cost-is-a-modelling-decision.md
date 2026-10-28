@@ -1,7 +1,7 @@
 ---
 title: "Erasing one person rewrote 31.8 million rows. With their e-mail in one table, 60,000."
 seo_title: "GDPR erasure cost and data modelling: personal data in facts vs one identity table, measured on Delta Lake UniForm"
-description: "Nulling one person's e-mail rewrote all 31.85 million rows of an event table that copied it into every row. Kept in one user table, the same erasure rewrote 60,000."
+description: "Nulling one person's e-mail rewrote all 31.85 million rows of an event table that copied it into each row. In one user table, the same erasure rewrote 60,000."
 date: 2026-10-20 03:00:00 +0545
 last_modified_at: 2026-10-20
 type: essay

@@ -1,7 +1,7 @@
 ---
 title: "A Type 1 dimension put 15% of a year's revenue on the wrong plan"
 seo_title: "SCD Type 2 in dbt: what Type 1 gets wrong, measured on a year of revenue"
-description: "Type 1 moved $152,227 of a year's revenue to the wrong plan. A Type 2 dimension from dbt snapshots got all 5,048 invoices right, and only a unit test saw the bug."
+description: "Type 1 moved $152,227 of a year's revenue to the wrong plan. A Type 2 dimension from dbt snapshots got all 5,048 invoices right; only a unit test saw the bug."
 date: 2026-10-18 09:00:00 +0545
 last_modified_at: 2026-10-19
 type: essay

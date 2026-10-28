@@ -197,9 +197,11 @@ task :content do
       failures << "#{path}: #{key} is required" if empty
     end
 
+    # _includes/head/meta.html truncates at 160, so anything longer shows an
+    # ellipsis in search results and loses its last words.
     description = data["description"].to_s
-    unless description.empty? || (120..165).cover?(description.length)
-      failures << "#{path}: description must be 120–165 characters (got #{description.length})"
+    unless description.empty? || (120..160).cover?(description.length)
+      failures << "#{path}: description must be 120–160 characters (got #{description.length})"
     end
 
     failures << "#{path}: type must be essay, tutorial or note" unless %w[essay tutorial note].include?(type)
@@ -291,6 +293,10 @@ task :content do
     rescue Psych::SyntaxError => e
       failures << "#{path}: invalid YAML — #{e.message.lines.first.to_s.strip}"
       next
+    end
+    description = data["description"].to_s
+    if description.length > 160
+      failures << "#{path}: description over 160 characters is cut in search results (got #{description.length})"
     end
     cover = data["cover"]
     next unless cover.is_a?(Hash) && cover["base"].to_s != ""

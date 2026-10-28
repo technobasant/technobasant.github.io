@@ -1,7 +1,7 @@
 ---
 title: "RDS, Citus, TimescaleDB, ClickHouse, Trino, Iceberg or pgvector: choosing where the data lives"
 seo_title: "Choosing a data store: RDS vs self-managed Postgres, Citus, TimescaleDB, ClickHouse, Trino, Apache Iceberg and pgvector"
-description: "A decision guide from production projects and measured labs: when one managed Postgres is enough, when to shard with Citus, when ClickHouse, Trino or Iceberg fit."
+description: "A decision guide from production projects and measured labs: when one managed Postgres will do, when to shard with Citus, when ClickHouse, Trino or Iceberg fit."
 date: 2026-10-20 04:30:00 +0545
 last_modified_at: 2026-10-20
 type: essay

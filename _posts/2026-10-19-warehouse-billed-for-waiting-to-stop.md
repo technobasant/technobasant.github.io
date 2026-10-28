@@ -1,7 +1,7 @@
 ---
 title: "The day's work took 38 seconds. The warehouse was billed for 11 minutes."
 seo_title: "Databricks SQL serverless cost: auto-stop, idle time and DBUs, measured from the billing tables"
-description: "A SaaS company's daily build and reports took 38 seconds on Databricks' smallest SQL warehouse. The billing table charged 11 minutes: 95% of it was waiting to stop."
+description: "A SaaS company's daily build and reports took 38 seconds on Databricks' smallest SQL warehouse. The bill showed 11 minutes, 95% of it waiting to stop."
 date: 2026-10-19 20:45:00 +0545
 last_modified_at: 2026-10-19
 type: essay

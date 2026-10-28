@@ -1,7 +1,7 @@
 ---
 title: "What an AI answer costs, and when a GPU of your own pays for itself"
 seo_title: "LLM cost per answer and self-hosting break-even, from October 2026 list prices"
-description: "One help-centre answer costs $0.0005 to $0.05 depending on the model. A GPU of your own beats Claude Sonnet 5 at about 196 answers an hour, but GPT-6 Luna at 3,918."
+description: "One help-centre answer costs $0.0005 to $0.05, by model. A GPU of your own beats Claude Sonnet 5 at about 196 answers an hour, but GPT-6 Luna at 3,918."
 date: 2026-10-18 18:30:00 +0545
 last_modified_at: 2026-10-20
 type: essay

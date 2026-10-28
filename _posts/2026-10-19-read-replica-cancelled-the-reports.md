@@ -1,7 +1,7 @@
 ---
 title: "The read replica was meant to take the reports. 3 of 35 finished."
 seo_title: "Postgres read replica cancelling long queries: max_standby_streaming_delay and hot_standby_feedback, measured"
-description: "With the product at its peak write rate, 3 of 35 long reports finished on a Postgres read replica. A replica for reports alone, with a longer delay, ran them all."
+description: "At the product's peak write rate, 3 of 35 long reports finished on a Postgres read replica. A replica for reports alone, with a longer delay, ran them all."
 date: 2026-10-19 11:30:00 +0545
 last_modified_at: 2026-10-19
 type: essay

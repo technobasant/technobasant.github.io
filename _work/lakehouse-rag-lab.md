@@ -1,7 +1,7 @@
 ---
 title: "A lakehouse, and the RAG pipeline that runs on it"
 hook: "The two halves of the thesis as one system: Trino and Iceberg underneath, retrieval and answers on top, both measured"
-description: "A measured lab where a Trino/Iceberg lakehouse and a Delta-backed RAG pipeline share the same storage — credential vending proven scoped, a rollback performed, and grounding enforced at the retriever rather than the prompt."
+description: "A measured lab: a Trino/Iceberg lakehouse and a Delta-backed RAG pipeline on shared storage, with scoped credential vending, a rollback and retriever grounding."
 date: 2024-01-27
 last_modified_at: 2026-10-14
 kind: lab

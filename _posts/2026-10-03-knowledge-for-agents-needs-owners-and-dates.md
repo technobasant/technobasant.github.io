@@ -1,7 +1,7 @@
 ---
 title: "Agents read your definitions. Somebody has to own them."
 seo_title: "Structuring knowledge for AI agents: owners, dates, disputes"
-description: "Agents fail on stale or contradictory knowledge before they fail on reasoning. One concept per file, an owner, a date, a Disputed section, and generate the rest."
+description: "Agents fail on stale or contradictory knowledge before they fail on reasoning. One concept per file, an owner, a date, a Disputed section; generate the rest."
 date: 2026-10-03 10:40:00 +0545
 last_modified_at: 2026-10-14
 type: essay

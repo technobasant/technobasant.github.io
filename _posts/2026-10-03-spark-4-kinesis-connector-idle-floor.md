@@ -1,7 +1,7 @@
 ---
 title: "Ten seconds per idle shard: why I maintain a Kinesis connector for Spark 4"
 seo_title: "Spark 4 Kinesis connector: AWS SDK v2 and no idle-shard floor"
-description: "The awslabs Kinesis connector for Spark 4 waits on every idle shard. Why I ported the synchronous connector to Spark 4.2 and AWS SDK v2, and maintain it in public."
+description: "The awslabs Kinesis connector for Spark 4 waits on every idle shard. Why I ported the synchronous one to Spark 4.2 and AWS SDK v2, and maintain it in public."
 date: 2026-10-03 10:00:00 +0545
 last_modified_at: 2026-10-14
 type: essay

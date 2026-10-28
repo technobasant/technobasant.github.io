@@ -2,7 +2,7 @@
 title: "An analytics lakehouse for a contact-centre platform, delivered end to end"
 seo_title: "Consulting Case Study — Contact-Centre Analytics Lakehouse on S3, Trino and Airflow"
 hook: "A client wanted a working analytics platform, not a design: storage, query engine, orchestration, catalog and API, configured and handed over with security, access control, HA and DR."
-description: "Consulting case study: a contact-centre analytics lakehouse on S3, Trino and Airflow, with the catalog moved to AWS Glue, delivered configured with security, access control, HA and DR."
+description: "Consulting case study: a contact-centre analytics lakehouse on S3, Trino and Airflow, catalog moved to AWS Glue, with security, access control, HA and DR."
 date: 2026-10-20
 last_modified_at: 2026-10-20
 kind: consulting

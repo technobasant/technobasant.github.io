@@ -1,7 +1,7 @@
 ---
 title: "Re-running one day of a Spark job deleted the other 364"
 seo_title: "Spark partitionOverwriteMode static vs dynamic, small files and AQE, measured"
-description: "With Spark's default overwrite mode, re-writing one partitioned day removed every other day. Plus how many files a partitioned write makes, with and without AQE."
+description: "With Spark's default overwrite mode, rewriting one partitioned day deleted the other 364. Plus how many files a partitioned write makes, with and without AQE."
 date: 2026-10-18 21:00:00 +0545
 last_modified_at: 2026-10-18
 type: essay

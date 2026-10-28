@@ -2,7 +2,7 @@
 title: "Managed or self-run PostgreSQL: a capacity plan and an RDS fleet"
 seo_title: "Consulting Case Study — PostgreSQL Capacity Planning and an Amazon RDS / Aurora Fleet"
 hook: "A capacity plan that had to choose between a managed service and running PostgreSQL yourself, and a fleet of RDS and Aurora databases tuned and failover-tested: the same rule decided both."
-description: "Consulting case study: a PostgreSQL 16 capacity plan with the managed-or-self-run decision, and an optimisation programme for a fleet of RDS and Aurora databases with failover tests."
+description: "Consulting case study: a PostgreSQL 16 capacity plan with the managed-or-self-run decision, and optimisation of an RDS and Aurora fleet, with failover tests."
 date: 2026-10-20
 last_modified_at: 2026-10-20
 kind: consulting

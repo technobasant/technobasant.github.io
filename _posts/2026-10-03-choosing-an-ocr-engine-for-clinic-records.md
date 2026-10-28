@@ -1,7 +1,7 @@
 ---
 title: "The best OCR model I tested does not ship. The scorer decided why."
 seo_title: "Choosing an OCR engine for clinic records: eight engines, one scorer"
-description: "Eight OCR engines on real clinic records, one fixed scorer. The strongest reader stays switched off: slower on the target box, and it cannot say when it is unsure."
+description: "Eight OCR engines on real clinic records, one fixed scorer. The strongest reader stays off: slower on the target box, and it cannot say when it is unsure."
 date: 2026-10-03 10:10:00 +0545
 last_modified_at: 2026-10-14
 type: essay
