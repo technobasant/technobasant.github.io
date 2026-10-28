@@ -246,6 +246,13 @@ jobs:
           # deploy's commit timestamp is the boundary. If either is unavailable
           # — a first run, a force push — fall back to the full set, because
           # submitting too much once is better than submitting nothing.
+          #
+          # Compare by day, not by timestamp. `date` and `last_modified_at` are
+          # dates, so lastmod is midnight, and a page published or edited after
+          # that day's first deploy sorted before it. Most deploys sent only
+          # ai.txt and llms.txt, and by 2026-10-28 Bing had never seen 33 posts.
+          # A same-day page may be resubmitted once more than it needs to be;
+          # that is the cheaper mistake.
           since="$(git log -1 --format=%cI "${{ github.event.before }}" 2>/dev/null || true)"
           all=$(curl -sf "https://$host/sitemap.xml" \
             | tr -d '\n' | grep -o '<url>.*\?</url>' | sed 's|</url>|</url>\n|g')
@@ -257,7 +264,7 @@ jobs:
                     mod = ""
                     if (match($0, /<lastmod>[^<]*<\/lastmod>/))
                       mod = substr($0, RSTART+9, RLENGTH-19)
-                    if (mod == "" || mod >= since) print loc
+                    if (mod == "" || substr(mod, 1, 10) >= substr(since, 1, 10)) print loc
                   }' \
               | jq -R . | jq -s .)
             echo "delta since $since"
