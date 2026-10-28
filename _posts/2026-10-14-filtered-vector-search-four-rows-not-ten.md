@@ -3,7 +3,7 @@ title: "Filtered vector search returned four rows instead of ten, and nothing fa
 seo_title: "Filtered vector search in pgvector, Qdrant and OpenSearch: recall by selectivity"
 description: "A 10% filter cut pgvector's post-filtered answer to 3.9 of 10 rows and OpenSearch's filtered recall to 0.745 on 381,559 vectors. No error was raised."
 date: 2026-10-14 09:10:00 +0545
-last_modified_at: 2026-10-14
+last_modified_at: 2026-10-28
 type: essay
 pillar: ai-systems
 series: reference-systems
@@ -46,6 +46,8 @@ faq:
     a: "Not in the same form when the filter is part of the vector query. Both switched to exact search at 1% and returned perfect results in about a millisecond. Their weak spot was 10%: Qdrant recalled 0.925 and OpenSearch's efficient filter 0.745, both while returning ten rows. A filter placed beside OpenSearch's knn clause in a bool query is a post-filter and collapses like pgvector's."
   - q: "How should a filtered retriever be tested?"
     a: "Sweep several selectivities, not just none and one very selective filter, and compare each against exact nearest neighbours over the rows that pass. Record how many rows came back as well as recall: a post-filter's short answers show in the row count, and a filtered graph walk's misses only show against exact search."
+  - q: "Is IVFFlat or HNSW better for filtered search in pgvector?"
+    a: "IVFFlat did not collapse under a filter the way post-filtered HNSW did: at 16 probes it scans about 15,000 rows per query, so even a 1% filter leaves around 150 candidates. It lost recall to the lists it did not probe (0.840 at 1%), took 3.7 to 4.4 ms per query, and unfiltered it needed 5.7 times HNSW's latency for the same recall. HNSW with a relaxed_order iterative scan recalled 0.949 at 10% in 1.26 ms and 0.964 at 1% in 8.77 ms."
 key_takeaways:
   - "Post-filtered HNSW returns what its candidate list allows: at ef_search 40 and a 10% filter, pgvector returned 3.9 rows of 10, as fast as a full answer."
   - "The most selective filter was the easy case: Qdrant and OpenSearch switched to exact search at 1% and returned perfect results in about a millisecond."
@@ -153,7 +155,7 @@ The filtered runs say the choice is about behaviour under a filter, and that eac
 - **OpenSearch** needs the filter inside the `knn` clause, never beside it, and a recall check at the middle selectivities its exact fallback does not cover.
 - **Qdrant** needs its payload index created before the graph is built, which is when the extra links are added.
 
-IVFFlat, for completeness, did not collapse: at 16 probes it scans about 15,000 rows per query, so even 1% leaves around 150 candidates. Its recall at 1% (0.840) was lost to the lists it did not probe, and at 3.7 to 4.4 ms per query it was the slowest option throughout; unfiltered, it already needed 5.7× pgvector HNSW's latency for the same recall.
+IVFFlat, for completeness, did not collapse: at 16 probes it scans about 15,000 rows per query, so even 1% leaves around 150 candidates. Its recall at 1% (0.840) was lost to the lists it did not probe, and at 3.7 to 4.4 ms per query it was the slowest option at 50% and 10%; only the iterative scans at 1% took longer. Unfiltered, it already needed 5.7× pgvector HNSW's latency for the same recall.
 
 <div class="callout callout--note" markdown="1">
 **Boundary.** One synthetic filter, uncorrelated with content. Real tenant and date filters correlate with what a document says, which can help a graph walk (the passing rows sit near each other) or hurt it (the query lands far from them); this run measures neither. Everything fits in memory, on one node per engine, with shared index parameters rather than tuned ones, and OpenSearch force-merged to one segment. The engines run in Docker's VM on the same host as the client — an Apple M5 with 10 cores and 24 GiB — so there is no network between application and database, other applications shared the machine, and a network filter on the host sees the loopback traffic. Interleaved passes and medians blunt that; they do not remove it. Every figure is in the repository's MEASUREMENTS.md, drawn from the JSON results it commits.
@@ -186,5 +188,9 @@ Not in the same form when the filter is part of the vector query. Both switched 
 ### How should a filtered retriever be tested?
 
 Sweep several selectivities, not just none and one very selective filter, and compare each against exact nearest neighbours over the rows that pass. Record how many rows came back as well as recall: a post-filter's short answers show in the row count, and a filtered graph walk's misses only show against exact search.
+
+### Is IVFFlat or HNSW better for filtered search in pgvector?
+
+IVFFlat did not collapse under a filter the way post-filtered HNSW did: at 16 probes it scans about 15,000 rows per query, so even a 1% filter leaves around 150 candidates. It lost recall to the lists it did not probe (0.840 at 1%), took 3.7 to 4.4 ms per query, and unfiltered it needed 5.7 times HNSW's latency for the same recall. HNSW with a `relaxed_order` iterative scan recalled 0.949 at 10% in 1.26 ms and 0.964 at 1% in 8.77 ms.
 
 The whole benchmark — quality, latency, build cost, concurrency and writes under load — is written up as a case study in [retrieval-bench](/work/retrieval-bench/). The retrieval pipeline it was built to inform is in [the lakehouse RAG lab](/work/lakehouse-rag-lab/). More on [RAG](/writing/tags/rag/) and [Postgres](/writing/tags/postgres/).

@@ -3,7 +3,7 @@ title: "A lakehouse spine: Trino, Iceberg and Polaris, with credentials that exp
 seo_title: "Trino and Iceberg on an Apache Polaris REST catalog, with vended S3 credentials"
 description: "Build Trino 483 on Iceberg with Apache Polaris as the REST catalog, then prove the vended S3 credentials cannot read the table next door."
 date: 2026-08-16 12:00:00 +0545
-last_modified_at: 2026-10-14
+last_modified_at: 2026-10-28
 type: tutorial
 pillar: data-platforms
 tags: [iceberg-lakehouse, distributed-databases]
@@ -28,6 +28,15 @@ prerequisites:
   - "Comfort reading a docker-compose file and a Trino catalog properties file"
   - "No AWS account: MinIO stands in for S3, including its STS endpoint"
 tested_on: "macOS Darwin 25 · arm64 host · Docker Desktop 8 CPU / 11.67 GB · Trino 483 · Apache Polaris 1.7.0 · MinIO RELEASE.2025-09-07 · PostgreSQL 18.1 · all images native arm64, nothing emulated"
+faq:
+  - q: "Why is POLARIS_BOOTSTRAP_CREDENTIALS ignored when Polaris runs on Postgres?"
+    a: "The server bootstraps itself only for the persistence types in polaris.persistence.auto-bootstrap-types, which defaults to in-memory. With relational-jdbc it starts, passes its healthcheck, then fails every request with relation \"polaris_schema.entities\" does not exist. Create the schema with polaris-admin-tool bootstrap before the server starts."
+  - q: "Why does polaris-admin-tool bootstrap exit with code 3?"
+    a: "The admin tool does not read POLARIS_BOOTSTRAP_CREDENTIALS. Given only -r, it exits 3 with \"Specify either --credentials or --print-credentials\". Pass the credential in its own form, -c realm,clientId,clientSecret. Bootstrap is idempotent, so it can run as a one-shot service the server depends on."
+  - q: "Why does MinIO answer Polaris's AssumeRole with Unsupported action?"
+    a: "MinIO does support STS. The request arrived without a SigV4 signature, so MinIO routed it to the web-identity handler, which rejects AssumeRole as an action it does not handle. Giving Polaris explicit keys for a dedicated MinIO user fixed it."
+  - q: "Why do Trino SELECTs on a Polaris table fail when writes succeed?"
+    a: "For read-only vended credentials, Polaris adds a wildcard KMS statement to the session policy when it can parse an AWS account id, here from a placeholder roleArn. MinIO's policy engine rejects KMS ARNs, so the SELECT fails while CREATE TABLE AS SELECT works. Drop the placeholder roleArn, or set kmsUnavailable: true on the catalog."
 key_takeaways:
   - "With `relational-jdbc`, Polaris never bootstraps itself, so POLARIS_BOOTSTRAP_CREDENTIALS is ignored. Polaris starts, reports healthy, then fails every request with `relation \"polaris_schema.entities\" does not exist`."
   - "`Unsupported action AssumeRole` from MinIO does not mean STS is missing: the request never reached MinIO's AssumeRole handler. Explicit keys for a dedicated MinIO user fixed it."
@@ -369,5 +378,23 @@ docker compose down -v
 The operating rule this lab produced: **a REST catalog is only worth the extra service if vending actually works.** Turn vending off and Polaris becomes a metadata lookup with a permissions table in front of it, while every Trino user still holds a key to the whole bucket. That is not obviously better than Hive Metastore.
 
 Turn it on and the boundary is real, but you inherit an STS dependency that must be exercised in whatever object store you actually run. Against MinIO that meant a service user and one flag to undo a placeholder role ARN. Against a different S3-compatible store it will mean something else — and the way to find out is to take a vended credential and try to read the table next door.
+
+## Frequently asked questions
+
+### Why is POLARIS_BOOTSTRAP_CREDENTIALS ignored when Polaris runs on Postgres?
+
+The server bootstraps itself only for the persistence types in `polaris.persistence.auto-bootstrap-types`, which defaults to `in-memory`. With `relational-jdbc` it starts, passes its healthcheck, then fails every request with `relation "polaris_schema.entities" does not exist`. Create the schema with `polaris-admin-tool bootstrap` before the server starts.
+
+### Why does polaris-admin-tool bootstrap exit with code 3?
+
+The admin tool does not read `POLARIS_BOOTSTRAP_CREDENTIALS`. Given only `-r`, it exits 3 with `Specify either --credentials or --print-credentials`. Pass the credential in its own form, `-c realm,clientId,clientSecret`. Bootstrap is idempotent, so it can run as a one-shot service the server depends on.
+
+### Why does MinIO answer Polaris's AssumeRole with Unsupported action?
+
+MinIO does support STS. The request arrived without a SigV4 signature, so MinIO routed it to the web-identity handler, which rejects `AssumeRole` as an action it does not handle. Giving Polaris explicit keys for a dedicated MinIO user fixed it.
+
+### Why do Trino SELECTs on a Polaris table fail when writes succeed?
+
+For read-only vended credentials, Polaris adds a wildcard KMS statement to the session policy when it can parse an AWS account id, here from a placeholder `roleArn`. MinIO's policy engine rejects KMS ARNs, so the `SELECT` fails while `CREATE TABLE AS SELECT` works. Drop the placeholder `roleArn`, or set `kmsUnavailable: true` on the catalog.
 
 [Part 2]({{ '/writing/dbt-trino-iceberg-medallion-airflow/' | relative_url }}) builds bronze, silver and gold on top of this with dbt-trino, where the interesting failure is a partition spec that dbt accepts and silently discards.

@@ -1,9 +1,9 @@
 ---
 title: "pgBackRest against a Patroni cluster: archive, rebuild, and restore"
 seo_title: "pgBackRest with Patroni: backups, replica rebuild and point-in-time restore, tested"
-description: "Wire pgBackRest into a running Patroni cluster over mutual TLS with Ansible, then prove it: full backup, replica rebuilt from the repo, and a point-in-time restore."
+description: "Wire pgBackRest into a Patroni cluster with Ansible over mutual TLS, then prove it: full backup, replica rebuilt from the repo, point-in-time restore (PITR)."
 date: 2026-08-14 16:30:00 +0545
-last_modified_at: 2026-10-14
+last_modified_at: 2026-10-28
 type: tutorial
 pillar: database-lifecycle
 tags: [postgres, distributed-databases]
@@ -28,6 +28,13 @@ prerequisites:
   - "Ansible on the control node (ansible-core 2.15.x against RHEL-family guests), plus the `ansible.posix` collection: `ansible-galaxy collection install -r ansible/collections/requirements.yml`"
   - "Enough repo disk for one full backup plus WAL — 3 GB is plenty for a lab"
 tested_on: "Rocky Linux 8 · amd64 under QEMU on Apple Silicon · PostgreSQL 18.6 (PGDG) · Patroni 4.1.5 · pgBackRest 2.59.0 over mutual TLS on 8432 · etcd 3.7.0 · ansible-core 2.15.13 · 192.168.105.140–142"
+faq:
+  - q: "How do you run a point-in-time restore with pgBackRest on a Patroni cluster?"
+    a: "Pause Patroni with patronictl pause, then stop PostgreSQL itself on every node with pg_ctl: stopping the Patroni service leaves the database running, and pgBackRest refuses with \"unable to restore while PostgreSQL is running\". Restore the leader with pgbackrest restore --delta --type=time --target and --target-action=promote, start it, confirm it is out of recovery on a new timeline, then resume Patroni."
+  - q: "Why does a Patroni replica hang in starting after a pgBackRest PITR?"
+    a: "It was rebuilt from a backup taken on the old timeline, so it asks the leader for that timeline's history file, which the restored leader never had. After a point-in-time restore, take a fresh full backup first, then run patronictl reinit on the replica."
+  - q: "Where do archive_mode and create_replica_methods go in a Patroni cluster?"
+    a: "archive_mode and archive_command describe the whole cluster, so they go in the DCS through patronictl edit-config. create_replica_methods names a command on the host, so it stays in the local patroni.yml. archive_mode is postmaster-level: after edit-config, Patroni flags a pending restart, and the members need a rolling patronictl restart."
 key_takeaways:
   - "Cluster-wide settings go in the DCS via edit-config; create_replica_methods names a local command so it stays in patroni.yml."
   - "archive_mode is postmaster-level: edit-config is not enough, Patroni raises a Pending restart flag and you must do a rolling restart."
@@ -402,3 +409,17 @@ patronictl -c /etc/patroni/patroni.yml reinit pg18lab pgn1 --force
 The cluster now survives three separate things, and they are worth naming separately because they fail separately. A node dying is handled by Patroni, in about twenty seconds, from part 2. A replica needing to come back is handled by pgBackRest in five seconds without touching the primary. And an operator error — the dropped table — is handled by a point-in-time restore that recovered every row.
 
 Only the first of those is automatic. The other two are drills, and a drill you have not run is a plan, not a capability. The useful outcome of this post is not the config; it is that the restore was performed once, on purpose, while nothing was actually on fire.
+
+## Frequently asked questions
+
+### How do you run a point-in-time restore with pgBackRest on a Patroni cluster?
+
+Pause Patroni with `patronictl pause`, then stop PostgreSQL itself on every node with `pg_ctl`: stopping the Patroni service leaves the database running, and pgBackRest refuses with `unable to restore while PostgreSQL is running`. Restore the leader with `pgbackrest restore --delta --type=time --target=... --target-action=promote`, start it, confirm it is out of recovery on a new timeline, then resume Patroni. Step 6 has the full sequence.
+
+### Why does a Patroni replica hang in starting after a pgBackRest PITR?
+
+It was rebuilt from a backup taken on the old timeline, so it asks the leader for that timeline's history file, which the restored leader never had. After a point-in-time restore, take a fresh full backup first, then run `patronictl reinit` on the replica.
+
+### Where do archive_mode and create_replica_methods go in a Patroni cluster?
+
+`archive_mode` and `archive_command` describe the whole cluster, so they go in the DCS through `patronictl edit-config`. `create_replica_methods` names a command on the host, so it stays in the local `patroni.yml`. `archive_mode` is postmaster-level: after `edit-config`, Patroni flags a pending restart, and the members need a rolling `patronictl restart`.

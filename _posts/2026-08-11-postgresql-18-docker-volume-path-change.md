@@ -1,9 +1,9 @@
 ---
 title: "PostgreSQL 18 won't take a volume at /var/lib/postgresql/data"
 seo_title: "PostgreSQL 18 Docker volume: mount /var/lib/postgresql, PGDATA is 18/docker"
-description: "The mount point moved in the PG 18 image, so every compose file copied from a 12–17 guide breaks. The corrected file, then replication, promotion and PITR."
+description: "PostgreSQL 18's Docker image wants the volume at /var/lib/postgresql, PGDATA in 18/docker, so 12–17 compose files break. The fix, replication and PITR."
 date: 2026-08-11 09:00:00 +0545
-last_modified_at: 2026-10-13
+last_modified_at: 2026-10-28
 type: tutorial
 pillar: database-lifecycle
 tags: [postgres]
@@ -28,6 +28,15 @@ prerequisites:
   - "Docker Compose v2 — the `docker compose` subcommand, not `docker-compose`"
   - "Working knowledge of psql and basic SQL"
 tested_on: "PostgreSQL 18 (official `postgres:18` image) · Docker Compose v2 · 8 CPU / 12.5 GB"
+faq:
+  - q: "Where is the data directory in the PostgreSQL 18 Docker image?"
+    a: "PGDATA defaults to /var/lib/postgresql/18/docker. Mount the volume at its parent, /var/lib/postgresql, and the cluster is created in the 18/docker subdirectory beneath it. The pre-18 mount point, /var/lib/postgresql/data, is no longer the data directory."
+  - q: "Why did the PostgreSQL 18 image move the data directory?"
+    a: "For pg_upgrade --link. An in-place major upgrade needs the old and new data directories side by side on the same filesystem, which is impossible when the data directory is itself the mount point. With the mount one level up, 18/docker and 19/docker can coexist during an upgrade."
+  - q: "What does \"/var/lib/postgresql/data (unused mount/volume)\" mean when PostgreSQL 18 starts?"
+    a: "The volume is mounted at /var/lib/postgresql/data, which PostgreSQL 18 no longer uses as its data directory, and the container exits at startup. Change the volume line to pgdata:/var/lib/postgresql; the cluster lands in 18/docker beneath it."
+  - q: "Why does the docker compose command write two dollar signs before PGDATA?"
+    a: "Compose interpolates variables in the file before Docker sees it. A double dollar sign escapes to a literal one, so the shell inside the container gets $PGDATA. With a single dollar sign, Compose substitutes an empty string and the clone test checks /PG_VERSION."
 key_takeaways:
   - "The PostgreSQL 18 image expects its persistent volume at /var/lib/postgresql, with PGDATA beneath it—not at the pre-18 /var/lib/postgresql/data mount point."
   - "A replica cloned with pg_basebackup should pin PGDATA so the clone's destination is explicit, and needs Compose variable escaping before it can stream safely."
@@ -418,5 +427,23 @@ Note that a promoted replica plus a full base backup is three copies of the same
 | Writes on the standby fail with `cannot execute INSERT in a read-only transaction` | It is still a standby | This is correct. Promote it with `SELECT pg_promote();` only if you actually mean to fail over |
 | Both nodes accept writes after a failover | The old primary was restarted on timeline 1 while the new one is on timeline 2 | Never do this. Rewind the old node with `pg_rewind` or rebuild it from `pg_basebackup` before it rejoins |
 | Recovery stops earlier than the target time | `archive_command` overwrote or skipped a segment | Keep the `test ! -f` guard so archiving fails loudly instead of clobbering |
+
+## Frequently asked questions
+
+### Where is the data directory in the PostgreSQL 18 Docker image?
+
+`PGDATA` defaults to `/var/lib/postgresql/18/docker`. Mount the volume at its parent, `/var/lib/postgresql`, and the cluster is created in the `18/docker` subdirectory beneath it. The pre-18 mount point, `/var/lib/postgresql/data`, is no longer the data directory.
+
+### Why did the PostgreSQL 18 image move the data directory?
+
+For `pg_upgrade --link`. An in-place major upgrade needs the old and new data directories side by side on the same filesystem, which is impossible when the data directory is itself the mount point. With the mount one level up, `18/docker` and `19/docker` can coexist during an upgrade.
+
+### What does "/var/lib/postgresql/data (unused mount/volume)" mean when PostgreSQL 18 starts?
+
+The volume is mounted at `/var/lib/postgresql/data`, which PostgreSQL 18 no longer uses as its data directory, and the container exits at startup. Change the volume line to `pgdata:/var/lib/postgresql`; the cluster lands in `18/docker` beneath it.
+
+### Why does the docker compose command write two dollar signs before PGDATA?
+
+Compose interpolates variables in the file before Docker sees it. `$$` escapes to a literal `$`, so the shell inside the container gets `$PGDATA`. With a single `$`, Compose substitutes an empty string and the clone test checks `/PG_VERSION`.
 
 Earlier in this series: [A failover lab: six database engines, eight scenarios, every one run](/writing/failover-lab-six-engines-eight-scenarios/) for the rig and the full results matrix, and [nodetool refresh only reads upload/](/writing/scylladb-nodetool-refresh-upload-truncate-marker/) for the ScyllaDB restore that returns zero rows two different ways.
