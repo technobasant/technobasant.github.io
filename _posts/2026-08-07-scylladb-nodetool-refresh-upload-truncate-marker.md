@@ -1,6 +1,6 @@
 ---
 title: "nodetool refresh only reads the live table's upload/ directory"
-seo_title: "ScyllaDB nodetool refresh only reads upload/"
+seo_title: "ScyllaDB snapshot restore: nodetool refresh only reads upload/"
 description: "Why a valid ScyllaDB snapshot restore can return zero rows with no error, the restore that works after a TRUNCATE, and the AIO limit that stops node three."
 date: 2026-08-07 09:00:00 +0545
 last_modified_at: 2026-10-14

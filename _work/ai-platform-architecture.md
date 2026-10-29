@@ -1,6 +1,6 @@
 ---
 title: "A usage assistant on governed data: a reference AI architecture, measured"
-seo_title: "AI architecture case study: text-to-SQL assistant, tenant isolation, semantic layer, Genie, measured"
+seo_title: "AI architecture: a text-to-SQL assistant with tenant isolation"
 hook: "Stage 3 of the same company: an assistant that answers customers from governed data, with accuracy, isolation and cost measured on three models and Genie"
 description: "An AI architecture for a SaaS usage assistant: accuracy, tenant isolation, latency and cost measured on Qwen3, Llama 3.3, gpt-oss and Genie, with 14 decisions."
 date: 2026-10-18

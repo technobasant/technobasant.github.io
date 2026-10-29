@@ -1,6 +1,6 @@
 ---
 title: "The producer re-sent the fixed file. COPY INTO never read it."
-seo_title: "COPY INTO vs Auto Loader vs MERGE on Databricks: corrected, late and duplicate files, measured"
+seo_title: "Databricks Auto Loader vs COPY INTO vs MERGE, measured"
 description: "Ten days of files loaded six ways on Databricks. A truncated upload, fixed under the same name, was skipped by COPY INTO and Auto Loader: 1,638 events lost."
 date: 2026-10-19 09:30:00 +0545
 last_modified_at: 2026-10-19

@@ -1,6 +1,6 @@
 ---
 title: "spark-sql-kinesis: a Kinesis source for Spark 4 without the idle-shard floor"
-seo_title: "spark-sql-kinesis — an Open-Source Kinesis Source for Spark 4"
+seo_title: "spark-sql-kinesis: Kinesis for Spark 4 Structured Streaming"
 hook: "Spark 4 dropped the AWS SDK the streaming connector depended on, and the maintained alternative paid seconds on every idle shard"
 description: "Open-source maintenance case: porting a Kinesis connector to Spark 4.2 and AWS SDK v2, replacing KCL, and upgrading production in place with no drain."
 date: 2026-08-10

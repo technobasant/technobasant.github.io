@@ -1,7 +1,7 @@
 ---
 title: "A free VPN on your VPS with WireGuard"
-seo_title: "Free WireGuard VPN with wg-easy v15 — do not use :latest"
-description: "Want a free VPN you actually control? Pin wg-easy to :15, mount /lib/modules, keep the UI off 80/443, and prove traffic exits from your VPS."
+seo_title: "wg-easy v15 with Docker Compose: a free WireGuard VPN on a VPS"
+description: "Want a free VPN you actually control? Pin wg-easy to :15, not :latest, mount /lib/modules, keep the UI off 80/443, and prove traffic exits from your VPS."
 date: 2026-06-03 09:00:00 +0545
 last_modified_at: 2026-10-14
 type: tutorial

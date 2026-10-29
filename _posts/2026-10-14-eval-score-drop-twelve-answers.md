@@ -1,7 +1,7 @@
 ---
 title: "The eval score fell 4.8 points. Twelve answers decided whether it meant anything."
-seo_title: "LLM eval release gates: test paired cases, not pass-rate deltas"
-description: "A prompt change cost 4.8 points on an LLM judge, and 12 of 83 paired cases carried all the evidence. Why a release gate needs a paired test, not a delta."
+seo_title: "LLM-as-a-judge release gates: McNemar's test, not pass-rate deltas"
+description: "A prompt change cost 4.8 points on an LLM-as-a-judge eval, and 12 of 83 paired cases held all the evidence. Why the gate is a McNemar test, not a delta."
 date: 2026-10-14 09:00:00 +0545
 last_modified_at: 2026-10-15
 type: essay

@@ -1,6 +1,6 @@
 ---
 title: "For text-to-SQL, the definitions mattered more than the model"
-seo_title: "Semantic layer vs schema-only text-to-SQL: Llama 3.3 70B, gpt-oss-120b, Qwen3 and Genie, measured"
+seo_title: "Semantic layer vs schema-only text-to-SQL, measured"
 description: "70 customer questions with answers computed by SQL. Given the business's definitions as well as the schema, Llama 3.3 70B went from 55 to 70 right."
 date: 2026-10-19 13:00:00 +0545
 last_modified_at: 2026-10-19

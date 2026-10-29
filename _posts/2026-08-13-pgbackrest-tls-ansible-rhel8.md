@@ -1,6 +1,7 @@
 ---
 title: "Dedicated pgBackRest TLS on RHEL 8 with Ansible—before Postgres"
-description: "Stand up a dedicated pgBackRest TLS repo host on generic/rhel8 with Ansible-issued certs, then prove server-ping and mTLS from a client VM."
+seo_title: "pgBackRest TLS server on a dedicated repository host, with Ansible"
+description: "Stand up a dedicated pgBackRest repository host running the TLS server on RHEL 8, with Ansible-issued certs, then prove server-ping and mTLS from a client VM."
 date: 2026-08-13 12:30:00 +0545
 last_modified_at: 2026-10-14
 type: tutorial

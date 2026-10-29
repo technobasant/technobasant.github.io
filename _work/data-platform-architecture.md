@@ -1,6 +1,6 @@
 ---
 title: "Leaving Postgres for a managed platform: a reference architecture, measured"
-seo_title: "Data architecture case study: Postgres to Databricks or Snowflake, data model, governance, SOC 2, 18 decisions"
+seo_title: "Data platform architecture: Postgres to Databricks or Snowflake"
 hook: "A common industry scenario, measured: a B2B SaaS company whose reporting has outgrown its product's Postgres, and a staged architecture with every decision tied to evidence"
 description: "A reference architecture for a B2B SaaS company: current state measured, options, data model, governance, SOC 2 readiness and 18 decisions."
 date: 2026-10-18

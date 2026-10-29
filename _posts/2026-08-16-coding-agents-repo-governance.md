@@ -1,6 +1,6 @@
 ---
 title: "Agents write the diff. The repo has to review it."
-seo_title: "How to use Cursor, Claude Code, and Codex in existing repos"
+seo_title: "AGENTS.md for Claude Code, Codex and Cursor in an existing repo"
 description: "How to run Cursor, Claude Code, and Codex in an existing repo: AGENTS.md, CODEOWNERS, CI gates, and the AI-generated PR pitfalls that blow up review."
 date: 2026-08-16 13:00:00 +0545
 last_modified_at: 2026-10-14

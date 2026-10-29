@@ -1,6 +1,6 @@
 ---
 title: "We deleted the user from the Delta table. Time travel still returned all 100 rows."
-seo_title: "GDPR erasure on Delta Lake: DELETE, deletion vectors, REORG PURGE, VACUUM and time travel, measured on Databricks"
+seo_title: "GDPR erasure on Delta Lake: DELETE, deletion vectors and VACUUM"
 description: "A user's rows deleted from a Delta table on Databricks stayed readable by time travel after DELETE, after a purge and after VACUUM, until the retention passed."
 date: 2026-10-19 14:30:00 +0545
 last_modified_at: 2026-10-19

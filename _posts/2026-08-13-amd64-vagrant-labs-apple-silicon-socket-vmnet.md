@@ -1,6 +1,7 @@
 ---
 title: "amd64 Vagrant labs on Apple Silicon without broken host networking"
-description: "Apple Silicon labs that boot still fail host and mesh ping when you use aarch64 boxes or park the VMs on your Wi‑Fi subnet."
+seo_title: "x86 Vagrant VMs on Apple Silicon with QEMU and socket_vmnet"
+description: "amd64 Vagrant boxes on Apple Silicon with QEMU and socket_vmnet, and why a lab that boots still fails host and mesh ping on aarch64 boxes or the Wi‑Fi subnet."
 date: 2026-08-13 10:00:00 +0545
 last_modified_at: 2026-10-14
 type: tutorial

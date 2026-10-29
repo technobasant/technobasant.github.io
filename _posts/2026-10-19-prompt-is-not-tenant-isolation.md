@@ -1,6 +1,6 @@
 ---
 title: "Told to stay in one customer's data, the models leaked 23 times in 120"
-seo_title: "Text-to-SQL tenant isolation: prompt instructions vs row-level security, measured on three LLMs"
+seo_title: "Text-to-SQL tenant isolation: prompts vs row-level security"
 description: "Three LLMs wrote SQL for one customer, told to stay in that account. Asked for others' data, they leaked 23 times in 120; run as the customer's role, never."
 date: 2026-10-19 12:45:00 +0545
 last_modified_at: 2026-10-19

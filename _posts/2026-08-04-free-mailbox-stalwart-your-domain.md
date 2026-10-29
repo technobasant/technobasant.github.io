@@ -1,7 +1,7 @@
 ---
 title: "A free mailbox for your domain with Stalwart"
-seo_title: "Self-host Stalwart mail: skip ACME when port 443 is already taken"
-description: "Want a free mailbox for your domain? Run Stalwart on Docker, skip ACME when 443 is taken, publish SPF/DKIM/DMARC, and prove a Gmail round-trip."
+seo_title: "Stalwart mail server on Docker: a free mailbox for your domain"
+description: "Want a free mailbox for your domain? Run the Stalwart mail server on Docker, skip ACME when 443 is taken, publish SPF/DKIM/DMARC, prove a Gmail round-trip."
 date: 2026-08-04 09:00:00 +0545
 last_modified_at: 2026-10-14
 type: tutorial
@@ -37,7 +37,7 @@ work: clickhomes
 
 ## Why bother
 
-Want `you@yourdomain.com` without paying Google Workspace or Fastmail, and without running a four-gigabyte Mailcow stack? [Stalwart](https://stalw.art/) is a single Rust binary: IMAP, SMTP, JMAP, a real admin UI, and about 100–200 MB idle. Community edition (AGPL) is enough for a personal or product domain.
+Want `you@yourdomain.com` without paying Google Workspace or Fastmail, and without running a four-gigabyte Mailcow stack? [Stalwart](https://stalw.art/) is a mail server in a single Rust binary: IMAP, SMTP, JMAP, a real admin UI, and about 100–200 MB idle. Community edition (AGPL) is enough for a personal or product domain.
 
 You need three things the SaaS plans hide from you:
 
