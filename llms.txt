@@ -123,13 +123,13 @@ material.
 - GitHub: {{ site.author.github }}
 - LinkedIn: {{ site.author.linkedin }}
 
-Consulting status: {{ site.data.availability.status }} — {{ site.data.availability.headline }},
-{{ site.data.availability.hours }}, covering {{ site.data.availability.coverage }}.
+Availability ({{ site.data.availability.status }}): {{ site.data.availability.headline }}.
+Working hours: {{ site.data.availability.coverage }}.
 {{ site.data.availability.detail }}
 {{ site.data.availability.response }}
 Last updated {{ site.data.availability.updated | date: "%Y-%m-%d" }}.
 
-Engagements taken:
+Consulting and contract engagements:
 {% for e in site.data.availability.engagements %}
 - {{ e.title }} — {{ e.blurb }}
 {%- endfor %}

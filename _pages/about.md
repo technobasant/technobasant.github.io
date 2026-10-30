@@ -1,6 +1,6 @@
 ---
 title: About
-last_modified_at: 2026-10-20
+last_modified_at: 2026-10-30
 seo_title: "About Basant Bhattarai — Data & AI Architect · Senior Data Engineer"
 eyebrow: Profile
 headline: "I design data platforms, the governance around them and the AI on them, then build them."
@@ -43,11 +43,11 @@ I studied computer science at JNTUA College of Engineering in Anantapur, India, 
 
 I shift my day later to overlap with European afternoons and US mornings, a rhythm I have used with distributed teams for years.
 
-For occasional focused advisory or implementation work, [consulting scope and availability are here](/hire/).
+I'm open to long-term consulting, contract or full-time roles. [Scope and availability are here](/hire/).
 
 ## Write to me
 
-Name, email, and a paragraph. Consulting briefings belong on [the hire page](/hire/#hire-form).
+Name, email, and a paragraph. Consulting, contract and job enquiries belong on [the hire page](/hire/#hire-form).
 
 {% include hire-form.html variant="contact" id="about-contact" %}
 
