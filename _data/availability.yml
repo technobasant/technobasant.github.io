@@ -1,13 +1,12 @@
 # Single source for availability. Rendered on /, /hire/ and /about/.
 # ALWAYS show `updated` — a stale availability claim is worse than no claim.
 
-status: limited          # open | limited | closed
-headline: "Taking one or two consulting engagements"
-hours: "15–30 hrs/week"
+status: open             # open | limited | closed
+headline: "Long-term consulting, contract or full-time"
 coverage: "Scheduled overlap with European afternoons and US mornings"
-detail: "I agree a fixed overlap window in UTC for each engagement so daylight-saving changes do not shift expectations."
+detail: "I agree a fixed overlap window in UTC with each team, so daylight-saving changes do not shift expectations."
 response: "I reply within two business days. If I can't take it, I'll say so in the first reply."
-updated: 2026-10-03
+updated: 2026-10-30
 
 # Each engagement says who it is for, what is handed over, and where a public
 # sample of that deliverable can be read. `samples` are site paths or full URLs.

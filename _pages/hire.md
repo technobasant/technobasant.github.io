@@ -1,22 +1,22 @@
 ---
 title: Work with me
-last_modified_at: 2026-10-20
+last_modified_at: 2026-10-30
 seo_title: "Data Architecture, Platform & AI Consulting — Basant Bhattarai"
-eyebrow: Consulting
+eyebrow: "Consulting, contract or full-time"
 headline: "Data and AI architecture for SaaS teams that have outgrown one Postgres: reviewed, chosen and built."
 hero_code: "SCOPE / DECIDE"
 page_class: page-hire
 permalink: /hire/
-description: "Data and AI architecture consulting: architecture reviews, platform selection, moves off Postgres, governance and SOC 2 readiness, and AI on governed data. One or two engagements at a time."
+description: "Data and AI architecture: reviews, platform selection, moves off Postgres, governance, SOC 2, AI on governed data. Long-term consulting, contract or full-time."
 ---
 
-I take one or two engagements at a time, alongside a full-time role. That constraint is the point: it keeps the work to problems where senior judgement is the bottleneck, not headcount.
+I'm looking for long-term work: a consulting or contract engagement, or a full-time role. I work with one team at a time and stay long enough to see its decisions through: reviewed, chosen, built, and handed over to the people who will run them.
 
 <p class="page-actions"><a class="btn btn--primary" href="#hire-form">Send a briefing</a> <a class="btn btn--ghost" href="mailto:contact@basantbhattarai.com.np?subject=Consulting%20enquiry">Email instead</a> <span>{{ site.data.availability.headline }} · {{ site.data.availability.response }}</span></p>
 
 ## Engagements
 
-Each one ends in written deliverables you keep. The samples are public, so you can read the kind of document you would get before you write to me.
+Each one ends in written deliverables you keep, and in a full-time role it is the work I would lead. The samples are public, so you can read the kind of document you would get before you write to me.
 
 <div class="engagement-grid is-wide">
 {% for e in site.data.availability.engagements %}
@@ -38,13 +38,13 @@ Each one ends in written deliverables you keep. The samples are public, so you c
 
 ## Availability
 
-**{{ site.data.availability.headline }}** — {{ site.data.availability.hours }}, {{ site.data.availability.coverage }}.
+**{{ site.data.availability.headline }}.** {{ site.data.availability.coverage }}.
 
 I work a shifted day by design. {{ site.data.availability.detail }} Real overlap with your team, not asynchronous-only.
 
 *Availability updated {{ site.data.availability.updated | date: "%B %-d, %Y" }}. If this page says one thing and my reply says another, believe the reply — but I keep this line current.*
 
-## How an engagement runs
+## How a consulting or contract engagement runs
 
 1. **Briefing.** The form below, or a 30-minute call: what breaks or what has to be decided, and what cannot change.
 2. **Written proposal.** The scope, the deliverables, and how we will both know it worked.
@@ -53,7 +53,7 @@ I work a shifted day by design. {{ site.data.availability.detail }} Real overlap
 
 ## How to start
 
-The form emails me. GitHub Pages never sees what you type. Name, email, and what is breaking are required; the other two questions make the first reply useful. Repositories and diagrams are welcome, never required.
+Hiring for a full-time role? Email the role and the team, or use the form. The form emails me. GitHub Pages never sees what you type. Name, email, and what is breaking are required; the other two questions make the first reply useful. Repositories and diagrams are welcome, never required.
 
 {% include hire-form.html %}
 

@@ -1472,7 +1472,7 @@
     inset: var(--sp-2) calc(var(--sp-2) * -1) calc(var(--sp-2) * -1) var(--sp-2);
   }
 
-  // "Taking one or two consulting engagements" is the highest-intent line on
+  // The availability line under the portrait is the highest-intent line on
   // the page and it used to be `display: none` here, so the whole hiring signal
   // was desktop-only. It was hidden because the desktop treatment hangs it off
   // the portrait's edge, which cannot work against a 10rem centred portrait.
