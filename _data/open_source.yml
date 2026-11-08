@@ -5,7 +5,7 @@
 # write-up's staging measurements. Re-verify before changing the date.
 # `demo` is a live app on Streamlit Community Cloud that runs the repository's code;
 # `package` is where the published library is installed from.
-as_of: '2026-10-20'
+as_of: '2026-11-08'
 repos:
 - name: spark-sql-kinesis
   url: https://github.com/technobasant/spark-sql-kinesis
@@ -52,6 +52,28 @@ repos:
   ci:
     conclusion: success
     url: https://github.com/technobasant/evalproof/actions/workflows/ci.yml
+- name: greenproof
+  url: https://github.com/technobasant/greenproof
+  pillar: ai-systems
+  what: A done gate for coding agents. When Claude Code, Codex CLI, Cursor or OpenCode stops, it runs the
+    repository's own checks and flags deleted, skipped and weakened tests, and CI runs the same check.
+  finding: Replayed over 698 human commits that touched tests, 0.3.0 blocked 75; read against each diff, 45
+    were correct, 9 ambiguous and 21 false. None of its 684 tamper probes pass, against 455 on 0.2.0.
+  post: /writing/done-gate-for-coding-agents/
+  package:
+    name: PyPI
+    url: https://pypi.org/project/greenproof/
+  languages:
+  - Python
+  - JavaScript
+  license: Apache-2.0
+  release:
+    tag: v0.3.1
+    date: '2026-11-08'
+    url: https://github.com/technobasant/greenproof/releases/tag/v0.3.1
+  ci:
+    conclusion: success
+    url: https://github.com/technobasant/greenproof/actions/workflows/ci.yml
 - name: ai-platform-architecture
   url: https://github.com/technobasant/ai-platform-architecture
   pillar: ai-systems

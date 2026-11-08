@@ -102,7 +102,7 @@ None of them was an agent hallucinating an API. All three were **the verificatio
 
 That is the failure mode that matters when the volume of change goes up. A confident wrong answer is easy to catch — it does not compile, or the test fails. What gets through is the change that satisfies every check you happen to have, in a system where nobody has time to notice which checks you do not have.
 
-Agents make that worse in a specific way: they are very good at satisfying the stated constraint. Point one at a failing gate and it will make the gate pass. Whether it made the underlying thing correct is a separate question, and the only way to keep asking it is to keep widening what the gates actually measure.
+Agents make that worse in a specific way: they are very good at satisfying the stated constraint. Point one at a failing gate and it will make the gate pass. Whether it made the underlying thing correct is a separate question, and the only way to keep asking it is to keep widening what the gates actually measure. Part four of this series turns that into [a done gate that runs when the agent stops](/writing/done-gate-for-coding-agents/) and reads its rules from the base revision, so a change cannot narrow the check that judges it.
 
 ## Ten gates, and the shape of a good one
 

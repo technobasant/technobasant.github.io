@@ -2092,6 +2092,43 @@ def store_choice() -> str:
     return "".join(body)
 
 
+def done_gate() -> str:
+    """Four agents hand their stop to one check outside them; it passes, blocks or lets go."""
+    # Hook contracts from greenproof's SPEC 6.1 and 6.8; the replay figures from its MEASUREMENTS.md.
+    body = _head("CODING AGENTS · STOP HOOKS · GREENPROOF 0.3",
+                 "Agents say done.",
+                 "Something outside them has to check.")
+    top, bottom = 460, 1080  # both columns span this; the gate is centred on it
+    mid = (top + bottom) // 2
+    agents = [("Claude Code", "Stop · exit 2 + stderr"), ("Codex CLI", "Stop · decision: block"),
+              ("Cursor", "stop · followup_message"), ("OpenCode 2.x", "idle · synthetic prompt")]
+    for i, (name, contract) in enumerate(agents):
+        y = top + i * 164
+        body += [node_box(150, y, 640, 128, name, contract),
+                 arrow(790, y + 64, 996, mid - 150 + i * 100)]
+    gate_y = mid - 220
+    gate_lines = ["runs the repo's checks", "policy from the base", "diff: weakened tests",
+                  "one decision per stop"]
+    body += [
+        f'<rect x="1000" y="{gate_y}" width="560" height="440" rx="6" fill="{PANEL}" '
+        f'stroke="{ACCENT}" stroke-width="3"/>',
+        f'<text x="1034" y="{gate_y + 82}" font-family="{SERIF}" font-size="50" font-weight="600" '
+        f'fill="{INK}">greenproof check</text>',
+        *[_t(1034, gate_y + 160 + j * 55, line, MUTED, 27) for j, line in enumerate(gate_lines)],
+        _t(1034, gate_y + 398, "OUTSIDE THE AGENT", ACCENT, 25, tracking=2),
+    ]
+    outcomes = [("pass", "exit 0 · stop", "nothing added", False),
+                ("block", "tests.skipped · :6", "the run continues", True),
+                ("release", "same tree twice", "the agent tells you", False)]
+    for i, (title, sub, badge, accent) in enumerate(outcomes):
+        y = top + i * 218
+        body += [arrow(1560, mid - 100 + i * 100, 1786, y + 92),
+                 node_box(1790, y, 460, 184, title, sub, badge, accent=accent)]
+    body += _foot("698 real commits · 75 blocked: 45 right, 21 false, 9 ambiguous",
+                  "CI is where the gate holds")
+    return "".join(body)
+
+
 DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patroni,
             "lakehouse-spine": lakehouse_spine,
             "lakehouse-medallion": lakehouse_medallion,
@@ -2143,7 +2180,8 @@ DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patro
             "delta-erasure": delta_erasure,
             "warehouse-idle": warehouse_idle,
             "erasure-model": erasure_model,
-            "store-choice": store_choice}
+            "store-choice": store_choice,
+            "done-gate": done_gate}
 
 def svg_for(name: str) -> str:
     return (
