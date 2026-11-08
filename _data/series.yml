@@ -43,7 +43,7 @@
   title: "Agents in a real repository"
   register: analysis
   register_label: "Operating model"
-  blurb: "How to run Cursor, Claude Code, and Codex in an existing repo: AGENTS.md, CODEOWNERS, CI gates, the AI-generated PR failures that produced them, the owned, dated knowledge agents read, and a stop-hook gate that checks the work when an agent says done."
+  blurb: "How to run Cursor, Claude Code, and Codex in an existing repo: AGENTS.md, CODEOWNERS, CI gates, the AI-generated PR failures that produced them, the owned, dated knowledge agents read, and a stop-hook gate that checks the work when an agent says done, with its own list of known limits turned into the next round of tests."
   status: in-progress
 
 - slug: production-notes

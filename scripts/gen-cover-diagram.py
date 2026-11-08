@@ -2129,6 +2129,37 @@ def done_gate() -> str:
     return "".join(body)
 
 
+def done_gate_limits() -> str:
+    """A gate's known-limits list turned into probes, then fixes; both builds measured on them."""
+    # Figures from greenproof 0.4.0's MEASUREMENTS.md: the spec_040 probes and the 698-commit replay.
+    body = _head("CODING AGENTS · GREENPROOF 0.4 · KNOWN LIMITS AS PROBES",
+                 "A gate's known limits",
+                 "are its next tests.")
+    body += [
+        node_box(150, 470, 700, 180, "Known limits", "SPEC.md · 0.3.0", "edits it could not see"),
+        arrow(500, 650, 500, 696),
+        node_box(150, 700, 700, 180, "Probes first", "a tamper + the honest edit", "110, before any fix",
+                 accent=True),
+        arrow(500, 880, 500, 926),
+        node_box(150, 930, 700, 150, "Fix, re-run", "every probe, both builds"),
+        _t(1000, 490, "ON THE PROBES AND REAL HISTORY", MUTED, 24, tracking=3),
+        _t(1900, 490, "0.3.1", MUTED, 24, "end", tracking=3),
+        _t(2250, 490, "0.4.0", ACCENT, 24, "end", tracking=3),
+        f'<line x1="1000" y1="512" x2="{W - 150}" y2="512" stroke="{LINE}" stroke-width="2"/>',
+    ]
+    rows = [("tamper probes, as expected", "49/60", "59/60"),
+            ("tampers let through", "6", "0"),
+            ("honest probes, as expected", "20/50", "32/50"),
+            ("false blocks, all honest probes", "35", "18"),
+            ("false blocks, 698 real commits", "21", "12")]
+    for i, (what, before, after) in enumerate(rows):
+        y = 590 + i * 100
+        body += [_t(1000, y, what, INK, 30), _t(1900, y, before, MUTED, 30, "end"),
+                 _t(2250, y, after, ACCENT, 30, "end")]
+    body += _foot("what is still open: SPEC, Known limits (0.4.0)", "probes before fixes")
+    return "".join(body)
+
+
 DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patroni,
             "lakehouse-spine": lakehouse_spine,
             "lakehouse-medallion": lakehouse_medallion,
@@ -2181,7 +2212,8 @@ DIAGRAMS = {"patroni-pg18": patroni_pg18, "pgbackrest-patroni": pgbackrest_patro
             "warehouse-idle": warehouse_idle,
             "erasure-model": erasure_model,
             "store-choice": store_choice,
-            "done-gate": done_gate}
+            "done-gate": done_gate,
+            "done-gate-limits": done_gate_limits}
 
 def svg_for(name: str) -> str:
     return (
