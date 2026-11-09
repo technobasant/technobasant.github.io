@@ -1,13 +1,13 @@
 ---
 title: Work with me
-last_modified_at: 2026-10-30
+last_modified_at: 2026-11-09
 seo_title: "Data Architecture, Platform & AI Consulting — Basant Bhattarai"
 eyebrow: "Consulting, contract or full-time"
-headline: "Data and AI architecture for SaaS teams that have outgrown one Postgres: reviewed, chosen and built."
+headline: "Data and AI architecture across the whole platform: reviewed, chosen and built."
 hero_code: "SCOPE / DECIDE"
 page_class: page-hire
 permalink: /hire/
-description: "Data and AI architecture: reviews, platform selection, moves off Postgres, governance, SOC 2, AI on governed data. Long-term consulting, contract or full-time."
+description: "Data and AI architecture: reviews, platform selection, migrations, governance, SOC 2 readiness, AI built into the platform. Consulting, contract or full-time."
 ---
 
 I'm looking for long-term work: a consulting or contract engagement, or a full-time role. I work with one team at a time and stay long enough to see its decisions through: reviewed, chosen, built, and handed over to the people who will run them.

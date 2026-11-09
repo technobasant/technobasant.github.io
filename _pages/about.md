@@ -1,9 +1,9 @@
 ---
 title: About
-last_modified_at: 2026-10-30
+last_modified_at: 2026-11-09
 seo_title: "About Basant Bhattarai — Data & AI Architect · Senior Data Engineer"
 eyebrow: Profile
-headline: "I design data platforms, the governance around them and the AI on them, then build them."
+headline: "I design and build data and AI platforms end to end, with governance and AI built in."
 hero_code: "OPERATE / OWN"
 page_class: page-about
 permalink: /about/
