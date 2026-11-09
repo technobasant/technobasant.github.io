@@ -1,13 +1,13 @@
 # ── Identity ──────────────────────────────────────────────────────────────
 title: "Basant Bhattarai"
 subtitle: "Data & AI Architect · Senior Data Engineer"
-tagline: "I design data platforms and the AI on them, then build them."
+tagline: "Data and AI platforms, end to end: designed, measured, built."
 email: contact@basantbhattarai.com.np
 description: >-
   Basant Bhattarai — Data & AI Architect, Senior Data Engineer.
   Nine years in software, six on production data platforms: architecture
-  reviews, platform selection, migrations off Postgres, governance and SOC 2
-  readiness, and AI on governed data.
+  reviews, platform selection, migrations, governance and SOC 2 readiness, with
+  AI built into the platform.
 url: "https://basantbhattarai.com.np"
 baseurl: ""
 repository: "technobasant/technobasant.github.io"
@@ -32,8 +32,8 @@ author:
   github: "https://github.com/technobasant"
   bio: >-
     Data and AI architect, and Senior Data Engineer at UXCam. I
-    design data platforms, the governance around them and the AI on them, then
-    build them.
+    design and build data and AI platforms end to end, with governance and AI
+    built in.
 
 # ── Build ─────────────────────────────────────────────────────────────────
 markdown: kramdown
