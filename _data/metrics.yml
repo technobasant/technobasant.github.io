@@ -7,21 +7,12 @@
 experience:
   value: "9+ years"
   label: "in industry"
-  method: "role history from 2017, including a part-time internship and a research project"
+  method: "role history from 2017"
   scope: "professional"
   source: "CV role history"
-  context: "From a part-time backend internship (2017) and a deep NLP research project, through database operations and data platforms, to production agentic systems."
+  context: "From backend services (2017) and a deep NLP research project, through database operations and data platforms, to production agentic systems."
 
 # --- professional platform evidence ---
-
-professional_platform_scale:
-  value: "15 TB+"
-  label: "production data footprint"
-  method: "operated footprint across ingestion, transformation, storage, and analytical serving"
-  window: "2024–2026 role period"
-  scope: "professional"
-  source: "CV summary"
-  context: "Batch and streaming data systems across ingestion, transformation, storage, and analytical serving."
 
 professional_event_volume:
   value: "100M+"
@@ -80,24 +71,24 @@ professional_manual_effort:
 professional_team_delivery:
   value: "30%"
   label: "faster team delivery"
-  method: "role-level before/after team delivery time after mentoring and review changes — not a lab sample"
+  method: "role-level before/after delivery time for the team he leads — not a lab sample"
   window: "Senior Data Engineer role, 2024–present"
   scope: "professional"
   source: "CV Senior Data Engineer role"
-  context: "Mentoring five engineers through pairing, code review, and written design feedback."
+  context: "Leading five engineers, with pairing, code review, and written design feedback."
 
-professional_mentoring:
+professional_team_led:
   value: "5"
-  label: "engineers mentored"
-  method: "engineers mentored directly through pairing and design review"
+  label: "engineers led"
+  method: "the team he leads as Senior Data Engineer"
   scope: "professional"
   source: "CV Senior Data Engineer role"
   context: "Pairing, code review, written design feedback, and transferable system ownership."
 
 professional_daily_processing:
-  value: "5 TB+"
+  value: "50 TB"
   label: "processed per day"
-  method: "daily volume through the core Spark processing path"
+  method: "daily data volume through the core Spark processing path"
   scope: "professional"
   source: "CV Data Engineer role"
   context: "Core Spark/PySpark ETL workloads orchestrated with Airflow."
@@ -141,7 +132,7 @@ professional_backend_users:
   method: "users served by the backend services"
   scope: "professional"
   source: "CV Software Developer Intern role"
-  context: "Python backend services in Flask and Django; a part-time internship during the degree."
+  context: "Python backend services in Flask and Django at SV Technology, 2017–2020."
 
 professional_test_coverage:
   value: "85%"
@@ -149,7 +140,7 @@ professional_test_coverage:
   method: "line coverage on the backend test suite"
   scope: "professional"
   source: "CV Software Developer Intern role"
-  context: "Python backend services in Flask and Django; a part-time internship during the degree."
+  context: "Python backend services in Flask and Django at SV Technology, 2017–2020."
 
 # --- multi-engine HA lab (independent, measured) ---
 

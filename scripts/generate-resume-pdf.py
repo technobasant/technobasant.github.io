@@ -298,13 +298,13 @@ def build_story(
         # The current role and its results lead: they are what a recruiter scans
         # for in the first lines. Method and stack follow; target roles close.
         f"Senior data engineer and data and AI architect with {metric(metrics, 'experience')} in industry. "
-        f"At UXCam, owns the architecture of a {metric(metrics, 'professional_platform_scale')} data platform processing "
-        f"{metric(metrics, 'professional_event_volume')} events a day, led its move from an OLTP warehouse to an Iceberg lakehouse, and designs the agentic AI "
-        f"platform built into it: "
+        f"At UXCam, owns the architecture of a data platform processing {metric(metrics, 'professional_daily_processing')} and "
+        f"{metric(metrics, 'professional_event_volume')} events a day, leads a team of {metric(metrics, 'professional_team_led')} engineers, moved it from "
+        "OLTP to a big data lakehouse, and designs the agentic AI platform built into it: "
         f"{metric(metrics, 'professional_cost_reduction')} lower infrastructure cost, {metric(metrics, 'professional_processing_improvement')} faster processing, "
         f"{metric(metrics, 'professional_analytics_delivery')} faster analytics delivery, {metric(metrics, 'professional_uptime')} uptime. "
-        "Sets the target architecture, chooses platforms on measured evidence, designs the data model with its governance "
-        "and SOC 2 controls, and leads the build on Kafka, Spark, Iceberg, Trino, dbt and Airflow on Kubernetes. "
+        "Sets the target architecture, chooses platforms on evidence and designs the data model with its governance "
+        "and SOC 2 controls. "
         "Open to Senior or Lead Data Engineer, AI Engineer and Data &amp; AI Architect roles.",
         s["body"],
     ))
@@ -324,42 +324,41 @@ def build_story(
     story += section("Experience", s)
     story.append(job_header("Senior Data Engineer", "UXCam", "Feb 2024 - present", s))
     story += bullets([
-        # "A platform handling 15 TB+ and 100M+ events daily" read as 15 TB a day;
-        # the figure is the footprint, so it qualifies the platform instead.
-        f"Own the architecture, reliability, data quality and governance of a {metric(metrics, 'professional_platform_scale')} "
-        f"platform processing {metric(metrics, 'professional_event_volume')} events daily: freshness and latency objectives "
-        f"per dataset, monitoring and alerting, {metric(metrics, 'professional_uptime')} uptime, incident-ready runbooks, "
-        "reviewable data contracts, a named owner for every published table, and the SOC 2 security criteria met for "
-        "the platform and its infrastructure through every audit.",
-        f"Design and build the agentic AI platform inside the data platform: RAG pipelines, MCP servers, LangGraph and "
-        f"Google ADK agents with evaluation, output landing as typed, provenanced rows: analytics delivery "
+        # The stack sits here, in the role, where screening tools weigh it.
+        f"Own the architecture, reliability, data quality and governance of a platform processing "
+        f"{metric(metrics, 'professional_daily_processing')} and {metric(metrics, 'professional_event_volume')} events a day on "
+        f"Kafka, Spark, Iceberg, Hive, Trino, dbt and Airflow: freshness objectives, alerting, "
+        f"{metric(metrics, 'professional_uptime')} uptime, runbooks, data contracts, a named owner per table, and the "
+        "SOC 2 criteria met for the platform and its infrastructure through every audit.",
+        f"Lead a team of {metric(metrics, 'professional_team_led')} engineers on the data platform, mentoring through pairing, "
+        f"code review and design feedback; delivery time down {metric(metrics, 'professional_team_delivery')}.",
+        "Design and build the agentic AI platform inside the data platform, with security, compliance and access control "
+        "to data and internal systems designed in: RAG pipelines, MCP servers, LangGraph and Google ADK agents with "
+        "guardrails and evaluation, output landing as typed, provenanced rows: analytics delivery "
         f"{metric(metrics, 'professional_analytics_delivery')} faster, "
         f"{metric(metrics, 'professional_manual_effort')} less analyst effort.",
-        # No daily volume until it is reconciled with the events figure above.
-        "Designed and built an LLM-based video-analysis platform that processes videos at high daily volume.",
+        "Designed and built an LLM video-analysis platform that describes each session recording for in-depth "
+        "product intelligence.",
         "Run the architecture and schema review every new store, pipeline and agent workflow passes before "
         "production, and operate the SQL and NoSQL databases underneath: replication, recovery, access, tuning, upgrades.",
-        f"Mentor {metric(metrics, 'professional_mentoring')} engineers through pairing, code review and written "
-        f"design feedback; team delivery time down {metric(metrics, 'professional_team_delivery')}.",
     ], s)
     story.append(Spacer(1, 4))
     story.append(job_header("Data Engineer", "UXCam", "Feb 2020 - Feb 2024", s))
     story += bullets([
         # The architecture decision of the role leads it. The lake's size stays
         # out: the privacy gate treats it as an internal scale description.
-        "Led the move from an OLTP data warehouse to an Iceberg lakehouse for analytics: Iceberg tables with partition "
-        "and schema-evolution rules, and a producer and consumer that queue and run Spark compaction jobs on small "
-        "files, keeping analytical queries fast.",
+        "Led the move from OLTP to a big data lakehouse for lower cost, faster queries, scale and deeper analytics: "
+        "tables in Iceberg, Hive and other formats with partition and schema-evolution rules, and a producer and "
+        "consumer that queue Spark compaction of small files.",
         "Rebuilt the core ETL layer in Spark and PySpark with Airflow orchestration, cutting processing time for "
         f"{metric(metrics, 'professional_daily_processing')}/day by "
         f"{metric(metrics, 'professional_processing_improvement')} and unblocking real-time product dashboards.",
         "Made backfills and replays safe to re-run: idempotent loads, explicit watermarks for late data, and schema "
         "evolution designed in.",
-        f"Tuned Trino, ClickHouse, Citus and TimescaleDB serving "
-        f"{metric(metrics, 'professional_query_volume')} queries/day for a "
-        f"{metric(metrics, 'professional_query_latency')} p95 latency reduction through partitioning, clustering "
-        "and model redesign.",
-        f"Led the Kubernetes migration of the data and database infrastructure, Spark clusters included: "
+        f"Cut p95 latency {metric(metrics, 'professional_query_latency')} on Trino, ClickHouse, Citus and TimescaleDB "
+        f"serving {metric(metrics, 'professional_query_volume')} queries/day, through performance tuning and query "
+        "optimisation: partitioning, clustering and model redesign.",
+        f"Led the migration of the data and database infrastructure to Kubernetes on EKS, Spark clusters included: "
         f"{metric(metrics, 'professional_cost_reduction')} lower infrastructure cost and autoscaling that held "
         "under peak load.",
     ], s)
@@ -375,27 +374,27 @@ def build_story(
         f"Led a team of {metric(metrics, 'professional_project_team')} engineers to build an intelligent dialogue system "
         "with deep NLP: a sequence-to-sequence model of two RNNs in TensorFlow and Python, trained on movie-dialogue "
         "and Twitter corpora, with a Flask web interface; delivered "
-        f"{metric(metrics, 'professional_project_delivery')} ahead of schedule.",
+        f"{metric(metrics, 'professional_project_delivery')} early.",
     ], s)
     story.append(KeepTogether(tail))
     story.append(Spacer(1, 3))
-    tail2: list = [job_header("Software Developer Intern (part-time)", "SV Technology, India", "2017 - 2019", s)]
+    tail2: list = [job_header("Software Developer Intern", "SV Technology, India", "2017 - 2020", s)]
     tail2 += bullets([
         f"Built Python backend services in Flask and Django serving "
         f"{metric(metrics, 'professional_backend_users')} users, at "
-        f"{metric(metrics, 'professional_test_coverage')} test coverage, alongside the degree.",
-        "Designed and maintained PostgreSQL schemas, stored procedures and reporting paths, and set up CI with "
-        "Jenkins alongside early pipeline work, the start of the move into data engineering.",
+        f"{metric(metrics, 'professional_test_coverage')} test coverage.",
+        "Designed PostgreSQL schemas, stored procedures and reports, set up Jenkins CI, and began the move into "
+        "data engineering.",
     ], s)
     story.append(KeepTogether(tail2))
 
     # Delivered projects outside the roles above, as work and outcome only: no
     # dates, counts, clients, platforms or fees, and not framed as a concurrent
     # role. The detail is shared privately with anyone hiring for consulting.
-    story += section("Selected projects", s)
-    story += bullets([
-        "<b>Database scale-out and migration:</b> Postgres application databases and a pgvector store moved to Citus "
-        "as they outgrew one server; an RDS database moved to a self-managed Citus cluster; a ClickHouse cluster "
+    # Kept whole: split by the page break, it read as two half-sections.
+    story.append(KeepTogether(section("Selected projects", s) + bullets([
+        "<b>Database scale-out and migration:</b> a Postgres application database and a pgvector store moved to Citus "
+        "as each outgrew one server; an RDS database moved to a self-managed Citus cluster; a ClickHouse cluster "
         "designed to its workload.",
         "<b>Reliability and cost:</b> PostgreSQL and TimescaleDB clusters with replication, pgBackRest and PgPool-II; "
         "a database recovered from its raw files; an RDS and Aurora fleet tuned and failover-tested; AWS database "
@@ -403,7 +402,7 @@ def build_story(
         "<b>Data platforms and AI:</b> an analytics lakehouse on S3, Trino, Airflow and Glue, delivered running with "
         "access control, HA and DR; frameworks for LLM applications and agentic workflows, architecture to tested "
         "Python; a failing classifier rebuilt on Databricks.",
-    ], s)
+    ], s)))
 
     # Public repositories a reviewer can open. Short on purpose: one line each,
     # the case studies carry the detail.
@@ -439,16 +438,15 @@ def build_story(
         ),
         (
             "Data platforms",
-            "Python, SQL and Scala; Kafka and Kinesis ingestion; Spark/PySpark processing, including the Spark 4 migration; Airflow orchestration; Iceberg, "
-            "Hive Metastore, dbt and lakehouse modelling; Databricks with Unity Catalog; CI/CD with GitHub "
-            "Actions, Kubernetes, Docker and Terraform; data quality, contracts, lineage, cost and recovery; "
-            "observability with Prometheus and Grafana.",
+            "Python, SQL and Scala; Kafka and Kinesis ingestion; Spark/PySpark, including the Spark 4 migration; Airflow; Iceberg, "
+            "Hive Metastore, dbt and lakehouse modelling; Databricks with Unity Catalog; Snowflake (working knowledge); CI/CD with GitHub "
+            "Actions, Kubernetes, Docker and Terraform; data quality, lineage and recovery; Prometheus and Grafana.",
         ),
         (
             "AI engineering",
             "LangGraph, LangChain, Google ADK, MCP servers, Pydantic, Milvus and MLflow; prompt and structured-output "
-            "design, bounded tools, retrieval, evaluation before rollout on Qwen3, Llama 3.3, gpt-oss and Databricks "
-            "Genie, provenance, human review and honest fallback paths; deep-learning NLP in TensorFlow since 2018.",
+            "design, guardrails, access control to data and internal systems, retrieval, evaluation on Qwen3, Llama 3.3, gpt-oss and "
+            "Databricks Genie, provenance, human review and fallbacks; deep-learning NLP in TensorFlow since 2018.",
         ),
         (
             "Database lifecycle",
@@ -510,7 +508,7 @@ def generate(output: Path) -> None:
         title="Basant Bhattarai - Senior Data Engineer, AI Engineer, Data and AI Architect",
         author="Basant Bhattarai",
         subject="Senior Data Engineer · AI Engineer · Data & AI Architect",
-        keywords="Senior Data Engineer, Lead Data Engineer, AI Engineer, Data & AI Architect, Spark, Kafka, Airflow, dbt, Iceberg, Lakehouse, Trino, ClickHouse, PostgreSQL, Citus, Kubernetes, Terraform, AWS, LangGraph, MCP, RAG, SOC 2",
+        keywords="Senior Data Engineer, Lead Data Engineer, AI Engineer, Data & AI Architect, Spark, Kafka, Airflow, dbt, Iceberg, Lakehouse, Trino, ClickHouse, PostgreSQL, Citus, Kubernetes, Terraform, AWS, LangGraph, MCP, RAG, Guardrails, Snowflake, SOC 2",
     )
     frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height, id="resume")
     # `onPageEnd`, not `onPage`. reportlab runs onPage *before* the frame draws,

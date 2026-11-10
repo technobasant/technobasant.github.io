@@ -29,16 +29,20 @@ auditor can check, including SOC 2 readiness; and AI built into the platform,
 measured before launch. He is open to Senior or Lead Data Engineer, AI Engineer
 and Data & AI Architect roles, long-term contract or full-time.
 
-At UXCam he owns the architecture of the production data platform and the
+At UXCam he leads a team of five engineers and owns the architecture of the
+production data platform, which processes {{ site.data.metrics.professional_daily_processing.value }} and {{ site.data.metrics.professional_event_volume.value }} events a day, and the
 databases underneath it: ingestion, Spark/PySpark processing, orchestration, lakehouse modelling,
 analytical serving, database reliability (HA, backup, upgrades, access),
 governance, architecture review, and operational readiness, and is responsible
 for meeting the SOC 2 criteria for the data platform and its infrastructure. He also designs
 and builds the agentic AI platform on LangGraph, LangChain, Google ADK, and MCP—RAG
-pipelines, MCP tool servers, evaluation, and integration into the existing stack so
-model output becomes governed product state—and built an LLM-based video-analysis
-platform. As Data Engineer (2020–2024) he led the move from an OLTP data warehouse
-to an Iceberg lakehouse: Spark on Kubernetes, Iceberg tables, and a producer and
+pipelines, MCP tool servers, guardrails, evaluation, and integration into the
+existing stack so model output becomes governed product state. Security, compliance
+and access control to data and internal systems are designed in and enforced by the
+platform, not the model. He also built an LLM-based video-analysis platform that
+watches session recordings and describes them for in-depth product intelligence.
+As Data Engineer (2020–2024) he led the move from OLTP to a big data
+lakehouse, for lower cost, faster analytics and room to scale: Spark on Kubernetes, tables in Iceberg, Hive and other formats, and a producer and
 consumer that queue and run Spark compaction jobs on small files.
 
 The architecture work that can be read in full is a reference architecture for
@@ -77,8 +81,8 @@ Roles: Senior Data Engineer at UXCam (Feb 2024 – present); Data Engineer at UX
 (Feb 2020 – Feb 2024); Project Leader and Research Developer at SVCET, JNTU
 Anantapur, India (Nov 2018 – Mar 2019): led a team of four engineers building a
 deep NLP dialogue system, a TensorFlow sequence-to-sequence model of two RNNs
-with a Flask interface; Software Developer Intern, part-time during the degree, at SV
-Technology, India (2017–2019): Python backend services in Flask and Django. B.Tech in Computer Science and
+with a Flask interface; Software Developer Intern at SV Technology, India
+(2017–2020): Python backend services in Flask and Django. B.Tech in Computer Science and
 Engineering, JNTU Anantapur (SVCET, an autonomous affiliated college), India,
 2015–2019. English C1, Nepali native. He works remotely from Kathmandu, Nepal, with
 US and EU teams; UXCam is based in California, US and Berlin, Germany.
