@@ -44,7 +44,7 @@ Senior data engineer and data and AI architect with 9+ years on production syste
 
 **February 2024 – present**
 
-- Own the architecture, reliability and governance of a {{ site.data.metrics.professional_platform_scale.value }} platform processing {{ site.data.metrics.professional_event_volume.value }} events daily, with {{ site.data.metrics.professional_uptime.value }} uptime, explicit service objectives, incident-ready runbooks, reviewable data contracts, and a named owner for every published table; responsible for meeting the SOC 2 criteria for the data platform and its infrastructure through every audit.
+- Own the architecture, reliability, data quality and governance of a {{ site.data.metrics.professional_platform_scale.value }} platform processing {{ site.data.metrics.professional_event_volume.value }} events daily, with {{ site.data.metrics.professional_uptime.value }} uptime, explicit service objectives, monitoring and alerting, incident-ready runbooks, reviewable data contracts, and a named owner for every published table; responsible for meeting the SOC 2 criteria for the data platform and its infrastructure through every audit.
 - Operate the database layer the platform depends on: clustering and replication, backup and recovery, access control, query and index tuning, and upgrade windows across SQL and NoSQL engines.
 - Design and operate the production agent workflows — LangGraph and Google ADK orchestration, MCP tool servers, retrieval and evaluation — built into the existing platform so model output lands as typed, provenanced rows rather than a transcript. Analytics delivery {{ site.data.metrics.professional_analytics_delivery.value }} faster with {{ site.data.metrics.professional_manual_effort.value }} less analyst effort, with review and fallback paths kept in place.
 - Lead architecture and schema reviews before new stores, pipelines, and agent workflows reach production; mentor {{ site.data.metrics.professional_mentoring.value }} engineers through pairing, code review, and written design feedback; team delivery time improved {{ site.data.metrics.professional_team_delivery.value }}.
@@ -55,9 +55,9 @@ Senior data engineer and data and AI architect with 9+ years on production syste
 
 - Rebuilt core Spark/PySpark processing for {{ site.data.metrics.professional_daily_processing.value }} per day, improving processing time by {{ site.data.metrics.professional_processing_improvement.value }}.
 - Administered distributed SQL and NoSQL stores used for serving and product state—modelling, partitioning, replication, and query plans rather than treating the database as a black box.
-- Treated schema evolution, replay, late data and backfills as designed interfaces, with idempotent loads and explicit watermarks.
+- Made backfills and replays safe to re-run: idempotent loads, explicit watermarks for late data, and schema evolution designed in.
 - Reduced p95 query latency by {{ site.data.metrics.professional_query_latency.value }} across {{ site.data.metrics.professional_query_volume.value }} analytical queries per day through partitioning, clustering, and model redesign.
-- Led a Kubernetes migration of the data and database infrastructure that lowered cost by {{ site.data.metrics.professional_cost_reduction.value }} while sustaining {{ site.data.metrics.professional_uptime.value }} uptime.
+- Led a Kubernetes migration of the data and database infrastructure that lowered cost by {{ site.data.metrics.professional_cost_reduction.value }}, with autoscaling that held under peak load.
 
 ## Project Leader and Research Developer · SVCET, JNTU Anantapur
 
@@ -102,7 +102,7 @@ Senior data engineer and data and AI architect with 9+ years on production syste
   </li>
   <li>
     <h3>AI engineering</h3>
-    <p>Production agents on LangGraph, LangChain, Google ADK and MCP tool servers: bounded tools, retrieval, evaluation before rollout, typed output, and a fallback path that fails honestly. Built into the platform already running. Evidence: <a href="/work/governed-ai-delivery/">governed AI case study</a>; <a href="/work/governed-agent/">governed-agent</a> and <a href="/work/evalproof/">evalproof</a>, measured in public.</p>
+    <p>Production agents on LangGraph, LangChain, Google ADK and MCP tool servers: prompt and structured-output design, bounded tools, retrieval, evaluation before rollout, typed output, and a fallback path that fails honestly. Built into the platform already running. Evidence: <a href="/work/governed-ai-delivery/">governed AI case study</a>; <a href="/work/governed-agent/">governed-agent</a> and <a href="/work/evalproof/">evalproof</a>, measured in public.</p>
   </li>
   <li>
     <h3>Database lifecycle</h3>

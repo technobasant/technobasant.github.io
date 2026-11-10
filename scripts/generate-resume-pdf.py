@@ -293,7 +293,16 @@ def build_story(
 
     story += section("Profile", s)
     story.append(Paragraph(
-        f"Senior data engineer and data and AI architect with {metric(metrics, 'experience')} on production systems in industry. Sets the target architecture, chooses platforms on measured evidence, designs the data model and the governance and SOC 2 controls around it, then leads the build. Builds on open-source engines — Kafka, Spark, Iceberg, Trino, dbt and Airflow on Kubernetes — and the databases underneath: modeling, replication, backup and recovery, upgrades. AI built into the platform: agent workflows on LangGraph, Google ADK and MCP whose output lands as typed, reviewable rows, with isolation, evaluation and review designed in. Track record: {metric(metrics, 'professional_cost_reduction')} lower infrastructure cost, {metric(metrics, 'professional_processing_improvement')} faster processing, {metric(metrics, 'professional_analytics_delivery')} faster analytics delivery. Open to Senior or Lead Data Engineer, AI Engineer and Data &amp; AI Architect roles.",
+        # The current role and its results lead: they are what a recruiter scans
+        # for in the first lines. Method and stack follow; target roles close.
+        f"Senior data engineer and data and AI architect with {metric(metrics, 'experience')} on production systems in industry. "
+        f"At UXCam, owns the architecture of a {metric(metrics, 'professional_platform_scale')} data platform processing "
+        f"{metric(metrics, 'professional_event_volume')} events a day and the production AI agents built into it: "
+        f"{metric(metrics, 'professional_cost_reduction')} lower infrastructure cost, {metric(metrics, 'professional_processing_improvement')} faster processing, "
+        f"{metric(metrics, 'professional_analytics_delivery')} faster analytics delivery, {metric(metrics, 'professional_uptime')} uptime. "
+        "Sets the target architecture, chooses platforms on measured evidence, designs the data model with its governance "
+        "and SOC 2 controls, and leads the build on Kafka, Spark, Iceberg, Trino, dbt and Airflow on Kubernetes. "
+        "Open to Senior or Lead Data Engineer, AI Engineer and Data &amp; AI Architect roles.",
         s["body"],
     ))
 
@@ -312,18 +321,20 @@ def build_story(
     story += section("Experience", s)
     story.append(job_header("Senior Data Engineer", "UXCam", "Feb 2024 - present", s))
     story += bullets([
-        f"Own the architecture, reliability and governance of a platform handling {metric(metrics, 'professional_platform_scale')} "
-        f"and {metric(metrics, 'professional_event_volume')} events daily: freshness and latency objectives per "
-        f"dataset, {metric(metrics, 'professional_uptime')} uptime, incident-ready runbooks, reviewable data "
-        "contracts, a named owner for every published table, and the SOC 2 criteria met for the platform and "
-        "its infrastructure through every audit.",
+        # "A platform handling 15 TB+ and 100M+ events daily" read as 15 TB a day;
+        # the figure is the footprint, so it qualifies the platform instead.
+        f"Own the architecture, reliability, data quality and governance of a {metric(metrics, 'professional_platform_scale')} "
+        f"platform processing {metric(metrics, 'professional_event_volume')} events daily: freshness and latency objectives "
+        f"per dataset, monitoring and alerting, {metric(metrics, 'professional_uptime')} uptime, incident-ready runbooks, "
+        "reviewable data contracts, a named owner for every published table, and the SOC 2 security criteria met for "
+        "the platform and its infrastructure through every audit.",
         f"Design and operate the production agent workflows — LangGraph and Google ADK orchestration, MCP tool "
         f"servers, retrieval and evaluation — built into the existing platform, so model output lands as typed, "
         f"provenanced rows rather than a transcript: analytics delivery "
         f"{metric(metrics, 'professional_analytics_delivery')} faster with "
         f"{metric(metrics, 'professional_manual_effort')} less analyst effort, review and fallback paths kept.",
-        "Operate the SQL and NoSQL databases underneath: replication, backup and recovery, access, tuning, upgrades.",
-        "Lead architecture and schema reviews before new stores, pipelines and agent workflows reach production.",
+        "Run the architecture and schema review every new store, pipeline and agent workflow passes before "
+        "production, and operate the SQL and NoSQL databases underneath: replication, recovery, access, tuning, upgrades.",
         f"Mentor {metric(metrics, 'professional_mentoring')} engineers through pairing, code review and written "
         f"design feedback; team delivery time down {metric(metrics, 'professional_team_delivery')}.",
     ], s)
@@ -333,14 +344,15 @@ def build_story(
         "Rebuilt the core ETL layer in Spark and PySpark with Airflow orchestration, cutting processing time for "
         f"{metric(metrics, 'professional_daily_processing')}/day by "
         f"{metric(metrics, 'professional_processing_improvement')} and unblocking real-time product dashboards.",
-        "Treated schema evolution, replay, late data and backfills as designed interfaces, with idempotent loads and watermarks.",
+        "Made backfills and replays safe to re-run: idempotent loads, explicit watermarks for late data, and schema "
+        "evolution designed in.",
         f"Tuned Trino, ClickHouse, Citus and TimescaleDB serving "
         f"{metric(metrics, 'professional_query_volume')} queries/day for a "
         f"{metric(metrics, 'professional_query_latency')} p95 latency reduction through partitioning, clustering "
         "and model redesign.",
         f"Led the Kubernetes migration of the data and database infrastructure: "
-        f"{metric(metrics, 'professional_cost_reduction')} lower infrastructure cost, "
-        f"{metric(metrics, 'professional_uptime')} uptime, and autoscaling that held under peak load.",
+        f"{metric(metrics, 'professional_cost_reduction')} lower infrastructure cost and autoscaling that held "
+        "under peak load.",
     ], s)
     story.append(Spacer(1, 4))
     # KeepTogether on the short roles. The two-bullet SV Technology block was
@@ -393,35 +405,42 @@ def build_story(
         "model and a Databricks proof of concept; then its usage assistant on governed data.",
         "<b>spark-sql-kinesis</b> (maintainer): Kinesis source and sink for Spark 4.2 on AWS SDK v2, on Maven "
         "Central; an idle shard costs one GetRecords call, not a multi-second floor per batch.",
-        "<b>distributed-db-lab</b>: Citus sharding, online rebalance and tenant isolation, measured against "
-        "TimescaleDB and replicated ClickHouse. Also evalproof, data-stack-lab, a governed agent, streaming, real-time ML, "
-        "retrieval, data contracts and GitOps delivery. github.com/technobasant",
+        # The AI evidence, with its measured figures: one bullet on agents in a
+        # paid role was the whole AI Engineer case before this.
+        f"<b>governed-agent</b> and <b>evalproof</b> (LangGraph, MCP, LLM evaluation): answers matched a SQL-computed "
+        f"key on {metric(metrics, 'agent_answer_match')} questions, and {metric(metrics, 'agent_injection_actions')} planted "
+        "prompt injections led to a proposed action; evalproof fails CI only on LLM-judge drops both large and significant.",
+        "Also <b>distributed-db-lab</b> (Citus sharding and online rebalance, against TimescaleDB and ClickHouse), "
+        "data-stack-lab, streaming, real-time ML, retrieval, data contracts and GitOps delivery. github.com/technobasant",
     ], s)
 
     # No forced page break here any more. It existed to give the Independent work
     # panel a clean page; with that section gone it stranded 124 words on page 2.
-    story += section("Capability map", s)
+    story += section("Skills", s)
     # Architecture first: it is the level the profile claims, so it leads the
     # map, with the AI side of the architecture named in it rather than left to
     # the AI systems row.
     categories = [
         (
             "Data and AI architecture",
-            "Target architectures and platform selection, conceptual to physical modelling, Kimball and Type 2 "
-            "history, lakehouse, ClickHouse and Citus layouts, contracts in CI, decision records, SOC 2 and erasure "
-            "by design, tenant isolation outside the model, semantic layers, release gates, cost models.",
+            "Target architectures and platform selection, conceptual to physical modelling, data warehouse and "
+            "lakehouse modelling (Kimball, Type 2 history), ClickHouse and Citus layouts, contracts in CI, decision "
+            "records and architecture documentation, SOC 2 and GDPR erasure by design, tenant isolation outside the "
+            "model, semantic layers, release gates, cost models.",
         ),
         (
             "Data platforms",
             "Python, SQL and Scala; Kafka and Kinesis ingestion (maintainer of a Spark 4 Kinesis "
             "connector); Spark/PySpark processing, including the Spark 4 migration; Airflow orchestration; Iceberg, "
-            "Hive Metastore, dbt and lakehouse modelling; Databricks with Unity Catalog; Kubernetes, Docker and "
-            "Terraform delivery; contracts, lineage, cost and recovery; Prometheus and Grafana.",
+            "Hive Metastore, dbt and lakehouse modelling; Databricks with Unity Catalog; CI/CD with GitHub "
+            "Actions, Kubernetes, Docker and Terraform; data quality, contracts, lineage, cost and recovery; "
+            "observability with Prometheus and Grafana.",
         ),
         (
             "AI engineering",
-            "LangGraph, LangChain, Google ADK, MCP servers, Pydantic, Milvus and MLflow; bounded tools, retrieval, "
-            "evaluation before rollout, provenance, human review and honest fallback paths.",
+            "LangGraph, LangChain, Google ADK, MCP servers, Pydantic, Milvus and MLflow; prompt and structured-output "
+            "design, bounded tools, retrieval, evaluation before rollout on Qwen3, Llama 3.3, gpt-oss and Databricks "
+            "Genie, provenance, human review and honest fallback paths; deep-learning NLP in TensorFlow since 2018.",
         ),
         (
             "Database lifecycle",
@@ -445,20 +464,6 @@ def build_story(
                 for c in clouds
             ),
         )]
-
-    # One line of what the category means, then the systems it runs on. Splitting
-    # those across two sections meant a reader had to hold the first to make
-    # sense of the second.
-    blurbs = {
-        "Data platforms": "Ingestion to serving, run for reliability, recovery and cost.",
-        "Data and AI architecture": "Platforms chosen on evidence, with every decision written down and AI built in.",
-        "Database lifecycle": "Modeling, replication, failover, backup and PITR, upgrades and query performance.",
-        "AI systems": "Model output that lands as typed, reviewable rows rather than a transcript.",
-    }
-    categories = [
-        (label, f'<font color="#5D646D">{blurbs[label]}</font><br/>{body}' if label in blurbs else body)
-        for label, body in categories
-    ]
 
     for label, body in categories:
         story.append(KeepTogether([
@@ -496,7 +501,8 @@ def generate(output: Path) -> None:
         bottomMargin=0.58 * inch,
         title="Basant Bhattarai - Senior Data Engineer, AI Engineer, Data and AI Architect",
         author="Basant Bhattarai",
-        subject="Data & AI Architect · Senior Data Engineer",
+        subject="Senior Data Engineer · AI Engineer · Data & AI Architect",
+        keywords="Senior Data Engineer, Lead Data Engineer, AI Engineer, Data & AI Architect, Spark, Kafka, Airflow, dbt, Iceberg, Trino, ClickHouse, PostgreSQL, Citus, Kubernetes, Terraform, AWS, LangGraph, MCP, SOC 2",
     )
     frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height, id="resume")
     # `onPageEnd`, not `onPage`. reportlab runs onPage *before* the frame draws,
