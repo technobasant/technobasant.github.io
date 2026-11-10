@@ -3,12 +3,12 @@ title: Résumé
 last_modified_at: 2026-11-10
 seo_title: "Basant Bhattarai — Senior Data Engineer · AI Engineer · Data & AI Architect résumé"
 eyebrow: Career
-headline: "Senior Data Engineer · AI Engineer · Data & AI Architect — 9+ years in industry, nearly 7 full-time."
+headline: "Senior Data Engineer · AI Engineer · Data & AI Architect — 9+ years in industry."
 hero_code: "CAREER / LOG"
 lede: "From backend services and PostgreSQL schemas to owning the architecture of a data platform handling 100M+ events a day: its data model, databases, governance and SOC 2 controls, and the AI built into it."
 page_class: page-resume
 permalink: /resume/
-description: "Senior Data Engineer, AI Engineer and Data & AI Architect: 9+ years in industry, nearly 7 full-time. Roles, measured outcomes, and the stack behind each."
+description: "Senior Data Engineer, AI Engineer and Data & AI Architect: 9+ years in industry. Roles, measured outcomes, and the stack behind each."
 redirect_from:
   - /experience/
   - /skills/
@@ -29,7 +29,7 @@ redirect_from:
 
 ## Profile
 
-Senior data engineer and data and AI architect with 9+ years in industry, nearly 7 of them full-time. I set the target architecture, choose platforms on measured evidence, design the data model with the governance and SOC 2 controls around it, then lead the build: Kafka, Spark, Iceberg, Trino, dbt and Airflow on Kubernetes, the databases underneath, and AI built into the platform with isolation, evaluation and review designed in. My current title is Senior Data Engineer at UXCam, where I led the move from an OLTP warehouse to an Iceberg lakehouse and design the agentic AI platform built into it. I am open to Senior or Lead Data Engineer, AI Engineer and Data & AI Architect roles, long-term contract or full-time. I work remotely from Kathmandu, Nepal, with teams in the US and Europe.
+Senior data engineer and data and AI architect with 9+ years in industry. I set the target architecture, choose platforms on measured evidence, design the data model with the governance and SOC 2 controls around it, then lead the build: Kafka, Spark, Iceberg, Trino, dbt and Airflow on Kubernetes, the databases underneath, and AI built into the platform with isolation, evaluation and review designed in. My current title is Senior Data Engineer at UXCam, where I led the move from an OLTP warehouse to an Iceberg lakehouse and design the agentic AI platform built into it. I am open to Senior or Lead Data Engineer, AI Engineer and Data & AI Architect roles, long-term contract or full-time. I work remotely from Kathmandu, Nepal, with teams in the US and Europe.
 
 ## Experience at a glance
 

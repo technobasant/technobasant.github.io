@@ -8,7 +8,7 @@ hero_code: "OPERATE / OWN"
 page_class: page-about
 permalink: /about/
 description: "About Basant Bhattarai: Senior Data Engineer at UXCam, practising as a Data & AI Architect. 9+ years in industry; governance, SOC 2, AI built in."
-lede: "9+ years in industry, nearly 7 full-time: from backend services and PostgreSQL schemas to the architecture of the whole platform, its governance, and the AI built into it."
+lede: "9+ years in industry: from backend services and PostgreSQL schemas to the architecture of the whole platform, its governance, and the AI built into it."
 ---
 
 I work as a data and AI architect: I set the target architecture, choose platforms by measuring them on the workload, design the data model and the controls around it, and lead the build through to the people who will run it. My title is Senior Data Engineer at UXCam, and the job is exactly that, on a platform handling {{ site.data.metrics.professional_event_volume.value }} events a day. Projects I have delivered and written up include [an analytics lakehouse](/work/contact-centre-lakehouse/) handed over configured and running, [two Postgres databases moved to Citus](/work/postgres-scale-out-citus/), [a managed-or-self-run decision and an RDS fleet](/work/postgres-on-rds/), and [a failing classifier rebuilt](/work/consulting-short-text-and-alerting/) on a Databricks lakehouse. The architecture work I can show in full is [a reference architecture](/work/data-platform-architecture/) for a B2B SaaS company leaving Postgres, a scenario common across the industry: the current state measured, 18 decisions, a data model, SOC 2 readiness and a proof of concept on Databricks.

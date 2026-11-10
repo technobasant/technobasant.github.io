@@ -26,11 +26,10 @@ hero:
   # Length is a contract here, not a preference: scripts/e2e-hero.mjs asserts the
   # CTAs stay inside the first viewport, and at 320px every ~5 words is another
   # line. 25 words fits; 28 pushed the buttons 12px past the fold.
-  # Years first: 9+ in industry (internship and research included) and the
-  # full-time share, then both halves of the job (architect and build) across
-  # the platform's span, with AI part of it rather than a layer on top. 145
-  # characters; 151 fitted, 160 did not.
-  lede: "9+ years in industry, nearly 7 full-time. I architect and build platforms from ingestion to governance, with AI built in: safe, secure, measured."
+  # Years first: 9+ in industry (internship and research included), then both
+  # halves of the job (architect and build) across the platform's span, with AI
+  # part of it rather than a layer on top. 125 characters; 151 fitted, 160 did not.
+  lede: "9+ years in industry. I architect and build platforms from ingestion to governance, with AI built in: safe, secure, measured."
   actions:
     - label: "Selected work"
       url: /work/

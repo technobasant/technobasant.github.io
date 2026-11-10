@@ -12,16 +12,6 @@ experience:
   source: "CV role history"
   context: "From a part-time backend internship (2017) and a deep NLP research project, through database operations and data platforms, to production agentic systems."
 
-# Full-time roles only. It reads "7+ years" from February 2027: change it here
-# and in the pages that state it in prose (grep "nearly 7").
-full_time_experience:
-  value: "nearly 7 years"
-  label: "full-time"
-  method: "full-time roles only: UXCam, February 2020 onwards"
-  scope: "professional"
-  source: "CV role history"
-  context: "Data Engineer from February 2020, Senior Data Engineer from February 2024."
-
 # --- professional platform evidence ---
 
 professional_platform_scale:

@@ -297,7 +297,7 @@ def build_story(
     story.append(Paragraph(
         # The current role and its results lead: they are what a recruiter scans
         # for in the first lines. Method and stack follow; target roles close.
-        f"Senior data engineer and data and AI architect with {metric(metrics, 'experience')} in industry ({metric(metrics, 'full_time_experience')} full-time). "
+        f"Senior data engineer and data and AI architect with {metric(metrics, 'experience')} in industry. "
         f"At UXCam, owns the architecture of a {metric(metrics, 'professional_platform_scale')} data platform processing "
         f"{metric(metrics, 'professional_event_volume')} events a day, led its move from an OLTP warehouse to an Iceberg lakehouse, and designs the agentic AI "
         f"platform built into it: "
