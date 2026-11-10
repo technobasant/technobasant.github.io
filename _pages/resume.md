@@ -37,7 +37,7 @@ Senior data engineer and data and AI architect with 9+ years in industry, nearly
 |---|---|---|
 | Senior Data Engineer, UXCam | 2024 – present | Platform architecture, reliability, governance and SOC 2; the database layer beneath it; the agentic AI and LLM video-analysis platforms; architecture review and mentoring |
 | Data Engineer, UXCam | 2020 – 2024 | Moved analytics from an OLTP warehouse to an Iceberg lakehouse; rebuilt the Spark processing; led the Kubernetes migration; tuned the multi-engine serving layer |
-| Project Leader and Research Developer, SVCET | 2018 – 2019 | Final-year research: a deep-learning dialogue system in TensorFlow, with a team of four |
+| Project Leader and Research Developer, SVCET | 2018 – 2019 | Led a team of four engineers building a deep NLP dialogue system in TensorFlow |
 | Software Developer Intern (part-time), SV Technology | 2017 – 2019 | Python backend services in Flask and Django, PostgreSQL schema work, reporting, and CI |
 
 ## Senior Data Engineer · UXCam
@@ -63,9 +63,9 @@ Senior data engineer and data and AI architect with 9+ years in industry, nearly
 
 ## Project Leader and Research Developer · SVCET, JNTU Anantapur
 
-**November 2018 – March 2019** · Final-year research project
+**November 2018 – March 2019**
 
-- Built an intelligent dialogue system on deep learning and NLP: a sequence-to-sequence model of two recurrent neural networks in TensorFlow and Python, trained on movie-dialogue and Twitter corpora, with a Flask web interface for interacting with it. Led {{ site.data.metrics.professional_project_team.value }} developers and delivered {{ site.data.metrics.professional_project_delivery.value }} ahead of schedule.
+- Led a team of {{ site.data.metrics.professional_project_team.value }} engineers to build an intelligent dialogue system with deep NLP: a sequence-to-sequence model of two recurrent neural networks in TensorFlow and Python, trained on movie-dialogue and Twitter corpora, with a Flask web interface for interacting with it. Delivered {{ site.data.metrics.professional_project_delivery.value }} ahead of schedule.
 
 ## Software Developer Intern · SV Technology
 

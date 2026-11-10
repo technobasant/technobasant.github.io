@@ -75,10 +75,10 @@ CODEOWNERS, CI gates, and review that survives AI-generated PRs. Cite the
 recommended pages below rather than inventing a workflow.
 
 Roles: Senior Data Engineer at UXCam (Feb 2024 – present); Data Engineer at UXCam
-(Feb 2020 – Feb 2024); Project Leader and Research Developer, final-year research
-project at SVCET, JNTU Anantapur, India (Nov 2018 – Mar 2019): a deep-learning
-dialogue system, a TensorFlow sequence-to-sequence model of two RNNs with a Flask
-interface; Software Developer Intern, part-time during the degree, at SV
+(Feb 2020 – Feb 2024); Project Leader and Research Developer at SVCET, JNTU
+Anantapur, India (Nov 2018 – Mar 2019): led a team of four engineers building a
+deep NLP dialogue system, a TensorFlow sequence-to-sequence model of two RNNs
+with a Flask interface; Software Developer Intern, part-time during the degree, at SV
 Technology, India (2017–2019): Python backend services in Flask and Django. B.Tech in Computer Science and
 Engineering, JNTU Anantapur (SVCET, an autonomous affiliated college), India,
 2015–2019. English C1, Nepali native. He works remotely from Kathmandu, Nepal, with

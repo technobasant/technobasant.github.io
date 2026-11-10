@@ -39,7 +39,7 @@ Outside that I maintain [spark-sql-kinesis](https://github.com/technobasant/spar
 
 ## Background
 
-I studied computer science and engineering at SVCET, an autonomous college affiliated to JNTU Anantapur, in India, from 2015 to 2019. In the final two years I worked part-time as a backend developer, in Python with Flask and Django, and led a final-year research project: a deep-learning dialogue system, a TensorFlow sequence-to-sequence model behind a Flask interface. The data half of the job gradually became the job. I speak English at C1 and Nepali natively.
+I studied computer science and engineering at SVCET, an autonomous college affiliated to JNTU Anantapur, in India, from 2015 to 2019. In the final two years I worked part-time as a backend developer, in Python with Flask and Django, and led a team of four engineers on a research project: a deep NLP dialogue system, a TensorFlow sequence-to-sequence model behind a Flask interface. The data half of the job gradually became the job. I speak English at C1 and Nepali natively.
 
 I work from Kathmandu, remotely with teams in the US and Europe; UXCam itself is based in California and Berlin. I shift my day later to overlap with European afternoons and US mornings, a rhythm I have used for years.
 

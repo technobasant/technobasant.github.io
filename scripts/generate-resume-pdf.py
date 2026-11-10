@@ -372,9 +372,9 @@ def build_story(
     tail: list = []
     tail.append(job_header("Project Leader and Research Developer", "SVCET, JNTU Anantapur", "Nov 2018 - Mar 2019", s))
     tail += bullets([
-        "Final-year research project: an intelligent dialogue system on deep learning and NLP, a sequence-to-sequence "
-        "model of two RNNs in TensorFlow and Python, trained on movie-dialogue and Twitter corpora, with a Flask web "
-        f"interface; led {metric(metrics, 'professional_project_team')} developers and delivered "
+        f"Led a team of {metric(metrics, 'professional_project_team')} engineers to build an intelligent dialogue system "
+        "with deep NLP: a sequence-to-sequence model of two RNNs in TensorFlow and Python, trained on movie-dialogue "
+        "and Twitter corpora, with a Flask web interface; delivered "
         f"{metric(metrics, 'professional_project_delivery')} ahead of schedule.",
     ], s)
     story.append(KeepTogether(tail))

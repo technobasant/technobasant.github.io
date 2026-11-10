@@ -7,10 +7,10 @@
 experience:
   value: "9+ years"
   label: "in industry"
-  method: "role history from 2017, including a part-time internship and a final-year research project"
+  method: "role history from 2017, including a part-time internship and a research project"
   scope: "professional"
   source: "CV role history"
-  context: "From a part-time backend internship (2017) and a final-year deep-learning research project, through database operations and data platforms, to production agentic systems."
+  context: "From a part-time backend internship (2017) and a deep NLP research project, through database operations and data platforms, to production agentic systems."
 
 # Full-time roles only. It reads "7+ years" from February 2027: change it here
 # and in the pages that state it in prose (grep "nearly 7").
@@ -131,11 +131,11 @@ professional_query_latency:
 
 professional_project_team:
   value: "4"
-  label: "developers led"
+  label: "engineers led"
   method: "project team size"
   scope: "professional"
   source: "CV Project Leader and Research Developer role"
-  context: "Final-year research project: a deep-learning dialogue system, Nov 2018 – Mar 2019."
+  context: "A deep NLP dialogue system at SVCET, Nov 2018 – Mar 2019."
 
 professional_project_delivery:
   value: "2 weeks"
@@ -143,7 +143,7 @@ professional_project_delivery:
   method: "delivery against the agreed project schedule"
   scope: "professional"
   source: "CV Project Leader and Research Developer role"
-  context: "Final-year research project: a deep-learning dialogue system."
+  context: "A deep NLP dialogue system at SVCET."
 
 professional_backend_users:
   value: "10K+"
