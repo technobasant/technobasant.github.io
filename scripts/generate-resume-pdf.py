@@ -330,8 +330,7 @@ def build_story(
         "Rebuilt the core ETL layer in Spark and PySpark with Airflow orchestration, cutting processing time for "
         f"{metric(metrics, 'professional_daily_processing')}/day by "
         f"{metric(metrics, 'professional_processing_improvement')} and unblocking real-time product dashboards.",
-        "Made change and recovery safe by treating schema evolution, replay, late-arriving data and backfills as "
-        "designed interfaces with idempotent loads and explicit watermarks, not as emergency procedures.",
+        "Made schema evolution, replay, late data and backfills designed interfaces: idempotent loads, explicit watermarks.",
         f"Tuned Trino, ClickHouse, Citus and TimescaleDB serving "
         f"{metric(metrics, 'professional_query_volume')} queries/day for a "
         f"{metric(metrics, 'professional_query_latency')} p95 latency reduction through partitioning, clustering "
@@ -339,6 +338,19 @@ def build_story(
         f"Led the Kubernetes migration of the data infrastructure: "
         f"{metric(metrics, 'professional_cost_reduction')} lower infrastructure cost, "
         f"{metric(metrics, 'professional_uptime')} uptime, and autoscaling that held under peak load.",
+    ], s)
+    story.append(Spacer(1, 4))
+    # Consulting alongside UXCam, as projects and outcomes only: no clients, no
+    # platforms, no fees. The count and the period come from the owner's records.
+    story.append(job_header("Independent Consultant", "Data, databases and AI", "May 2021 - present", s))
+    story += bullets([
+        "30 engagements alongside UXCam. Database architecture and migration: Postgres scaled out to Citus, RDS "
+        "moved to a self-managed Citus cluster, a 500 GB database moved and faster afterwards, a ClickHouse cluster "
+        "designed to its workload.",
+        "PostgreSQL and TimescaleDB clusters with replication, pgBackRest and PgPool-II; a database recovered from "
+        "raw files; AWS database cost analysis; an analytics lakehouse on S3, Trino, Airflow and Glue, end to end.",
+        "Frameworks for LLM applications and agentic workflows, from the architecture to tested Python; a short-text "
+        "classifier redesigned on Databricks; pgvector performance on RDS.",
     ], s)
     story.append(Spacer(1, 4))
     # KeepTogether on the short roles. The two-bullet SV Technology block was
@@ -352,8 +364,6 @@ def build_story(
         f"Led {metric(metrics, 'professional_project_team')} developers building an intelligent dialogue system "
         "on an NLP and deep-learning stack, reaching the client's acceptance threshold for intent recognition and "
         f"delivering {metric(metrics, 'professional_project_delivery')} ahead of schedule.",
-        "Coordinated requirements, planning and review across academic and industry stakeholders, and introduced "
-        "the code-review and version-control discipline the department kept afterwards.",
     ], s)
     story.append(KeepTogether(tail))
     story.append(Spacer(1, 3))
@@ -376,10 +386,8 @@ def build_story(
         "model and a Databricks proof of concept; then its usage assistant on governed data.",
         "<b>spark-sql-kinesis</b> (maintainer): Kinesis source and sink for Spark 4.2 on AWS SDK v2, on Maven "
         "Central; an idle shard costs one GetRecords call, not a multi-second floor per batch.",
-        "<b>evalproof</b>: LLM evaluation with judge calibration and CI gates that fail only on drops that are "
-        "both large and significant.",
         "<b>distributed-db-lab</b>: Citus sharding, online rebalance and tenant isolation, measured against "
-        "TimescaleDB and replicated ClickHouse. Also data-stack-lab, a governed agent, streaming, real-time ML, "
+        "TimescaleDB and replicated ClickHouse. Also evalproof, data-stack-lab, a governed agent, streaming, real-time ML, "
         "retrieval, data contracts and GitOps delivery. github.com/technobasant",
     ], s)
 
@@ -401,7 +409,7 @@ def build_story(
             "Python, SQL and Scala; Kafka and Kinesis ingestion (maintainer of an open-source Spark 4 Kinesis "
             "connector); Spark/PySpark processing, including the Spark 4 migration; Airflow orchestration; Iceberg, "
             "Hive Metastore, dbt and lakehouse modeling; Databricks with Unity Catalog; Kubernetes, Docker and "
-            "Terraform delivery; contracts, lineage, cost and recovery.",
+            "Terraform delivery; contracts, lineage, cost and recovery; Prometheus and Grafana.",
         ),
         (
             "AI systems",
@@ -412,11 +420,6 @@ def build_story(
             "Database lifecycle",
             "PostgreSQL, ClickHouse, Trino, Citus, TimescaleDB, Redis and MongoDB; partitioning, replication, "
             "restore and high availability.",
-        ),
-        (
-            "Technical leadership",
-            "Architecture and operational review, mentoring, runbooks, service and freshness objectives, "
-            "Prometheus and Grafana.",
         ),
     ]
     # Cloud belongs in the document. It was absent entirely — no AWS, GCP or
@@ -438,7 +441,6 @@ def build_story(
         "Data and AI architecture": "Platforms chosen on evidence, with every decision written down and AI built in.",
         "Database lifecycle": "Modeling, replication, failover, backup and PITR, upgrades and query performance.",
         "AI systems": "Model output that lands as typed, reviewable rows rather than a transcript.",
-        "Technical leadership": "Design review, mentoring, runbooks, and making system ownership transferable.",
     }
     categories = [
         (label, f'<font color="#5D646D">{blurbs[label]}</font><br/>{body}' if label in blurbs else body)

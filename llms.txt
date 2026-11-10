@@ -46,7 +46,10 @@ Databricks. Its AI stage (https://github.com/technobasant/ai-platform-architectu
 is a usage assistant whose tenant isolation, accuracy and cost were measured on
 three models and Databricks Genie.
 
-Consulting engagements: an analytics lakehouse for a
+Independent consulting since May 2021, alongside UXCam: 30 engagements
+completed, mostly database architecture, migration to Citus, high availability
+and recovery, with a ClickHouse cluster design, AWS database cost analysis and
+frameworks for LLM applications. Those with case studies: an analytics lakehouse for a
 contact-centre platform, delivered configured with security, access control, HA
 and DR; two single-server PostgreSQL databases, one of pgvector embeddings,
 moved to Citus; a managed-or-self-run PostgreSQL decision and an RDS and Aurora

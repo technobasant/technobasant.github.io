@@ -37,6 +37,7 @@ Data and AI architect with 9+ years on production systems in industry. I set the
 |---|---|---|
 | Senior Data Engineer, UXCam | 2024 – present | Platform architecture, reliability, governance and SOC 2; the database layer beneath it; the production agent workflows; architecture review and mentoring |
 | Data Engineer, UXCam | 2020 – 2024 | Built the batch and streaming processing, the lakehouse models, and the multi-engine serving layer |
+| Independent Consultant | 2021 – present | 30 engagements alongside UXCam: database architecture and migration, high availability and recovery, cost analysis, a lakehouse, frameworks for LLM applications |
 | Project Leader, SVCET | 2019 – 2020 | Planning and delivery of an NLP dialogue-system project with a small team |
 | Software Developer, SV Technology | 2017 – 2019 | Python backend services, PostgreSQL schema work, reporting, and CI |
 
@@ -58,6 +59,14 @@ Data and AI architect with 9+ years on production systems in industry. I set the
 - Made schema evolution, replay, late data, and backfills designed interfaces with idempotent loads and explicit watermarks.
 - Reduced p95 query latency by {{ site.data.metrics.professional_query_latency.value }} across {{ site.data.metrics.professional_query_volume.value }} analytical queries per day through partitioning, clustering, and model redesign.
 - Led a Kubernetes migration of the data and database infrastructure that lowered cost by {{ site.data.metrics.professional_cost_reduction.value }} while sustaining {{ site.data.metrics.professional_uptime.value }} uptime.
+
+## Independent Consultant · Data, databases and AI
+
+**May 2021 – present** · Alongside UXCam · 30 engagements completed
+
+- Database architecture and migration: Postgres scaled out to Citus as workloads outgrew one server, including [an application database and a pgvector store](/work/postgres-scale-out-citus/); RDS Postgres moved to a self-managed Citus cluster; a 500 GB database moved between servers and faster afterwards; a ClickHouse cluster designed to its workload.
+- Operations and cost: PostgreSQL and TimescaleDB clusters with replication, pgBackRest backups and PgPool-II pooling; a database recovered from its raw files; AWS database costs and options analysed for savings; [a capacity plan, a managed-or-self-run decision and an RDS fleet](/work/postgres-on-rds/).
+- Data platforms and AI: [an analytics lakehouse on S3, Trino, Airflow and Glue](/work/contact-centre-lakehouse/), delivered end to end; Trino and dbt development; frameworks for LLM applications and agentic workflows, from the architecture to tested Python; [a short-text classifier redesigned](/work/consulting-short-text-and-alerting/) on a Databricks lakehouse.
 
 ## Selected open source
 
