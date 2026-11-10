@@ -1,14 +1,14 @@
 ---
 title: Résumé
-last_modified_at: 2026-10-20
-seo_title: "Basant Bhattarai — Senior Data Engineer · Data & AI Architect résumé"
+last_modified_at: 2026-11-10
+seo_title: "Basant Bhattarai — Data & AI Architect · Senior Data Engineer résumé"
 eyebrow: Career
-headline: "Senior Data Engineer · Data & AI Architect — nine years in software, six on production data platforms."
+headline: "Data & AI Architect · Senior Data Engineer — 9+ years on production systems in industry."
 hero_code: "CAREER / LOG"
-lede: "Roles, measured outcomes, open-source work, and the stack behind each: platform architecture, databases, governance and SOC 2, and AI systems in production."
+lede: "Roles, measured outcomes, open-source work, and the stack behind each: platform architecture, data modelling, databases, governance and SOC 2, and AI built into production platforms."
 page_class: page-resume
 permalink: /resume/
-description: "Senior Data Engineer and data and AI architect: nine years in software, six on production data platforms. Roles, measured outcomes, and the stack behind each."
+description: "Data & AI Architect and Senior Data Engineer: 9+ years on production systems in industry. Roles, measured outcomes, and the stack behind each."
 redirect_from:
   - /experience/
   - /skills/
@@ -27,6 +27,10 @@ redirect_from:
   {% endfor %}
 </div>
 
+## Profile
+
+Data and AI architect with 9+ years on production systems in industry. I set the target architecture, choose platforms against criteria fixed in advance, design the data model with the governance and SOC 2 controls around it, then lead the build: Kafka, Spark, Iceberg, Trino, dbt and Airflow on Kubernetes, the databases underneath, and AI built into the platform with isolation, evaluation and review designed in. My current title is Senior Data Engineer at UXCam.
+
 ## Experience at a glance
 
 | Role | Period | Scope |
@@ -40,9 +44,9 @@ redirect_from:
 
 **February 2024 – present** · Working with a global team
 
-- Own reliability and governance for a {{ site.data.metrics.professional_platform_scale.value }} platform processing {{ site.data.metrics.professional_event_volume.value }} events daily, with {{ site.data.metrics.professional_uptime.value }} uptime, explicit service objectives, incident-ready runbooks, reviewable data contracts, and a named owner for every published table; responsible for meeting the SOC 2 criteria for the data platform and its infrastructure through every audit.
+- Own the architecture, reliability and governance of a {{ site.data.metrics.professional_platform_scale.value }} platform processing {{ site.data.metrics.professional_event_volume.value }} events daily, with {{ site.data.metrics.professional_uptime.value }} uptime, explicit service objectives, incident-ready runbooks, reviewable data contracts, and a named owner for every published table; responsible for meeting the SOC 2 criteria for the data platform and its infrastructure through every audit.
 - Operate the database layer the platform depends on: clustering and replication, backup and recovery, access control, query and index tuning, and upgrade windows across SQL and NoSQL engines.
-- Design and operate the production agent workflows — LangGraph and Google ADK orchestration, MCP tool servers, retrieval and evaluation — wired into the existing platform so model output lands as typed, provenanced rows rather than a transcript. Analytics delivery {{ site.data.metrics.professional_analytics_delivery.value }} faster with {{ site.data.metrics.professional_manual_effort.value }} less analyst effort, with review and fallback paths kept in place.
+- Design and operate the production agent workflows — LangGraph and Google ADK orchestration, MCP tool servers, retrieval and evaluation — built into the existing platform so model output lands as typed, provenanced rows rather than a transcript. Analytics delivery {{ site.data.metrics.professional_analytics_delivery.value }} faster with {{ site.data.metrics.professional_manual_effort.value }} less analyst effort, with review and fallback paths kept in place.
 - Lead architecture and schema reviews before new stores, pipelines, and agent workflows reach production; mentor {{ site.data.metrics.professional_mentoring.value }} engineers through pairing, code review, and written design feedback; team delivery time improved {{ site.data.metrics.professional_team_delivery.value }}.
 
 ## Data Engineer · UXCam
@@ -71,20 +75,20 @@ redirect_from:
 
 <ol class="principle-list capability-map is-wide">
   <li>
+    <h3>Data &amp; AI architecture</h3>
+    <p>Target architectures and platform selection on criteria fixed in advance; conceptual to physical data modelling; Kimball stars with Type 2 history; Iceberg and Delta, ClickHouse and Citus layouts; open data contracts checked in CI; C4 diagrams and decision records; SOC 2 controls and GDPR erasure designed into the model; AI built into the platform, with tenant isolation outside the model, a semantic layer and a release gate; cost models over 36 months. Evidence: <a href="/work/data-platform-architecture/">a reference architecture</a> and <a href="/work/ai-platform-architecture/">its AI stage</a>; <a href="/writing/choosing-where-the-data-lives/">the decision guide</a>.</p>
+  </li>
+  <li>
     <h3>Data platforms</h3>
     <p>Batch and streaming ingestion, Spark/PySpark processing, Airflow orchestration, Iceberg and dbt modeling, Kubernetes capacity, contracts, lineage, and cost. Databricks: a consulting client's lakehouse, a proof of concept on Unity Catalog under OpenTofu, and AI/BI Genie evaluated against three models. Evidence: <a href="/work/data-platform-practice/">production platform case study</a>; <a href="/work/streaming-platform/">exactly-once streaming, measured</a>.</p>
   </li>
   <li>
+    <h3>AI systems</h3>
+    <p>Production agents on LangGraph, LangChain, Google ADK and MCP tool servers: bounded tools, retrieval, evaluation before rollout, typed output, and a fallback path that fails honestly. Built into the platform already running. Evidence: <a href="/work/governed-ai-delivery/">governed AI case study</a>; <a href="/work/governed-agent/">governed-agent</a> and <a href="/work/evalproof/">evalproof</a>, measured in public.</p>
+  </li>
+  <li>
     <h3>Database lifecycle</h3>
     <p>PostgreSQL, ClickHouse, Trino, Citus, TimescaleDB, Redis, MongoDB, and MySQL/MariaDB across modeling, HA, replication, backup and PITR, upgrades, access control, and query performance. Evidence: <a href="/work/distributed-db-lab/">Citus sharding and rebalance lab</a>; <a href="/work/multi-engine-ha-lab/">measured failover lab</a>.</p>
-  </li>
-  <li>
-    <h3>Agentic systems</h3>
-    <p>Production agents on LangGraph, LangChain, Google ADK and MCP tool servers: bounded tools, retrieval, evaluation before rollout, typed output, and a fallback path that fails honestly. Built against the platform already running. Evidence: <a href="/work/governed-ai-delivery/">governed AI case study</a>; <a href="/work/governed-agent/">governed-agent</a> and <a href="/work/evalproof/">evalproof</a>, measured in public.</p>
-  </li>
-  <li>
-    <h3>Data &amp; system architecture</h3>
-    <p>Conceptual to physical data modelling; Kimball stars with Type 2 history; Iceberg and Delta, ClickHouse and Citus layouts; open data contracts checked in CI; C4 diagrams and decision records; SOC 2 controls and GDPR erasure designed into the model; cost models over 36 months. Evidence: <a href="/work/data-platform-architecture/">a reference architecture</a>; <a href="/writing/choosing-where-the-data-lives/">the decision guide</a>.</p>
   </li>
 </ol>
 

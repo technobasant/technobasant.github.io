@@ -276,7 +276,7 @@ def build_story(
     story: list = [
         Spacer(1, 2),
         Paragraph("BASANT BHATTARAI", s["name"]),
-        Paragraph("SENIOR DATA ENGINEER  /  DATA &amp; AI ARCHITECT", s["role"]),
+        Paragraph("DATA &amp; AI ARCHITECT  /  SENIOR DATA ENGINEER", s["role"]),
         Paragraph(
             # Site first among the links. Location is not in the header: the
             # public pages lead with the work, not the city.
@@ -290,7 +290,7 @@ def build_story(
 
     story += section("Profile", s)
     story.append(Paragraph(
-        f"Senior data engineer and data and AI architect with {metric(metrics, 'experience')} in software engineering, six of them owning production data platforms. Designs platforms, their data models and the governance and SOC 2 controls around them, then builds them. Open-source first — Kafka, Spark, Iceberg, Trino, dbt and Airflow on Kubernetes — plus the databases underneath: modeling, replication, backup and recovery, upgrades. Designs and runs the agent workflows on that same stack (LangGraph, Google ADK, MCP), so model output lands as typed, reviewable rows. Track record: {metric(metrics, 'professional_cost_reduction')} lower infrastructure cost, {metric(metrics, 'professional_processing_improvement')} faster processing, {metric(metrics, 'professional_analytics_delivery')} faster analytics delivery.",
+        f"Data and AI architect and senior data engineer with {metric(metrics, 'experience')} on production systems in industry. Sets the target architecture, chooses platforms against criteria fixed in advance, designs the data model and the governance and SOC 2 controls around it, then leads the build. Open-source first — Kafka, Spark, Iceberg, Trino, dbt and Airflow on Kubernetes — plus the databases underneath: modeling, replication, backup and recovery, upgrades. AI built into the platform: agent workflows on LangGraph, Google ADK and MCP whose output lands as typed, reviewable rows, with isolation, evaluation and review designed in. Track record: {metric(metrics, 'professional_cost_reduction')} lower infrastructure cost, {metric(metrics, 'professional_processing_improvement')} faster processing, {metric(metrics, 'professional_analytics_delivery')} faster analytics delivery.",
         s["body"],
     ))
 
@@ -309,13 +309,13 @@ def build_story(
     story += section("Experience", s)
     story.append(job_header("Senior Data Engineer", "UXCam", "Feb 2024 - present", s))
     story += bullets([
-        f"Own reliability and governance for a platform handling {metric(metrics, 'professional_platform_scale')} "
+        f"Own the architecture, reliability and governance of a platform handling {metric(metrics, 'professional_platform_scale')} "
         f"and {metric(metrics, 'professional_event_volume')} events daily: freshness and latency objectives per "
         f"dataset, {metric(metrics, 'professional_uptime')} uptime, incident-ready runbooks, reviewable data "
         "contracts, a named owner for every published table, and the SOC 2 criteria met for the platform and "
         "its infrastructure through every audit.",
         f"Design and operate the production agent workflows — LangGraph and Google ADK orchestration, MCP tool "
-        f"servers, retrieval and evaluation — against the existing platform, so model output lands as typed, "
+        f"servers, retrieval and evaluation — built into the existing platform, so model output lands as typed, "
         f"provenanced rows rather than a transcript: analytics delivery "
         f"{metric(metrics, 'professional_analytics_delivery')} faster with "
         f"{metric(metrics, 'professional_manual_effort')} less analyst effort, review and fallback paths kept.",
@@ -389,7 +389,16 @@ def build_story(
     # No forced page break here any more. It existed to give the Independent work
     # panel a clean page; with that section gone it stranded 124 words on page 2.
     story += section("Capability map", s)
+    # Architecture first: it is the level the profile claims, so it leads the
+    # map, with the AI side of the architecture named in it rather than left to
+    # the AI systems row.
     categories = [
+        (
+            "Data and AI architecture",
+            "Target architectures and platform selection, conceptual to physical modelling, Kimball and Type 2 "
+            "history, lakehouse, ClickHouse and Citus layouts, contracts in CI, decision records, SOC 2 and erasure "
+            "by design, tenant isolation outside the model, semantic layers, release gates, cost models.",
+        ),
         (
             "Platform ownership",
             "Python, SQL and Scala; Kafka and Kinesis ingestion (maintainer of an open-source Spark 4 Kinesis "
@@ -398,19 +407,14 @@ def build_story(
             "Terraform delivery; contracts, lineage, cost and recovery.",
         ),
         (
-            "Data and system architecture",
-            "Conceptual to physical modelling, Kimball and Type 2 history, lakehouse, ClickHouse and Citus "
-            "layouts, contracts in CI, decision records, SOC 2 and erasure by design, cost models.",
+            "AI systems",
+            "LangGraph, LangChain, Google ADK, MCP servers, Pydantic, Milvus and MLflow; bounded tools, retrieval, "
+            "evaluation before rollout, provenance, human review and honest fallback paths.",
         ),
         (
             "Database lifecycle",
             "PostgreSQL, ClickHouse, Trino, Citus, TimescaleDB, Redis and MongoDB; partitioning, replication, "
             "restore and high availability.",
-        ),
-        (
-            "Agentic systems",
-            "LangGraph, LangChain, Google ADK, MCP servers, Pydantic, Milvus and MLflow; bounded tools, retrieval, "
-            "evaluation before rollout, provenance, human review and honest fallback paths.",
         ),
         (
             "Technical leadership",
@@ -434,9 +438,9 @@ def build_story(
     # sense of the second.
     blurbs = {
         "Platform ownership": "Consumer-facing reliability, governance, recovery and operational readiness.",
-        "Data and system architecture": "Platforms chosen on evidence, with every decision written down.",
+        "Data and AI architecture": "Platforms chosen on evidence, with every decision written down and AI built in.",
         "Database lifecycle": "Modeling, replication, failover, backup and PITR, upgrades and query performance.",
-        "Agentic systems": "Model output that lands as typed, reviewable rows rather than a transcript.",
+        "AI systems": "Model output that lands as typed, reviewable rows rather than a transcript.",
         "Technical leadership": "Design review, mentoring, runbooks, and making system ownership transferable.",
     }
     categories = [
@@ -478,9 +482,9 @@ def generate(output: Path) -> None:
         leftMargin=0.68 * inch,
         topMargin=0.62 * inch,
         bottomMargin=0.58 * inch,
-        title="Basant Bhattarai - Senior Data Engineer, Data and AI Architect",
+        title="Basant Bhattarai - Data and AI Architect, Senior Data Engineer",
         author="Basant Bhattarai",
-        subject="Senior Data Engineer · Data & AI Architect",
+        subject="Data & AI Architect · Senior Data Engineer",
     )
     frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height, id="resume")
     # `onPageEnd`, not `onPage`. reportlab runs onPage *before* the frame draws,

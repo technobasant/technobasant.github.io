@@ -1,16 +1,16 @@
 ---
 title: Work with me
-last_modified_at: 2026-11-09
-seo_title: "Data Architecture, Platform & AI Consulting — Basant Bhattarai"
+last_modified_at: 2026-11-10
+seo_title: "Data & AI Architecture Consulting — Basant Bhattarai"
 eyebrow: "Consulting, contract or full-time"
 headline: "Data and AI architecture across the whole platform: reviewed, chosen and built."
 hero_code: "SCOPE / DECIDE"
 page_class: page-hire
 permalink: /hire/
-description: "Data and AI architecture: reviews, platform selection, migrations, governance, SOC 2 readiness, AI built into the platform. Consulting, contract or full-time."
+description: "Data & AI architecture, 9+ years in production: reviews, platform selection, migrations, governance, SOC 2, AI built in. Consulting, contract or full-time."
 ---
 
-I'm looking for long-term work: a consulting or contract engagement, or a full-time role. I work with one team at a time and stay long enough to see its decisions through: reviewed, chosen, built, and handed over to the people who will run them.
+I'm looking for long-term work: a consulting or contract engagement, or a full-time role. I bring 9+ years on production systems in industry and the architecture judgement that comes with it. I work with one team at a time and stay long enough to see its decisions through: reviewed, chosen, built, and handed over to the people who will run them.
 
 <p class="page-actions"><a class="btn btn--primary" href="#hire-form">Send a briefing</a> <a class="btn btn--ghost" href="mailto:contact@basantbhattarai.com.np?subject=Consulting%20enquiry">Email instead</a> <span>{{ site.data.availability.headline }} · {{ site.data.availability.response }}</span></p>
 

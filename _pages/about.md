@@ -1,17 +1,17 @@
 ---
 title: About
-last_modified_at: 2026-11-09
+last_modified_at: 2026-11-10
 seo_title: "About Basant Bhattarai — Data & AI Architect · Senior Data Engineer"
 eyebrow: Profile
-headline: "I design and build data and AI platforms end to end, with governance and AI built in."
+headline: "I lead the architecture of data and AI platforms end to end, and I build what I design."
 hero_code: "OPERATE / OWN"
 page_class: page-about
 permalink: /about/
-description: "About Basant Bhattarai: data and AI architect, Senior Data Engineer at UXCam. Platform architecture, databases, governance and SOC 2 readiness, and AI on governed data."
-lede: "Nine years that started with backend services and PostgreSQL schemas, and ended up owning the platforms, the databases underneath them, and the agents that write into both."
+description: "About Basant Bhattarai: Data & AI Architect and Senior Data Engineer at UXCam, 9+ years on production systems. Architecture, governance, SOC 2, AI built in."
+lede: "9+ years on production systems in industry: from backend services and PostgreSQL schemas to the architecture of the whole platform, its governance, and the AI built into it."
 ---
 
-I work as a data and AI architect, and I still build what I design. My title is Senior Data Engineer at UXCam, where I own the reliability and governance of the data platform, operate the databases under it, design the production agent workflows, and am responsible for meeting the SOC 2 criteria for the platform and its infrastructure. I also take consulting engagements: [an analytics lakehouse](/work/contact-centre-lakehouse/) delivered configured and running, [two Postgres databases moved to Citus](/work/postgres-scale-out-citus/), [a managed-or-self-run decision and an RDS fleet](/work/postgres-on-rds/), and [a classifier redesigned](/work/consulting-short-text-and-alerting/) for a client's Databricks lakehouse. The architecture work I can show in full is [a reference architecture](/work/data-platform-architecture/) for a B2B SaaS company leaving Postgres, a scenario common across the industry: the current state measured, 18 decisions, a data model, SOC 2 readiness and a proof of concept on Databricks.
+I work as a data and AI architect, and I still build what I design: I set the target architecture, choose platforms against criteria fixed in advance, design the data model and the controls around it, and lead the build through to the people who will run it. My title is Senior Data Engineer at UXCam, where I own the architecture, reliability and governance of the data platform, operate the databases under it, design the production agent workflows, and am responsible for meeting the SOC 2 criteria for the platform and its infrastructure. I also take consulting engagements: [an analytics lakehouse](/work/contact-centre-lakehouse/) delivered configured and running, [two Postgres databases moved to Citus](/work/postgres-scale-out-citus/), [a managed-or-self-run decision and an RDS fleet](/work/postgres-on-rds/), and [a classifier redesigned](/work/consulting-short-text-and-alerting/) for a client's Databricks lakehouse. The architecture work I can show in full is [a reference architecture](/work/data-platform-architecture/) for a B2B SaaS company leaving Postgres, a scenario common across the industry: the current state measured, 18 decisions, a data model, SOC 2 readiness and a proof of concept on Databricks.
 
 The job arrived in a particular order. First Python services and PostgreSQL schemas; then the databases those services leaned on, which is where I learned that most outages are a storage decision made two years earlier; then the platform around them — Kafka ingestion, Spark processing, Airflow orchestration, lakehouse modeling, analytical serving.
 
@@ -31,7 +31,7 @@ Architecture is what ties the two together, and it is most of what I am asked to
 
 ## What I am doing now
 
-At UXCam I work across the data platform and the stores underneath it: processing, serving, database reliability, governance and the SOC 2 controls for the platform and its infrastructure, and architecture review. I also own the production agent workflows — LangGraph and Google ADK for orchestration, MCP for the tool surface — with the same requirement as any other producer: what they emit lands in the governed stores, typed and reviewable, or it does not land.
+At UXCam I own the architecture of the data platform and the stores underneath it: processing, serving, database reliability, governance and the SOC 2 controls for the platform and its infrastructure, and the architecture review every new store, pipeline and agent workflow passes before production. I also own the production agent workflows — LangGraph and Google ADK for orchestration, MCP for the tool surface — with the same requirement as any other producer: what they emit lands in the governed stores, typed and reviewable, or it does not land.
 
 Outside that I maintain [spark-sql-kinesis](https://github.com/technobasant/spark-sql-kinesis), a Kinesis source for Spark 4, and publish reference systems with their method and measurements in the repository: LLM evaluation, a governed agent, filtered vector retrieval, real-time ML, exactly-once streaming, data contracts, progressive delivery and sharded databases. They are [on the work page](/work/), alongside a multi-engine failover lab with restartable scenarios, published commands and measured outcomes, and two reference architectures: [a SaaS company leaving Postgres](/work/data-platform-architecture/) and [the usage assistant on its governed data](/work/ai-platform-architecture/).
 

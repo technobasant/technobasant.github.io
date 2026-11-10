@@ -5,8 +5,8 @@
 # reader next to the figure; `source` and `context` are editorial notes.
 
 experience:
-  value: "9 years"
-  label: "in software engineering"
+  value: "9+ years"
+  label: "on production systems in industry"
   method: "role history, 2017–2026"
   scope: "professional"
   source: "CV role history"

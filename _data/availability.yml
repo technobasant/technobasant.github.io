@@ -43,8 +43,8 @@ engagements:
         url: "https://github.com/technobasant/data-platform-architecture/blob/main/docs/12-soc2-readiness.md"
       - label: "Erasure cost is a modelling decision"
         url: "/writing/erasure-cost-is-a-modelling-decision/"
-  - title: "AI on governed data"
-    for: "Product teams shipping a first AI feature over customer data."
+  - title: "AI built into the platform"
+    for: "Product teams shipping AI features over customer data."
     blurb: "A brief with success measures; an evaluation set and a release gate; isolation enforced outside the model and tested; the business's definitions in a semantic layer; the cost of an answer. LangGraph, Google ADK, MCP where they fit."
     samples:
       - label: "A usage assistant on governed data"

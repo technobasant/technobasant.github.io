@@ -19,14 +19,17 @@ Companion files: {{ '/ai.txt' | absolute_url }} (discovery) ·
 
 {{ site.author.name }} works as a data and AI architect and holds the
 title {{ site.author.job_title }} at UXCam. {{ site.data.metrics.experience.value }}
-{{ site.data.metrics.experience.label }} ({{ site.data.metrics.experience.method }}),
-six of them on production data platforms. The practice covers four problems:
-moving analytics off a product's Postgres; platforms chosen on evidence and run
-at scale; governance an auditor can check, including SOC 2 readiness; and AI on
-governed data.
+{{ site.data.metrics.experience.label }} ({{ site.data.metrics.experience.method }}):
+backend services and databases first, data platforms since 2020, and production
+agent workflows since 2024. He sets the target architecture, chooses platforms
+against criteria fixed in advance, designs the data model and its controls, and
+leads the build. The practice covers four problems: migrations that don't stop
+the product; platforms chosen on evidence and run at scale; governance an
+auditor can check, including SOC 2 readiness; and AI built into the platform,
+measured before launch.
 
-At UXCam he works across production data platforms and the databases underneath
-them: ingestion, Spark/PySpark processing, orchestration, lakehouse modeling,
+At UXCam he owns the architecture of the production data platform and the
+databases underneath it: ingestion, Spark/PySpark processing, orchestration, lakehouse modeling,
 analytical serving, database reliability (HA, backup, upgrades, access),
 governance, architecture review, and operational readiness, and is responsible
 for meeting the SOC 2 criteria for the data platform and its infrastructure. He also designs
