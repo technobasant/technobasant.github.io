@@ -330,22 +330,23 @@ def build_story(
         "Rebuilt the core ETL layer in Spark and PySpark with Airflow orchestration, cutting processing time for "
         f"{metric(metrics, 'professional_daily_processing')}/day by "
         f"{metric(metrics, 'professional_processing_improvement')} and unblocking real-time product dashboards.",
-        "Made schema evolution, replay, late data and backfills designed interfaces: idempotent loads, explicit watermarks.",
+        "Treated schema evolution, replay, late data and backfills as designed interfaces, with idempotent loads and watermarks.",
         f"Tuned Trino, ClickHouse, Citus and TimescaleDB serving "
         f"{metric(metrics, 'professional_query_volume')} queries/day for a "
         f"{metric(metrics, 'professional_query_latency')} p95 latency reduction through partitioning, clustering "
         "and model redesign.",
-        f"Led the Kubernetes migration of the data infrastructure: "
+        f"Led the Kubernetes migration of the data and database infrastructure: "
         f"{metric(metrics, 'professional_cost_reduction')} lower infrastructure cost, "
         f"{metric(metrics, 'professional_uptime')} uptime, and autoscaling that held under peak load.",
     ], s)
     story.append(Spacer(1, 4))
-    # Consulting alongside UXCam, as projects and outcomes only: no clients, no
-    # platforms, no fees. The count and the period come from the owner's records.
-    story.append(job_header("Independent Consultant", "Data, databases and AI", "May 2021 - present", s))
+    # Part-time consulting outside UXCam hours, as projects and outcomes only: no
+    # clients, no platforms, no fees. Framed as projects rather than a concurrent
+    # role, so the full-time timeline reads as one commitment.
+    story.append(job_header("Consulting projects", "part-time, outside UXCam hours", "2021 - 2026", s))
     story += bullets([
-        "30 engagements alongside UXCam. Database architecture and migration: Postgres scaled out to Citus, RDS "
-        "moved to a self-managed Citus cluster, a 500 GB database moved and faster afterwards, a ClickHouse cluster "
+        f"{metric(metrics, 'consulting_engagements')} engagements. Database architecture and migration: Postgres scaled "
+        "out to Citus as workloads outgrew one server, RDS moved to a self-managed Citus cluster, a ClickHouse cluster "
         "designed to its workload.",
         "PostgreSQL and TimescaleDB clusters with replication, pgBackRest and PgPool-II; a database recovered from "
         "raw files; AWS database cost analysis; an analytics lakehouse on S3, Trino, Airflow and Glue, end to end.",
@@ -408,7 +409,7 @@ def build_story(
             "Data platforms",
             "Python, SQL and Scala; Kafka and Kinesis ingestion (maintainer of an open-source Spark 4 Kinesis "
             "connector); Spark/PySpark processing, including the Spark 4 migration; Airflow orchestration; Iceberg, "
-            "Hive Metastore, dbt and lakehouse modeling; Databricks with Unity Catalog; Kubernetes, Docker and "
+            "Hive Metastore, dbt and lakehouse modelling; Databricks with Unity Catalog; Kubernetes, Docker and "
             "Terraform delivery; contracts, lineage, cost and recovery; Prometheus and Grafana.",
         ),
         (
@@ -430,14 +431,20 @@ def build_story(
     if clouds:
         categories = list(categories) + [(
             "Cloud",
-            "  |  ".join(f"<b>{c['name']}:</b> {', '.join(c['items'][:8])}" for c in clouds),
+            # Depth beside each cloud, as skills.yml states it: AWS is production
+            # work, GCP and Azure are working knowledge. Listing them level read as
+            # an equal claim the tiers on the site do not make.
+            "  |  ".join(
+                f"<b>{c['name']}</b> ({c.get('depth', 'used')}): {', '.join(c['items'][:8 if c.get('depth') == 'production' else 5])}"
+                for c in clouds
+            ),
         )]
 
     # One line of what the category means, then the systems it runs on. Splitting
     # those across two sections meant a reader had to hold the first to make
     # sense of the second.
     blurbs = {
-        "Data platforms": "Consumer-facing reliability, governance, recovery and operational readiness.",
+        "Data platforms": "Ingestion to serving, run for reliability, recovery and cost.",
         "Data and AI architecture": "Platforms chosen on evidence, with every decision written down and AI built in.",
         "Database lifecycle": "Modeling, replication, failover, backup and PITR, upgrades and query performance.",
         "AI systems": "Model output that lands as typed, reviewable rows rather than a transcript.",

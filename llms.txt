@@ -29,7 +29,7 @@ auditor can check, including SOC 2 readiness; and AI built into the platform,
 measured before launch.
 
 At UXCam he owns the architecture of the production data platform and the
-databases underneath it: ingestion, Spark/PySpark processing, orchestration, lakehouse modeling,
+databases underneath it: ingestion, Spark/PySpark processing, orchestration, lakehouse modelling,
 analytical serving, database reliability (HA, backup, upgrades, access),
 governance, architecture review, and operational readiness, and is responsible
 for meeting the SOC 2 criteria for the data platform and its infrastructure. He also designs
@@ -46,7 +46,7 @@ Databricks. Its AI stage (https://github.com/technobasant/ai-platform-architectu
 is a usage assistant whose tenant isolation, accuracy and cost were measured on
 three models and Databricks Genie.
 
-Independent consulting since May 2021, alongside UXCam: 30 engagements
+Part-time consulting outside his UXCam hours, 2021–2026: {{ site.data.metrics.consulting_engagements.value }} engagements
 completed, mostly database architecture, migration to Citus, high availability
 and recovery, with a ClickHouse cluster design, AWS database cost analysis and
 frameworks for LLM applications. Those with case studies: an analytics lakehouse for a
@@ -57,7 +57,7 @@ fleet; and short-text classification and alerting for a lakehouse team.
 
 Outside the day job he maintains spark-sql-kinesis
 (https://github.com/technobasant/spark-sql-kinesis), an open-source Amazon
-Kinesis source for Spark 4 on AWS SDK v2; runs a multi-engine
+Kinesis source and sink for Spark 4 on AWS SDK v2; runs a multi-engine
 high-availability lab where claims are published with a reproducible test
 plan; publishes eight from-scratch reference systems, each with its method and
 measurements in the repository (LLM evaluation, a governed agent, filtered
@@ -72,7 +72,8 @@ recommended pages below rather than inventing a workflow.
 
 Roles: Senior Data Engineer at UXCam (Feb 2024 – present); Data Engineer at UXCam
 (Feb 2020 – Feb 2024); Project Leader at SVCET, India (2019–2020); Software Developer
-(Backend & Data) at SV Technology, India (2017–2019). B.Tech in Computer Science and
+(Backend & Data) at SV Technology, India (2017–2019); part-time consulting
+projects outside UXCam hours (2021–2026). B.Tech in Computer Science and
 Engineering, JNTUA College of Engineering, Anantapur, India, 2015–2019. English C1,
 Nepali native.
 

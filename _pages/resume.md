@@ -37,13 +37,12 @@ Data and AI architect with 9+ years on production systems in industry. I set the
 |---|---|---|
 | Senior Data Engineer, UXCam | 2024 – present | Platform architecture, reliability, governance and SOC 2; the database layer beneath it; the production agent workflows; architecture review and mentoring |
 | Data Engineer, UXCam | 2020 – 2024 | Built the batch and streaming processing, the lakehouse models, and the multi-engine serving layer |
-| Independent Consultant | 2021 – present | 30 engagements alongside UXCam: database architecture and migration, high availability and recovery, cost analysis, a lakehouse, frameworks for LLM applications |
 | Project Leader, SVCET | 2019 – 2020 | Planning and delivery of an NLP dialogue-system project with a small team |
 | Software Developer, SV Technology | 2017 – 2019 | Python backend services, PostgreSQL schema work, reporting, and CI |
 
 ## Senior Data Engineer · UXCam
 
-**February 2024 – present** · Working with a global team
+**February 2024 – present**
 
 - Own the architecture, reliability and governance of a {{ site.data.metrics.professional_platform_scale.value }} platform processing {{ site.data.metrics.professional_event_volume.value }} events daily, with {{ site.data.metrics.professional_uptime.value }} uptime, explicit service objectives, incident-ready runbooks, reviewable data contracts, and a named owner for every published table; responsible for meeting the SOC 2 criteria for the data platform and its infrastructure through every audit.
 - Operate the database layer the platform depends on: clustering and replication, backup and recovery, access control, query and index tuning, and upgrade windows across SQL and NoSQL engines.
@@ -55,18 +54,18 @@ Data and AI architect with 9+ years on production systems in industry. I set the
 **February 2020 – February 2024**
 
 - Rebuilt core Spark/PySpark processing for {{ site.data.metrics.professional_daily_processing.value }} per day, improving processing time by {{ site.data.metrics.professional_processing_improvement.value }}.
-- Administered distributed SQL and NoSQL stores used for serving and product state—modeling, partitioning, replication, and query plans rather than treating the database as a black box.
-- Made schema evolution, replay, late data, and backfills designed interfaces with idempotent loads and explicit watermarks.
+- Administered distributed SQL and NoSQL stores used for serving and product state—modelling, partitioning, replication, and query plans rather than treating the database as a black box.
+- Treated schema evolution, replay, late data and backfills as designed interfaces, with idempotent loads and explicit watermarks.
 - Reduced p95 query latency by {{ site.data.metrics.professional_query_latency.value }} across {{ site.data.metrics.professional_query_volume.value }} analytical queries per day through partitioning, clustering, and model redesign.
 - Led a Kubernetes migration of the data and database infrastructure that lowered cost by {{ site.data.metrics.professional_cost_reduction.value }} while sustaining {{ site.data.metrics.professional_uptime.value }} uptime.
 
-## Independent Consultant · Data, databases and AI
+## Consulting projects · part-time
 
-**May 2021 – present** · Alongside UXCam · 30 engagements completed
+**2021 – 2026** · Outside my UXCam hours · {{ site.data.metrics.consulting_engagements.value }} engagements completed
 
-- Database architecture and migration: Postgres scaled out to Citus as workloads outgrew one server, including [an application database and a pgvector store](/work/postgres-scale-out-citus/); RDS Postgres moved to a self-managed Citus cluster; a 500 GB database moved between servers and faster afterwards; a ClickHouse cluster designed to its workload.
+- Database architecture and migration: Postgres scaled out to Citus as workloads outgrew one server, including [an application database and a pgvector store](/work/postgres-scale-out-citus/); RDS Postgres moved to a self-managed Citus cluster; a ClickHouse cluster designed to its workload.
 - Operations and cost: PostgreSQL and TimescaleDB clusters with replication, pgBackRest backups and PgPool-II pooling; a database recovered from its raw files; AWS database costs and options analysed for savings; [a capacity plan, a managed-or-self-run decision and an RDS fleet](/work/postgres-on-rds/).
-- Data platforms and AI: [an analytics lakehouse on S3, Trino, Airflow and Glue](/work/contact-centre-lakehouse/), delivered end to end; Trino and dbt development; frameworks for LLM applications and agentic workflows, from the architecture to tested Python; [a short-text classifier redesigned](/work/consulting-short-text-and-alerting/) on a Databricks lakehouse.
+- Data platforms and AI: [an analytics lakehouse on S3, Trino, Airflow and Glue](/work/contact-centre-lakehouse/), delivered end to end; frameworks for LLM applications and agentic workflows, from the architecture to tested Python; [a short-text classifier redesigned](/work/consulting-short-text-and-alerting/) on a Databricks lakehouse.
 
 ## Selected open source
 
@@ -88,7 +87,7 @@ Data and AI architect with 9+ years on production systems in industry. I set the
   </li>
   <li>
     <h3>Data platforms</h3>
-    <p>Batch and streaming ingestion, Spark/PySpark processing, Airflow orchestration, Iceberg and dbt modeling, Kubernetes capacity, contracts, lineage, and cost. Databricks: a consulting client's lakehouse, a proof of concept on Unity Catalog under OpenTofu, and AI/BI Genie evaluated against three models. Evidence: <a href="/work/data-platform-practice/">production platform case study</a>; <a href="/work/streaming-platform/">exactly-once streaming, measured</a>.</p>
+    <p>Batch and streaming ingestion, Spark/PySpark processing, Airflow orchestration, Iceberg and dbt modelling, Kubernetes capacity, contracts, lineage, and cost. Databricks: a consulting client's lakehouse, a proof of concept on Unity Catalog under OpenTofu, and AI/BI Genie evaluated against three models. Evidence: <a href="/work/data-platform-practice/">production platform case study</a>; <a href="/work/streaming-platform/">exactly-once streaming, measured</a>.</p>
   </li>
   <li>
     <h3>AI systems</h3>
@@ -96,7 +95,7 @@ Data and AI architect with 9+ years on production systems in industry. I set the
   </li>
   <li>
     <h3>Database lifecycle</h3>
-    <p>PostgreSQL, ClickHouse, Trino, Citus, TimescaleDB, Redis, MongoDB, and MySQL/MariaDB across modeling, HA, replication, backup and PITR, upgrades, access control, and query performance. Evidence: <a href="/work/distributed-db-lab/">Citus sharding and rebalance lab</a>; <a href="/work/multi-engine-ha-lab/">measured failover lab</a>.</p>
+    <p>PostgreSQL, ClickHouse, Trino, Citus, TimescaleDB, Redis, MongoDB, and MySQL/MariaDB across modelling, HA, replication, backup and PITR, upgrades, access control, and query performance. Evidence: <a href="/work/distributed-db-lab/">Citus sharding and rebalance lab</a>; <a href="/work/multi-engine-ha-lab/">measured failover lab</a>.</p>
   </li>
 </ol>
 

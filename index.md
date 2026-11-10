@@ -27,9 +27,10 @@ hero:
   # CTAs stay inside the first viewport, and at 320px every ~5 words is another
   # line. 25 words fits; 28 pushed the buttons 12px past the fold.
   # Years first, at architect level: 9+ on production systems in industry, then
-  # the scope led (ingestion to SOC 2 controls) with AI part of the platform
-  # rather than a layer on top of it. 148 characters; 151 fitted, 160 did not.
-  lede: "9+ years on production systems in industry. I lead platform architecture from ingestion to SOC 2 controls, with AI built in: safe, secure, measured."
+  # both halves of the job (architect and build) across the platform's span,
+  # with AI part of it rather than a layer on top. 147 characters; 151 fitted,
+  # 160 did not.
+  lede: "9+ years on production systems in industry. I architect and build platforms from ingestion to governance, with AI built in: safe, secure, measured."
   actions:
     - label: "Selected work"
       url: /work/

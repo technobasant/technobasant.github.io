@@ -26,11 +26,11 @@ tier1:
     - { name: "Amazon Kinesis + Structured Streaming", since: 2023, scale: "Streaming ingestion; maintainer of an open-source Spark 4 connector", evidence: /work/spark-sql-kinesis/, evidence_label: "connector case study" }
     - { name: "Apache Kafka", since: 2020, scale: "Event-driven and streaming systems" }
     - { name: "Apache Airflow", since: 2020, scale: "Workflow orchestration, replay, and recovery design" }
-    - { name: "Apache Iceberg", since: 2022, scale: "Table evolution, maintenance, and data modeling", evidence: /writing/iceberg-compaction-snapshots-rollback/, evidence_label: "compaction and rollback, measured" }
+    - { name: "Apache Iceberg", since: 2022, scale: "Table evolution, maintenance, and data modelling", evidence: /writing/iceberg-compaction-snapshots-rollback/, evidence_label: "compaction and rollback, measured" }
     - { name: "dbt", since: 2021, scale: "Transformation contracts, testing, and documentation" }
     - { name: "PostgreSQL", since: 2017, scale: "Application schemas, replication, HA, backup, and upgrades", evidence: /work/multi-engine-ha-lab/, evidence_label: "failover lab" }
-    - { name: "ClickHouse", since: 2021, scale: "Analytical modeling and operational practice" }
-    - { name: "Trino", since: 2021, scale: "Federated SQL and query modeling", evidence: /writing/trino-iceberg-polaris-lakehouse-spine/, evidence_label: "Trino on Iceberg via Polaris" }
+    - { name: "ClickHouse", since: 2021, scale: "Analytical modelling and operational practice" }
+    - { name: "Trino", since: 2021, scale: "Federated SQL and query modelling", evidence: /writing/trino-iceberg-polaris-lakehouse-spine/, evidence_label: "Trino on Iceberg via Polaris" }
     - { name: "Kubernetes", since: 2022, scale: "Container orchestration and data workloads" }
     - { name: "LangGraph / LangChain", since: 2024, scale: "Production agent orchestration and tool use", evidence: /work/governed-ai-delivery/, evidence_label: "agent case study" }
     - { name: "Google ADK", since: 2024, scale: "Agent applications on an OSS framework, integrated into product workflows", evidence: /work/governed-ai-delivery/, evidence_label: "agent case study" }
@@ -48,7 +48,7 @@ tier2:
     - name: "Applied ML & evaluation"
       items: ["OCR (RapidOCR / PaddleOCR, ONNX Runtime)", "Sentence embeddings", "UMAP / HDBSCAN", "Quantification"]
     - name: "Databases"
-      items: [Redis, MongoDB, Citus, TimescaleDB, "MySQL / MariaDB", "Patroni / pgBackRest"]
+      items: [Redis, MongoDB, Citus, TimescaleDB, pgvector, "MySQL / MariaDB", "Patroni / pgBackRest"]
     - name: "Product & infra"
       items: [FastAPI, Celery, "Next.js", Docker, Ansible, Terraform, "GitHub Actions", Helm]
 
@@ -66,7 +66,6 @@ tier3:
     - DSPy
     - OpenAI Agents SDK
     - Pinecone
-    - pgvector
     - Qdrant
     - OpenSearch
     - Feast
@@ -105,13 +104,17 @@ tier3:
     - LangSmith
     - Langfuse
     - Opik
-    - OpenTelemetry
     - Datadog
 
 clouds:
+  # `depth` matches the tiers above: AWS is where the production work ran; the
+  # GCP and Azure services are tier-3 working knowledge. The PDF prints it.
   - name: AWS
-    items: [S3, "EKS (IRSA)", Lambda, Glue, Athena, Redshift, Kinesis, EMR, RDS, "Step Functions", Bedrock, SageMaker]
+    depth: production
+    items: [S3, "EKS (IRSA)", Lambda, Glue, Athena, Kinesis, EMR, RDS, Redshift, "Step Functions", Bedrock, SageMaker]
   - name: GCP
+    depth: working knowledge
     items: [BigQuery, Dataflow, Dataproc, Datastream, "Pub/Sub", "Cloud Composer", GKE, "Vertex AI"]
   - name: Azure
+    depth: working knowledge
     items: [Synapse, "Data Factory", Databricks, ADLS, "Event Hubs", AKS, "Azure ML"]

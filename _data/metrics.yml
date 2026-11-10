@@ -50,6 +50,15 @@ professional_cost_reduction:
   source: "CV Data Engineer role"
   context: "Kubernetes migration and capacity work across the data infrastructure."
 
+consulting_engagements:
+  value: "30"
+  label: "consulting engagements completed, part-time, outside employment hours"
+  method: "completed contracts in the owner's records, counted once each"
+  window: "May 2021 – Oct 2026"
+  scope: "consulting"
+  source: "owner's contract records"
+  context: "Mostly PostgreSQL and Citus architecture, migration, high availability and recovery; also a ClickHouse cluster design, AWS database cost analysis, a lakehouse, and frameworks for LLM applications."
+
 professional_processing_improvement:
   value: "50%"
   label: "faster core processing"
