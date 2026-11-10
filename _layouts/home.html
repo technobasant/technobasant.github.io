@@ -47,7 +47,7 @@ layout: default
     {%- assign _consulting = site.work | where: "kind", "consulting" -%}
     <ul class="portfolio-proof portfolio-proof--strip" aria-label="Track record">
       <li><a href="{{ '/work/data-platform-practice/' | relative_url }}"><strong>{{ _m.professional_event_volume.value }}</strong> <span>events a day</span></a></li>
-      <li><a href="{{ '/work/data-platform-practice/' | relative_url }}"><strong>{{ _m.professional_uptime.value }}</strong> <span>platform uptime</span></a></li>
+      <li><a href="{{ '/work/data-platform-practice/' | relative_url }}"><strong>{{ _m.professional_cost_reduction.value }}</strong> <span>lower infra cost</span></a></li>
       {%- if _consulting.size > 0 %}
       <li><a href="{{ '/work/' | relative_url }}"><strong>{{ _consulting.size }}</strong> <span>consulting case studies</span></a></li>
       {%- endif %}

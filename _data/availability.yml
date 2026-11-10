@@ -27,8 +27,8 @@ engagements:
         url: "/writing/choosing-where-the-data-lives/"
       - label: "A warehouse billed for waiting to stop"
         url: "/writing/warehouse-billed-for-waiting-to-stop/"
-  - title: "Off Postgres without stopping the product"
-    for: "SaaS teams whose reports, growth or vectors have outgrown one Postgres server."
+  - title: "Migrations that don't stop the product"
+    for: "Teams whose reports, growth or vectors have outgrown the database they started on."
     blurb: "Every reader of the database inventoried with what happens to it; a stopgap that stops the damage now; the target and its data model; the move in waves, each with a parallel run and a way back; runbooks."
     samples:
       - label: "Two Postgres servers moved to Citus"

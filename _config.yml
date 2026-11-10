@@ -30,10 +30,11 @@ author:
   email: "contact@basantbhattarai.com.np"
   linkedin: "https://www.linkedin.com/in/technobasant"
   github: "https://github.com/technobasant"
+  # Person.description in JSON-LD, so third person, with the title held first.
   bio: >-
-    Data and AI architect, and Senior Data Engineer at UXCam, with 9+ years on
-    production systems in industry. I lead the architecture of data and AI
-    platforms end to end and build what I design, with governance and AI built in.
+    Senior Data Engineer at UXCam and data and AI architect, with 9+ years on
+    production systems in industry. Leads the architecture of data and AI
+    platforms end to end, governance and AI built in, and builds what he designs.
 
 # ── Build ─────────────────────────────────────────────────────────────────
 markdown: kramdown

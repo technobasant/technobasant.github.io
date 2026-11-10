@@ -12,8 +12,8 @@
     stop the damage now, then scale out or migrate in stages with a way back.
   case: postgres-scale-out-citus
   post: read-replica-cancelled-the-reports
-  repo: data-platform-architecture
-  repo_blurb: "A reference architecture: current state measured, 18 decisions"
+  repo: distributed-db-lab
+  repo_blurb: "A Citus migration planned from the catalog, rebalanced under load"
 
 - id: data-platforms
   title: "Platforms chosen on evidence and run at scale"

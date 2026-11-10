@@ -22,7 +22,7 @@ title {{ site.author.job_title }} at UXCam. {{ site.data.metrics.experience.valu
 {{ site.data.metrics.experience.label }} ({{ site.data.metrics.experience.method }}):
 backend services and databases first, data platforms since 2020, and production
 agent workflows since 2024. He sets the target architecture, chooses platforms
-against criteria fixed in advance, designs the data model and its controls, and
+by measuring them on the workload, designs the data model and its controls, and
 leads the build. The practice covers four problems: migrations that don't stop
 the product; platforms chosen on evidence and run at scale; governance an
 auditor can check, including SOC 2 readiness; and AI built into the platform,

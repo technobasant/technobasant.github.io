@@ -5,7 +5,7 @@ seo_title: "Basant Bhattarai — Data & AI Architect · Senior Data Engineer ré
 eyebrow: Career
 headline: "Data & AI Architect · Senior Data Engineer — 9+ years on production systems in industry."
 hero_code: "CAREER / LOG"
-lede: "Roles, measured outcomes, open-source work, and the stack behind each: platform architecture, data modelling, databases, governance and SOC 2, and AI built into production platforms."
+lede: "From backend services and PostgreSQL schemas to owning the architecture of a data platform handling 100M+ events a day: its data model, databases, governance and SOC 2 controls, and the AI built into it."
 page_class: page-resume
 permalink: /resume/
 description: "Data & AI Architect and Senior Data Engineer: 9+ years on production systems in industry. Roles, measured outcomes, and the stack behind each."
@@ -29,7 +29,7 @@ redirect_from:
 
 ## Profile
 
-Data and AI architect with 9+ years on production systems in industry. I set the target architecture, choose platforms against criteria fixed in advance, design the data model with the governance and SOC 2 controls around it, then lead the build: Kafka, Spark, Iceberg, Trino, dbt and Airflow on Kubernetes, the databases underneath, and AI built into the platform with isolation, evaluation and review designed in. My current title is Senior Data Engineer at UXCam.
+Data and AI architect with 9+ years on production systems in industry. I set the target architecture, choose platforms on measured evidence, design the data model with the governance and SOC 2 controls around it, then lead the build: Kafka, Spark, Iceberg, Trino, dbt and Airflow on Kubernetes, the databases underneath, and AI built into the platform with isolation, evaluation and review designed in. My current title is Senior Data Engineer at UXCam.
 
 ## Experience at a glance
 
@@ -62,13 +62,12 @@ Data and AI architect with 9+ years on production systems in industry. I set the
 ## Selected open source
 
 - **Reference architectures**, published in full: [data-platform-architecture](/work/data-platform-architecture/), a SaaS company leaving Postgres — the current state measured, 18 decision records, a Kimball data model, governance and SOC 2 readiness, a cost model and a proof of concept on Databricks; and [ai-platform-architecture](/work/ai-platform-architecture/), its usage assistant, with tenant isolation, accuracy and cost measured on three models and Genie.
-- **[data-stack-lab](/work/data-stack-lab/)** — dbt, Airflow, data quality, Spark and Databricks projects on one generated SaaS business, each scored against the data's ground truth.
 - **[spark-sql-kinesis](https://github.com/technobasant/spark-sql-kinesis)** — maintainer of a Kinesis source and sink for Spark 4.2 on AWS SDK v2, published to Maven Central; an idle shard costs one `GetRecords` call instead of a multi-second floor per batch.
 - **[evalproof](/work/evalproof/)** — LLM evaluation as measurement: judge calibration, and CI gates that fail only on drops that are both large and significant (paired McNemar and bootstrap).
 - **[governed-agent](/work/governed-agent/)** — a LangGraph and MCP agent whose answers become state only after schema, policy, grounding and, where required, a person.
 - **[distributed-db-lab](/work/distributed-db-lab/)** — Citus sharding, online rebalance and tenant isolation, measured against TimescaleDB and a replicated ClickHouse cluster.
-- Also [streaming-platform](/work/streaming-platform/), [realtime-ml](/work/realtime-ml/), [retrieval-bench](/work/retrieval-bench/), [dataset-registry](/work/dataset-registry/) and [platform-deployments](/work/platform-deployments/), each with its method and measurements in the repository.
-- Upstream: a minimal reproduction and an offered patch for [citusdata/citus#7333](https://github.com/citusdata/citus/issues/7333); an opt-in early-stop option for [awslabs/spark-sql-kinesis-connector](https://github.com/awslabs/spark-sql-kinesis-connector/pull/99) (in review).
+- Also [data-stack-lab](/work/data-stack-lab/), [streaming-platform](/work/streaming-platform/), [realtime-ml](/work/realtime-ml/), [retrieval-bench](/work/retrieval-bench/), [dataset-registry](/work/dataset-registry/) and [platform-deployments](/work/platform-deployments/), each with its method and measurements in the repository.
+- Upstream: a report that led Citus to support unnamed constraints on distributed tables, [citusdata/citus#4776](https://github.com/citusdata/citus/issues/4776) (shipped in 11.2); a minimal reproduction and an offered patch for [citusdata/citus#7333](https://github.com/citusdata/citus/issues/7333); an opt-in early-stop option for [awslabs/spark-sql-kinesis-connector](https://github.com/awslabs/spark-sql-kinesis-connector/pull/99) (in review).
 
 ## Capability map
 {: #skills }

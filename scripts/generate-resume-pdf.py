@@ -290,7 +290,7 @@ def build_story(
 
     story += section("Profile", s)
     story.append(Paragraph(
-        f"Data and AI architect and senior data engineer with {metric(metrics, 'experience')} on production systems in industry. Sets the target architecture, chooses platforms against criteria fixed in advance, designs the data model and the governance and SOC 2 controls around it, then leads the build. Open-source first — Kafka, Spark, Iceberg, Trino, dbt and Airflow on Kubernetes — plus the databases underneath: modeling, replication, backup and recovery, upgrades. AI built into the platform: agent workflows on LangGraph, Google ADK and MCP whose output lands as typed, reviewable rows, with isolation, evaluation and review designed in. Track record: {metric(metrics, 'professional_cost_reduction')} lower infrastructure cost, {metric(metrics, 'professional_processing_improvement')} faster processing, {metric(metrics, 'professional_analytics_delivery')} faster analytics delivery.",
+        f"Data and AI architect and senior data engineer with {metric(metrics, 'experience')} on production systems in industry. Sets the target architecture, chooses platforms on measured evidence, designs the data model and the governance and SOC 2 controls around it, then leads the build. Builds on open-source engines — Kafka, Spark, Iceberg, Trino, dbt and Airflow on Kubernetes — and the databases underneath: modeling, replication, backup and recovery, upgrades. AI built into the platform: agent workflows on LangGraph, Google ADK and MCP whose output lands as typed, reviewable rows, with isolation, evaluation and review designed in. Track record: {metric(metrics, 'professional_cost_reduction')} lower infrastructure cost, {metric(metrics, 'professional_processing_improvement')} faster processing, {metric(metrics, 'professional_analytics_delivery')} faster analytics delivery.",
         s["body"],
     ))
 
@@ -319,17 +319,14 @@ def build_story(
         f"provenanced rows rather than a transcript: analytics delivery "
         f"{metric(metrics, 'professional_analytics_delivery')} faster with "
         f"{metric(metrics, 'professional_manual_effort')} less analyst effort, review and fallback paths kept.",
-        "Lead architecture and operational review across ingestion, storage, serving, observability and recovery.",
-        "Treat capacity and cost as design inputs, with storage layout, partitioning and compaction as the levers.",
+        "Operate the SQL and NoSQL databases underneath: replication, backup and recovery, access, tuning, upgrades.",
+        "Lead architecture and schema reviews before new stores, pipelines and agent workflows reach production.",
         f"Mentor {metric(metrics, 'professional_mentoring')} engineers through pairing, code review and written "
-        f"design feedback; team delivery time down {metric(metrics, 'professional_team_delivery')}, with the "
-        "emphasis on making system ownership transferable.",
+        f"design feedback; team delivery time down {metric(metrics, 'professional_team_delivery')}.",
     ], s)
     story.append(Spacer(1, 4))
     story.append(job_header("Data Engineer", "UXCam", "Feb 2020 - Feb 2024", s))
     story += bullets([
-        "Built and operated batch and streaming pipelines, then took on the data models, orchestration, storage "
-        "and analytical serving paths around them.",
         "Rebuilt the core ETL layer in Spark and PySpark with Airflow orchestration, cutting processing time for "
         f"{metric(metrics, 'professional_daily_processing')}/day by "
         f"{metric(metrics, 'professional_processing_improvement')} and unblocking real-time product dashboards.",
@@ -366,7 +363,7 @@ def build_story(
         f"{metric(metrics, 'professional_backend_users')} users at "
         f"{metric(metrics, 'professional_test_coverage')} test coverage.",
         "Designed and maintained PostgreSQL schemas, stored procedures and reporting paths, and set up CI with "
-        "Jenkins alongside the early pipeline work that moved me into data engineering.",
+        "Jenkins alongside early pipeline work, the start of the move into data engineering.",
     ], s)
     story.append(KeepTogether(tail2))
 
@@ -400,7 +397,7 @@ def build_story(
             "by design, tenant isolation outside the model, semantic layers, release gates, cost models.",
         ),
         (
-            "Platform ownership",
+            "Data platforms",
             "Python, SQL and Scala; Kafka and Kinesis ingestion (maintainer of an open-source Spark 4 Kinesis "
             "connector); Spark/PySpark processing, including the Spark 4 migration; Airflow orchestration; Iceberg, "
             "Hive Metastore, dbt and lakehouse modeling; Databricks with Unity Catalog; Kubernetes, Docker and "
@@ -437,7 +434,7 @@ def build_story(
     # those across two sections meant a reader had to hold the first to make
     # sense of the second.
     blurbs = {
-        "Platform ownership": "Consumer-facing reliability, governance, recovery and operational readiness.",
+        "Data platforms": "Consumer-facing reliability, governance, recovery and operational readiness.",
         "Data and AI architecture": "Platforms chosen on evidence, with every decision written down and AI built in.",
         "Database lifecycle": "Modeling, replication, failover, backup and PITR, upgrades and query performance.",
         "AI systems": "Model output that lands as typed, reviewable rows rather than a transcript.",

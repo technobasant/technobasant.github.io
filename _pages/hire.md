@@ -10,7 +10,7 @@ permalink: /hire/
 description: "Data & AI architecture, 9+ years in production: reviews, platform selection, migrations, governance, SOC 2, AI built in. Consulting, contract or full-time."
 ---
 
-I'm looking for long-term work: a consulting or contract engagement, or a full-time role. I bring 9+ years on production systems in industry and the architecture judgement that comes with it. I work with one team at a time and stay long enough to see its decisions through: reviewed, chosen, built, and handed over to the people who will run them.
+I bring 9+ years on production systems in industry; today I own the architecture of a data platform handling {{ site.data.metrics.professional_event_volume.value }} events a day. I'm open to long-term work: a consulting or contract engagement, or a full-time role. I work with one team at a time and stay long enough to see its decisions through: reviewed, chosen, built, and handed over to the people who will run them.
 
 <p class="page-actions"><a class="btn btn--primary" href="#hire-form">Send a briefing</a> <a class="btn btn--ghost" href="mailto:contact@basantbhattarai.com.np?subject=Consulting%20enquiry">Email instead</a> <span>{{ site.data.availability.headline }} · {{ site.data.availability.response }}</span></p>
 

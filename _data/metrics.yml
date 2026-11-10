@@ -602,7 +602,7 @@ dsl_default_daily_loaded:
 # ── data-platform-architecture (2026) ───────────────────────────────────────
 dpa_decisions_backed:
   value: "14 of 18"
-  label: "architecture decisions for the client accepted, each citing its evidence, marked direct or indirect; the other four wait on the proof of concept or their stage"
+  label: "architecture decisions for the company accepted, each citing its evidence, marked direct or indirect; the other four wait on the proof of concept or their stage"
   method: "each decision record cites figures from evidence/evidence.yml, generated into the record by scripts/build.py; figures from the repository's own results are re-derived from the results files in CI, a missing template section or a broken source link fails the build, and evidence that does not test its decision directly is labelled indirect"
   scope: "independent"
   source: "data-platform-architecture (2026)"
@@ -612,7 +612,7 @@ dpa_decisions_backed:
 dpa_bi_on_primary:
   value: "40 → 525 ms"
   label: "the product's p95 request latency, without and with the BI tool's reports running on the primary"
-  method: "a lab copy of the client's database (Postgres 17, 2 vCPU and 4 GB, 31.5 million events); the product's request at 12 a second from pgbench, its weekday peak (each request records one event; 350,000 a day average 4 a second); two analysts running four BI queries in turn; five-minute scenarios after a checkpoint"
+  method: "a lab copy of the company's database (Postgres 17, 2 vCPU and 4 GB, 31.5 million events); the product's request at 12 a second from pgbench, its weekday peak (each request records one event; 350,000 a day average 4 a second); two analysts running four BI queries in turn; five-minute scenarios after a checkpoint"
   scope: "independent"
   source: "data-platform-architecture (2026)"
   window: "measured Oct 2026"
@@ -634,7 +634,7 @@ dpa_break_even:
   scope: "independent"
   source: "data-platform-architecture v0.1.0 (2026)"
   window: "list prices, Oct 2026"
-  context: "Arithmetic on list prices, not a measurement. Against self-run Trino on four r7i.2xlarge workers the line is 0.37–0.42 TB, before the cost of operating it. From the repository's first version; v0.3.0 prices the client's EU region at the editions its requirements need, where the line against Athena is 3.1–4.4 TB."
+  context: "Arithmetic on list prices, not a measurement. Against self-run Trino on four r7i.2xlarge workers the line is 0.37–0.42 TB, before the cost of operating it. From the repository's first version; v0.3.0 prices the company's EU region at the editions its requirements need, where the line against Athena is 3.1–4.4 TB."
 
 # ── ai-platform-architecture (2026) ─────────────────────────────────────────
 aipa_decisions_backed:
@@ -721,7 +721,7 @@ dsl_dbt_databricks:
 dpa_bi_speed:
   value: "2.82 s"
   label: "the slowest BI report's median on the smallest Databricks SQL warehouse with eight analysts at once; 62 s on the product's Postgres"
-  method: "the four queries the BI tool runs today, on the client's data at today's scale (31.5 million events); a 2X-Small serverless warehouse with one cluster on Databricks Free Edition, result cache off, timings from system.query.history; Postgres: the same queries on the primary at the product's peak rate"
+  method: "the four queries the BI tool runs today, on the company's data at today's scale (31.5 million events); a 2X-Small serverless warehouse with one cluster on Databricks Free Edition, result cache off, timings from system.query.history; Postgres: the same queries on the primary at the product's peak rate"
   scope: "independent"
   source: "data-platform-architecture (2026)"
   window: "measured Oct 2026"
@@ -743,7 +743,7 @@ dpa_day_bill:
   scope: "independent"
   source: "data-platform-architecture (2026)"
   window: "measured Oct 2026"
-  context: "95% of the bill came after the last statement, waiting for auto-stop; billed DBUs matched uptime at 4 DBU an hour in every hour checked. At $0.91 a DBU in the client's EU region the month costs $21 woken once a day and $961 awake through working hours."
+  context: "95% of the bill came after the last statement, waiting for auto-stop; billed DBUs matched uptime at 4 DBU an hour in every hour checked. At $0.91 a DBU in the company's EU region the month costs $21 woken once a day and $961 awake through working hours."
 
 dpa_erasure_model:
   value: "31,849,449 rows"
