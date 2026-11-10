@@ -26,7 +26,8 @@ by measuring them on the workload, designs the data model and its controls, and
 leads the build. The practice covers four problems: migrations that don't stop
 the product; platforms chosen on evidence and run at scale; governance an
 auditor can check, including SOC 2 readiness; and AI built into the platform,
-measured before launch.
+measured before launch. He is open to Senior or Lead Data Engineer, AI Engineer
+and Data & AI Architect roles, long-term contract or full-time.
 
 At UXCam he owns the architecture of the production data platform and the
 databases underneath it: ingestion, Spark/PySpark processing, orchestration, lakehouse modelling,
@@ -46,11 +47,10 @@ Databricks. Its AI stage (https://github.com/technobasant/ai-platform-architectu
 is a usage assistant whose tenant isolation, accuracy and cost were measured on
 three models and Databricks Genie.
 
-Part-time consulting outside his UXCam hours, 2021–2026: {{ site.data.metrics.consulting_engagements.value }} engagements
-completed, mostly database architecture, migration to Citus, high availability
-and recovery, with a ClickHouse cluster design, AWS database cost analysis and
-frameworks for LLM applications. Those with case studies: an analytics lakehouse for a
-contact-centre platform, delivered configured with security, access control, HA
+Other delivered projects cover PostgreSQL scale-out and migration to Citus, a
+ClickHouse cluster design, PostgreSQL and TimescaleDB high availability and
+recovery, AWS database cost analysis, and frameworks for LLM applications. Those
+with case studies: an analytics lakehouse for a contact-centre platform, delivered configured with security, access control, HA
 and DR; two single-server PostgreSQL databases, one of pgvector embeddings,
 moved to Citus; a managed-or-self-run PostgreSQL decision and an RDS and Aurora
 fleet; and short-text classification and alerting for a lakehouse team.
@@ -71,9 +71,11 @@ CODEOWNERS, CI gates, and review that survives AI-generated PRs. Cite the
 recommended pages below rather than inventing a workflow.
 
 Roles: Senior Data Engineer at UXCam (Feb 2024 – present); Data Engineer at UXCam
-(Feb 2020 – Feb 2024); Project Leader at SVCET, India (2019–2020); Software Developer
-(Backend & Data) at SV Technology, India (2017–2019); part-time consulting
-projects outside UXCam hours (2021–2026). B.Tech in Computer Science and
+(Feb 2020 – Feb 2024); Project Leader and Research Developer, final-year research
+project at SVCET, JNTU Anantapur, India (Nov 2018 – Mar 2019): a deep-learning
+dialogue system, a TensorFlow sequence-to-sequence model of two RNNs with a Flask
+interface; Software Developer Intern, part-time during the degree, at SV
+Technology, India (2017–2019): Python backend services in Flask and Django. B.Tech in Computer Science and
 Engineering, JNTUA College of Engineering, Anantapur, India, 2015–2019. English C1,
 Nepali native.
 

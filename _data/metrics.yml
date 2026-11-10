@@ -10,7 +10,7 @@ experience:
   method: "role history, 2017–2026"
   scope: "professional"
   source: "CV role history"
-  context: "Four engineering roles from backend development through database operations, data platforms, and production agentic systems."
+  context: "From a part-time backend internship (2017) and a final-year deep-learning research project, through database operations and data platforms, to production agentic systems."
 
 # --- professional platform evidence ---
 
@@ -49,15 +49,6 @@ professional_cost_reduction:
   scope: "professional"
   source: "CV Data Engineer role"
   context: "Kubernetes migration and capacity work across the data infrastructure."
-
-consulting_engagements:
-  value: "30"
-  label: "consulting engagements completed, part-time, outside employment hours"
-  method: "completed contracts in the owner's records, counted once each"
-  window: "May 2021 – Oct 2026"
-  scope: "consulting"
-  source: "owner's contract records"
-  context: "Mostly PostgreSQL and Citus architecture, migration, high availability and recovery; also a ClickHouse cluster design, AWS database cost analysis, a lakehouse, and frameworks for LLM applications."
 
 professional_processing_improvement:
   value: "50%"
@@ -133,32 +124,32 @@ professional_project_team:
   label: "developers led"
   method: "project team size"
   scope: "professional"
-  source: "CV Project Leader role"
-  context: "NLP dialogue-system project across academic and industry stakeholders."
+  source: "CV Project Leader and Research Developer role"
+  context: "Final-year research project: a deep-learning dialogue system, Nov 2018 – Mar 2019."
 
 professional_project_delivery:
   value: "2 weeks"
   label: "ahead of schedule"
   method: "delivery against the agreed project schedule"
   scope: "professional"
-  source: "CV Project Leader role"
-  context: "Client acceptance threshold met for the dialogue system."
+  source: "CV Project Leader and Research Developer role"
+  context: "Final-year research project: a deep-learning dialogue system."
 
 professional_backend_users:
   value: "10K+"
   label: "backend users served"
   method: "users served by the backend services"
   scope: "professional"
-  source: "CV Software Developer role"
-  context: "Python and FastAPI backend services."
+  source: "CV Software Developer Intern role"
+  context: "Python backend services in Flask and Django; a part-time internship during the degree."
 
 professional_test_coverage:
   value: "85%"
   label: "test coverage"
   method: "line coverage on the backend test suite"
   scope: "professional"
-  source: "CV Software Developer role"
-  context: "Python and FastAPI backend services."
+  source: "CV Software Developer Intern role"
+  context: "Python backend services in Flask and Django; a part-time internship during the degree."
 
 # --- multi-engine HA lab (independent, measured) ---
 

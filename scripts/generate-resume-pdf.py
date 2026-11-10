@@ -276,7 +276,10 @@ def build_story(
     story: list = [
         Spacer(1, 2),
         Paragraph("BASANT BHATTARAI", s["name"]),
-        Paragraph("DATA &amp; AI ARCHITECT  /  SENIOR DATA ENGINEER", s["role"]),
+        # Target roles, the title held first. The practice is architecture, but the
+        # roles sought include senior and lead data engineering and AI engineering,
+        # so the line names all three rather than reading as architect-only.
+        Paragraph("SENIOR DATA ENGINEER  /  AI ENGINEER  /  DATA &amp; AI ARCHITECT", s["role"]),
         Paragraph(
             # Site first among the links. Location is not in the header: the
             # public pages lead with the work, not the city.
@@ -290,7 +293,7 @@ def build_story(
 
     story += section("Profile", s)
     story.append(Paragraph(
-        f"Data and AI architect and senior data engineer with {metric(metrics, 'experience')} on production systems in industry. Sets the target architecture, chooses platforms on measured evidence, designs the data model and the governance and SOC 2 controls around it, then leads the build. Builds on open-source engines — Kafka, Spark, Iceberg, Trino, dbt and Airflow on Kubernetes — and the databases underneath: modeling, replication, backup and recovery, upgrades. AI built into the platform: agent workflows on LangGraph, Google ADK and MCP whose output lands as typed, reviewable rows, with isolation, evaluation and review designed in. Track record: {metric(metrics, 'professional_cost_reduction')} lower infrastructure cost, {metric(metrics, 'professional_processing_improvement')} faster processing, {metric(metrics, 'professional_analytics_delivery')} faster analytics delivery.",
+        f"Senior data engineer and data and AI architect with {metric(metrics, 'experience')} on production systems in industry. Sets the target architecture, chooses platforms on measured evidence, designs the data model and the governance and SOC 2 controls around it, then leads the build. Builds on open-source engines — Kafka, Spark, Iceberg, Trino, dbt and Airflow on Kubernetes — and the databases underneath: modeling, replication, backup and recovery, upgrades. AI built into the platform: agent workflows on LangGraph, Google ADK and MCP whose output lands as typed, reviewable rows, with isolation, evaluation and review designed in. Track record: {metric(metrics, 'professional_cost_reduction')} lower infrastructure cost, {metric(metrics, 'professional_processing_improvement')} faster processing, {metric(metrics, 'professional_analytics_delivery')} faster analytics delivery. Open to Senior or Lead Data Engineer, AI Engineer and Data &amp; AI Architect roles.",
         s["body"],
     ))
 
@@ -340,43 +343,46 @@ def build_story(
         f"{metric(metrics, 'professional_uptime')} uptime, and autoscaling that held under peak load.",
     ], s)
     story.append(Spacer(1, 4))
-    # Part-time consulting outside UXCam hours, as projects and outcomes only: no
-    # clients, no platforms, no fees. Framed as projects rather than a concurrent
-    # role, so the full-time timeline reads as one commitment.
-    story.append(job_header("Consulting projects", "part-time, outside UXCam hours", "2021 - 2026", s))
-    story += bullets([
-        f"{metric(metrics, 'consulting_engagements')} engagements. Database architecture and migration: Postgres scaled "
-        "out to Citus as workloads outgrew one server, RDS moved to a self-managed Citus cluster, a ClickHouse cluster "
-        "designed to its workload.",
-        "PostgreSQL and TimescaleDB clusters with replication, pgBackRest and PgPool-II; a database recovered from "
-        "raw files; AWS database cost analysis; an analytics lakehouse on S3, Trino, Airflow and Glue, end to end.",
-        "Frameworks for LLM applications and agentic workflows, from the architecture to tested Python; a short-text "
-        "classifier redesigned on Databricks; pgvector performance on RDS.",
-    ], s)
-    story.append(Spacer(1, 4))
     # KeepTogether on the short roles. The two-bullet SV Technology block was
     # split by the page break and left one line stranded at the top of page two,
     # which reads as a rendering accident rather than a layout. The long UXCam
     # blocks are deliberately not wrapped: forcing a five-bullet role to stay
     # whole would push the whole section to the next page to avoid a widow.
     tail: list = []
-    tail.append(job_header("Project Leader", "SVCET, India", "2019 - 2020", s))
+    tail.append(job_header("Project Leader and Research Developer", "SVCET, JNTU Anantapur", "Nov 2018 - Mar 2019", s))
     tail += bullets([
-        f"Led {metric(metrics, 'professional_project_team')} developers building an intelligent dialogue system "
-        "on an NLP and deep-learning stack, reaching the client's acceptance threshold for intent recognition and "
-        f"delivering {metric(metrics, 'professional_project_delivery')} ahead of schedule.",
+        "Final-year research project: an intelligent dialogue system on deep learning and NLP, a sequence-to-sequence "
+        "model of two RNNs in TensorFlow and Python, trained on movie-dialogue and Twitter corpora, with a Flask web "
+        f"interface; led {metric(metrics, 'professional_project_team')} developers and delivered "
+        f"{metric(metrics, 'professional_project_delivery')} ahead of schedule.",
     ], s)
     story.append(KeepTogether(tail))
     story.append(Spacer(1, 3))
-    tail2: list = [job_header("Software Developer", "SV Technology, India", "2017 - 2019", s)]
+    tail2: list = [job_header("Software Developer Intern (part-time)", "SV Technology, India", "2017 - 2019", s)]
     tail2 += bullets([
-        f"Built Python and FastAPI backend services carrying "
-        f"{metric(metrics, 'professional_backend_users')} users at "
-        f"{metric(metrics, 'professional_test_coverage')} test coverage.",
+        f"Built Python backend services in Flask and Django serving "
+        f"{metric(metrics, 'professional_backend_users')} users, at "
+        f"{metric(metrics, 'professional_test_coverage')} test coverage, alongside the degree.",
         "Designed and maintained PostgreSQL schemas, stored procedures and reporting paths, and set up CI with "
         "Jenkins alongside early pipeline work, the start of the move into data engineering.",
     ], s)
     story.append(KeepTogether(tail2))
+
+    # Delivered projects outside the roles above, as work and outcome only: no
+    # dates, counts, clients, platforms or fees, and not framed as a concurrent
+    # role. The detail is shared privately with anyone hiring for consulting.
+    story += section("Selected projects", s)
+    story += bullets([
+        "<b>Database scale-out and migration:</b> Postgres application databases and a pgvector store moved to Citus "
+        "as they outgrew one server; an RDS database moved to a self-managed Citus cluster; a ClickHouse cluster "
+        "designed to its workload.",
+        "<b>Reliability and cost:</b> PostgreSQL and TimescaleDB clusters with replication, pgBackRest and PgPool-II; "
+        "a database recovered from its raw files; an RDS and Aurora fleet tuned and failover-tested; AWS database "
+        "spend analysed for savings.",
+        "<b>Data platforms and AI:</b> an analytics lakehouse on S3, Trino, Airflow and Glue, delivered running with "
+        "access control, HA and DR; frameworks for LLM applications and agentic workflows, architecture to tested "
+        "Python; a failing classifier rebuilt on Databricks.",
+    ], s)
 
     # Public repositories a reviewer can open. Short on purpose: one line each,
     # the case studies carry the detail.
@@ -407,13 +413,13 @@ def build_story(
         ),
         (
             "Data platforms",
-            "Python, SQL and Scala; Kafka and Kinesis ingestion (maintainer of an open-source Spark 4 Kinesis "
+            "Python, SQL and Scala; Kafka and Kinesis ingestion (maintainer of a Spark 4 Kinesis "
             "connector); Spark/PySpark processing, including the Spark 4 migration; Airflow orchestration; Iceberg, "
             "Hive Metastore, dbt and lakehouse modelling; Databricks with Unity Catalog; Kubernetes, Docker and "
             "Terraform delivery; contracts, lineage, cost and recovery; Prometheus and Grafana.",
         ),
         (
-            "AI systems",
+            "AI engineering",
             "LangGraph, LangChain, Google ADK, MCP servers, Pydantic, Milvus and MLflow; bounded tools, retrieval, "
             "evaluation before rollout, provenance, human review and honest fallback paths.",
         ),
@@ -488,7 +494,7 @@ def generate(output: Path) -> None:
         leftMargin=0.68 * inch,
         topMargin=0.62 * inch,
         bottomMargin=0.58 * inch,
-        title="Basant Bhattarai - Data and AI Architect, Senior Data Engineer",
+        title="Basant Bhattarai - Senior Data Engineer, AI Engineer, Data and AI Architect",
         author="Basant Bhattarai",
         subject="Data & AI Architect · Senior Data Engineer",
     )

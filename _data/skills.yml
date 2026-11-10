@@ -50,7 +50,7 @@ tier2:
     - name: "Databases"
       items: [Redis, MongoDB, Citus, TimescaleDB, pgvector, "MySQL / MariaDB", "Patroni / pgBackRest"]
     - name: "Product & infra"
-      items: [FastAPI, Celery, "Next.js", Docker, Ansible, Terraform, "GitHub Actions", Helm]
+      items: [FastAPI, "Flask / Django", Celery, "Next.js", Docker, Ansible, Terraform, "GitHub Actions", Helm]
 
 tier3:
   heading: "Working knowledge"

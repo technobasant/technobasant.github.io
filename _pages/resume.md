@@ -1,14 +1,14 @@
 ---
 title: Résumé
 last_modified_at: 2026-11-10
-seo_title: "Basant Bhattarai — Data & AI Architect · Senior Data Engineer résumé"
+seo_title: "Basant Bhattarai — Senior Data Engineer · AI Engineer · Data & AI Architect résumé"
 eyebrow: Career
-headline: "Data & AI Architect · Senior Data Engineer — 9+ years on production systems in industry."
+headline: "Senior Data Engineer · AI Engineer · Data & AI Architect — 9+ years on production systems in industry."
 hero_code: "CAREER / LOG"
 lede: "From backend services and PostgreSQL schemas to owning the architecture of a data platform handling 100M+ events a day: its data model, databases, governance and SOC 2 controls, and the AI built into it."
 page_class: page-resume
 permalink: /resume/
-description: "Data & AI Architect and Senior Data Engineer: 9+ years on production systems in industry. Roles, measured outcomes, and the stack behind each."
+description: "Senior Data Engineer, AI Engineer and Data & AI Architect: 9+ years on production systems in industry. Roles, measured outcomes, and the stack behind each."
 redirect_from:
   - /experience/
   - /skills/
@@ -29,7 +29,7 @@ redirect_from:
 
 ## Profile
 
-Data and AI architect with 9+ years on production systems in industry. I set the target architecture, choose platforms on measured evidence, design the data model with the governance and SOC 2 controls around it, then lead the build: Kafka, Spark, Iceberg, Trino, dbt and Airflow on Kubernetes, the databases underneath, and AI built into the platform with isolation, evaluation and review designed in. My current title is Senior Data Engineer at UXCam.
+Senior data engineer and data and AI architect with 9+ years on production systems in industry. I set the target architecture, choose platforms on measured evidence, design the data model with the governance and SOC 2 controls around it, then lead the build: Kafka, Spark, Iceberg, Trino, dbt and Airflow on Kubernetes, the databases underneath, and AI built into the platform with isolation, evaluation and review designed in. My current title is Senior Data Engineer at UXCam. I am open to Senior or Lead Data Engineer, AI Engineer and Data & AI Architect roles, long-term contract or full-time.
 
 ## Experience at a glance
 
@@ -37,8 +37,8 @@ Data and AI architect with 9+ years on production systems in industry. I set the
 |---|---|---|
 | Senior Data Engineer, UXCam | 2024 – present | Platform architecture, reliability, governance and SOC 2; the database layer beneath it; the production agent workflows; architecture review and mentoring |
 | Data Engineer, UXCam | 2020 – 2024 | Built the batch and streaming processing, the lakehouse models, and the multi-engine serving layer |
-| Project Leader, SVCET | 2019 – 2020 | Planning and delivery of an NLP dialogue-system project with a small team |
-| Software Developer, SV Technology | 2017 – 2019 | Python backend services, PostgreSQL schema work, reporting, and CI |
+| Project Leader and Research Developer, SVCET | 2018 – 2019 | Final-year research: a deep-learning dialogue system in TensorFlow, with a team of four |
+| Software Developer Intern (part-time), SV Technology | 2017 – 2019 | Python backend services in Flask and Django, PostgreSQL schema work, reporting, and CI |
 
 ## Senior Data Engineer · UXCam
 
@@ -59,13 +59,24 @@ Data and AI architect with 9+ years on production systems in industry. I set the
 - Reduced p95 query latency by {{ site.data.metrics.professional_query_latency.value }} across {{ site.data.metrics.professional_query_volume.value }} analytical queries per day through partitioning, clustering, and model redesign.
 - Led a Kubernetes migration of the data and database infrastructure that lowered cost by {{ site.data.metrics.professional_cost_reduction.value }} while sustaining {{ site.data.metrics.professional_uptime.value }} uptime.
 
-## Consulting projects · part-time
+## Project Leader and Research Developer · SVCET, JNTU Anantapur
 
-**2021 – 2026** · Outside my UXCam hours · {{ site.data.metrics.consulting_engagements.value }} engagements completed
+**November 2018 – March 2019** · Final-year research project
 
-- Database architecture and migration: Postgres scaled out to Citus as workloads outgrew one server, including [an application database and a pgvector store](/work/postgres-scale-out-citus/); RDS Postgres moved to a self-managed Citus cluster; a ClickHouse cluster designed to its workload.
-- Operations and cost: PostgreSQL and TimescaleDB clusters with replication, pgBackRest backups and PgPool-II pooling; a database recovered from its raw files; AWS database costs and options analysed for savings; [a capacity plan, a managed-or-self-run decision and an RDS fleet](/work/postgres-on-rds/).
-- Data platforms and AI: [an analytics lakehouse on S3, Trino, Airflow and Glue](/work/contact-centre-lakehouse/), delivered end to end; frameworks for LLM applications and agentic workflows, from the architecture to tested Python; [a short-text classifier redesigned](/work/consulting-short-text-and-alerting/) on a Databricks lakehouse.
+- Built an intelligent dialogue system on deep learning and NLP: a sequence-to-sequence model of two recurrent neural networks in TensorFlow and Python, trained on movie-dialogue and Twitter corpora, with a Flask web interface for interacting with it. Led {{ site.data.metrics.professional_project_team.value }} developers and delivered {{ site.data.metrics.professional_project_delivery.value }} ahead of schedule.
+
+## Software Developer Intern · SV Technology
+
+**2017 – 2019** · Part-time, during the degree
+
+- Built Python backend services in Flask and Django serving {{ site.data.metrics.professional_backend_users.value }} users, at {{ site.data.metrics.professional_test_coverage.value }} test coverage.
+- Designed and maintained PostgreSQL schemas, stored procedures and reporting paths, and set up CI with Jenkins: the start of the move into data engineering.
+
+## Selected projects
+
+- **Database scale-out and migration.** Postgres scaled out to Citus as workloads outgrew one server, including [an application database and a pgvector store](/work/postgres-scale-out-citus/); an RDS Postgres database moved to a self-managed Citus cluster; a ClickHouse cluster designed to its workload.
+- **Reliability and cost.** PostgreSQL and TimescaleDB clusters with replication, pgBackRest backups and PgPool-II pooling; a database recovered from its raw files; [a capacity plan, a managed-or-self-run decision, and an RDS and Aurora fleet tuned and failover-tested](/work/postgres-on-rds/); AWS database spend analysed for savings.
+- **Data platforms and AI.** [An analytics lakehouse on S3, Trino, Airflow and Glue](/work/contact-centre-lakehouse/), handed over running with access control, HA and DR; frameworks for LLM applications and agentic workflows, from the architecture to tested Python; [a production classifier that was failing, rebuilt](/work/consulting-short-text-and-alerting/) on a Databricks lakehouse around the unit of work.
 
 ## Selected open source
 
@@ -87,10 +98,10 @@ Data and AI architect with 9+ years on production systems in industry. I set the
   </li>
   <li>
     <h3>Data platforms</h3>
-    <p>Batch and streaming ingestion, Spark/PySpark processing, Airflow orchestration, Iceberg and dbt modelling, Kubernetes capacity, contracts, lineage, and cost. Databricks: a consulting client's lakehouse, a proof of concept on Unity Catalog under OpenTofu, and AI/BI Genie evaluated against three models. Evidence: <a href="/work/data-platform-practice/">production platform case study</a>; <a href="/work/streaming-platform/">exactly-once streaming, measured</a>.</p>
+    <p>Batch and streaming ingestion, Spark/PySpark processing, Airflow orchestration, Iceberg and dbt modelling, Kubernetes capacity, contracts, lineage, and cost. Databricks: a production classifier rebuilt on a lakehouse, a proof of concept on Unity Catalog under OpenTofu, and AI/BI Genie evaluated against three models. Evidence: <a href="/work/data-platform-practice/">production platform case study</a>; <a href="/work/streaming-platform/">exactly-once streaming, measured</a>.</p>
   </li>
   <li>
-    <h3>AI systems</h3>
+    <h3>AI engineering</h3>
     <p>Production agents on LangGraph, LangChain, Google ADK and MCP tool servers: bounded tools, retrieval, evaluation before rollout, typed output, and a fallback path that fails honestly. Built into the platform already running. Evidence: <a href="/work/governed-ai-delivery/">governed AI case study</a>; <a href="/work/governed-agent/">governed-agent</a> and <a href="/work/evalproof/">evalproof</a>, measured in public.</p>
   </li>
   <li>
