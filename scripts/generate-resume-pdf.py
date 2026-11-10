@@ -250,6 +250,7 @@ def section(label: str, s: dict[str, ParagraphStyle]) -> list:
     return [Paragraph(label.upper(), s["section"])]
 
 
+
 def job_header(role: str, employer: str, period: str, s: dict[str, ParagraphStyle]) -> Table:
     table = Table(
         [[Paragraph(f"{role}  |  {employer}", s["job"]), Paragraph(period, s["date"])]],
@@ -276,11 +277,15 @@ def build_story(
     story: list = [
         Spacer(1, 2),
         Paragraph("BASANT BHATTARAI", s["name"]),
-        Paragraph("SENIOR DATA ENGINEER  /  DATA &amp; AI ARCHITECT", s["role"]),
+        # Target roles, the title held first. The practice is architecture, but the
+        # roles sought include senior and lead data engineering and AI engineering,
+        # so the line names all three rather than reading as architect-only.
+        Paragraph("SENIOR DATA ENGINEER  /  AI ENGINEER  /  DATA &amp; AI ARCHITECT", s["role"]),
         Paragraph(
-            # Site first among the links. Location is not in the header: the
-            # public pages lead with the work, not the city.
-            f'<a href="{SITE_URL}/" color="#9A692C"><b>{SITE_HOST}</b></a><br/>'
+            # Site first among the links, then where the work is done from, so
+            # a reader in the US or EU never has to guess the time zone.
+            f'<a href="{SITE_URL}/" color="#9A692C"><b>{SITE_HOST}</b></a> &nbsp;&nbsp;|&nbsp;&nbsp; '
+            'Kathmandu, Nepal, remote with US and EU teams<br/>'
             '<a href="mailto:contact@basantbhattarai.com.np" color="#58616B">contact@basantbhattarai.com.np</a> &nbsp;&nbsp;|&nbsp;&nbsp; '
             '<a href="https://www.linkedin.com/in/technobasant" color="#58616B">linkedin.com/in/technobasant</a> &nbsp;&nbsp;|&nbsp;&nbsp; '
             '<a href="https://github.com/technobasant" color="#58616B">github.com/technobasant</a>',
@@ -290,7 +295,17 @@ def build_story(
 
     story += section("Profile", s)
     story.append(Paragraph(
-        f"Senior data engineer and data and AI architect with {metric(metrics, 'experience')} in software engineering, six of them owning production data platforms. Designs platforms, their data models and the governance and SOC 2 controls around them, then builds them. Open-source first — Kafka, Spark, Iceberg, Trino, dbt and Airflow on Kubernetes — plus the databases underneath: modeling, replication, backup and recovery, upgrades. Designs and runs the agent workflows on that same stack (LangGraph, Google ADK, MCP), so model output lands as typed, reviewable rows. Track record: {metric(metrics, 'professional_cost_reduction')} lower infrastructure cost, {metric(metrics, 'professional_processing_improvement')} faster processing, {metric(metrics, 'professional_analytics_delivery')} faster analytics delivery.",
+        # The current role and its results lead: they are what a recruiter scans
+        # for in the first lines. Method and stack follow; target roles close.
+        f"Senior data engineer and data and AI architect with {metric(metrics, 'experience')} in industry. "
+        f"At UXCam, owns the architecture of a data platform processing {metric(metrics, 'professional_daily_processing')} and "
+        f"{metric(metrics, 'professional_event_volume')} events a day, leads a team of {metric(metrics, 'professional_team_led')} engineers, moved it from "
+        "OLTP to a big data lakehouse, and designs the agentic AI platform built into it: "
+        f"{metric(metrics, 'professional_cost_reduction')} lower infrastructure cost, {metric(metrics, 'professional_processing_improvement')} faster processing, "
+        f"{metric(metrics, 'professional_analytics_delivery')} faster analytics delivery, {metric(metrics, 'professional_uptime')} uptime. "
+        "Sets the target architecture, chooses platforms on evidence and designs the data model with its governance "
+        "and SOC 2 controls. "
+        "Open to Senior or Lead Data Engineer, AI Engineer and Data &amp; AI Architect roles.",
         s["body"],
     ))
 
@@ -309,39 +324,43 @@ def build_story(
     story += section("Experience", s)
     story.append(job_header("Senior Data Engineer", "UXCam", "Feb 2024 - present", s))
     story += bullets([
-        f"Own reliability and governance for a platform handling {metric(metrics, 'professional_platform_scale')} "
-        f"and {metric(metrics, 'professional_event_volume')} events daily: freshness and latency objectives per "
-        f"dataset, {metric(metrics, 'professional_uptime')} uptime, incident-ready runbooks, reviewable data "
-        "contracts, a named owner for every published table, and the SOC 2 criteria met for the platform and "
-        "its infrastructure through every audit.",
-        f"Design and operate the production agent workflows — LangGraph and Google ADK orchestration, MCP tool "
-        f"servers, retrieval and evaluation — against the existing platform, so model output lands as typed, "
-        f"provenanced rows rather than a transcript: analytics delivery "
-        f"{metric(metrics, 'professional_analytics_delivery')} faster with "
-        f"{metric(metrics, 'professional_manual_effort')} less analyst effort, review and fallback paths kept.",
-        "Lead architecture and operational review across ingestion, storage, serving, observability and recovery.",
-        "Treat capacity and cost as design inputs, with storage layout, partitioning and compaction as the levers.",
-        f"Mentor {metric(metrics, 'professional_mentoring')} engineers through pairing, code review and written "
-        f"design feedback; team delivery time down {metric(metrics, 'professional_team_delivery')}, with the "
-        "emphasis on making system ownership transferable.",
+        # The stack sits here, in the role, where screening tools weigh it.
+        f"Own the architecture, reliability, data quality and governance of a platform processing "
+        f"{metric(metrics, 'professional_daily_processing')} and {metric(metrics, 'professional_event_volume')} events a day on "
+        f"Kafka, Spark, Iceberg, Hive, Trino, dbt and Airflow: freshness objectives, alerting, "
+        f"{metric(metrics, 'professional_uptime')} uptime, runbooks, data contracts, a named owner per table, and the "
+        "SOC 2 criteria met for the platform and its infrastructure through every audit.",
+        f"Lead a team of {metric(metrics, 'professional_team_led')} engineers on the data platform, mentoring through pairing, "
+        f"code review and design feedback; delivery time down {metric(metrics, 'professional_team_delivery')}.",
+        "Design and build the agentic AI platform inside the data platform, with security, compliance and access control "
+        "to data and internal systems designed in: RAG pipelines, MCP servers, LangGraph and Google ADK agents with "
+        "guardrails and evaluation, output landing as typed, provenanced rows: analytics delivery "
+        f"{metric(metrics, 'professional_analytics_delivery')} faster, "
+        f"{metric(metrics, 'professional_manual_effort')} less analyst effort.",
+        "Designed and built an LLM video-analysis platform that describes each session recording for in-depth "
+        "product intelligence.",
+        "Run the architecture and schema review every new store, pipeline and agent workflow passes before "
+        "production, and operate the SQL and NoSQL databases underneath: replication, recovery, access, tuning, upgrades.",
     ], s)
     story.append(Spacer(1, 4))
     story.append(job_header("Data Engineer", "UXCam", "Feb 2020 - Feb 2024", s))
     story += bullets([
-        "Built and operated batch and streaming pipelines, then took on the data models, orchestration, storage "
-        "and analytical serving paths around them.",
+        # The architecture decision of the role leads it. The lake's size stays
+        # out: the privacy gate treats it as an internal scale description.
+        "Led the move from OLTP to a big data lakehouse for lower cost, faster queries, scale and deeper analytics: "
+        "tables in Iceberg, Hive and other formats with partition and schema-evolution rules, and a producer and "
+        "consumer that queue Spark compaction of small files.",
         "Rebuilt the core ETL layer in Spark and PySpark with Airflow orchestration, cutting processing time for "
         f"{metric(metrics, 'professional_daily_processing')}/day by "
         f"{metric(metrics, 'professional_processing_improvement')} and unblocking real-time product dashboards.",
-        "Made change and recovery safe by treating schema evolution, replay, late-arriving data and backfills as "
-        "designed interfaces with idempotent loads and explicit watermarks, not as emergency procedures.",
-        f"Tuned Trino, ClickHouse, Citus and TimescaleDB serving "
-        f"{metric(metrics, 'professional_query_volume')} queries/day for a "
-        f"{metric(metrics, 'professional_query_latency')} p95 latency reduction through partitioning, clustering "
-        "and model redesign.",
-        f"Led the Kubernetes migration of the data infrastructure: "
-        f"{metric(metrics, 'professional_cost_reduction')} lower infrastructure cost, "
-        f"{metric(metrics, 'professional_uptime')} uptime, and autoscaling that held under peak load.",
+        "Made backfills and replays safe to re-run: idempotent loads, explicit watermarks for late data, and schema "
+        "evolution designed in.",
+        f"Cut p95 latency {metric(metrics, 'professional_query_latency')} on Trino, ClickHouse, Citus and TimescaleDB "
+        f"serving {metric(metrics, 'professional_query_volume')} queries/day, through performance tuning and query "
+        "optimisation: partitioning, clustering and model redesign.",
+        f"Led the migration of the data and database infrastructure to Kubernetes on EKS, Spark clusters included: "
+        f"{metric(metrics, 'professional_cost_reduction')} lower infrastructure cost and autoscaling that held "
+        "under peak load.",
     ], s)
     story.append(Spacer(1, 4))
     # KeepTogether on the short roles. The two-bullet SV Technology block was
@@ -350,25 +369,40 @@ def build_story(
     # blocks are deliberately not wrapped: forcing a five-bullet role to stay
     # whole would push the whole section to the next page to avoid a widow.
     tail: list = []
-    tail.append(job_header("Project Leader", "SVCET, India", "2019 - 2020", s))
+    tail.append(job_header("Project Leader and Research Developer", "SVCET, JNTU Anantapur", "Nov 2018 - Mar 2019", s))
     tail += bullets([
-        f"Led {metric(metrics, 'professional_project_team')} developers building an intelligent dialogue system "
-        "on an NLP and deep-learning stack, reaching the client's acceptance threshold for intent recognition and "
-        f"delivering {metric(metrics, 'professional_project_delivery')} ahead of schedule.",
-        "Coordinated requirements, planning and review across academic and industry stakeholders, and introduced "
-        "the code-review and version-control discipline the department kept afterwards.",
+        f"Led a team of {metric(metrics, 'professional_project_team')} engineers to build an intelligent dialogue system "
+        "with deep NLP: a sequence-to-sequence model of two RNNs in TensorFlow and Python, trained on movie-dialogue "
+        "and Twitter corpora, with a Flask web interface; delivered "
+        f"{metric(metrics, 'professional_project_delivery')} early.",
     ], s)
     story.append(KeepTogether(tail))
     story.append(Spacer(1, 3))
-    tail2: list = [job_header("Software Developer", "SV Technology, India", "2017 - 2019", s)]
+    tail2: list = [job_header("Software Developer Intern", "SV Technology, India", "2017 - 2020", s)]
     tail2 += bullets([
-        f"Built Python and FastAPI backend services carrying "
-        f"{metric(metrics, 'professional_backend_users')} users at "
+        f"Built Python backend services in Flask and Django serving "
+        f"{metric(metrics, 'professional_backend_users')} users, at "
         f"{metric(metrics, 'professional_test_coverage')} test coverage.",
-        "Designed and maintained PostgreSQL schemas, stored procedures and reporting paths, and set up CI with "
-        "Jenkins alongside the early pipeline work that moved me into data engineering.",
+        "Designed PostgreSQL schemas, stored procedures and reports, set up Jenkins CI, and began the move into "
+        "data engineering.",
     ], s)
     story.append(KeepTogether(tail2))
+
+    # Delivered projects outside the roles above, as work and outcome only: no
+    # dates, counts, clients, platforms or fees, and not framed as a concurrent
+    # role. The detail is shared privately with anyone hiring for consulting.
+    # Kept whole: split by the page break, it read as two half-sections.
+    story.append(KeepTogether(section("Selected projects", s) + bullets([
+        "<b>Database scale-out and migration:</b> a Postgres application database and a pgvector store moved to Citus "
+        "as each outgrew one server; an RDS database moved to a self-managed Citus cluster; a ClickHouse cluster "
+        "designed to its workload.",
+        "<b>Reliability and cost:</b> PostgreSQL and TimescaleDB clusters with replication, pgBackRest and PgPool-II; "
+        "a database recovered from its raw files; an RDS and Aurora fleet tuned and failover-tested; AWS database "
+        "spend analysed for savings.",
+        "<b>Data platforms and AI:</b> an analytics lakehouse on S3, Trino, Airflow and Glue, delivered running with "
+        "access control, HA and DR; frameworks for LLM applications and agentic workflows, architecture to tested "
+        "Python; a failing classifier rebuilt on Databricks.",
+    ], s)))
 
     # Public repositories a reviewer can open. Short on purpose: one line each,
     # the case studies carry the detail.
@@ -376,46 +410,48 @@ def build_story(
     story += bullets([
         "<b>data-platform-architecture</b> and <b>ai-platform-architecture</b> (reference architectures): "
         "a SaaS company leaving Postgres, measured: 18 decision records, a Kimball model, SOC 2 readiness, a cost "
-        "model and a Databricks proof of concept; then its usage assistant on governed data.",
+        "model and a Databricks proof of concept; then its AI usage assistant.",
         "<b>spark-sql-kinesis</b> (maintainer): Kinesis source and sink for Spark 4.2 on AWS SDK v2, on Maven "
         "Central; an idle shard costs one GetRecords call, not a multi-second floor per batch.",
-        "<b>evalproof</b>: LLM evaluation with judge calibration and CI gates that fail only on drops that are "
-        "both large and significant.",
-        "<b>distributed-db-lab</b>: Citus sharding, online rebalance and tenant isolation, measured against "
-        "TimescaleDB and replicated ClickHouse. Also data-stack-lab, a governed agent, streaming, real-time ML, "
-        "retrieval, data contracts and GitOps delivery. github.com/technobasant",
+        # The AI evidence, with its measured figures: one bullet on agents in a
+        # paid role was the whole AI Engineer case before this.
+        f"<b>governed-agent</b> and <b>evalproof</b> (LangGraph, MCP, LLM evaluation): answers matched a SQL-computed "
+        f"key on {metric(metrics, 'agent_answer_match')} questions, and {metric(metrics, 'agent_injection_actions')} planted "
+        "prompt injections led to a proposed action; evalproof fails CI only on LLM-judge drops both large and significant.",
+        "Also <b>distributed-db-lab</b> (Citus sharding and online rebalance, against TimescaleDB and ClickHouse), "
+        "data-stack-lab, streaming, real-time ML, retrieval, data contracts and GitOps delivery. github.com/technobasant",
     ], s)
 
     # No forced page break here any more. It existed to give the Independent work
     # panel a clean page; with that section gone it stranded 124 words on page 2.
-    story += section("Capability map", s)
+    story += section("Skills", s)
+    # Architecture first: it is the level the profile claims, so it leads the
+    # map, with the AI side of the architecture named in it rather than left to
+    # the AI systems row.
     categories = [
         (
-            "Platform ownership",
-            "Python, SQL and Scala; Kafka and Kinesis ingestion (maintainer of an open-source Spark 4 Kinesis "
-            "connector); Spark/PySpark processing, including the Spark 4 migration; Airflow orchestration; Iceberg, "
-            "Hive Metastore, dbt and lakehouse modeling; Databricks with Unity Catalog; Kubernetes, Docker and "
-            "Terraform delivery; contracts, lineage, cost and recovery.",
+            "Data and AI architecture",
+            "Target architectures and platform selection, conceptual to physical modelling, data warehouse and "
+            "lakehouse modelling (Kimball, Type 2 history), ClickHouse and Citus layouts, contracts in CI, decision "
+            "records and architecture documentation, SOC 2 and GDPR erasure by design, tenant isolation outside the "
+            "model, semantic layers, release gates, cost models.",
         ),
         (
-            "Data and system architecture",
-            "Conceptual to physical modelling, Kimball and Type 2 history, lakehouse, ClickHouse and Citus "
-            "layouts, contracts in CI, decision records, SOC 2 and erasure by design, cost models.",
+            "Data platforms",
+            "Python, SQL and Scala; Kafka and Kinesis ingestion; Spark/PySpark, including the Spark 4 migration; Airflow; Iceberg, "
+            "Hive Metastore, dbt and lakehouse modelling; Databricks with Unity Catalog; Snowflake (working knowledge); CI/CD with GitHub "
+            "Actions, Kubernetes, Docker and Terraform; data quality, lineage and recovery; Prometheus and Grafana.",
+        ),
+        (
+            "AI engineering",
+            "LangGraph, LangChain, Google ADK, MCP servers, Pydantic, Milvus and MLflow; prompt and structured-output "
+            "design, guardrails, access control to data and internal systems, retrieval, evaluation on Qwen3, Llama 3.3, gpt-oss and "
+            "Databricks Genie, provenance, human review and fallbacks; deep-learning NLP in TensorFlow since 2018.",
         ),
         (
             "Database lifecycle",
             "PostgreSQL, ClickHouse, Trino, Citus, TimescaleDB, Redis and MongoDB; partitioning, replication, "
             "restore and high availability.",
-        ),
-        (
-            "Agentic systems",
-            "LangGraph, LangChain, Google ADK, MCP servers, Pydantic, Milvus and MLflow; bounded tools, retrieval, "
-            "evaluation before rollout, provenance, human review and honest fallback paths.",
-        ),
-        (
-            "Technical leadership",
-            "Architecture and operational review, mentoring, runbooks, service and freshness objectives, "
-            "Prometheus and Grafana.",
         ),
     ]
     # Cloud belongs in the document. It was absent entirely — no AWS, GCP or
@@ -426,23 +462,14 @@ def build_story(
     if clouds:
         categories = list(categories) + [(
             "Cloud",
-            "  |  ".join(f"<b>{c['name']}:</b> {', '.join(c['items'][:8])}" for c in clouds),
+            # Depth beside each cloud, as skills.yml states it: AWS is production
+            # work, GCP and Azure are working knowledge. Listing them level read as
+            # an equal claim the tiers on the site do not make.
+            "  |  ".join(
+                f"<b>{c['name']}</b> ({c.get('depth', 'used')}): {', '.join(c['items'][:8 if c.get('depth') == 'production' else 5])}"
+                for c in clouds
+            ),
         )]
-
-    # One line of what the category means, then the systems it runs on. Splitting
-    # those across two sections meant a reader had to hold the first to make
-    # sense of the second.
-    blurbs = {
-        "Platform ownership": "Consumer-facing reliability, governance, recovery and operational readiness.",
-        "Data and system architecture": "Platforms chosen on evidence, with every decision written down.",
-        "Database lifecycle": "Modeling, replication, failover, backup and PITR, upgrades and query performance.",
-        "Agentic systems": "Model output that lands as typed, reviewable rows rather than a transcript.",
-        "Technical leadership": "Design review, mentoring, runbooks, and making system ownership transferable.",
-    }
-    categories = [
-        (label, f'<font color="#5D646D">{blurbs[label]}</font><br/>{body}' if label in blurbs else body)
-        for label, body in categories
-    ]
 
     for label, body in categories:
         story.append(KeepTogether([
@@ -452,7 +479,7 @@ def build_story(
 
     story += section("Education and languages", s)
     story.append(Paragraph("Bachelor of Technology in Computer Science and Engineering", s["job"]))
-    story.append(Paragraph("JNTUA College of Engineering, Anantapur, India  |  2015 - 2019", s["small"]))
+    story.append(Paragraph("JNTU Anantapur (SVCET, an autonomous affiliated college), India  |  2015 - 2019", s["small"]))
     story.append(Paragraph("English: C1  |  Nepali: native", s["body"]))
 
     # The link stays; the disclosure-boundary paragraph does not. A document that
@@ -478,9 +505,10 @@ def generate(output: Path) -> None:
         leftMargin=0.68 * inch,
         topMargin=0.62 * inch,
         bottomMargin=0.58 * inch,
-        title="Basant Bhattarai - Senior Data Engineer, Data and AI Architect",
+        title="Basant Bhattarai - Senior Data Engineer, AI Engineer, Data and AI Architect",
         author="Basant Bhattarai",
-        subject="Senior Data Engineer · Data & AI Architect",
+        subject="Senior Data Engineer · AI Engineer · Data & AI Architect",
+        keywords="Senior Data Engineer, Lead Data Engineer, AI Engineer, Data & AI Architect, Spark, Kafka, Airflow, dbt, Iceberg, Lakehouse, Trino, ClickHouse, PostgreSQL, Citus, Kubernetes, Terraform, AWS, LangGraph, MCP, RAG, Guardrails, Snowflake, SOC 2",
     )
     frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height, id="resume")
     # `onPageEnd`, not `onPage`. reportlab runs onPage *before* the frame draws,

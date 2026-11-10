@@ -6,14 +6,14 @@
 # nothing), `repo` is a public repository under github.com/technobasant.
 
 - id: database-lifecycle
-  title: "Moving analytics off the product's Postgres"
+  title: "Migrations that don't stop the product"
   blurb: >-
-    Reports that slow the product and replicas that cancel them: measure first,
+    Databases and pipelines that have outgrown their design: measure first,
     stop the damage now, then scale out or migrate in stages with a way back.
   case: postgres-scale-out-citus
   post: read-replica-cancelled-the-reports
-  repo: data-platform-architecture
-  repo_blurb: "A reference architecture: current state measured, 18 decisions"
+  repo: distributed-db-lab
+  repo_blurb: "A Citus migration planned from the catalog, rebalanced under load"
 
 - id: data-platforms
   title: "Platforms chosen on evidence and run at scale"
@@ -38,7 +38,7 @@
   repo_blurb: "Data contracts that wait for the consumers they break"
 
 - id: ai-systems
-  title: "AI on governed data, measured before launch"
+  title: "AI built into the platform, measured before launch"
   blurb: >-
     Assistants and agents over customer data: isolation enforced outside the
     model, the business's definitions in a semantic layer, a release gate that

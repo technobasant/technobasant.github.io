@@ -340,7 +340,6 @@ SENSITIVE_PUBLIC_PATTERNS = CONFIDENTIAL_PATTERNS.freeze
 
 APPROVED_PROFESSIONAL_METRICS = %w[
   experience
-  professional_platform_scale
   professional_event_volume
   professional_uptime
   professional_cost_reduction
@@ -348,7 +347,7 @@ APPROVED_PROFESSIONAL_METRICS = %w[
   professional_analytics_delivery
   professional_manual_effort
   professional_team_delivery
-  professional_mentoring
+  professional_team_led
   professional_daily_processing
   professional_query_volume
   professional_query_latency

@@ -1,16 +1,17 @@
 ---
 title: Work with me
-last_modified_at: 2026-11-09
-seo_title: "Data Architecture, Platform & AI Consulting — Basant Bhattarai"
+last_modified_at: 2026-11-10
+seo_title: "Data & AI Architecture Consulting — Basant Bhattarai"
 eyebrow: "Consulting, contract or full-time"
 headline: "Data and AI architecture across the whole platform: reviewed, chosen and built."
 hero_code: "SCOPE / DECIDE"
 page_class: page-hire
 permalink: /hire/
-description: "Data and AI architecture: reviews, platform selection, migrations, governance, SOC 2 readiness, AI built into the platform. Consulting, contract or full-time."
+description: "Data & AI architecture, 9+ years in industry: reviews, platform selection, migrations, governance, SOC 2, AI built in. Consulting, contract or full-time."
+lede: "Architecture reviews, platform selection, migrations, governance and SOC 2, and AI built into the platform: each engagement ends in documents you keep."
 ---
 
-I'm looking for long-term work: a consulting or contract engagement, or a full-time role. I work with one team at a time and stay long enough to see its decisions through: reviewed, chosen, built, and handed over to the people who will run them.
+I bring 9+ years in industry; today I own the architecture of a data platform handling {{ site.data.metrics.professional_daily_processing.value }} and {{ site.data.metrics.professional_event_volume.value }} events a day, and lead a team of five engineers. I work with one team at a time and stay long enough to see its decisions through: reviewed, chosen, built, and handed over to the people who will run them.
 
 <p class="page-actions"><a class="btn btn--primary" href="#hire-form">Send a briefing</a> <a class="btn btn--ghost" href="mailto:contact@basantbhattarai.com.np?subject=Consulting%20enquiry">Email instead</a> <span>{{ site.data.availability.headline }} · {{ site.data.availability.response }}</span></p>
 
@@ -68,6 +69,6 @@ Declining the wrong work early is cheaper for both of us than discovering the mi
 
 ## What I commit to
 
-{{ site.data.availability.response }} I will tell you when a problem does not need me, or needs someone cheaper, and I will say what I think you should do instead.
+{{ site.data.availability.response }} I will tell you when a problem does not need me, or needs a different specialist, and I will say what I think you should do instead.
 
 Work I do ships with the things that make it survivable without me: runbooks, named dataset owners, freshness objectives, and a cost model your finance team can read.

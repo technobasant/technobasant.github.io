@@ -41,7 +41,7 @@
   {%- unless include.hide_evidence -%}
   {%- assign _keys = "" -%}
   {%- case _variant -%}
-  {%- when "platform" -%}{%- assign _keys = "professional_platform_scale,professional_event_volume,professional_uptime" | split: "," -%}
+  {%- when "platform" -%}{%- assign _keys = "professional_daily_processing,professional_event_volume,professional_uptime" | split: "," -%}
   {%- when "ai" -%}{%- assign _keys = "professional_analytics_delivery,professional_manual_effort" | split: "," -%}
   {%- when "clickhomes" -%}{%- assign _keys = "clickhomes_migrations" | split: "," -%}
   {%- when "lab" -%}{%- assign _keys = "lab_scenarios,lab_pg_replay_lag,lab_redis_promotion" | split: "," -%}

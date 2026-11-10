@@ -1,23 +1,23 @@
 ---
 title: About
-last_modified_at: 2026-11-09
+last_modified_at: 2026-11-10
 seo_title: "About Basant Bhattarai — Data & AI Architect · Senior Data Engineer"
 eyebrow: Profile
-headline: "I design and build data and AI platforms end to end, with governance and AI built in."
+headline: "I lead the architecture of data and AI platforms end to end, and I build what I design."
 hero_code: "OPERATE / OWN"
 page_class: page-about
 permalink: /about/
-description: "About Basant Bhattarai: data and AI architect, Senior Data Engineer at UXCam. Platform architecture, databases, governance and SOC 2 readiness, and AI on governed data."
-lede: "Nine years that started with backend services and PostgreSQL schemas, and ended up owning the platforms, the databases underneath them, and the agents that write into both."
+description: "About Basant Bhattarai: Senior Data Engineer at UXCam, practising as a Data & AI Architect. 9+ years in industry; governance, SOC 2, AI built in."
+lede: "9+ years in industry: from backend services and PostgreSQL schemas to the architecture of the whole platform, its governance, and the AI built into it."
 ---
 
-I work as a data and AI architect, and I still build what I design. My title is Senior Data Engineer at UXCam, where I own the reliability and governance of the data platform, operate the databases under it, design the production agent workflows, and am responsible for meeting the SOC 2 criteria for the platform and its infrastructure. I also take consulting engagements: [an analytics lakehouse](/work/contact-centre-lakehouse/) delivered configured and running, [two Postgres databases moved to Citus](/work/postgres-scale-out-citus/), [a managed-or-self-run decision and an RDS fleet](/work/postgres-on-rds/), and [a classifier redesigned](/work/consulting-short-text-and-alerting/) for a client's Databricks lakehouse. The architecture work I can show in full is [a reference architecture](/work/data-platform-architecture/) for a B2B SaaS company leaving Postgres, a scenario common across the industry: the current state measured, 18 decisions, a data model, SOC 2 readiness and a proof of concept on Databricks.
+I work as a data and AI architect: I set the target architecture, choose platforms by measuring them on the workload, design the data model and the controls around it, and lead the build through to the people who will run it. My title is Senior Data Engineer at UXCam, and the job is exactly that, on a platform handling {{ site.data.metrics.professional_event_volume.value }} events a day. Projects I have delivered and written up include [an analytics lakehouse](/work/contact-centre-lakehouse/) handed over configured and running, [two Postgres databases moved to Citus](/work/postgres-scale-out-citus/), [a managed-or-self-run decision and an RDS fleet](/work/postgres-on-rds/), and [a failing classifier rebuilt](/work/consulting-short-text-and-alerting/) on a Databricks lakehouse. The architecture work I can show in full is [a reference architecture](/work/data-platform-architecture/) for a B2B SaaS company leaving Postgres, a scenario common across the industry: the current state measured, 18 decisions, a data model, SOC 2 readiness and a proof of concept on Databricks.
 
-The job arrived in a particular order. First Python services and PostgreSQL schemas; then the databases those services leaned on, which is where I learned that most outages are a storage decision made two years earlier; then the platform around them — Kafka ingestion, Spark processing, Airflow orchestration, lakehouse modeling, analytical serving.
+The job arrived in a particular order. First Python services and PostgreSQL schemas; then the databases those services leaned on, which is where I learned that most outages are a storage decision made two years earlier; then the platform around them — Kafka ingestion, Spark processing, Airflow orchestration, lakehouse modelling, analytical serving.
 
 Agents came last and belong to the same stack. The interesting part was never the orchestration framework. It was the boundary: what a model is allowed to write, what validates it, what happens on the second attempt, and how you compare today's answer to last week's. I work close to system internals — throughput and failure limits, recovery paths, observability, and cost before scale turns an architectural shortcut into an operational one.
 
-Architecture is what ties the two together, and it is most of what I am asked to review: where state lives, which operations are idempotent, what a second delivery does, and how a system degrades when a dependency is slow. I write those down as decisions next to the alternative I rejected, so the next person can disagree with a reason rather than a hunch. The same habit shows up outside the day job — in [a connector I maintain in the open](/work/spark-sql-kinesis/), in consulting work, and in [the reference architecture's 18 decision records](https://github.com/technobasant/data-platform-architecture/tree/main/decisions).
+Architecture ties the data platform and the agents together, and it is most of what I am asked to review: where state lives, which operations are idempotent, what a second delivery does, and how a system degrades when a dependency is slow. I write those down as decisions next to the alternative I rejected, so the next person can disagree with a reason rather than a hunch. The same habit shows up outside the day job — in [a connector I maintain in the open](/work/spark-sql-kinesis/), in the projects above, and in [the reference architecture's 18 decision records](https://github.com/technobasant/data-platform-architecture/tree/main/decisions).
 
 
 ## Operating principles
@@ -31,19 +31,19 @@ Architecture is what ties the two together, and it is most of what I am asked to
 
 ## What I am doing now
 
-At UXCam I work across the data platform and the stores underneath it: processing, serving, database reliability, governance and the SOC 2 controls for the platform and its infrastructure, and architecture review. I also own the production agent workflows — LangGraph and Google ADK for orchestration, MCP for the tool surface — with the same requirement as any other producer: what they emit lands in the governed stores, typed and reviewable, or it does not land.
+At UXCam I lead a team of five engineers and own the architecture of the data platform and the stores underneath it: processing, serving, database reliability, governance and the SOC 2 controls for the platform and its infrastructure, and the architecture review every new store, pipeline and agent workflow passes before production. I also design and build the agentic AI platform — RAG pipelines, MCP servers, and LangGraph and Google ADK agent workflows — with the same requirement as any other producer: what it emits lands in the governed stores, typed and reviewable, or it does not land. The hard part of putting AI into a platform is security, compliance and access control, so the platform, not the model, decides what each agent may read and call across data and internal systems. I designed and built the LLM-based video-analysis platform as well, which watches session recordings and describes them for product intelligence, and before this role led the move from OLTP to a big data lakehouse on Iceberg, Hive and other formats.
 
-Outside that I maintain [spark-sql-kinesis](https://github.com/technobasant/spark-sql-kinesis), a Kinesis source for Spark 4, and publish reference systems with their method and measurements in the repository: LLM evaluation, a governed agent, filtered vector retrieval, real-time ML, exactly-once streaming, data contracts, progressive delivery and sharded databases. They are [on the work page](/work/), alongside a multi-engine failover lab with restartable scenarios, published commands and measured outcomes, and two reference architectures: [a SaaS company leaving Postgres](/work/data-platform-architecture/) and [the usage assistant on its governed data](/work/ai-platform-architecture/).
+Outside that I maintain [spark-sql-kinesis](https://github.com/technobasant/spark-sql-kinesis), a Kinesis source and sink for Spark 4, and publish reference systems with their method and measurements in the repository: LLM evaluation, a governed agent, filtered vector retrieval, real-time ML, exactly-once streaming, data contracts, progressive delivery and sharded databases. They are [on the work page](/work/), alongside a multi-engine failover lab with restartable scenarios, published commands and measured outcomes, and two reference architectures: [a SaaS company leaving Postgres](/work/data-platform-architecture/) and [the usage assistant on its governed data](/work/ai-platform-architecture/).
 
 *Updated {{ site.data.availability.updated | date: "%B %Y" }}.*
 
 ## Background
 
-I studied computer science at JNTUA College of Engineering in Anantapur, India, from 2015 to 2019. My first roles centered on backend services; the data half of the job gradually became the job. I speak English at C1 and Nepali natively.
+I studied computer science and engineering at SVCET, an autonomous college affiliated to JNTU Anantapur, in India, from 2015 to 2019. From 2017 I built backend services in Python with Flask and Django at SV Technology, and led a team of four engineers on a research project: a deep NLP dialogue system, a TensorFlow sequence-to-sequence model behind a Flask interface. The data half of the job gradually became the job. I speak English at C1 and Nepali natively.
 
-I shift my day later to overlap with European afternoons and US mornings, a rhythm I have used with distributed teams for years.
+I work from Kathmandu, remotely with teams in the US and Europe; UXCam itself is based in California and Berlin. I shift my day later to overlap with European afternoons and US mornings, a rhythm I have used for years.
 
-I'm open to long-term consulting, contract or full-time roles. [Scope and availability are here](/hire/).
+I'm open to Senior or Lead Data Engineer, AI Engineer and Data & AI Architect roles, long-term contract or full-time, and to consulting engagements. [Scope and availability are here](/hire/).
 
 ## Write to me
 

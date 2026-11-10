@@ -1,15 +1,15 @@
 ---
 title: "Two Postgres servers that ran out of room: an application database and a vector store, moved to Citus"
-seo_title: "Consulting Case Study — Scaling PostgreSQL and pgvector Out with Citus"
+seo_title: "Case Study — Scaling PostgreSQL and pgvector Out with Citus"
 hook: "One database outgrew its server's disk, memory and CPU; another could no longer insert, read or index its vector embeddings. Both moved to Citus, with the data model doing most of the work."
-description: "Consulting case study: two single-server Postgres databases, one of them pgvector embeddings, moved to Citus with coordinator HA and an OLAP engine evaluation."
+description: "Case study: two single-server Postgres databases, one of them pgvector embeddings, moved to Citus with coordinator HA and an OLAP engine evaluation."
 date: 2026-10-20
 last_modified_at: 2026-10-20
 kind: consulting
 pillar: database-lifecycle
 order: 1
-role: "Consultant — database architecture and migration"
-org: "Two consulting clients"
+role: "Database architecture and migration"
+org: "Two clients"
 team: "Remote, with each client's engineering team"
 scale: "Single-server PostgreSQL databases at the limit of their hardware, one relational and one of vector embeddings"
 problem: "A single PostgreSQL server per client had run out of headroom: one could not keep up with its tables and queries, the other with inserting, reading and indexing vector embeddings."
@@ -17,7 +17,7 @@ decision: "Move both to Citus, keeping PostgreSQL and its extensions: distribute
 stack: [PostgreSQL, Citus, pgvector, HNSW, repmgr, HAProxy, ClickHouse, "Apache Pinot", StarRocks, Trino]
 tags: [distributed-databases, postgres, rag]
 image: /assets/og/og-postgres.png
-image_alt: "Consulting case study: PostgreSQL and pgvector moved to Citus — Basant Bhattarai"
+image_alt: "Case study: PostgreSQL and pgvector moved to Citus — Basant Bhattarai"
 sitemap:
   changefreq: monthly
   priority: 0.8

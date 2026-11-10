@@ -1,15 +1,15 @@
 ---
 title: "An analytics lakehouse for a contact-centre platform, delivered end to end"
-seo_title: "Consulting Case Study — Contact-Centre Analytics Lakehouse on S3, Trino and Airflow"
+seo_title: "Case Study — Contact-Centre Analytics Lakehouse on S3, Trino and Airflow"
 hook: "A client wanted a working analytics platform, not a design: storage, query engine, orchestration, catalog and API, configured and handed over with security, access control, HA and DR."
-description: "Consulting case study: a contact-centre analytics lakehouse on S3, Trino and Airflow, catalog moved to AWS Glue, with security, access control, HA and DR."
+description: "Case study: a contact-centre analytics lakehouse on S3, Trino and Airflow, catalog moved to AWS Glue, with security, access control, HA and DR."
 date: 2026-10-20
 last_modified_at: 2026-10-20
 kind: consulting
 pillar: data-platforms
 order: 1
-role: "Consultant — data platform architecture and delivery"
-org: "Consulting client"
+role: "Data platform architecture and delivery"
+org: "Client"
 team: "Remote, with the client's engineering lead"
 scale: "Contact-centre interaction data, reported in the fixed intervals contact centres run on"
 problem: "The client needed analytics on its contact-centre data and wanted the whole platform delivered working and configured, not as a design to implement later."
@@ -17,7 +17,7 @@ decision: "Keep the data in S3 and query it in place with Trino; compute interva
 stack: ["Amazon S3", Trino, "Apache Airflow", "AWS Glue Data Catalog", "Hive Metastore", Python, "REST API"]
 tags: [iceberg-lakehouse, orchestration]
 image: /assets/og/og-lakehouse.png
-image_alt: "Consulting case study: a contact-centre analytics lakehouse — Basant Bhattarai"
+image_alt: "Case study: a contact-centre analytics lakehouse — Basant Bhattarai"
 sitemap:
   changefreq: monthly
   priority: 0.8
