@@ -29,14 +29,14 @@ redirect_from:
 
 ## Profile
 
-Senior data engineer and data and AI architect with 9+ years in industry, nearly 7 of them full-time. I set the target architecture, choose platforms on measured evidence, design the data model with the governance and SOC 2 controls around it, then lead the build: Kafka, Spark, Iceberg, Trino, dbt and Airflow on Kubernetes, the databases underneath, and AI built into the platform with isolation, evaluation and review designed in. My current title is Senior Data Engineer at UXCam. I am open to Senior or Lead Data Engineer, AI Engineer and Data & AI Architect roles, long-term contract or full-time. I work remotely from Kathmandu, Nepal, with teams in the US and Europe.
+Senior data engineer and data and AI architect with 9+ years in industry, nearly 7 of them full-time. I set the target architecture, choose platforms on measured evidence, design the data model with the governance and SOC 2 controls around it, then lead the build: Kafka, Spark, Iceberg, Trino, dbt and Airflow on Kubernetes, the databases underneath, and AI built into the platform with isolation, evaluation and review designed in. My current title is Senior Data Engineer at UXCam, where I led the move from an OLTP warehouse to an Iceberg lakehouse and design the agentic AI platform built into it. I am open to Senior or Lead Data Engineer, AI Engineer and Data & AI Architect roles, long-term contract or full-time. I work remotely from Kathmandu, Nepal, with teams in the US and Europe.
 
 ## Experience at a glance
 
 | Role | Period | Scope |
 |---|---|---|
-| Senior Data Engineer, UXCam | 2024 – present | Platform architecture, reliability, governance and SOC 2; the database layer beneath it; the production agent workflows; architecture review and mentoring |
-| Data Engineer, UXCam | 2020 – 2024 | Built the batch and streaming processing, the lakehouse models, and the multi-engine serving layer |
+| Senior Data Engineer, UXCam | 2024 – present | Platform architecture, reliability, governance and SOC 2; the database layer beneath it; the agentic AI and LLM video-analysis platforms; architecture review and mentoring |
+| Data Engineer, UXCam | 2020 – 2024 | Moved analytics from an OLTP warehouse to an Iceberg lakehouse; rebuilt the Spark processing; led the Kubernetes migration; tuned the multi-engine serving layer |
 | Project Leader and Research Developer, SVCET | 2018 – 2019 | Final-year research: a deep-learning dialogue system in TensorFlow, with a team of four |
 | Software Developer Intern (part-time), SV Technology | 2017 – 2019 | Python backend services in Flask and Django, PostgreSQL schema work, reporting, and CI |
 
@@ -46,18 +46,20 @@ Senior data engineer and data and AI architect with 9+ years in industry, nearly
 
 - Own the architecture, reliability, data quality and governance of a {{ site.data.metrics.professional_platform_scale.value }} platform processing {{ site.data.metrics.professional_event_volume.value }} events daily, with {{ site.data.metrics.professional_uptime.value }} uptime, explicit service objectives, monitoring and alerting, incident-ready runbooks, reviewable data contracts, and a named owner for every published table; responsible for meeting the SOC 2 criteria for the data platform and its infrastructure through every audit.
 - Operate the database layer the platform depends on: clustering and replication, backup and recovery, access control, query and index tuning, and upgrade windows across SQL and NoSQL engines.
-- Design and operate the production agent workflows — LangGraph and Google ADK orchestration, MCP tool servers, retrieval and evaluation — built into the existing platform so model output lands as typed, provenanced rows rather than a transcript. Analytics delivery {{ site.data.metrics.professional_analytics_delivery.value }} faster with {{ site.data.metrics.professional_manual_effort.value }} less analyst effort, with review and fallback paths kept in place.
+- Design and build the agentic AI platform — RAG pipelines, MCP servers, and LangGraph and Google ADK agent workflows with evaluation — built into the existing platform so model output lands as typed, provenanced rows rather than a transcript. Analytics delivery {{ site.data.metrics.professional_analytics_delivery.value }} faster with {{ site.data.metrics.professional_manual_effort.value }} less analyst effort, with review and fallback paths kept in place.
+- Designed and built an LLM-based video-analysis platform that processes videos at high daily volume.
 - Lead architecture and schema reviews before new stores, pipelines, and agent workflows reach production; mentor {{ site.data.metrics.professional_mentoring.value }} engineers through pairing, code review, and written design feedback; team delivery time improved {{ site.data.metrics.professional_team_delivery.value }}.
 
 ## Data Engineer · UXCam
 
 **February 2020 – February 2024** · California, US and Berlin, Germany · remote from Kathmandu, Nepal
 
+- Led the move from an OLTP data warehouse to an Iceberg lakehouse for analytics: Iceberg tables with partition and schema-evolution rules, and a producer and consumer that queue and run Spark compaction jobs on small files, keeping analytical queries fast.
 - Rebuilt core Spark/PySpark processing for {{ site.data.metrics.professional_daily_processing.value }} per day, improving processing time by {{ site.data.metrics.professional_processing_improvement.value }}.
 - Administered distributed SQL and NoSQL stores used for serving and product state—modelling, partitioning, replication, and query plans rather than treating the database as a black box.
 - Made backfills and replays safe to re-run: idempotent loads, explicit watermarks for late data, and schema evolution designed in.
 - Reduced p95 query latency by {{ site.data.metrics.professional_query_latency.value }} across {{ site.data.metrics.professional_query_volume.value }} analytical queries per day through partitioning, clustering, and model redesign.
-- Led a Kubernetes migration of the data and database infrastructure that lowered cost by {{ site.data.metrics.professional_cost_reduction.value }}, with autoscaling that held under peak load.
+- Led a Kubernetes migration of the data and database infrastructure, Spark clusters included, that lowered cost by {{ site.data.metrics.professional_cost_reduction.value }}, with autoscaling that held under peak load.
 
 ## Project Leader and Research Developer · SVCET, JNTU Anantapur
 

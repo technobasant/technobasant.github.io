@@ -35,9 +35,12 @@ databases underneath it: ingestion, Spark/PySpark processing, orchestration, lak
 analytical serving, database reliability (HA, backup, upgrades, access),
 governance, architecture review, and operational readiness, and is responsible
 for meeting the SOC 2 criteria for the data platform and its infrastructure. He also designs
-production agentic systems on LangGraph, LangChain, Google ADK, and MCP—tool
-servers, retrieval, evaluation, and integration into the existing stack so
-model output becomes governed product state.
+and builds the agentic AI platform on LangGraph, LangChain, Google ADK, and MCP—RAG
+pipelines, MCP tool servers, evaluation, and integration into the existing stack so
+model output becomes governed product state—and built an LLM-based video-analysis
+platform. As Data Engineer (2020–2024) he led the move from an OLTP data warehouse
+to an Iceberg lakehouse: Spark on Kubernetes, Iceberg tables, and a producer and
+consumer that queue and run Spark compaction jobs on small files.
 
 The architecture work that can be read in full is a reference architecture for
 a B2B SaaS company leaving Postgres, a scenario common across the industry

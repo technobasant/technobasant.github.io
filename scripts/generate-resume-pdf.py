@@ -303,7 +303,8 @@ def build_story(
         # for in the first lines. Method and stack follow; target roles close.
         f"Senior data engineer and data and AI architect with {metric(metrics, 'experience')} in industry ({metric(metrics, 'full_time_experience')} full-time). "
         f"At UXCam, owns the architecture of a {metric(metrics, 'professional_platform_scale')} data platform processing "
-        f"{metric(metrics, 'professional_event_volume')} events a day and the production AI agents built into it: "
+        f"{metric(metrics, 'professional_event_volume')} events a day, led its move from an OLTP warehouse to an Iceberg lakehouse, and designs the agentic AI "
+        f"platform built into it: "
         f"{metric(metrics, 'professional_cost_reduction')} lower infrastructure cost, {metric(metrics, 'professional_processing_improvement')} faster processing, "
         f"{metric(metrics, 'professional_analytics_delivery')} faster analytics delivery, {metric(metrics, 'professional_uptime')} uptime. "
         "Sets the target architecture, chooses platforms on measured evidence, designs the data model with its governance "
@@ -334,11 +335,12 @@ def build_story(
         f"per dataset, monitoring and alerting, {metric(metrics, 'professional_uptime')} uptime, incident-ready runbooks, "
         "reviewable data contracts, a named owner for every published table, and the SOC 2 security criteria met for "
         "the platform and its infrastructure through every audit.",
-        f"Design and operate the production agent workflows — LangGraph and Google ADK orchestration, MCP tool "
-        f"servers, retrieval and evaluation — built into the existing platform, so model output lands as typed, "
-        f"provenanced rows rather than a transcript: analytics delivery "
-        f"{metric(metrics, 'professional_analytics_delivery')} faster with "
-        f"{metric(metrics, 'professional_manual_effort')} less analyst effort, review and fallback paths kept.",
+        f"Design and build the agentic AI platform inside the data platform: RAG pipelines, MCP servers, LangGraph and "
+        f"Google ADK agents with evaluation, output landing as typed, provenanced rows: analytics delivery "
+        f"{metric(metrics, 'professional_analytics_delivery')} faster, "
+        f"{metric(metrics, 'professional_manual_effort')} less analyst effort.",
+        # No daily volume until it is reconciled with the events figure above.
+        "Designed and built an LLM-based video-analysis platform that processes videos at high daily volume.",
         "Run the architecture and schema review every new store, pipeline and agent workflow passes before "
         "production, and operate the SQL and NoSQL databases underneath: replication, recovery, access, tuning, upgrades.",
         f"Mentor {metric(metrics, 'professional_mentoring')} engineers through pairing, code review and written "
@@ -347,6 +349,11 @@ def build_story(
     story.append(Spacer(1, 4))
     story.append(job_header("Data Engineer", UXCAM, "Feb 2020 - Feb 2024", s))
     story += bullets([
+        # The architecture decision of the role leads it. The lake's size stays
+        # out: the privacy gate treats it as an internal scale description.
+        "Led the move from an OLTP data warehouse to an Iceberg lakehouse for analytics: Iceberg tables with partition "
+        "and schema-evolution rules, and a producer and consumer that queue and run Spark compaction jobs on small "
+        "files, keeping analytical queries fast.",
         "Rebuilt the core ETL layer in Spark and PySpark with Airflow orchestration, cutting processing time for "
         f"{metric(metrics, 'professional_daily_processing')}/day by "
         f"{metric(metrics, 'professional_processing_improvement')} and unblocking real-time product dashboards.",
@@ -356,7 +363,7 @@ def build_story(
         f"{metric(metrics, 'professional_query_volume')} queries/day for a "
         f"{metric(metrics, 'professional_query_latency')} p95 latency reduction through partitioning, clustering "
         "and model redesign.",
-        f"Led the Kubernetes migration of the data and database infrastructure: "
+        f"Led the Kubernetes migration of the data and database infrastructure, Spark clusters included: "
         f"{metric(metrics, 'professional_cost_reduction')} lower infrastructure cost and autoscaling that held "
         "under peak load.",
     ], s)
@@ -408,7 +415,7 @@ def build_story(
     story += bullets([
         "<b>data-platform-architecture</b> and <b>ai-platform-architecture</b> (reference architectures): "
         "a SaaS company leaving Postgres, measured: 18 decision records, a Kimball model, SOC 2 readiness, a cost "
-        "model and a Databricks proof of concept; then its usage assistant on governed data.",
+        "model and a Databricks proof of concept; then its AI usage assistant.",
         "<b>spark-sql-kinesis</b> (maintainer): Kinesis source and sink for Spark 4.2 on AWS SDK v2, on Maven "
         "Central; an idle shard costs one GetRecords call, not a multi-second floor per batch.",
         # The AI evidence, with its measured figures: one bullet on agents in a
@@ -436,8 +443,7 @@ def build_story(
         ),
         (
             "Data platforms",
-            "Python, SQL and Scala; Kafka and Kinesis ingestion (maintainer of a Spark 4 Kinesis "
-            "connector); Spark/PySpark processing, including the Spark 4 migration; Airflow orchestration; Iceberg, "
+            "Python, SQL and Scala; Kafka and Kinesis ingestion; Spark/PySpark processing, including the Spark 4 migration; Airflow orchestration; Iceberg, "
             "Hive Metastore, dbt and lakehouse modelling; Databricks with Unity Catalog; CI/CD with GitHub "
             "Actions, Kubernetes, Docker and Terraform; data quality, contracts, lineage, cost and recovery; "
             "observability with Prometheus and Grafana.",
@@ -508,7 +514,7 @@ def generate(output: Path) -> None:
         title="Basant Bhattarai - Senior Data Engineer, AI Engineer, Data and AI Architect",
         author="Basant Bhattarai",
         subject="Senior Data Engineer · AI Engineer · Data & AI Architect",
-        keywords="Senior Data Engineer, Lead Data Engineer, AI Engineer, Data & AI Architect, Spark, Kafka, Airflow, dbt, Iceberg, Trino, ClickHouse, PostgreSQL, Citus, Kubernetes, Terraform, AWS, LangGraph, MCP, SOC 2",
+        keywords="Senior Data Engineer, Lead Data Engineer, AI Engineer, Data & AI Architect, Spark, Kafka, Airflow, dbt, Iceberg, Lakehouse, Trino, ClickHouse, PostgreSQL, Citus, Kubernetes, Terraform, AWS, LangGraph, MCP, RAG, SOC 2",
     )
     frame = Frame(doc.leftMargin, doc.bottomMargin, doc.width, doc.height, id="resume")
     # `onPageEnd`, not `onPage`. reportlab runs onPage *before* the frame draws,
