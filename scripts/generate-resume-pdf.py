@@ -250,10 +250,6 @@ def section(label: str, s: dict[str, ParagraphStyle]) -> list:
     return [Paragraph(label.upper(), s["section"])]
 
 
-# Where the employer is, and that the work is remote: 4.56in of the 4.7in
-# column at the job style, so it stays on one line.
-UXCAM = "UXCam (California, US · Berlin, Germany) · remote"
-
 
 def job_header(role: str, employer: str, period: str, s: dict[str, ParagraphStyle]) -> Table:
     table = Table(
@@ -326,7 +322,7 @@ def build_story(
     # where the prose line and the technology line finally sit together.
 
     story += section("Experience", s)
-    story.append(job_header("Senior Data Engineer", UXCAM, "Feb 2024 - present", s))
+    story.append(job_header("Senior Data Engineer", "UXCam", "Feb 2024 - present", s))
     story += bullets([
         # "A platform handling 15 TB+ and 100M+ events daily" read as 15 TB a day;
         # the figure is the footprint, so it qualifies the platform instead.
@@ -347,7 +343,7 @@ def build_story(
         f"design feedback; team delivery time down {metric(metrics, 'professional_team_delivery')}.",
     ], s)
     story.append(Spacer(1, 4))
-    story.append(job_header("Data Engineer", UXCAM, "Feb 2020 - Feb 2024", s))
+    story.append(job_header("Data Engineer", "UXCam", "Feb 2020 - Feb 2024", s))
     story += bullets([
         # The architecture decision of the role leads it. The lake's size stays
         # out: the privacy gate treats it as an internal scale description.

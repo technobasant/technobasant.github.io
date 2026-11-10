@@ -42,7 +42,7 @@ Senior data engineer and data and AI architect with 9+ years in industry, nearly
 
 ## Senior Data Engineer · UXCam
 
-**February 2024 – present** · California, US and Berlin, Germany · remote from Kathmandu, Nepal
+**February 2024 – present**
 
 - Own the architecture, reliability, data quality and governance of a {{ site.data.metrics.professional_platform_scale.value }} platform processing {{ site.data.metrics.professional_event_volume.value }} events daily, with {{ site.data.metrics.professional_uptime.value }} uptime, explicit service objectives, monitoring and alerting, incident-ready runbooks, reviewable data contracts, and a named owner for every published table; responsible for meeting the SOC 2 criteria for the data platform and its infrastructure through every audit.
 - Operate the database layer the platform depends on: clustering and replication, backup and recovery, access control, query and index tuning, and upgrade windows across SQL and NoSQL engines.
@@ -52,7 +52,7 @@ Senior data engineer and data and AI architect with 9+ years in industry, nearly
 
 ## Data Engineer · UXCam
 
-**February 2020 – February 2024** · California, US and Berlin, Germany · remote from Kathmandu, Nepal
+**February 2020 – February 2024**
 
 - Led the move from an OLTP data warehouse to an Iceberg lakehouse for analytics: Iceberg tables with partition and schema-evolution rules, and a producer and consumer that queue and run Spark compaction jobs on small files, keeping analytical queries fast.
 - Rebuilt core Spark/PySpark processing for {{ site.data.metrics.professional_daily_processing.value }} per day, improving processing time by {{ site.data.metrics.professional_processing_improvement.value }}.
