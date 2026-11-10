@@ -6,11 +6,21 @@
 
 experience:
   value: "9+ years"
-  label: "on production systems in industry"
-  method: "role history, 2017–2026"
+  label: "in industry"
+  method: "role history from 2017, including a part-time internship and a final-year research project"
   scope: "professional"
   source: "CV role history"
   context: "From a part-time backend internship (2017) and a final-year deep-learning research project, through database operations and data platforms, to production agentic systems."
+
+# Full-time roles only. It reads "7+ years" from February 2027: change it here
+# and in the pages that state it in prose (grep "nearly 7").
+full_time_experience:
+  value: "nearly 7 years"
+  label: "full-time"
+  method: "full-time roles only: UXCam, February 2020 onwards"
+  scope: "professional"
+  source: "CV role history"
+  context: "Data Engineer from February 2020, Senior Data Engineer from February 2024."
 
 # --- professional platform evidence ---
 

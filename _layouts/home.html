@@ -5,7 +5,7 @@ layout: default
 {%- comment -%}
   Evidence first. The hero keeps the headline and portrait and ends in a proof
   strip of the track record: the professional figures from _data/metrics.yml,
-  the consulting cases counted from the site, and the upstream work, each
+  the case studies counted from the site, and the upstream work, each
   linking to where it can be checked. Labels stay one line at 1280px: a second
   line pushes the strip across the fold (scripts/e2e-hero.mjs). The years are
   in the lede. Below it: four capability rows, each with a case study, a
@@ -44,13 +44,10 @@ layout: default
     </figure>
     {%- endif -%}
     {%- assign _m = site.data.metrics -%}
-    {%- assign _consulting = site.work | where: "kind", "consulting" -%}
     <ul class="portfolio-proof portfolio-proof--strip" aria-label="Track record">
       <li><a href="{{ '/work/data-platform-practice/' | relative_url }}"><strong>{{ _m.professional_event_volume.value }}</strong> <span>events a day</span></a></li>
       <li><a href="{{ '/work/data-platform-practice/' | relative_url }}"><strong>{{ _m.professional_cost_reduction.value }}</strong> <span>lower infra cost</span></a></li>
-      {%- if _consulting.size > 0 %}
-      <li><a href="{{ '/work/' | relative_url }}"><strong>{{ _consulting.size }}</strong> <span>consulting case studies</span></a></li>
-      {%- endif %}
+      <li><a href="{{ '/work/' | relative_url }}"><strong>{{ site.work.size }}</strong> <span>case studies</span></a></li>
       <li><a href="{{ '/work/spark-sql-kinesis/' | relative_url }}"><strong>Maintainer</strong> <span>Kinesis for Spark</span></a></li>
     </ul>
   </div>

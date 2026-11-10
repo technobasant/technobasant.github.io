@@ -250,6 +250,11 @@ def section(label: str, s: dict[str, ParagraphStyle]) -> list:
     return [Paragraph(label.upper(), s["section"])]
 
 
+# Where the employer is, and that the work is remote: 4.56in of the 4.7in
+# column at the job style, so it stays on one line.
+UXCAM = "UXCam (California, US · Berlin, Germany) · remote"
+
+
 def job_header(role: str, employer: str, period: str, s: dict[str, ParagraphStyle]) -> Table:
     table = Table(
         [[Paragraph(f"{role}  |  {employer}", s["job"]), Paragraph(period, s["date"])]],
@@ -281,9 +286,10 @@ def build_story(
         # so the line names all three rather than reading as architect-only.
         Paragraph("SENIOR DATA ENGINEER  /  AI ENGINEER  /  DATA &amp; AI ARCHITECT", s["role"]),
         Paragraph(
-            # Site first among the links. Location is not in the header: the
-            # public pages lead with the work, not the city.
-            f'<a href="{SITE_URL}/" color="#9A692C"><b>{SITE_HOST}</b></a><br/>'
+            # Site first among the links, then where the work is done from, so
+            # a reader in the US or EU never has to guess the time zone.
+            f'<a href="{SITE_URL}/" color="#9A692C"><b>{SITE_HOST}</b></a> &nbsp;&nbsp;|&nbsp;&nbsp; '
+            'Kathmandu, Nepal, remote with US and EU teams<br/>'
             '<a href="mailto:contact@basantbhattarai.com.np" color="#58616B">contact@basantbhattarai.com.np</a> &nbsp;&nbsp;|&nbsp;&nbsp; '
             '<a href="https://www.linkedin.com/in/technobasant" color="#58616B">linkedin.com/in/technobasant</a> &nbsp;&nbsp;|&nbsp;&nbsp; '
             '<a href="https://github.com/technobasant" color="#58616B">github.com/technobasant</a>',
@@ -295,7 +301,7 @@ def build_story(
     story.append(Paragraph(
         # The current role and its results lead: they are what a recruiter scans
         # for in the first lines. Method and stack follow; target roles close.
-        f"Senior data engineer and data and AI architect with {metric(metrics, 'experience')} on production systems in industry. "
+        f"Senior data engineer and data and AI architect with {metric(metrics, 'experience')} in industry ({metric(metrics, 'full_time_experience')} full-time). "
         f"At UXCam, owns the architecture of a {metric(metrics, 'professional_platform_scale')} data platform processing "
         f"{metric(metrics, 'professional_event_volume')} events a day and the production AI agents built into it: "
         f"{metric(metrics, 'professional_cost_reduction')} lower infrastructure cost, {metric(metrics, 'professional_processing_improvement')} faster processing, "
@@ -319,7 +325,7 @@ def build_story(
     # where the prose line and the technology line finally sit together.
 
     story += section("Experience", s)
-    story.append(job_header("Senior Data Engineer", "UXCam", "Feb 2024 - present", s))
+    story.append(job_header("Senior Data Engineer", UXCAM, "Feb 2024 - present", s))
     story += bullets([
         # "A platform handling 15 TB+ and 100M+ events daily" read as 15 TB a day;
         # the figure is the footprint, so it qualifies the platform instead.
@@ -339,7 +345,7 @@ def build_story(
         f"design feedback; team delivery time down {metric(metrics, 'professional_team_delivery')}.",
     ], s)
     story.append(Spacer(1, 4))
-    story.append(job_header("Data Engineer", "UXCam", "Feb 2020 - Feb 2024", s))
+    story.append(job_header("Data Engineer", UXCAM, "Feb 2020 - Feb 2024", s))
     story += bullets([
         "Rebuilt the core ETL layer in Spark and PySpark with Airflow orchestration, cutting processing time for "
         f"{metric(metrics, 'professional_daily_processing')}/day by "
@@ -473,7 +479,7 @@ def build_story(
 
     story += section("Education and languages", s)
     story.append(Paragraph("Bachelor of Technology in Computer Science and Engineering", s["job"]))
-    story.append(Paragraph("JNTUA College of Engineering, Anantapur, India  |  2015 - 2019", s["small"]))
+    story.append(Paragraph("JNTU Anantapur (SVCET, an autonomous affiliated college), India  |  2015 - 2019", s["small"]))
     story.append(Paragraph("English: C1  |  Nepali: native", s["body"]))
 
     # The link stays; the disclosure-boundary paragraph does not. A document that

@@ -7,11 +7,11 @@ headline: "Data and AI architecture across the whole platform: reviewed, chosen 
 hero_code: "SCOPE / DECIDE"
 page_class: page-hire
 permalink: /hire/
-description: "Data & AI architecture, 9+ years in production: reviews, platform selection, migrations, governance, SOC 2, AI built in. Consulting, contract or full-time."
+description: "Data & AI architecture, 9+ years in industry: reviews, platform selection, migrations, governance, SOC 2, AI built in. Consulting, contract or full-time."
 lede: "Architecture reviews, platform selection, migrations, governance and SOC 2, and AI built into the platform: each engagement ends in documents you keep."
 ---
 
-I bring 9+ years on production systems in industry; today I own the architecture of a data platform handling {{ site.data.metrics.professional_event_volume.value }} events a day. I work with one team at a time and stay long enough to see its decisions through: reviewed, chosen, built, and handed over to the people who will run them.
+I bring 9+ years in industry, nearly 7 of them full-time; today I own the architecture of a data platform handling {{ site.data.metrics.professional_event_volume.value }} events a day. I work with one team at a time and stay long enough to see its decisions through: reviewed, chosen, built, and handed over to the people who will run them.
 
 <p class="page-actions"><a class="btn btn--primary" href="#hire-form">Send a briefing</a> <a class="btn btn--ghost" href="mailto:contact@basantbhattarai.com.np?subject=Consulting%20enquiry">Email instead</a> <span>{{ site.data.availability.headline }} · {{ site.data.availability.response }}</span></p>
 

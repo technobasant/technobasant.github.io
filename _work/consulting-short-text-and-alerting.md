@@ -1,16 +1,15 @@
 ---
 title: "Short-text classification, alerting and agent knowledge for a lakehouse team"
-seo_title: "Consulting Case Study — Short-Text Classification and Alerting"
+seo_title: "Case Study — Short-Text Classification and Alerting"
 hook: "A comment classifier that failed in production, rebuilt around the unit of work — plus the alerting, agent knowledge and trend measurement around it."
-description: "Consulting case study: multilingual short-text classification, metric alerting and agent knowledge on a lakehouse, designed around distinct strings, not rows."
+description: "Case study: multilingual short-text classification, metric alerting and agent knowledge on a lakehouse, designed around distinct strings, not rows."
 date: 2026-08-25
 last_modified_at: 2026-10-20
 kind: consulting
 pillar: ai-systems
 order: 1
-role: "Consultant — data and AI"
-org: "Consulting client"
-period: "2026"
+role: "Data and AI"
+org: "Client"
 team: "Remote, alongside the client's data and product leads"
 scale: "Daily batches of short multilingual user comments on a lakehouse"
 problem: "A comment-classification notebook failed in production, and the per-row model calls proposed to replace it would have been the most expensive way to buy the cheapest inference available."
@@ -26,7 +25,7 @@ cover:
   link: "/writing/classify-distinct-strings-not-rows/"
 tags: [applied-ml, data-quality, ai-agents]
 image: /assets/og/og-agents.png
-image_alt: "Consulting case study: short-text classification and alerting on a lakehouse — Basant Bhattarai"
+image_alt: "Case study: short-text classification and alerting on a lakehouse — Basant Bhattarai"
 sitemap:
   changefreq: monthly
   priority: 0.8

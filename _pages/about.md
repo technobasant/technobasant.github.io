@@ -7,8 +7,8 @@ headline: "I lead the architecture of data and AI platforms end to end, and I bu
 hero_code: "OPERATE / OWN"
 page_class: page-about
 permalink: /about/
-description: "About Basant Bhattarai: Senior Data Engineer at UXCam, practising as a Data & AI Architect. 9+ years on production systems; governance, SOC 2, AI built in."
-lede: "9+ years on production systems in industry: from backend services and PostgreSQL schemas to the architecture of the whole platform, its governance, and the AI built into it."
+description: "About Basant Bhattarai: Senior Data Engineer at UXCam, practising as a Data & AI Architect. 9+ years in industry; governance, SOC 2, AI built in."
+lede: "9+ years in industry, nearly 7 full-time: from backend services and PostgreSQL schemas to the architecture of the whole platform, its governance, and the AI built into it."
 ---
 
 I work as a data and AI architect: I set the target architecture, choose platforms by measuring them on the workload, design the data model and the controls around it, and lead the build through to the people who will run it. My title is Senior Data Engineer at UXCam, and the job is exactly that, on a platform handling {{ site.data.metrics.professional_event_volume.value }} events a day. Projects I have delivered and written up include [an analytics lakehouse](/work/contact-centre-lakehouse/) handed over configured and running, [two Postgres databases moved to Citus](/work/postgres-scale-out-citus/), [a managed-or-self-run decision and an RDS fleet](/work/postgres-on-rds/), and [a failing classifier rebuilt](/work/consulting-short-text-and-alerting/) on a Databricks lakehouse. The architecture work I can show in full is [a reference architecture](/work/data-platform-architecture/) for a B2B SaaS company leaving Postgres, a scenario common across the industry: the current state measured, 18 decisions, a data model, SOC 2 readiness and a proof of concept on Databricks.
@@ -39,9 +39,9 @@ Outside that I maintain [spark-sql-kinesis](https://github.com/technobasant/spar
 
 ## Background
 
-I studied computer science at JNTUA College of Engineering in Anantapur, India, from 2015 to 2019. In the final two years I worked part-time as a backend developer, in Python with Flask and Django, and led a final-year research project: a deep-learning dialogue system, a TensorFlow sequence-to-sequence model behind a Flask interface. The data half of the job gradually became the job. I speak English at C1 and Nepali natively.
+I studied computer science and engineering at SVCET, an autonomous college affiliated to JNTU Anantapur, in India, from 2015 to 2019. In the final two years I worked part-time as a backend developer, in Python with Flask and Django, and led a final-year research project: a deep-learning dialogue system, a TensorFlow sequence-to-sequence model behind a Flask interface. The data half of the job gradually became the job. I speak English at C1 and Nepali natively.
 
-I shift my day later to overlap with European afternoons and US mornings, a rhythm I have used with distributed teams for years.
+I work from Kathmandu, remotely with teams in the US and Europe; UXCam itself is based in California and Berlin. I shift my day later to overlap with European afternoons and US mornings, a rhythm I have used for years.
 
 I'm open to Senior or Lead Data Engineer, AI Engineer and Data & AI Architect roles, long-term contract or full-time, and to consulting engagements. [Scope and availability are here](/hire/).
 

@@ -1,15 +1,15 @@
 ---
 title: "Managed or self-run PostgreSQL: a capacity plan and an RDS fleet"
-seo_title: "Consulting Case Study — PostgreSQL Capacity Planning and an Amazon RDS / Aurora Fleet"
+seo_title: "Case Study — PostgreSQL Capacity Planning and an Amazon RDS / Aurora Fleet"
 hook: "A capacity plan that had to choose between a managed service and running PostgreSQL yourself, and a fleet of RDS and Aurora databases tuned and failover-tested: the same rule decided both."
-description: "Consulting case study: a PostgreSQL 16 capacity plan with the managed-or-self-run decision, and optimisation of an RDS and Aurora fleet, with failover tests."
+description: "Case study: a PostgreSQL 16 capacity plan with the managed-or-self-run decision, and optimisation of an RDS and Aurora fleet, with failover tests."
 date: 2026-10-20
 last_modified_at: 2026-10-20
 kind: consulting
 pillar: database-lifecycle
 order: 2
-role: "Consultant — PostgreSQL capacity, operations and platform choice"
-org: "Two consulting clients"
+role: "PostgreSQL capacity, operations and platform choice"
+org: "Two clients"
 team: "Remote, with each client's engineering team"
 scale: "Application databases for web products and services, one PostgreSQL 16 system and a fleet of RDS and Aurora instances"
 problem: "One client had to plan PostgreSQL 16's capacity and decide whether to run it as a managed service or on its own servers; another ran a fleet of RDS and Aurora databases that needed tuning and proof that failover worked."
@@ -17,7 +17,7 @@ decision: "Default to managed PostgreSQL for ordinary applications, since it cos
 stack: [PostgreSQL, "Amazon RDS", "Amazon Aurora", PgBouncer, AWS]
 tags: [postgres, observability-slo]
 image: /assets/og/og-postgres.png
-image_alt: "Consulting case study: PostgreSQL capacity planning and an RDS fleet — Basant Bhattarai"
+image_alt: "Case study: PostgreSQL capacity planning and an RDS fleet — Basant Bhattarai"
 sitemap:
   changefreq: monthly
   priority: 0.8

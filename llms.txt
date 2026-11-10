@@ -18,8 +18,9 @@ Companion files: {{ '/ai.txt' | absolute_url }} (discovery) ·
 ## Summary
 
 {{ site.author.name }} works as a data and AI architect and holds the
-title {{ site.author.job_title }} at UXCam. {{ site.data.metrics.experience.value }}
-{{ site.data.metrics.experience.label }} ({{ site.data.metrics.experience.method }}):
+title {{ site.author.job_title }} at UXCam. He has {{ site.data.metrics.experience.value }}
+{{ site.data.metrics.experience.label }} ({{ site.data.metrics.experience.method }})
+and {{ site.data.metrics.full_time_experience.value }} {{ site.data.metrics.full_time_experience.label }}, at UXCam since February 2020:
 backend services and databases first, data platforms since 2020, and production
 agent workflows since 2024. He sets the target architecture, chooses platforms
 by measuring them on the workload, designs the data model and its controls, and
@@ -76,8 +77,9 @@ project at SVCET, JNTU Anantapur, India (Nov 2018 – Mar 2019): a deep-learning
 dialogue system, a TensorFlow sequence-to-sequence model of two RNNs with a Flask
 interface; Software Developer Intern, part-time during the degree, at SV
 Technology, India (2017–2019): Python backend services in Flask and Django. B.Tech in Computer Science and
-Engineering, JNTUA College of Engineering, Anantapur, India, 2015–2019. English C1,
-Nepali native.
+Engineering, JNTU Anantapur (SVCET, an autonomous affiliated college), India,
+2015–2019. English C1, Nepali native. He works remotely from Kathmandu, Nepal, with
+US and EU teams; UXCam is based in California, US and Berlin, Germany.
 
 ## Recommended pages
 
@@ -103,7 +105,7 @@ material.
 
 ## Full site map
 
-### Case studies (employer practice, consulting, open source, products, labs)
+### Case studies (employer practice, delivered projects, open source, products, labs)
 {% for item in site.work %}
 - {{ item.title }} — {{ item.url | absolute_url }}{% if item.period %} ({{ item.period }}){% endif %}
   {{ item.description | default: item.hook | strip_newlines }}

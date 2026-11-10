@@ -4,7 +4,7 @@ permalink: /
 title: Basant Bhattarai
 last_modified_at: 2026-11-10
 seo_title: "Basant Bhattarai — Data & AI Architect · Senior Data Engineer"
-description: "Data & AI Architect · Senior Data Engineer with 9+ years on production systems: platform architecture, migrations, governance, SOC 2, and AI built in."
+description: "Data & AI Architect · Senior Data Engineer with 9+ years in industry: platform architecture, migrations, governance, SOC 2, and AI built in."
 sitemap:
   changefreq: weekly
   priority: 1.0
@@ -26,11 +26,11 @@ hero:
   # Length is a contract here, not a preference: scripts/e2e-hero.mjs asserts the
   # CTAs stay inside the first viewport, and at 320px every ~5 words is another
   # line. 25 words fits; 28 pushed the buttons 12px past the fold.
-  # Years first, at architect level: 9+ on production systems in industry, then
-  # both halves of the job (architect and build) across the platform's span,
-  # with AI part of it rather than a layer on top. 147 characters; 151 fitted,
-  # 160 did not.
-  lede: "9+ years on production systems in industry. I architect and build platforms from ingestion to governance, with AI built in: safe, secure, measured."
+  # Years first: 9+ in industry (internship and research included) and the
+  # full-time share, then both halves of the job (architect and build) across
+  # the platform's span, with AI part of it rather than a layer on top. 145
+  # characters; 151 fitted, 160 did not.
+  lede: "9+ years in industry, nearly 7 full-time. I architect and build platforms from ingestion to governance, with AI built in: safe, secure, measured."
   actions:
     - label: "Selected work"
       url: /work/

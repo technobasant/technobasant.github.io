@@ -3,12 +3,12 @@ title: Résumé
 last_modified_at: 2026-11-10
 seo_title: "Basant Bhattarai — Senior Data Engineer · AI Engineer · Data & AI Architect résumé"
 eyebrow: Career
-headline: "Senior Data Engineer · AI Engineer · Data & AI Architect — 9+ years on production systems in industry."
+headline: "Senior Data Engineer · AI Engineer · Data & AI Architect — 9+ years in industry, nearly 7 full-time."
 hero_code: "CAREER / LOG"
 lede: "From backend services and PostgreSQL schemas to owning the architecture of a data platform handling 100M+ events a day: its data model, databases, governance and SOC 2 controls, and the AI built into it."
 page_class: page-resume
 permalink: /resume/
-description: "Senior Data Engineer, AI Engineer and Data & AI Architect: 9+ years on production systems in industry. Roles, measured outcomes, and the stack behind each."
+description: "Senior Data Engineer, AI Engineer and Data & AI Architect: 9+ years in industry, nearly 7 full-time. Roles, measured outcomes, and the stack behind each."
 redirect_from:
   - /experience/
   - /skills/
@@ -29,7 +29,7 @@ redirect_from:
 
 ## Profile
 
-Senior data engineer and data and AI architect with 9+ years on production systems in industry. I set the target architecture, choose platforms on measured evidence, design the data model with the governance and SOC 2 controls around it, then lead the build: Kafka, Spark, Iceberg, Trino, dbt and Airflow on Kubernetes, the databases underneath, and AI built into the platform with isolation, evaluation and review designed in. My current title is Senior Data Engineer at UXCam. I am open to Senior or Lead Data Engineer, AI Engineer and Data & AI Architect roles, long-term contract or full-time.
+Senior data engineer and data and AI architect with 9+ years in industry, nearly 7 of them full-time. I set the target architecture, choose platforms on measured evidence, design the data model with the governance and SOC 2 controls around it, then lead the build: Kafka, Spark, Iceberg, Trino, dbt and Airflow on Kubernetes, the databases underneath, and AI built into the platform with isolation, evaluation and review designed in. My current title is Senior Data Engineer at UXCam. I am open to Senior or Lead Data Engineer, AI Engineer and Data & AI Architect roles, long-term contract or full-time. I work remotely from Kathmandu, Nepal, with teams in the US and Europe.
 
 ## Experience at a glance
 
@@ -42,7 +42,7 @@ Senior data engineer and data and AI architect with 9+ years on production syste
 
 ## Senior Data Engineer · UXCam
 
-**February 2024 – present**
+**February 2024 – present** · California, US and Berlin, Germany · remote from Kathmandu, Nepal
 
 - Own the architecture, reliability, data quality and governance of a {{ site.data.metrics.professional_platform_scale.value }} platform processing {{ site.data.metrics.professional_event_volume.value }} events daily, with {{ site.data.metrics.professional_uptime.value }} uptime, explicit service objectives, monitoring and alerting, incident-ready runbooks, reviewable data contracts, and a named owner for every published table; responsible for meeting the SOC 2 criteria for the data platform and its infrastructure through every audit.
 - Operate the database layer the platform depends on: clustering and replication, backup and recovery, access control, query and index tuning, and upgrade windows across SQL and NoSQL engines.
@@ -51,7 +51,7 @@ Senior data engineer and data and AI architect with 9+ years on production syste
 
 ## Data Engineer · UXCam
 
-**February 2020 – February 2024**
+**February 2020 – February 2024** · California, US and Berlin, Germany · remote from Kathmandu, Nepal
 
 - Rebuilt core Spark/PySpark processing for {{ site.data.metrics.professional_daily_processing.value }} per day, improving processing time by {{ site.data.metrics.professional_processing_improvement.value }}.
 - Administered distributed SQL and NoSQL stores used for serving and product state—modelling, partitioning, replication, and query plans rather than treating the database as a black box.
@@ -116,10 +116,12 @@ Senior data engineer and data and AI architect with 9+ years on production syste
 
 ## Education and languages
 
-**Bachelor of Technology, Computer Science and Engineering** — JNTUA College of Engineering, Anantapur, India, 2015–2019.
+**Bachelor of Technology, Computer Science and Engineering** — JNTU Anantapur (SVCET, an autonomous affiliated college), India, 2015–2019.
 
 English: C1 · Nepali: native
 
 ## Contact
+
+Kathmandu, Nepal · remote, with US and EU teams
 
 [contact@basantbhattarai.com.np](mailto:contact@basantbhattarai.com.np) · [LinkedIn](https://www.linkedin.com/in/technobasant) · [GitHub](https://github.com/technobasant)
