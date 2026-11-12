@@ -57,6 +57,7 @@ repos:
   pillar: ai-systems
   what: A done gate for coding agents. When Claude Code, Codex CLI, Cursor or OpenCode stops, it runs the
     repository's own checks and flags deleted, skipped and weakened tests, and CI runs the same check.
+    Since 0.5.0, GitHub Copilot, Qwen Code, Droid, Antigravity, OpenHands and Auggie are supported as experimental.
   finding: Replayed over 698 human commits that touched tests, 0.4.0 blocks 66, 12 of them wrongly (21 on
     0.3.1). None of its 744 tamper probes pass, including 60 aimed at the limits 0.3.x documented, 6 of
     which got through 0.3.1.
@@ -69,9 +70,9 @@ repos:
   - JavaScript
   license: Apache-2.0
   release:
-    tag: v0.4.0
-    date: '2026-11-09'
-    url: https://github.com/technobasant/greenproof/releases/tag/v0.4.0
+    tag: v0.5.0
+    date: '2026-11-12'
+    url: https://github.com/technobasant/greenproof/releases/tag/v0.5.0
   ci:
     conclusion: success
     url: https://github.com/technobasant/greenproof/actions/workflows/ci.yml
