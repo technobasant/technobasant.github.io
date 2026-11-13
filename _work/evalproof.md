@@ -4,7 +4,7 @@ seo_title: "evalproof — Open-Source LLM Evaluation with Judge Calibration and 
 hook: "An LLM judge's pass rate is a biased estimate, and a few-point drop on a small suite is mostly noise"
 description: "Open-source LLM evaluation: calibrate the judge against gold labels, compare runs on paired cases, and fail CI only on regressions the data can actually show."
 date: 2026-10-14
-last_modified_at: 2026-10-15
+last_modified_at: 2026-11-13
 kind: open-source
 pillar: ai-systems
 related: [governed-agent, realtime-ml, retrieval-bench]
@@ -46,38 +46,55 @@ The judge is a classifier. If it passes bad answers at a false-positive rate and
 
 ## Constraints
 
-Local-first, so results are reproducible and free to re-run: Ollama is the default provider, with Anthropic and OpenAI optional over plain HTTP and no vendor SDK. Every model call is cached by content, and each run records the dataset hash, seed, Ollama version and model digests. The statistics use numpy and the standard library only, small enough to read and to test against hand-worked values. Everything was measured on one Apple M5 with 24 GB of RAM, with `qwen3:1.7b` as the system under test and `qwen3:8b` as the judge.
+Local-first, so results are reproducible and free to re-run: Ollama is the default provider, with hosted models optional over plain HTTP and no vendor SDK. Anthropic came first, then fifteen OpenAI-compatible provider profiles in 0.3. Since 0.4 a logged-in Claude Code or Codex CLI can also be the judge, with no API key and the agent's tools switched off. Every model call is cached by content, and each run records the dataset hash, seed, Ollama version and model digests. The statistics use numpy and the standard library only, small enough to read and to test against hand-worked values. Everything was measured on one Apple M5 with 24 GB of RAM, with `qwen3:1.7b` as the system under test and `qwen3:8b` as the judge.
 
 ## Architecture
 
 A suite is one YAML file: a JSONL golden set, the system under test, scorers, an optional judge, calibration settings and a gate. `evalproof run` produces a self-describing run file with every case's output, latency, tokens and scores. Three commands read run files:
 
 - **calibrate** measures the judge against gold labels — confusion matrix, TPR, FPR, Cohen's κ — and reports the raw pass rate beside two corrected estimates, adjusted classify-and-count and prediction-powered inference, each with an interval.
-- **compare** pairs two runs by case id and tests the difference: exact McNemar for pass/fail, a paired bootstrap for continuous scores.
+- **compare** pairs two runs by case id and tests the difference: exact McNemar for pass/fail, a paired bootstrap for continuous scores. Since 0.5 every case also carries a hash, so a case added or edited between the runs is listed and left out, and the gate decides on the cases both runs share.
 - **pairwise** asks the judge to choose between two answers in both orders and reports order-dependent verdicts as ties.
 
 The gate turns a comparison into an exit code: 0 pass (possibly with warnings), 1 quality regression, 3 budget breach, 4 cannot gate, 2 usage error. A composite GitHub Action runs it and writes the report to the job summary.
 
+Later releases kept that core and widened what feeds it and what it checks:
+
+- `import` (0.3) turns per-case results from promptfoo, Inspect, DeepEval and lm-evaluation-harness into run files that `compare` reads.
+- The gate tests several metrics with Holm-adjusted p-values (0.3).
+- It refuses to compare runs whose judge model changed (0.4).
+- Since 0.5 it also has checks that need no baseline: a minimum pass rate, `must_pass` cases and a cap on newly failing cases.
+- `verify` checks a committed run file against its suite with no model call, and re-scores the scorers that need no model (0.5.1).
+- `init` (0.4) writes a suite, a CI workflow and an agent skill into a repository.
+
 ## In the code
 
-This is the decision behind the headline result. For a pass/fail metric `mc.p_value` is the exact McNemar test on the cases whose verdict changed, so a drop fails only when it is both beyond `max_drop` and significant; the 4.8-point drop on 83 cases took the warning branch, and the latency budget failed the change with its own exit code.
+This is the decision behind the headline result. For a pass/fail metric `mc.p_value` is the exact McNemar test on the cases whose verdict changed, so a drop fails only when it is both beyond `max_drop` and significant. With one gated metric `p_adj` is that p-value; with several it is Holm-adjusted. The 4.8-point drop on 83 cases took the warning branch, and the latency budget failed the change with its own exit code.
 
 ```python
-def decide(cmp: Comparison, gate: GateConfig) -> GateDecision:
+def decide(cmp: Comparison, gate: GateConfig, candidate: Run | None = None) -> GateDecision:
     # …
+    many = len(names) > 1
+    raw = [cmp.metrics[name].p_value for name in names]
+    adjusted = holm(raw) if many else raw
+
     exit_code = EXIT_PASS
-    drop_big = mc.delta <= -gate.max_drop
-    significant = mc.p_value < gate.alpha
-    if drop_big and significant:
+    for name, p_adj in zip(names, adjusted, strict=True):
+        mc = cmp.metrics[name]
         # …
-        exit_code = EXIT_REGRESSION
-    elif drop_big:
-        warnings.append(
-            f"{gate.metric} dropped {mc.delta:+.3f}, beyond the {gate.max_drop:.3f} threshold, but "
-            f"p={mc.p_value:.3f} ≥ α={gate.alpha}: not distinguishable from noise "
-            f"at n={mc.n_paired}. "
-            "Add cases before trusting either direction."
-        )
+        drop_big = mc.delta <= -gate.max_drop
+        significant = p_adj < gate.alpha
+        if drop_big and significant:
+            # …
+            exit_code = EXIT_REGRESSION
+        elif drop_big:
+            # …
+            warnings.append(
+                f"{name} dropped {mc.delta:+.3f}, beyond the {gate.max_drop:.3f} threshold, but "
+                f"{p_text} ≥ α={gate.alpha}: not distinguishable from noise "
+                f"at n={mc.n_paired}. "
+                "Add cases before trusting either direction."
+            )
     # …
     if (
         gate.max_p95_latency_ms is not None
@@ -97,9 +114,9 @@ The full function, including the checks that refuse to gate with exit 4, is in [
 | Decision | Alternative considered | Why | What it cost |
 |---|---|---|---|
 | Fail only when a drop is beyond `max_drop` **and** significant | Fail on any drop beyond a tolerance | On small suites most few-point drops are noise, and a gate that fails on noise gets switched off | A real but small regression on a small suite passes with a warning; the only fix is more cases |
-| Paired tests on case ids | Compare two pass rates or their intervals | Only cases whose verdict changed carry evidence; pairing uses exactly those | Runs over different datasets cannot be compared at all — exit 4 |
+| Paired tests on case ids | Compare two pass rates or their intervals | Only cases whose verdict changed carry evidence; pairing uses exactly those | Only the cases both runs share are compared. Until 0.5, runs over different datasets could not be compared at all (exit 4). Now cases added or edited between runs are listed and left out, and an older run file needs `evalproof rehash` first |
 | Treat the judge as a classifier and calibrate it | Trust its pass rate | Its count is biased by its own error rates, and the bias moves with the true rate | Someone has to label a sample, and with 30 labels the corrected intervals were 1.6 to 2.2 times as wide |
-| Gate one metric, report the rest | Gate every metric | Several metrics at α = 0.05 each inflate false failures | A regression in an ungated metric is only reported |
+| Gate one metric by default, and Holm-adjust the p-values when several are gated (since 0.3) | Gate every metric at α each | Several metrics at α = 0.05 each inflate false failures; Holm keeps the chance of any false failure at α | Each metric added to the gate makes a real regression in the others harder to detect; an ungated metric is only reported |
 | Pointwise verdicts gate; pairwise is a diagnostic | Gate on pairwise preference | Measured: 42.2% of pairwise verdicts flipped with answer order, with a strong length preference | Pairwise sensitivity is given up for gating |
 | Local models and a content-addressed cache | Hosted APIs by default | Reproducible, tied to a model digest, free to re-run | Small local models are weaker judges than hosted ones |
 
@@ -135,4 +152,4 @@ The first CI runs also caught one of my own bugs: the Wilson interval's lower bo
 
 **Stratify the gold sample.** Five of the answer key's seven errors were on the nine unanswerable questions, where telling an abstention from an invention matters most, and a uniform sample of 30 holds only about three of them. Per-tag sampling and per-tag calibration are first on the roadmap.
 
-**Measure a reasoning judge.** The judge ran without thinking to keep runs fast and deterministic. Whether a reasoning judge earns its latency against the same answer key is the next measurement worth making.
+**Measure a reasoning judge sooner.** The judge ran without thinking to keep runs fast and deterministic. When I later switched thinking on ([MEASUREMENTS.md §8](https://github.com/technobasant/evalproof/blob/main/MEASUREMENTS.md)), I read every contested case against the rubric. The thinking judge passed no wrong answer in either run, against three for the judge without it, at 6.7 times the judge time. It also caught two reference answers that claimed more than the product facts, now corrected. The gate's decision did not change: 6 worse and 1 better, p = 0.125, a pass with a warning.
