@@ -34,7 +34,8 @@ repos:
   url: https://github.com/technobasant/evalproof
   pillar: ai-systems
   what: A local-first LLM evaluation tool that calibrates the judge, corrects its pass rate, and gates
-    CI only on significant regressions.
+    CI only on significant regressions. Since 0.4, a logged-in Claude Code or Codex CLI can be the judge with
+    no API key, and since 0.5 cases added or edited between runs are left out instead of blocking the gate.
   finding: Judge pass rate fell 4.8 pts, but p = 0.39 at n = 83, so the gate passed with a warning.
   case: /work/evalproof/
   post: /writing/eval-score-drop-twelve-answers/
@@ -46,9 +47,9 @@ repos:
   - Python
   license: Apache-2.0
   release:
-    tag: v0.2.1
-    date: '2026-10-16'
-    url: https://github.com/technobasant/evalproof/releases/tag/v0.2.1
+    tag: v0.5.1
+    date: '2026-11-13'
+    url: https://github.com/technobasant/evalproof/releases/tag/v0.5.1
   ci:
     conclusion: success
     url: https://github.com/technobasant/evalproof/actions/workflows/ci.yml

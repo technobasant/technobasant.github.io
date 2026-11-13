@@ -3,7 +3,7 @@ title: "Agents say done. Something outside them has to check."
 seo_title: "Stop hooks for Claude Code, Codex CLI, Cursor and OpenCode"
 description: "A stop hook for Claude Code, Codex CLI, Cursor and OpenCode that runs the repo's checks and flags weakened tests. On 698 real commits it blocked 75, 21 wrongly."
 date: 2026-11-08 01:00:00 +0545
-last_modified_at: 2026-11-08
+last_modified_at: 2026-11-13
 type: essay
 pillar: ai-systems
 series: agentic-engineering
@@ -132,6 +132,8 @@ All four agents let a hook run when the agent tries to finish. What the hook can
 | OpenCode 2.x | A plugin in `.opencode/plugins/`, on the session's idle hook | A synthetic message, the next user input in the same run | A console warning |
 {: aria-label="How Claude Code, Codex CLI, Cursor and OpenCode return a block and a release from a stop hook" }
 
+Since 0.5.0, `greenproof init` also writes hooks for GitHub Copilot CLI, Qwen Code, Droid, Antigravity, OpenHands and Auggie. Those six are experimental: the same gate answers in each agent's own hook format, built from the vendors' documentation, and none of them has completed a real-CLI block-and-release run yet.
+
 `greenproof init` writes those files. For Claude Code, the stop hook is one command entry in `.claude/settings.json`:
 
 ```json
@@ -142,7 +144,7 @@ All four agents let a hook run when the agent tries to finish. What the hook can
         "hooks": [
           {
             "type": "command",
-            "command": "uvx greenproof@0.3.1 check --hook claude",
+            "command": "uvx greenproof@0.5.0 check --hook claude",
             "timeout": 960
           }
         ]
@@ -154,7 +156,7 @@ All four agents let a hook run when the agent tries to finish. What the hook can
         "hooks": [
           {
             "type": "command",
-            "command": "uvx greenproof@0.3.1 session-start --hook claude"
+            "command": "uvx greenproof@0.5.0 session-start --hook claude"
           }
         ]
       }

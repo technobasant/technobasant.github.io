@@ -3,7 +3,7 @@ title: "The eval score fell 4.8 points. Twelve answers decided whether it meant 
 seo_title: "LLM-as-a-judge release gates: McNemar's test, not pass-rate deltas"
 description: "A prompt change cost 4.8 points on an LLM-as-a-judge eval, and 12 of 83 paired cases held all the evidence. Why the gate is a McNemar test, not a delta."
 date: 2026-10-14 09:00:00 +0545
-last_modified_at: 2026-10-15
+last_modified_at: 2026-11-13
 type: essay
 pillar: ai-systems
 series: reference-systems
@@ -87,11 +87,11 @@ The repository's continuous integration holds the gate to this on every commit, 
 
 ## What the gate does with a drop it cannot see
 
-The rule evalproof applies is narrow on purpose. It fails on a quality regression only when the drop is at least `max_drop` **and** p is below `alpha`. A large drop that is not significant passes with a warning naming the sample size. A significant drop smaller than the tolerance passes with a warning. Fewer paired cases than `min_cases`, or two runs over different datasets — the run file records a dataset hash — mean it refuses to gate at all, with its own exit code.
+The rule evalproof applies is narrow on purpose. It fails on a quality regression only when the drop is at least `max_drop` **and** p is below `alpha`. A large drop that is not significant passes with a warning naming the sample size. A significant drop smaller than the tolerance passes with a warning. Fewer paired cases than `min_cases` mean it refuses to gate at all, with its own exit code. When this was written, so did two runs over different datasets, because the run file recorded only a dataset hash. Since 0.5 it records a hash per case too, so a case added or edited between the runs is listed and left out, and the gate decides on the cases both runs share.
 
 That rule has an honest cost, and it is better to state it than to tune it away. If the prompt change really is 4.8 points worse, this suite will usually miss it. Taking the observed rates as the truth — 8 of every 83 cases worse, 4 better — I simulated the gate with a fixed seed. At 83 cases it caught the regression 13% of the time. It needed about 520 cases for an 80% chance. The fix for a gate that cannot see a regression is more cases, not a looser threshold. The warning says exactly that, because "add cases before trusting either direction" is the only true statement available.
 
-I chose to accept that rather than lower the bar, for the reason recorded in the repo's decision log: on a few dozen cases most few-point drops are noise, and a gate that fails on noise gets switched off. Once it is off it catches nothing, including the 18-point regression. For the same reason the gate tests one metric. Testing five independent metrics at α = 0.05 each fails a harmless change close to one time in four, so the others are reported but not gated.
+I chose to accept that rather than lower the bar, for the reason recorded in the repo's decision log: on a few dozen cases most few-point drops are noise, and a gate that fails on noise gets switched off. Once it is off it catches nothing, including the 18-point regression. For the same reason the gate tested one metric. Testing five independent metrics at α = 0.05 each fails a harmless change close to one time in four, so the others were reported but not gated. Since 0.3 it can gate several, with Holm-adjusted p-values, so adding a metric to the gate cannot make a false failure likelier.
 
 ## The instrument sits inside the twelve cases
 
@@ -128,16 +128,16 @@ Every model call is cached by content, and every run records the dataset hash, s
 Reproducibility also caught a bug of mine. CI on x86_64 Linux failed a known-value test that passed on arm64 macOS: the Wilson interval's lower bound at zero passes came out as 2.8e-17 instead of 0.0. The bound is computed by subtracting two quantities that are exactly equal at that point, and the rounding differed by platform. Version 0.1.1 pins the boundaries at exactly 0 and 1. It is a small bug, but a statistics library that prints 2.8e-17 for "no passes" on one machine invites a question nobody should have to answer. Known-value tests on the platform CI actually runs on are cheap.
 
 <div class="callout callout--note" markdown="1">
-**Boundary.** One Apple M5 with 24 GB of RAM, two small local models, one product domain, 83 cases. The answer key is a stand-in for human review, and the post shows where it is wrong. Determinism was checked on 20 cases on one backend, and the judge ran with thinking disabled; a reasoning judge was not measured. The McNemar thresholds in the split table are exact arithmetic on the same test, not further measurements. The detection rates come from a Monte Carlo simulation with a fixed seed that assumes this run's rates are the true ones. The numbers describe this setup. What transfers is the method: pair the cases, test the discordant ones, and audit the gold as hard as the judge.
+**Boundary.** One Apple M5 with 24 GB of RAM, two small local models, one product domain, 83 cases. The answer key is a stand-in for human review, and the post shows where it is wrong. Determinism was checked on 20 cases on one backend, and the judge ran with thinking disabled. A later run with thinking on ([MEASUREMENTS.md §8](https://github.com/technobasant/evalproof/blob/main/MEASUREMENTS.md)) passed no wrong answer, at 6.7 times the judge time, and left the gate's decision unchanged. The McNemar thresholds in the split table are exact arithmetic on the same test, not further measurements. The detection rates come from a Monte Carlo simulation with a fixed seed that assumes this run's rates are the true ones. The numbers describe this setup. What transfers is the method: pair the cases, test the discordant ones, and audit the gold as hard as the judge.
 </div>
 
 ## What goes in an eval release gate
 
-- Run baseline and candidate on the same case ids, record a dataset hash, and refuse to compare runs that differ.
+- Pair baseline and candidate on case ids, hash each case, and leave out the cases added or edited between them, saying which.
 - Test the paired difference: exact McNemar for pass/fail verdicts, a paired bootstrap for continuous scores, with the interval reported.
 - Fail only when the drop is beyond the tolerance and significant. Otherwise warn, and name the sample size.
 - Know the smallest drop your suite can detect before you choose a tolerance below it.
-- Gate one metric; report the rest.
+- Gate one metric, or adjust the p-values (Holm) when you gate several; report the rest.
 - Measure the judge against gold labels, and audit the gold the same way.
 - Swap the order in any pairwise judgement, count flips as ties, and never gate on preference.
 - Give latency and cost their own budgets and their own exit code.
@@ -161,4 +161,4 @@ It depends on how many cases change verdict, not only on the size of the drop. T
 
 Not in this measurement. With the two answers shown in both orders, 35 of 83 verdicts (42.2%) flipped with the order. Of the consistent verdicts the 8B judge preferred the lower-scoring prompt 42 to 6, mostly where both answers were correct and the preferred one was about five times longer. Pairwise preference is a useful diagnostic and a poor gate.
 
-The code, the run files and every table are in [evalproof](https://github.com/technobasant/evalproof), with the decisions behind it in [the case study](/work/evalproof/). The judge-as-classifier algebra comes from [the prevalence post](/writing/count-prevalence-not-classifications/). More on [applied ML and evaluation](/writing/tags/applied-ml/) and [AI agents in production](/writing/tags/ai-agents/).
+The code, the run files and every table are in [evalproof](https://github.com/technobasant/evalproof), now at 0.5.1 (`pip install evalproof` or `uvx evalproof`), with the decisions behind it in [the case study](/work/evalproof/). The judge-as-classifier algebra comes from [the prevalence post](/writing/count-prevalence-not-classifications/). More on [applied ML and evaluation](/writing/tags/applied-ml/) and [AI agents in production](/writing/tags/ai-agents/).

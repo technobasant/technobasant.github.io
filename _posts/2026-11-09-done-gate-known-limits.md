@@ -3,7 +3,7 @@ title: "A gate's known limits are its next tests"
 seo_title: "Catching coding agents that weaken tests: greenproof 0.4.0"
 description: "greenproof 0.4.0 set out to close the limits its own docs listed. Of 744 tamper probes none passes, and honest changes blocked fell from 35 to 18."
 date: 2026-11-09 01:19:00 +0545
-last_modified_at: 2026-11-09
+last_modified_at: 2026-11-13
 type: essay
 pillar: ai-systems
 series: agentic-engineering
@@ -217,8 +217,8 @@ All three split block from warn on purpose and publish what they measured, inclu
 ## Upgrading
 
 ```bash
-pipx install --force greenproof==0.4.0     # or: uvx greenproof@0.4.0 check
+pipx install --force greenproof==0.5.0     # or: uvx greenproof@0.5.0 check
 greenproof check --base origin/main
 ```
 
-The Claude Code, Codex and Cursor plugins and `greenproof init` pick up the new version through the installed command. OpenCode users can pin [`opencode-greenproof@0.4.0`](https://www.npmjs.com/package/opencode-greenproof) in `opencode.json`. Every number above, with the raw per-probe and per-commit results and the commands to reproduce them, is in the repository's [MEASUREMENTS.md](https://github.com/technobasant/greenproof/blob/main/MEASUREMENTS.md), and the full list of changes is in the [0.4.0 changelog](https://github.com/technobasant/greenproof/blob/main/CHANGELOG.md).
+The current release is 0.5.0. The rules and every number above are unchanged since 0.4.0: 0.4.1 made the hooks `greenproof init` writes run through `uvx` and added an install step to the CI template, and 0.5.0 added experimental hooks for six more agents (GitHub Copilot CLI, Qwen Code, Droid, Antigravity, OpenHands and Auggie). The Claude Code, Codex and Cursor plugins and `greenproof init` pick up the new version through the installed command. OpenCode users can pin [`opencode-greenproof@0.5.0`](https://www.npmjs.com/package/opencode-greenproof) in `opencode.json`. Every number above, with the raw per-probe and per-commit results and the commands to reproduce them, is in the repository's [MEASUREMENTS.md](https://github.com/technobasant/greenproof/blob/main/MEASUREMENTS.md), and the full list of changes is in the [changelog](https://github.com/technobasant/greenproof/blob/main/CHANGELOG.md).

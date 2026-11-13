@@ -134,7 +134,7 @@ evalproof:
   stages:
     - name: "Suite"
       tech: ["YAML", "JSONL"]
-      note: "The dataset hash goes into every run; runs on different data refuse to gate (exit 4)."
+      note: "Every run records the dataset hash and a hash per case; a case added or edited between runs is listed, not compared."
     - name: "Run"
       tech: ["Ollama", "httpx", "SHA-256 cache"]
       note: "Cached by content: a warm re-run took 0.05 s instead of 363 s, with identical results."
